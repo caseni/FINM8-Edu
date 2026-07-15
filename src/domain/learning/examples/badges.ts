@@ -55,17 +55,32 @@ export const INITIAL_BADGES: readonly LearningBadge[] = [
   },
   {
     id: 'badge.market-literacy.foundation',
-    title: { tr: 'Piyasa Temelleri', en: 'Market Foundations' },
+    title: { tr: 'Piyasa Okuryazarı', en: 'Market Literate' },
     description: {
-      tr: 'Piyasa okuryazarlığı başlangıç challenge’ını başarıyla tamamla.',
-      en: 'Complete the foundation market-literacy challenge.',
+      tr: 'Piyasa Okuryazarlığı yolundaki dört modül challenge’ını tamamla.',
+      en: 'Complete all four module challenges in the Market Literacy path.',
     },
     credentialType: 'learning_achievement',
     definitionVersion: '0.1.0',
     requirements: [
       {
         kind: 'challenge_completion',
-        targetId: 'challenge.market-literacy.foundation',
+        targetId: 'challenge.market-foundations.foundation',
+        threshold: 1,
+      },
+      {
+        kind: 'challenge_completion',
+        targetId: 'challenge.chart-literacy.foundation',
+        threshold: 1,
+      },
+      {
+        kind: 'challenge_completion',
+        targetId: 'challenge.risk.foundation',
+        threshold: 1,
+      },
+      {
+        kind: 'challenge_completion',
+        targetId: 'challenge.behavior-evidence.foundation',
         threshold: 1,
       },
     ],

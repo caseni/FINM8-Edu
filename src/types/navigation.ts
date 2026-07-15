@@ -3,10 +3,11 @@ import { NavigatorScreenParams } from '@react-navigation/native';
 export type RootStackParamList = {
   Home: undefined;
   LearningOnboarding: undefined;
-  MicroLesson: { lessonId: string };
-  PracticalTask: { lessonId: string };
-  LessonQuiz: { lessonId: string };
-  LearningChallenge: { challengeId: string };
+  MicroLesson: { lessonId: string; review?: boolean };
+  PracticalTask: { lessonId: string; review?: boolean };
+  LessonQuiz: { lessonId: string; review?: boolean };
+  LearningChallenge: { challengeId: string; review?: boolean };
+  LearningReview: undefined;
   LegacyCatalog: undefined;
   CourseDetail: { courseId: number };
   Auth: NavigatorScreenParams<AuthStackParamList>;
@@ -21,10 +22,11 @@ export type AuthStackParamList = {
 export type MainStackParamList = {
   Home: undefined;
   LearningOnboarding: undefined;
-  MicroLesson: { lessonId: string };
-  PracticalTask: { lessonId: string };
-  LessonQuiz: { lessonId: string };
-  LearningChallenge: { challengeId: string };
+  MicroLesson: { lessonId: string; review?: boolean };
+  PracticalTask: { lessonId: string; review?: boolean };
+  LessonQuiz: { lessonId: string; review?: boolean };
+  LearningChallenge: { challengeId: string; review?: boolean };
+  LearningReview: undefined;
   LegacyCatalog: undefined;
   CourseDetail: { courseId: number };
 };

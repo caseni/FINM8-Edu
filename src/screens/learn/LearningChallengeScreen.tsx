@@ -37,19 +37,19 @@ export function LearningChallengeScreen({ route, navigation }: Props) {
     return <SafeAreaView style={styles.safeArea}><Text style={styles.error}>Challenge bulunamadı.</Text></SafeAreaView>;
   }
 
-  const missingLessonCount = challenge.prerequisiteLessonIds.filter(
+  const missingLessonCount = route.params.review ? 0 : challenge.prerequisiteLessonIds.filter(
     (lessonId) => !completedLessonIds.includes(lessonId)
   ).length;
 
   const finishQuiz = (resultScore: number, resultPassed: boolean) => {
     setScore(resultScore);
     setPassed(resultPassed);
-    if (resultPassed) {
+    if (resultPassed && !route.params.review) {
       const now = new Date().toISOString();
       completeChallenge(challenge.id, now);
-      const badge = INITIAL_BADGES.find((candidate) => candidate.id === challenge.badgeId);
-      if (badge && tryAwardBadge(badge, now)) {
-        setNewBadgeTitle(selectLocalizedText(badge.title, language));
+      const newlyAwarded = INITIAL_BADGES.filter((badge) => tryAwardBadge(badge, now));
+      if (newlyAwarded.length > 0) {
+        setNewBadgeTitle(newlyAwarded.map((badge) => selectLocalizedText(badge.title, language)).join(' · '));
       }
     }
     setStage('result');
@@ -61,7 +61,7 @@ export function LearningChallengeScreen({ route, navigation }: Props) {
     return (
       <SafeAreaView style={styles.safeArea}>
         <ScrollView contentContainerStyle={styles.content}>
-          <Text style={styles.progress}>UYGULAMA {taskIndex + 1}/{challenge.practicalTasks.length}</Text>
+          <Text style={styles.progress}>{language === 'tr' ? 'UYGULAMA' : 'TASK'} {taskIndex + 1}/{challenge.practicalTasks.length}</Text>
           <PracticalTaskPlayer
             key={task.id}
             task={task}
@@ -87,7 +87,7 @@ export function LearningChallengeScreen({ route, navigation }: Props) {
     return (
       <SafeAreaView style={styles.safeArea}>
         <ScrollView contentContainerStyle={styles.content}>
-          <Text style={styles.progress}>FİNAL QUIZ • {quiz.questions.length} SORU</Text>
+          <Text style={styles.progress}>{language === 'tr' ? `FİNAL QUIZ · ${quiz.questions.length} SORU` : `FINAL QUIZ · ${quiz.questions.length} QUESTIONS`}</Text>
           <QuizPlayer quiz={quiz} language={language} onComplete={(result) => finishQuiz(result.score, result.passed)} />
         </ScrollView>
       </SafeAreaView>
@@ -103,8 +103,8 @@ export function LearningChallengeScreen({ route, navigation }: Props) {
           <Text style={styles.score}>%{score}</Text>
           <Text style={styles.body}>{passed ? (language === 'tr' ? `+${challenge.xpReward} XP kazandın.` : `You earned +${challenge.xpReward} XP.`) : (language === 'tr' ? `Geçme eşiği %${challenge.passingScore}. Açıklamaları kullanıp tekrar dene.` : `Passing score is ${challenge.passingScore}%. Review the explanations and try again.`)}</Text>
           {newBadgeTitle ? <Text style={styles.badgeNotice}>◆ {newBadgeTitle}</Text> : null}
-          <Pressable style={styles.primaryButton} onPress={() => passed ? navigation.popToTop() : setStage('intro')}>
-            <Text style={styles.primaryButtonText}>{passed ? (language === 'tr' ? 'M8 Learn’e dön' : 'Return to M8 Learn') : (language === 'tr' ? 'Tekrar dene' : 'Retry')}</Text>
+          <Pressable style={styles.primaryButton} onPress={() => passed ? (route.params.review ? navigation.goBack() : navigation.popToTop()) : setStage('intro')}>
+            <Text style={styles.primaryButtonText}>{passed ? (route.params.review ? (language === 'tr' ? 'Review merkezine dön' : 'Return to review center') : (language === 'tr' ? 'M8 Learn’e dön' : 'Return to M8 Learn')) : (language === 'tr' ? 'Tekrar dene' : 'Retry')}</Text>
           </Pressable>
         </View>
       </SafeAreaView>
@@ -114,7 +114,7 @@ export function LearningChallengeScreen({ route, navigation }: Props) {
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.introContent}>
-        <Text style={styles.eyebrow}>MODÜL FINAL CHALLENGE</Text>
+        <Text style={styles.eyebrow}>{language === 'tr' ? 'MODÜL FİNAL CHALLENGE' : 'MODULE FINAL CHALLENGE'}</Text>
         <Text style={styles.title}>{selectLocalizedText(challenge.title, language)}</Text>
         <Text style={styles.body}>{selectLocalizedText(challenge.description, language)}</Text>
         <View style={styles.summaryCard}>

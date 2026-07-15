@@ -10,6 +10,7 @@ import { MicroLessonScreen } from '../screens/learn/MicroLessonScreen';
 import { LessonQuizScreen } from '../screens/learn/LessonQuizScreen';
 import { PracticalTaskScreen } from '../screens/learn/PracticalTaskScreen';
 import { LearningChallengeScreen } from '../screens/learn/LearningChallengeScreen';
+import { LearningReviewScreen } from '../screens/learn/LearningReviewScreen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -40,6 +41,7 @@ export const AppNavigator: React.FC = () => {
         <Stack.Screen name="PracticalTask" component={PracticalTaskScreen} options={{ headerShown: false, gestureEnabled: false }} />
         <Stack.Screen name="LessonQuiz" component={LessonQuizScreen} options={{ headerShown: false, gestureEnabled: false }} />
         <Stack.Screen name="LearningChallenge" component={LearningChallengeScreen} options={{ headerShown: false, gestureEnabled: false }} />
+        <Stack.Screen name="LearningReview" component={LearningReviewScreen} options={{ headerShown: false }} />
         <Stack.Screen name="LegacyCatalog" component={HomeScreen} options={{ title: 'Eski Kurs Arşivi' }} />
         <Stack.Screen
           name="CourseDetail"
