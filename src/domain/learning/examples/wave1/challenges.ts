@@ -2,6 +2,7 @@ import { learningChallengeSchema } from '../../progressionSchemas';
 import { WAVE1_MARKET_FOUNDATION_LESSONS } from './marketFoundationsLessons';
 import { WAVE1_CHART_LITERACY_LESSONS } from './chartLiteracyLessons';
 import { WAVE1_RISK_MANAGEMENT_LESSONS } from './riskManagementLessons';
+import { WAVE1_BEHAVIOR_EVIDENCE_LESSONS } from './behaviorEvidenceLessons';
 import type { LearningChallenge } from '../../types';
 
 const challengeQuestions = WAVE1_MARKET_FOUNDATION_LESSONS.map((lesson, index) => ({
@@ -94,10 +95,41 @@ export const RISK_MANAGEMENT_CHALLENGE = learningChallengeSchema.parse({
   badgeId: 'badge.risk-guardian.foundation',
 });
 
+const behaviorEvidenceQuestions = WAVE1_BEHAVIOR_EVIDENCE_LESSONS.map((lesson, index) => ({
+  ...lesson.quiz.questions[0],
+  id: `question.challenge.behavior-evidence.${index + 1}`,
+}));
+
+export const BEHAVIOR_EVIDENCE_CHALLENGE = learningChallengeSchema.parse({
+  id: 'challenge.behavior-evidence.foundation',
+  title: { tr: 'Kanıt Dedektifi Challenge' },
+  description: {
+    tr: 'FOMO, aşırı işlem, doğrulama yanlılığı, veri kalitesi, güncellik ve karar günlüğünü birlikte değerlendir.',
+  },
+  stage: 'foundation',
+  skillIds: ['skill.behavior-evidence'],
+  prerequisiteLessonIds: WAVE1_BEHAVIOR_EVIDENCE_LESSONS.map((lesson) => lesson.id),
+  questions: behaviorEvidenceQuestions,
+  practicalTasks: [
+    {
+      ...WAVE1_BEHAVIOR_EVIDENCE_LESSONS[2].practicalTask,
+      id: 'task.challenge.behavior-evidence.confirmation-bias',
+    },
+    {
+      ...WAVE1_BEHAVIOR_EVIDENCE_LESSONS[5].practicalTask,
+      id: 'task.challenge.behavior-evidence.decision-journal',
+    },
+  ],
+  passingScore: 75,
+  xpReward: 100,
+  badgeId: 'badge.evidence-detective.foundation',
+});
+
 export const LEARNING_CHALLENGE_CATALOG: readonly LearningChallenge[] = [
   MARKET_FOUNDATIONS_CHALLENGE,
   CHART_LITERACY_CHALLENGE,
   RISK_MANAGEMENT_CHALLENGE,
+  BEHAVIOR_EVIDENCE_CHALLENGE,
 ];
 
 export function getLearningChallengeById(challengeId: string) {

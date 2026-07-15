@@ -120,16 +120,16 @@ export const INITIAL_BADGES: readonly LearningBadge[] = [
     id: 'badge.evidence-detective.foundation',
     title: { tr: 'Kanıt Dedektifi', en: 'Evidence Detective' },
     description: {
-      tr: 'Kanıt kalitesi becerisinde en az %75 ustalık göster.',
-      en: 'Demonstrate at least 75% mastery in evidence quality.',
+      tr: 'Davranış ve Kanıt modülünü ve uygulamalı challenge’ını tamamla.',
+      en: 'Complete the Behavior and Evidence module and its applied challenge.',
     },
     credentialType: 'learning_achievement',
     definitionVersion: '0.1.0',
     requirements: [
       {
-        kind: 'mastery',
-        targetId: 'skill.evidence-literacy',
-        threshold: 75,
+        kind: 'challenge_completion',
+        targetId: 'challenge.behavior-evidence.foundation',
+        threshold: 1,
       },
     ],
     disclaimer: {

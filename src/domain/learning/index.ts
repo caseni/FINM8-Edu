@@ -6,6 +6,8 @@ export * from './examples/wave1MarketLiteracyPath';
 export * from './examples/wave1/marketFoundationsLessons';
 export * from './examples/wave1/chartLiteracyLessons';
 export * from './examples/wave1/riskManagementLessons';
+export * from './examples/wave1/behaviorEvidenceLessons';
+export * from './examples/wave1/behaviorEvidenceSources';
 export * from './examples/wave1/challenges';
 export * from './presentation';
 export * from './progressionEngine';
