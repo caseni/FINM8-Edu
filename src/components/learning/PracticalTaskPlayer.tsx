@@ -5,7 +5,7 @@ import {
   selectLocalizedText,
   type LearningLanguage,
 } from '../../domain/learning/presentation';
-import type { PracticalTask, PresentationMode } from '../../domain/learning/types';
+import type { LocalizedText, PracticalTask, PresentationMode } from '../../domain/learning/types';
 import { defaultLearningTheme, type LearningTheme } from '../../theme/learningTheme';
 
 export interface PracticalTaskPlayerProps {
@@ -14,6 +14,8 @@ export interface PracticalTaskPlayerProps {
   presentationMode: PresentationMode;
   theme?: LearningTheme;
   onComplete: (passed: boolean, selectedEvidence: readonly string[]) => void;
+  completionLabel?: LocalizedText;
+  eyebrow?: LocalizedText;
 }
 
 export function PracticalTaskPlayer({
@@ -22,6 +24,8 @@ export function PracticalTaskPlayer({
   presentationMode,
   theme = defaultLearningTheme,
   onComplete,
+  completionLabel,
+  eyebrow,
 }: PracticalTaskPlayerProps) {
   const [selected, setSelected] = useState<string[]>([]);
   const [checked, setChecked] = useState(false);
@@ -58,25 +62,38 @@ export function PracticalTaskPlayer({
   return (
     <View style={styles.container}>
       <Text style={styles.eyebrow}>
-        {language === 'tr' ? 'GRAFİK GÖREVİ' : 'CHART TASK'}
+        {eyebrow
+          ? selectLocalizedText(eyebrow, language)
+          : task.kind === 'chart_identification'
+            ? language === 'tr' ? 'GRAFİK GÖREVİ' : 'CHART TASK'
+            : language === 'tr' ? 'SENARYO GÖREVİ' : 'SCENARIO TASK'}
       </Text>
       <Text style={styles.prompt}>
         {selectAudienceCopy(task.prompt, presentationMode, language)}
       </Text>
-      <View style={styles.chart}>
-        <View style={styles.levelLine} />
-        <View style={[styles.candle, styles.candleOne]} />
-        <View style={[styles.candle, styles.candleTwo]} />
-        <View style={[styles.candle, styles.candleThree]} />
-        <View style={[styles.candle, styles.candleFour]} />
-        <Text style={styles.chartLabel}>
-          {language === 'tr' ? 'Eğitim amaçlı şematik grafik' : 'Schematic training chart'}
-        </Text>
-      </View>
+      {task.kind === 'chart_identification' ? (
+        <View style={styles.chart}>
+          <View style={styles.levelLine} />
+          <View style={[styles.candle, styles.candleOne]} />
+          <View style={[styles.candle, styles.candleTwo]} />
+          <View style={[styles.candle, styles.candleThree]} />
+          <View style={[styles.candle, styles.candleFour]} />
+          <Text style={styles.chartLabel}>
+            {language === 'tr' ? 'Eğitim amaçlı şematik grafik' : 'Schematic training chart'}
+          </Text>
+        </View>
+      ) : (
+        <View style={styles.scenarioPanel}>
+          <Text style={styles.scenarioMark}>?</Text>
+          <Text style={styles.scenarioText}>
+            {language === 'tr' ? 'Senaryoyu değerlendir ve en güçlü seçeneği işaretle.' : 'Evaluate the scenario and choose the strongest answer.'}
+          </Text>
+        </View>
+      )}
       <Text style={styles.helper}>
         {language === 'tr'
-          ? 'İki doğru kanıtı seç.'
-          : 'Select the two correct pieces of evidence.'}
+          ? `${task.expectedEvidence.length} doğru kanıtı seç.`
+          : `Select ${task.expectedEvidence.length} correct ${task.expectedEvidence.length === 1 ? 'answer' : 'pieces of evidence'}.`}
       </Text>
       <View style={styles.choices}>
         {choices.map((choice) => {
@@ -104,8 +121,8 @@ export function PracticalTaskPlayer({
       {checked ? (
         <Text style={[styles.feedback, passed ? styles.feedbackPassed : styles.feedbackRetry]}>
           {passed
-            ? language === 'tr' ? 'Doğru. Yapısal seviye ve teyit kapanışı birlikte değerlendirildi.' : 'Correct. Structural level and confirming close were evaluated together.'
-            : language === 'tr' ? 'Henüz değil. Seviyeyi ve teyit kapanışını birlikte düşün.' : 'Not yet. Consider the level and confirming close together.'}
+            ? language === 'tr' ? 'Doğru. Seçimin senaryodaki kanıtlarla uyumlu.' : 'Correct. Your selection matches the evidence in the scenario.'
+            : language === 'tr' ? 'Henüz değil. Senaryodaki ipuçlarını birlikte değerlendir.' : 'Not yet. Evaluate the clues in the scenario together.'}
         </Text>
       ) : null}
       <Pressable
@@ -117,7 +134,9 @@ export function PracticalTaskPlayer({
           {!checked
             ? language === 'tr' ? 'Kontrol et' : 'Check'
             : passed
-              ? language === 'tr' ? 'Quiz’e geç' : 'Continue to quiz'
+              ? completionLabel
+                ? selectLocalizedText(completionLabel, language)
+                : language === 'tr' ? 'Quiz’e geç' : 'Continue to quiz'
               : language === 'tr' ? 'Tekrar dene' : 'Try again'}
         </Text>
       </Pressable>
@@ -138,6 +157,9 @@ const createStyles = (theme: LearningTheme) =>
     candleThree: { left: '57%', bottom: 44, height: 64 },
     candleFour: { left: '77%', bottom: 70, height: 92 },
     chartLabel: { position: 'absolute', left: 12, bottom: 8, color: theme.colors.textMuted, fontSize: 10 },
+    scenarioPanel: { minHeight: 120, flexDirection: 'row', alignItems: 'center', gap: theme.spacing.md, padding: theme.spacing.lg, backgroundColor: theme.colors.background, borderRadius: theme.radius.medium, borderWidth: 1, borderColor: theme.colors.border },
+    scenarioMark: { color: theme.colors.primary, fontSize: 38, fontWeight: '900' },
+    scenarioText: { flex: 1, color: theme.colors.textMuted, fontSize: 15, lineHeight: 22 },
     helper: { color: theme.colors.textMuted, fontSize: 13 },
     choices: { gap: theme.spacing.sm },
     choice: { padding: theme.spacing.md, borderRadius: theme.radius.medium, borderWidth: 1, borderColor: theme.colors.border, backgroundColor: theme.colors.surfaceMuted },
@@ -152,4 +174,3 @@ const createStyles = (theme: LearningTheme) =>
     buttonText: { color: theme.colors.primaryText, fontSize: 16, fontWeight: '900' },
     disabled: { opacity: 0.35 },
   });
-
