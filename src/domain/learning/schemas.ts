@@ -175,6 +175,18 @@ export const practicalTaskSchema = z
     conceptKey: learningConceptKeySchema,
     prompt: audienceCopySchema,
     assetRef: z.string().trim().min(1).optional(),
+    choices: z
+      .array(
+        z
+          .object({
+            id: idSchema,
+            label: localizedTextSchema,
+          })
+          .strict()
+      )
+      .min(2)
+      .max(8)
+      .optional(),
     evaluationRule: z.enum(['exact', 'rubric', 'self_check']),
     expectedEvidence: z.array(z.string().trim().min(1)).min(1).max(6),
   })
