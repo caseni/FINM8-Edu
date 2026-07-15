@@ -58,7 +58,7 @@ export function LearningReviewScreen({ navigation }: Props) {
           </View>
           <View style={styles.segmented}>
             {(['normal', 'pro'] as const).map((mode: PresentationMode) => (
-              <Pressable key={mode} onPress={() => setPresentationMode(mode)} style={[styles.segment, presentationMode === mode && styles.segmentActive]}>
+              <Pressable accessibilityRole="button" accessibilityState={{ selected: presentationMode === mode }} key={mode} onPress={() => setPresentationMode(mode)} style={[styles.segment, presentationMode === mode && styles.segmentActive]}>
                 <Text style={[styles.segmentText, presentationMode === mode && styles.segmentTextActive]}>{mode === 'normal' ? 'Normal' : 'Pro'}</Text>
               </Pressable>
             ))}
@@ -128,11 +128,11 @@ const styles = StyleSheet.create({
   notice: { padding: 16, borderRadius: 16, backgroundColor: '#123B42', borderWidth: 1, borderColor: '#2DD4BF', gap: 5 },
   noticeTitle: { color: '#F8FAFC', fontSize: 15, fontWeight: '900' },
   noticeText: { color: '#B8D6D5', fontSize: 13, lineHeight: 19 },
-  modeRow: { flexDirection: 'row', alignItems: 'center', gap: 12, padding: 16, borderRadius: 16, backgroundColor: '#0C1928', borderWidth: 1, borderColor: '#1F3449' },
+  modeRow: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: 12, padding: 16, borderRadius: 16, backgroundColor: '#0C1928', borderWidth: 1, borderColor: '#1F3449' },
   modeTitle: { color: '#F8FAFC', fontSize: 14, fontWeight: '800' },
   modeHint: { color: '#8094A8', fontSize: 11, lineHeight: 16 },
   segmented: { flexDirection: 'row', padding: 4, borderRadius: 12, backgroundColor: '#102033' },
-  segment: { paddingVertical: 8, paddingHorizontal: 12, borderRadius: 9 },
+  segment: { minHeight: 44, justifyContent: 'center', paddingVertical: 8, paddingHorizontal: 12, borderRadius: 9 },
   segmentActive: { backgroundColor: '#2DD4BF' },
   segmentText: { color: '#9FB0C3', fontSize: 12, fontWeight: '800' },
   segmentTextActive: { color: '#042F2E' },
@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
   lessonTitle: { color: '#F8FAFC', fontSize: 14, lineHeight: 19, fontWeight: '700' },
   lessonMeta: { color: '#8094A8', fontSize: 11 },
   actions: { flexDirection: 'row', flexWrap: 'wrap', gap: 7, marginTop: 5 },
-  actionButton: { paddingVertical: 7, paddingHorizontal: 11, borderRadius: 9, backgroundColor: '#102033', borderWidth: 1, borderColor: '#294057' },
+  actionButton: { minHeight: 44, justifyContent: 'center', paddingVertical: 7, paddingHorizontal: 11, borderRadius: 9, backgroundColor: '#102033', borderWidth: 1, borderColor: '#294057' },
   actionText: { color: '#2DD4BF', fontSize: 11, fontWeight: '900' },
   challengeButton: { flexDirection: 'row', alignItems: 'center', gap: 12, marginTop: 8, padding: 14, borderRadius: 14, backgroundColor: '#123B42', borderWidth: 1, borderColor: '#2DD4BF' },
   challengeMark: { color: '#FBBF24', fontSize: 19 },
