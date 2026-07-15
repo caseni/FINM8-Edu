@@ -4,6 +4,10 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/navigation';
 import { HomeScreen } from '../screens/home/HomeScreen';
 import { CourseDetailScreen } from '../screens/course/CourseDetailScreen';
+import { LearnHomeScreen } from '../screens/learn/LearnHomeScreen';
+import { LearningOnboardingScreen } from '../screens/learn/LearningOnboardingScreen';
+import { MicroLessonScreen } from '../screens/learn/MicroLessonScreen';
+import { LessonQuizScreen } from '../screens/learn/LessonQuizScreen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -24,12 +28,15 @@ export const AppNavigator: React.FC = () => {
       >
         <Stack.Screen
           name="Home"
-          component={HomeScreen}
+          component={LearnHomeScreen}
           options={{
-            title: 'Finans Eğitim Akademi',
-            headerLargeTitle: true,
+            headerShown: false,
           }}
         />
+        <Stack.Screen name="LearningOnboarding" component={LearningOnboardingScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="MicroLesson" component={MicroLessonScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="LessonQuiz" component={LessonQuizScreen} options={{ headerShown: false, gestureEnabled: false }} />
+        <Stack.Screen name="LegacyCatalog" component={HomeScreen} options={{ title: 'Eski Kurs Arşivi' }} />
         <Stack.Screen
           name="CourseDetail"
           component={CourseDetailScreen}
