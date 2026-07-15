@@ -55,8 +55,25 @@ const bosLessonDraft = {
       },
     },
     {
-      id: 'bos.misconception',
+      id: 'bos.visual',
       order: 2,
+      audience: 'all',
+      kind: 'visual',
+      assetRef: 'edu://charts/bos-starter-001',
+      alt: {
+        tr: 'Önceki tepe ve teyit kapanışını gösteren sade BOS grafiği',
+        en: 'Simple BOS chart showing the previous high and confirming close',
+      },
+      caption: {
+        normal: {
+          tr: 'Önemli olan yalnızca seviyenin aşılması değil, kırılımın bağlamıdır.',
+          en: 'What matters is not only crossing the level, but the context of the break.',
+        },
+      },
+    },
+    {
+      id: 'bos.misconception',
+      order: 3,
       audience: 'all',
       kind: 'misconception',
       copy: {
@@ -68,7 +85,7 @@ const bosLessonDraft = {
     },
     {
       id: 'bos.risk',
-      order: 3,
+      order: 4,
       audience: 'all',
       kind: 'callout',
       tone: 'risk',
