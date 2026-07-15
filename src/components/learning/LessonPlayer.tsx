@@ -181,7 +181,7 @@ const createStyles = (theme: LearningTheme) =>
       paddingHorizontal: theme.spacing.md,
       paddingVertical: theme.spacing.sm,
     },
-    exitButton: { width: 36, height: 36, alignItems: 'center', justifyContent: 'center' },
+    exitButton: { width: 44, height: 44, alignItems: 'center', justifyContent: 'center' },
     exitText: { color: theme.colors.textMuted, fontSize: 28 },
     progressTrack: {
       flex: 1,
@@ -233,6 +233,7 @@ const createStyles = (theme: LearningTheme) =>
       borderRadius: theme.radius.medium,
       backgroundColor: theme.colors.primary,
       padding: theme.spacing.md,
+      minHeight: 52,
     },
     primaryText: { color: theme.colors.primaryText, fontWeight: '800', fontSize: 16 },
     secondaryButton: {
@@ -242,6 +243,7 @@ const createStyles = (theme: LearningTheme) =>
       borderWidth: 1,
       padding: theme.spacing.md,
       minWidth: 100,
+      minHeight: 52,
     },
     secondaryText: { color: theme.colors.text, fontWeight: '700' },
     disabled: { opacity: 0.35 },

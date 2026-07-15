@@ -101,6 +101,7 @@ export function QuizPlayer({
       ) : null}
       <Pressable
         accessibilityRole="button"
+        accessibilityState={{ disabled: !selectedOptionId }}
         disabled={!selectedOptionId}
         onPress={revealed ? next : reveal}
         style={[styles.button, !selectedOptionId && styles.disabled]}
@@ -142,6 +143,7 @@ const createStyles = (theme: LearningTheme) =>
     question: { color: theme.colors.text, fontSize: 24, lineHeight: 32, fontWeight: '800' },
     options: { gap: theme.spacing.sm },
     option: {
+      minHeight: 52,
       padding: theme.spacing.md,
       borderColor: theme.colors.border,
       borderWidth: 1,
@@ -171,7 +173,9 @@ const createStyles = (theme: LearningTheme) =>
     feedbackIncorrect: { color: theme.colors.warning },
     explanationText: { color: theme.colors.text, fontSize: 15, lineHeight: 22 },
     button: {
+      minHeight: 52,
       alignItems: 'center',
+      justifyContent: 'center',
       padding: theme.spacing.md,
       borderRadius: theme.radius.medium,
       backgroundColor: theme.colors.primary,
