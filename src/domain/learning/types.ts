@@ -10,6 +10,7 @@ import type {
   learningEntryContextSchema,
   learningProfileSchema,
   learningStageSchema,
+  lessonBlueprintSchema,
   lessonSeriesSchema,
   learningModuleSchema,
   learningPathSchema,
@@ -46,6 +47,7 @@ export type ContentSource = z.infer<typeof contentSourceSchema>;
 export type ContentVersion = z.infer<typeof contentVersionSchema>;
 export type MicroLesson = z.infer<typeof microLessonSchema>;
 export type LessonSeries = z.infer<typeof lessonSeriesSchema>;
+export type LessonBlueprint = z.infer<typeof lessonBlueprintSchema>;
 export type LearningModule = z.infer<typeof learningModuleSchema>;
 export type LearningPath = z.infer<typeof learningPathSchema>;
 export type Skill = z.infer<typeof skillSchema>;
