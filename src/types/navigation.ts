@@ -2,6 +2,10 @@ import { NavigatorScreenParams } from '@react-navigation/native';
 
 export type RootStackParamList = {
   Home: undefined;
+  LearningOnboarding: undefined;
+  MicroLesson: { lessonId: string };
+  LessonQuiz: { lessonId: string };
+  LegacyCatalog: undefined;
   CourseDetail: { courseId: number };
   Auth: NavigatorScreenParams<AuthStackParamList>;
 };
@@ -14,5 +18,9 @@ export type AuthStackParamList = {
 
 export type MainStackParamList = {
   Home: undefined;
+  LearningOnboarding: undefined;
+  MicroLesson: { lessonId: string };
+  LessonQuiz: { lessonId: string };
+  LegacyCatalog: undefined;
   CourseDetail: { courseId: number };
 };
