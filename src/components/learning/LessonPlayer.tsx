@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   Pressable,
   SafeAreaView,
@@ -22,6 +22,7 @@ import {
   defaultLearningTheme,
   type LearningTheme,
 } from '../../theme/learningTheme';
+import { LEARNING_STAGE_LABELS } from '../../domain/learning/personalization';
 import { LessonBlockRenderer } from './LessonBlockRenderer';
 
 type VisualBlock = Extract<ContentBlock, { kind: 'visual' }>;
@@ -67,9 +68,14 @@ export function LessonPlayer({
   const [stepIndex, setStepIndex] = useState(() =>
     Math.max(0, Math.min(initialStepIndex, blocks.length))
   );
+  const scrollRef = useRef<ScrollView>(null);
   const isTakeaway = stepIndex === blocks.length;
   const totalSteps = blocks.length + 1;
   const progress = (stepIndex + 1) / totalSteps;
+
+  useEffect(() => {
+    scrollRef.current?.scrollTo({ y: 0, animated: false });
+  }, [stepIndex]);
 
   const next = () => {
     if (isTakeaway) {
@@ -108,10 +114,11 @@ export function LessonPlayer({
         </Text>
       </View>
 
-      <ScrollView contentContainerStyle={styles.content}>
+      <ScrollView ref={scrollRef} contentContainerStyle={styles.content}>
         <View style={styles.metaRow}>
-          <Text style={styles.stage}>{lesson.learningStage.toUpperCase()}</Text>
-          <Text style={styles.duration}>{lesson.estimatedMinutes} dk</Text>
+          <Text style={styles.stage}>{language === 'tr' ? 'DERS 1/3' : 'LESSON 1/3'}</Text>
+          <Text style={styles.duration}>{selectLocalizedText(LEARNING_STAGE_LABELS[lesson.learningStage], language)}</Text>
+          <Text style={styles.duration}>{lesson.estimatedMinutes} {language === 'tr' ? 'dk' : 'min'}</Text>
           {entryContext ? (
             <Text style={styles.contextLabel}>{entryContext.sourceModule}</Text>
           ) : null}
