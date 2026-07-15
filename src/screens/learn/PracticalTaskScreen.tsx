@@ -26,8 +26,13 @@ export function PracticalTaskScreen({ route, navigation }: Props) {
         task={lesson.practicalTask}
         language={language}
         presentationMode={presentationMode}
+        completionLabel={route.params.review ? { tr: 'Önizlemeyi kapat', en: 'Close preview' } : undefined}
         onComplete={(passed) => {
           if (!passed) return;
+          if (route.params.review) {
+            navigation.goBack();
+            return;
+          }
           passPracticalTask(lesson, new Date().toISOString());
           navigation.replace('LessonQuiz', { lessonId: lesson.id });
         }}
@@ -40,4 +45,3 @@ const styles = StyleSheet.create({
   safeArea: { flex: 1, justifyContent: 'center', padding: 20, backgroundColor: '#07111F' },
   error: { color: '#F8FAFC' },
 });
-
