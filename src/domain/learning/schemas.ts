@@ -11,6 +11,23 @@ const slugSchema = z
 
 export const learningConceptKeySchema = z.enum(LEARNING_CONCEPT_KEYS);
 
+export const learningStageSchema = z.enum([
+  'foundation',
+  'intermediate',
+  'advanced',
+]);
+
+export const presentationModeSchema = z.enum(['normal', 'pro']);
+
+export const marketScopeSchema = z.enum([
+  'general',
+  'equities',
+  'crypto',
+  'forex',
+  'commodities',
+  'fixed_income',
+]);
+
 export const localizedTextSchema = z
   .object({
     tr: z.string().trim().min(1),
@@ -39,7 +56,7 @@ export const learningEntryContextSchema = z
   .object({
     conceptKey: learningConceptKeySchema,
     sourceModule: finm8SourceModuleSchema,
-    audienceMode: z.enum(['normal', 'pro']),
+    audienceMode: presentationModeSchema,
     language: z.enum(['tr', 'en']),
     symbol: z.string().trim().min(1).max(40).optional(),
     market: z.string().trim().min(1).max(80).optional(),
@@ -202,19 +219,35 @@ export const microLessonSchema = z
   .object({
     id: idSchema,
     slug: slugSchema,
+    seriesId: idSchema,
     conceptKey: learningConceptKeySchema,
     skillId: idSchema,
+    competencyIds: z.array(idSchema).min(1).max(8),
     title: localizedTextSchema,
     learningObjective: localizedTextSchema,
     estimatedMinutes: z.number().int().min(3).max(6),
-    difficulty: z.enum(['starter', 'intermediate', 'advanced']),
+    learningStage: learningStageSchema,
     accessTier: z.enum(['free', 'pro']),
+    marketScopes: z.array(marketScopeSchema).min(1),
+    prerequisiteConceptKeys: z.array(learningConceptKeySchema),
+    relatedConceptKeys: z.array(learningConceptKeySchema),
     contentBlocks: z.array(contentBlockSchema).min(3).max(12),
     practicalTask: practicalTaskSchema,
     quiz: quizSchema,
     takeaway: localizedTextSchema,
     sources: z.array(contentSourceSchema).min(1).max(12),
     contentVersion: contentVersionSchema,
+  })
+  .strict();
+
+export const lessonSeriesSchema = z
+  .object({
+    id: idSchema,
+    conceptKey: learningConceptKeySchema,
+    title: localizedTextSchema,
+    description: localizedTextSchema,
+    lessonIds: z.array(idSchema).min(1),
+    availableStages: z.array(learningStageSchema).min(1),
   })
   .strict();
 
@@ -235,7 +268,19 @@ export const learningPathSchema = z
     slug: slugSchema,
     title: localizedTextSchema,
     description: localizedTextSchema,
-    audience: z.enum(['starter', 'beginner', 'intermediate']),
+    startingStage: learningStageSchema,
+    goals: z
+      .array(
+        z.enum([
+          'financial_literacy',
+          'investing',
+          'trading',
+          'risk_management',
+          'portfolio_management',
+          'data_literacy',
+        ])
+      )
+      .min(1),
     status: z.enum(['draft', 'published', 'archived']),
     moduleIds: z.array(idSchema).min(1),
     estimatedMinutes: z.number().int().positive(),
@@ -248,6 +293,19 @@ export const skillSchema = z
     title: localizedTextSchema,
     description: localizedTextSchema,
     conceptKeys: z.array(learningConceptKeySchema).min(1),
+  })
+  .strict();
+
+export const competencySchema = z
+  .object({
+    id: idSchema,
+    title: localizedTextSchema,
+    description: localizedTextSchema,
+    conceptKey: learningConceptKeySchema,
+    stage: learningStageSchema,
+    evidenceKinds: z
+      .array(z.enum(['quiz', 'practical_task', 'challenge']))
+      .min(1),
   })
   .strict();
 
@@ -295,6 +353,27 @@ export const learningBadgeSchema = z
   })
   .strict();
 
+export const learningProfileSchema = z
+  .object({
+    userId: idSchema,
+    selectedStage: learningStageSchema,
+    goals: z
+      .array(
+        z.enum([
+          'financial_literacy',
+          'investing',
+          'trading',
+          'risk_management',
+          'portfolio_management',
+          'data_literacy',
+        ])
+      )
+      .min(1),
+    preferredMarketScopes: z.array(marketScopeSchema).min(1),
+    placementCompletedAt: z.string().datetime({ offset: true }).optional(),
+  })
+  .strict();
+
 export function parseMicroLesson(input: unknown) {
   return microLessonSchema.parse(input);
 }
@@ -302,4 +381,3 @@ export function parseMicroLesson(input: unknown) {
 export function parseLearningEntryContext(input: unknown) {
   return learningEntryContextSchema.parse(input);
 }
-
