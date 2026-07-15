@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { LearningModuleCard } from '../../components/learning';
+import { LearningModuleCard, LearningPreferencesCard } from '../../components/learning';
 import { MICRO_LESSON_CATALOG } from '../../domain/learning/catalog';
 import { INITIAL_BADGES } from '../../domain/learning/examples/badges';
 import { BEHAVIOR_EVIDENCE_CHALLENGE, CHART_LITERACY_CHALLENGE, MARKET_FOUNDATIONS_CHALLENGE, RISK_MANAGEMENT_CHALLENGE } from '../../domain/learning/examples/wave1/challenges';
@@ -90,6 +90,7 @@ export function LearnHomeScreen() {
         ? 3
         : 4;
   const [expandedModule, setExpandedModule] = useState(activeModuleNumber);
+  const [preferencesExpanded, setPreferencesExpanded] = useState(false);
   useEffect(() => setExpandedModule(activeModuleNumber), [activeModuleNumber]);
   const dueMasteries = Object.values(masteryBySkill).filter(
     (mastery) => mastery.reviewDueAt && new Date(mastery.reviewDueAt) <= new Date()
@@ -154,87 +155,9 @@ export function LearnHomeScreen() {
           </Pressable>
         ) : null}
 
-        {profile.onboardingCompletedAt ? (
-          <Pressable accessibilityRole="button" onPress={() => navigation.navigate('LearningOnboarding')} style={styles.profileCard}>
-            <View style={styles.profileTop}>
-              <View>
-                <Text style={styles.cardEyebrow}>{language === 'tr' ? 'ÖĞRENME PROFİLİN' : 'YOUR LEARNING PROFILE'}</Text>
-                <Text style={styles.profileStage}>{selectLocalizedText(LEARNING_STAGE_LABELS[profile.selectedStage], language)}</Text>
-              </View>
-              <Text style={styles.profileEdit}>{language === 'tr' ? 'Düzenle' : 'Edit'}</Text>
-            </View>
-            <View style={styles.profileGoals}>
-              {profile.goals.slice(0, 3).map((goal) => (
-                <View key={goal} style={styles.profileGoalChip}>
-                  <Text style={styles.profileGoalText}>{selectLocalizedText(LEARNING_GOAL_LABELS[goal], language)}</Text>
-                </View>
-              ))}
-              {profile.goals.length > 3 ? <Text style={styles.moreGoals}>+{profile.goals.length - 3}</Text> : null}
-            </View>
-            <Text style={styles.profileNote}>{language === 'tr' ? 'Temel yol sırası sabit; rehberlik hedeflerine göre uyarlanır.' : 'The foundation path order stays fixed; guidance adapts to your goals.'}</Text>
-          </Pressable>
-        ) : null}
-
-        <View style={styles.modeRow}>
-          <View>
-            <Text style={styles.sectionLabel}>{language === 'tr' ? 'ANLATIM' : 'PRESENTATION'}</Text>
-            <Text style={styles.modeHint}>{language === 'tr' ? 'Eğitim seviyesi değildir' : 'Not your learning level'}</Text>
-          </View>
-          <View style={styles.segmented}>
-            {(['normal', 'pro'] as const).map((mode) => (
-              <Pressable
-                accessibilityRole="button"
-                accessibilityState={{ selected: presentationMode === mode }}
-                key={mode}
-                onPress={() => setPresentationMode(mode)}
-                style={[styles.segment, presentationMode === mode && styles.segmentActive]}
-              >
-                <Text style={[styles.segmentText, presentationMode === mode && styles.segmentTextActive]}>
-                  {mode === 'normal' ? 'Normal' : 'Pro'}
-                </Text>
-              </Pressable>
-            ))}
-          </View>
-        </View>
-
-        <View style={styles.statsRow}>
-          <Stat value={`${totalXp}`} label="XP" />
-          <Stat value={`${streak.currentDays}`} label={language === 'tr' ? 'Gün seri' : 'Day streak'} />
-          <Stat value={`${badgeAwards.length}`} label={language === 'tr' ? 'Badge' : 'Badges'} />
-        </View>
-
-        <View style={styles.skillCard}>
-          <View style={styles.skillTop}>
-            <View>
-              <Text style={styles.sectionLabel}>{language === 'tr' ? 'BECERİ HARİTASI' : 'SKILL MAP'}</Text>
-              <Text style={styles.skillTitle}>{riskChallengeCompleted ? (language === 'tr' ? 'Davranış ve kanıt' : 'Behavior and evidence') : chartChallengeCompleted ? (language === 'tr' ? 'Risk yönetimi' : 'Risk management') : marketChallengeCompleted ? (language === 'tr' ? 'Grafik okuryazarlığı' : 'Chart literacy') : (language === 'tr' ? 'Piyasa temelleri' : 'Market foundations')}</Text>
-            </View>
-            <Text style={styles.skillScore}>{Math.round(activeMastery?.score ?? 0)}%</Text>
-          </View>
-          <View style={styles.skillTrack}>
-            <View style={[styles.skillFill, { width: `${activeMastery?.score ?? 0}%` }]} />
-          </View>
-          <Text style={styles.skillMeta}>
-            {reviewDue > 0
-              ? language === 'tr' ? `${reviewDue} tekrar görevi hazır` : `${reviewDue} review task ready`
-              : language === 'tr' ? 'Yeni kanıtlarla gelişir' : 'Improves with new evidence'}
-          </Text>
-        </View>
-
-        {reviewLesson ? (
-          <Pressable accessibilityRole="button" onPress={() => navigation.navigate('LessonQuiz', { lessonId: reviewLesson.id, spacedReview: true })} style={styles.spacedReviewCard}>
-            <View style={styles.reviewClock}><Text style={styles.reviewClockText}>↻</Text></View>
-            <View style={styles.pathContent}>
-              <Text style={styles.cardEyebrow}>{language === 'tr' ? 'TEKRAR ZAMANI' : 'REVIEW DUE'}</Text>
-              <Text style={styles.pathTitle}>{selectLocalizedText(reviewLesson.title, language)}</Text>
-              <Text style={styles.pathBody}>{language === 'tr' ? 'Kısa bir aktif tekrar bilgiyi kalıcılaştırır.' : 'A short active review helps make learning stick.'}</Text>
-            </View>
-            <Text style={styles.startText}>{language === 'tr' ? 'Başla ›' : 'Start ›'}</Text>
-          </Pressable>
-        ) : null}
-
         <Text style={styles.sectionTitle}>{language === 'tr' ? 'Bugünün görevi' : "Today's mission"}</Text>
         <Pressable
+          accessibilityRole="button"
           style={styles.missionCard}
           onPress={() => mission.kind === 'lesson'
             ? openLesson(mission.lesson.id)
@@ -270,10 +193,58 @@ export function LearnHomeScreen() {
                 ? language === 'tr' ? 'Tekrar et →' : 'Review →'
                 : missionCheckpoint
                   ? language === 'tr' ? 'Devam et →' : 'Continue →'
-                : language === 'tr' ? 'Başla →' : 'Start →'}
+                  : language === 'tr' ? 'Başla →' : 'Start →'}
             </Text>
           </View>
         </Pressable>
+
+        <View style={styles.statsRow}>
+          <Stat value={`${totalXp}`} label="XP" />
+          <Stat value={`${streak.currentDays}`} label={language === 'tr' ? 'Gün seri' : 'Day streak'} />
+          <Stat value={`${badgeAwards.length}`} label={language === 'tr' ? 'Badge' : 'Badges'} />
+        </View>
+
+        <View style={styles.skillCard}>
+          <View style={styles.skillTop}>
+            <View>
+              <Text style={styles.sectionLabel}>{language === 'tr' ? 'BECERİ HARİTASI' : 'SKILL MAP'}</Text>
+              <Text style={styles.skillTitle}>{riskChallengeCompleted ? (language === 'tr' ? 'Davranış ve kanıt' : 'Behavior and evidence') : chartChallengeCompleted ? (language === 'tr' ? 'Risk yönetimi' : 'Risk management') : marketChallengeCompleted ? (language === 'tr' ? 'Grafik okuryazarlığı' : 'Chart literacy') : (language === 'tr' ? 'Piyasa temelleri' : 'Market foundations')}</Text>
+            </View>
+            <Text style={styles.skillScore}>{Math.round(activeMastery?.score ?? 0)}%</Text>
+          </View>
+          <View style={styles.skillTrack}>
+            <View style={[styles.skillFill, { width: `${activeMastery?.score ?? 0}%` }]} />
+          </View>
+          <Text style={styles.skillMeta}>
+            {reviewDue > 0
+              ? language === 'tr' ? `${reviewDue} tekrar görevi hazır` : `${reviewDue} review task ready`
+              : language === 'tr' ? 'Yeni kanıtlarla gelişir' : 'Improves with new evidence'}
+          </Text>
+        </View>
+
+        {profile.onboardingCompletedAt ? (
+          <LearningPreferencesCard
+            profile={profile}
+            presentationMode={presentationMode}
+            language={language}
+            expanded={preferencesExpanded}
+            onToggle={() => setPreferencesExpanded((current) => !current)}
+            onEditProfile={() => navigation.navigate('LearningOnboarding')}
+            onModeChange={setPresentationMode}
+          />
+        ) : null}
+
+        {reviewLesson ? (
+          <Pressable accessibilityRole="button" onPress={() => navigation.navigate('LessonQuiz', { lessonId: reviewLesson.id, spacedReview: true })} style={styles.spacedReviewCard}>
+            <View style={styles.reviewClock}><Text style={styles.reviewClockText}>↻</Text></View>
+            <View style={styles.pathContent}>
+              <Text style={styles.cardEyebrow}>{language === 'tr' ? 'TEKRAR ZAMANI' : 'REVIEW DUE'}</Text>
+              <Text style={styles.pathTitle}>{selectLocalizedText(reviewLesson.title, language)}</Text>
+              <Text style={styles.pathBody}>{language === 'tr' ? 'Kısa bir aktif tekrar bilgiyi kalıcılaştırır.' : 'A short active review helps make learning stick.'}</Text>
+            </View>
+            <Text style={styles.startText}>{language === 'tr' ? 'Başla ›' : 'Start ›'}</Text>
+          </Pressable>
+        ) : null}
 
         <Text style={styles.sectionTitle}>{language === 'tr' ? 'Öğrenme yolları' : 'Learning paths'}</Text>
         <View style={styles.pathCard}>
@@ -410,26 +381,10 @@ const styles = StyleSheet.create({
   levelLabel: { color: '#9FB0C3', fontSize: 9, fontWeight: '800' },
   levelValue: { color: '#2DD4BF', fontSize: 24, fontWeight: '900' },
   onboardingCard: { backgroundColor: '#123B42', padding: 20, borderRadius: 20, borderWidth: 1, borderColor: '#2DD4BF', gap: 7 },
-  profileCard: { padding: 18, borderRadius: 18, backgroundColor: '#0C1928', borderWidth: 1, borderColor: '#1F3449', gap: 12 },
-  profileTop: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12 },
-  profileStage: { color: '#F8FAFC', fontSize: 17, fontWeight: '900', marginTop: 4 },
-  profileEdit: { color: '#2DD4BF', fontSize: 12, fontWeight: '900' },
-  profileGoals: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: 7 },
-  profileGoalChip: { paddingVertical: 7, paddingHorizontal: 10, borderRadius: 99, backgroundColor: '#172F46' },
-  profileGoalText: { color: '#B8D6D5', fontSize: 11, fontWeight: '700' },
-  moreGoals: { color: '#8094A8', fontSize: 11, fontWeight: '800' },
-  profileNote: { color: '#8094A8', fontSize: 12, lineHeight: 17 },
   cardEyebrow: { color: '#5EEAD4', fontSize: 11, fontWeight: '900' },
   cardTitle: { color: '#F8FAFC', fontSize: 21, fontWeight: '800' },
   cardBody: { color: '#B8D6D5', fontSize: 14, lineHeight: 20 },
-  modeRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 12, justifyContent: 'space-between', alignItems: 'center' },
   sectionLabel: { color: '#F8FAFC', fontSize: 12, fontWeight: '800' },
-  modeHint: { color: '#6F8499', fontSize: 11, marginTop: 2 },
-  segmented: { flexDirection: 'row', backgroundColor: '#102033', padding: 4, borderRadius: 12 },
-  segment: { minHeight: 44, justifyContent: 'center', paddingVertical: 8, paddingHorizontal: 14, borderRadius: 9 },
-  segmentActive: { backgroundColor: '#2DD4BF' },
-  segmentText: { color: '#9FB0C3', fontWeight: '700', fontSize: 13 },
-  segmentTextActive: { color: '#042F2E' },
   statsRow: { flexDirection: 'row', gap: 10 },
   stat: { flex: 1, backgroundColor: '#102033', borderRadius: 16, padding: 14, borderWidth: 1, borderColor: '#1F3449' },
   statValue: { color: '#F8FAFC', fontSize: 22, fontWeight: '900' },
