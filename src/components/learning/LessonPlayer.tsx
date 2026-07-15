@@ -15,6 +15,7 @@ import type {
   ContentBlock,
   LearningEntryContext,
   MicroLesson,
+  LocalizedText,
   PresentationMode,
 } from '../../domain/learning/types';
 import {
@@ -34,6 +35,7 @@ export interface LessonPlayerProps {
   renderVisual?: (block: VisualBlock) => React.ReactNode;
   onExit?: () => void;
   onStartAssessment: (lesson: MicroLesson) => void;
+  assessmentLabel?: LocalizedText;
 }
 
 export function LessonPlayer({
@@ -45,6 +47,7 @@ export function LessonPlayer({
   renderVisual,
   onExit,
   onStartAssessment,
+  assessmentLabel,
 }: LessonPlayerProps) {
   const [stepIndex, setStepIndex] = useState(0);
   const styles = createStyles(theme);
@@ -137,9 +140,11 @@ export function LessonPlayer({
         <Pressable accessibilityRole="button" onPress={next} style={styles.primaryButton}>
           <Text style={styles.primaryText}>
             {isTakeaway
-              ? language === 'tr'
-                ? 'Göreve geç'
-                : 'Start assessment'
+              ? assessmentLabel
+                ? selectLocalizedText(assessmentLabel, language)
+                : language === 'tr'
+                  ? 'Göreve geç'
+                  : 'Start assessment'
               : language === 'tr'
                 ? 'Devam'
                 : 'Continue'}
@@ -225,4 +230,3 @@ const createStyles = (theme: LearningTheme) =>
     secondaryText: { color: theme.colors.text, fontWeight: '700' },
     disabled: { opacity: 0.35 },
   });
-
