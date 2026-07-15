@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { QuizPlayer } from '../../components/learning';
+import { LearningFlowHeader, QuizPlayer } from '../../components/learning';
 import { getMicroLessonById } from '../../domain/learning/catalog';
 import { INITIAL_BADGES } from '../../domain/learning/examples/badges';
 import { selectLocalizedText, type LearningLanguage } from '../../domain/learning/presentation';
@@ -70,6 +70,11 @@ export function LessonQuizScreen({ route, navigation }: Props) {
 
   return (
     <SafeAreaView style={styles.safeArea}>
+      <LearningFlowHeader
+        language={language}
+        stage={3}
+        onExit={() => route.params.review ? navigation.goBack() : navigation.popToTop()}
+      />
       <ScrollView contentContainerStyle={styles.quizWrap} keyboardShouldPersistTaps="handled">
         <QuizPlayer
           quiz={lesson.quiz}

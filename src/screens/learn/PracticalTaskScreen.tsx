@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, Text } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { PracticalTaskPlayer } from '../../components/learning';
+import { LearningFlowHeader, PracticalTaskPlayer } from '../../components/learning';
 import { getMicroLessonById } from '../../domain/learning/catalog';
 import type { LearningLanguage } from '../../domain/learning/presentation';
 import { useLanguageStore } from '../../store/useLanguageStore';
@@ -27,6 +27,11 @@ export function PracticalTaskScreen({ route, navigation }: Props) {
 
   return (
     <SafeAreaView style={styles.safeArea}>
+      <LearningFlowHeader
+        language={language}
+        stage={2}
+        onExit={() => route.params.review ? navigation.goBack() : navigation.popToTop()}
+      />
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
         <PracticalTaskPlayer
           task={lesson.practicalTask}

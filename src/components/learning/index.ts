@@ -3,5 +3,6 @@ export * from './LessonPlayer';
 export * from './LearningVisual';
 export * from './LearningModuleCard';
 export * from './LearningPreferencesCard';
+export * from './LearningFlowHeader';
 export * from './PracticalTaskPlayer';
 export * from './QuizPlayer';
