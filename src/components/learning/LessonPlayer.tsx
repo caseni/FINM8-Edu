@@ -36,6 +36,8 @@ export interface LessonPlayerProps {
   onExit?: () => void;
   onStartAssessment: (lesson: MicroLesson) => void;
   assessmentLabel?: LocalizedText;
+  initialStepIndex?: number;
+  onStepChange?: (stepIndex: number) => void;
 }
 
 export function LessonPlayer({
@@ -48,8 +50,9 @@ export function LessonPlayer({
   onExit,
   onStartAssessment,
   assessmentLabel,
+  initialStepIndex = 0,
+  onStepChange,
 }: LessonPlayerProps) {
-  const [stepIndex, setStepIndex] = useState(0);
   const styles = createStyles(theme);
   const blocks = useMemo(
     () =>
@@ -61,6 +64,9 @@ export function LessonPlayer({
         .sort((a, b) => a.order - b.order),
     [lesson.contentBlocks, presentationMode]
   );
+  const [stepIndex, setStepIndex] = useState(() =>
+    Math.max(0, Math.min(initialStepIndex, blocks.length))
+  );
   const isTakeaway = stepIndex === blocks.length;
   const totalSteps = blocks.length + 1;
   const progress = (stepIndex + 1) / totalSteps;
@@ -70,8 +76,18 @@ export function LessonPlayer({
       onStartAssessment(lesson);
       return;
     }
-    setStepIndex((current) => Math.min(current + 1, blocks.length));
+    setStepIndex((current) => {
+      const nextStep = Math.min(current + 1, blocks.length);
+      onStepChange?.(nextStep);
+      return nextStep;
+    });
   };
+
+  const back = () => setStepIndex((current) => {
+    const nextStep = Math.max(0, current - 1);
+    onStepChange?.(nextStep);
+    return nextStep;
+  });
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -130,7 +146,7 @@ export function LessonPlayer({
         <Pressable
           accessibilityRole="button"
           disabled={stepIndex === 0}
-          onPress={() => setStepIndex((current) => Math.max(0, current - 1))}
+          onPress={back}
           style={[styles.secondaryButton, stepIndex === 0 && styles.disabled]}
         >
           <Text style={styles.secondaryText}>

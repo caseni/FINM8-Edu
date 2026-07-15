@@ -6,6 +6,7 @@ import { getMicroLessonById } from '../../domain/learning/catalog';
 import type { LearningLanguage } from '../../domain/learning/presentation';
 import { useLanguageStore } from '../../store/useLanguageStore';
 import { useLearningUiStore } from '../../store/useLearningUiStore';
+import { useLearningProgressStore } from '../../store/useLearningProgressStore';
 import type { RootStackParamList } from '../../types/navigation';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'MicroLesson'>;
@@ -15,6 +16,8 @@ export function MicroLessonScreen({ route, navigation }: Props) {
   const rawLanguage = useLanguageStore((state) => state.language);
   const language: LearningLanguage = rawLanguage === 'en' ? 'en' : 'tr';
   const presentationMode = useLearningUiStore((state) => state.presentationMode);
+  const checkpoint = useLearningProgressStore((state) => state.lessonCheckpoints[route.params.lessonId]);
+  const saveLessonCheckpoint = useLearningProgressStore((state) => state.saveLessonCheckpoint);
 
   if (!lesson) return <View><Text>Ders bulunamadı.</Text></View>;
 
@@ -23,6 +26,10 @@ export function MicroLessonScreen({ route, navigation }: Props) {
       lesson={lesson}
       language={language}
       presentationMode={presentationMode}
+      initialStepIndex={route.params.review ? 0 : checkpoint?.stepIndex ?? 0}
+      onStepChange={(stepIndex) => {
+        if (!route.params.review) saveLessonCheckpoint(lesson.id, 'lesson', stepIndex);
+      }}
       assessmentLabel={route.params.review ? { tr: 'Önizlemeyi kapat', en: 'Close preview' } : undefined}
       onExit={() => navigation.goBack()}
       onStartAssessment={() => {
@@ -30,6 +37,7 @@ export function MicroLessonScreen({ route, navigation }: Props) {
           navigation.goBack();
           return;
         }
+        saveLessonCheckpoint(lesson.id, 'task', checkpoint?.stepIndex ?? 0);
         navigation.replace('PracticalTask', { lessonId: lesson.id });
       }}
     />

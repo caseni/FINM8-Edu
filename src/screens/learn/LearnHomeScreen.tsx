@@ -30,6 +30,7 @@ export function LearnHomeScreen() {
   const streak = useLearningProgressStore((state) => state.streak);
   const badgeAwards = useLearningProgressStore((state) => state.badgeAwards);
   const masteryBySkill = useLearningProgressStore((state) => state.masteryBySkill);
+  const lessonCheckpoints = useLearningProgressStore((state) => state.lessonCheckpoints);
   const presentationMode = useLearningUiStore((state) => state.presentationMode);
   const setPresentationMode = useLearningUiStore((state) => state.setPresentationMode);
   const foundationNextLesson = WAVE1_MARKET_FOUNDATION_LESSONS.find(
@@ -90,6 +91,20 @@ export function LearnHomeScreen() {
   const reviewDue = Object.values(masteryBySkill).filter(
     (mastery) => mastery.reviewDueAt && new Date(mastery.reviewDueAt) <= new Date()
   ).length;
+  const missionCheckpoint = mission.kind === 'lesson' ? lessonCheckpoints[mission.lesson.id] : undefined;
+
+  const openLesson = (lessonId: string) => {
+    const checkpoint = lessonCheckpoints[lessonId];
+    if (checkpoint?.stage === 'task') {
+      navigation.navigate('PracticalTask', { lessonId });
+      return;
+    }
+    if (checkpoint?.stage === 'quiz') {
+      navigation.navigate('LessonQuiz', { lessonId });
+      return;
+    }
+    navigation.navigate('MicroLesson', { lessonId });
+  };
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -172,12 +187,20 @@ export function LearnHomeScreen() {
         <Pressable
           style={styles.missionCard}
           onPress={() => mission.kind === 'lesson'
-            ? navigation.navigate('MicroLesson', { lessonId: mission.lesson.id })
+            ? openLesson(mission.lesson.id)
             : navigation.navigate('LearningChallenge', { challengeId: mission.challenge.id })}
         >
           <View style={styles.missionTop}>
-            <Text style={styles.missionTag}>M8 LEARN</Text>
-            <Text style={styles.missionTime}>{mission.kind === 'lesson' ? `${mission.lesson.estimatedMinutes} dk` : 'Final'}</Text>
+            <Text style={styles.missionTag}>{missionCheckpoint ? (language === 'tr' ? 'KALDIĞIN YER' : 'RESUME') : 'M8 LEARN'}</Text>
+            <Text style={styles.missionTime}>
+              {missionCheckpoint?.stage === 'task'
+                ? language === 'tr' ? 'Görev' : 'Task'
+                : missionCheckpoint?.stage === 'quiz'
+                  ? 'Quiz'
+                  : mission.kind === 'lesson'
+                    ? `${mission.lesson.estimatedMinutes} ${language === 'tr' ? 'dk' : 'min'}`
+                    : 'Final'}
+            </Text>
           </View>
           <Text style={styles.missionTitle}>{selectLocalizedText(mission.kind === 'lesson' ? mission.lesson.title : mission.challenge.title, language)}</Text>
           <Text style={styles.missionBody}>
@@ -188,6 +211,8 @@ export function LearnHomeScreen() {
             <Text style={styles.startText}>
               {lessonCompleted
                 ? language === 'tr' ? 'Tekrar et →' : 'Review →'
+                : missionCheckpoint
+                  ? language === 'tr' ? 'Devam et →' : 'Continue →'
                 : language === 'tr' ? 'Başla →' : 'Start →'}
             </Text>
           </View>
@@ -267,7 +292,7 @@ export function LearnHomeScreen() {
             activeLessonId={mission.kind === 'lesson' ? mission.lesson.id : undefined}
             language={language}
             onToggle={() => setExpandedModule((current) => current === module.number ? 0 : module.number)}
-            onOpenLesson={(lessonId) => navigation.navigate('MicroLesson', { lessonId })}
+            onOpenLesson={openLesson}
             onOpenChallenge={(challengeId) => navigation.navigate('LearningChallenge', { challengeId })}
           />
         ))}
