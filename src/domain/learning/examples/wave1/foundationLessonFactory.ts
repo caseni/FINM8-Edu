@@ -1,6 +1,6 @@
 import type { LearningConceptKey } from '../../concepts';
 import { microLessonSchema } from '../../schemas';
-import type { ContentSource, MicroLesson } from '../../types';
+import type { ContentSource, LearningStage, MicroLesson, PracticalTask } from '../../types';
 
 interface ChoiceSpec {
   id: string;
@@ -23,6 +23,7 @@ export interface FoundationLessonSpec {
   title: string;
   objective: string;
   minutes: number;
+  learningStage?: LearningStage;
   hook: string;
   explanation: string;
   proExplanation?: string;
@@ -32,6 +33,8 @@ export interface FoundationLessonSpec {
   relatedConceptKeys: readonly LearningConceptKey[];
   visualAlt?: string;
   taskPrompt: string;
+  taskKind?: PracticalTask['kind'];
+  taskAssetRef?: string;
   taskChoices: readonly ChoiceSpec[];
   taskCorrectIds: readonly string[];
   questions: readonly [QuestionSpec, QuestionSpec, QuestionSpec];
@@ -100,7 +103,7 @@ export function createFoundationLesson(spec: FoundationLessonSpec): MicroLesson 
     title: { tr: spec.title },
     learningObjective: { tr: spec.objective },
     estimatedMinutes: spec.minutes,
-    learningStage: 'foundation',
+    learningStage: spec.learningStage ?? 'foundation',
     accessTier: 'free',
     marketScopes: ['general'],
     prerequisiteConceptKeys: spec.prerequisiteConceptKeys,
@@ -108,9 +111,10 @@ export function createFoundationLesson(spec: FoundationLessonSpec): MicroLesson 
     contentBlocks,
     practicalTask: {
       id: `task.${spec.slug}.001`,
-      kind: 'scenario_choice',
+      kind: spec.taskKind ?? 'scenario_choice',
       conceptKey: spec.conceptKey,
       prompt: { normal: { tr: spec.taskPrompt } },
+      ...(spec.taskAssetRef ? { assetRef: spec.taskAssetRef } : {}),
       choices: spec.taskChoices.map((choice) => ({
         id: choice.id,
         label: { tr: choice.label },
@@ -147,4 +151,3 @@ export function createFoundationLesson(spec: FoundationLessonSpec): MicroLesson 
     },
   });
 }
-
