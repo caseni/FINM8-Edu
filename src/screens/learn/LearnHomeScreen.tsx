@@ -3,9 +3,10 @@ import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'rea
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { INITIAL_BADGES } from '../../domain/learning/examples/badges';
-import { CHART_LITERACY_CHALLENGE, MARKET_FOUNDATIONS_CHALLENGE } from '../../domain/learning/examples/wave1/challenges';
+import { CHART_LITERACY_CHALLENGE, MARKET_FOUNDATIONS_CHALLENGE, RISK_MANAGEMENT_CHALLENGE } from '../../domain/learning/examples/wave1/challenges';
 import { WAVE1_CHART_LITERACY_LESSONS } from '../../domain/learning/examples/wave1/chartLiteracyLessons';
 import { WAVE1_MARKET_FOUNDATION_LESSONS } from '../../domain/learning/examples/wave1/marketFoundationsLessons';
+import { WAVE1_RISK_MANAGEMENT_LESSONS } from '../../domain/learning/examples/wave1/riskManagementLessons';
 import { WAVE1_CONTENT_SUMMARY } from '../../domain/learning/examples/wave1MarketLiteracyPath';
 import { selectLocalizedText, type LearningLanguage } from '../../domain/learning/presentation';
 import { useLanguageStore } from '../../store/useLanguageStore';
@@ -37,6 +38,10 @@ export function LearnHomeScreen() {
     ? WAVE1_CHART_LITERACY_LESSONS.find((lesson) => !completedLessonIds.includes(lesson.id))
     : undefined;
   const chartChallengeCompleted = completedChallengeIds.includes(CHART_LITERACY_CHALLENGE.id);
+  const riskNextLesson = chartChallengeCompleted
+    ? WAVE1_RISK_MANAGEMENT_LESSONS.find((lesson) => !completedLessonIds.includes(lesson.id))
+    : undefined;
+  const riskChallengeCompleted = completedChallengeIds.includes(RISK_MANAGEMENT_CHALLENGE.id);
   const mission = foundationNextLesson
     ? { kind: 'lesson' as const, lesson: foundationNextLesson }
     : !marketChallengeCompleted
@@ -45,9 +50,14 @@ export function LearnHomeScreen() {
         ? { kind: 'lesson' as const, lesson: chartNextLesson }
         : !chartChallengeCompleted
           ? { kind: 'challenge' as const, challenge: CHART_LITERACY_CHALLENGE }
-          : { kind: 'lesson' as const, lesson: WAVE1_MARKET_FOUNDATION_LESSONS[0] };
+          : riskNextLesson
+            ? { kind: 'lesson' as const, lesson: riskNextLesson }
+            : !riskChallengeCompleted
+              ? { kind: 'challenge' as const, challenge: RISK_MANAGEMENT_CHALLENGE }
+              : { kind: 'lesson' as const, lesson: WAVE1_MARKET_FOUNDATION_LESSONS[0] };
   const lessonCompleted = mission.kind === 'lesson' && completedLessonIds.includes(mission.lesson.id);
   const activeMastery =
+    (chartChallengeCompleted ? masteryBySkill['skill.risk-management'] : undefined) ??
     (marketChallengeCompleted ? masteryBySkill['skill.chart-literacy'] : undefined) ??
     masteryBySkill['skill.market-foundations'] ??
     masteryBySkill['skill.market-structure'];
@@ -65,6 +75,12 @@ export function LearnHomeScreen() {
   const chartLiteracyUnlocked = marketChallengeCompleted;
   const chartChallengeUnlocked =
     chartLiteracyCompletedCount === WAVE1_CHART_LITERACY_LESSONS.length;
+  const riskManagementCompletedCount = WAVE1_RISK_MANAGEMENT_LESSONS.filter(
+    (lesson) => completedLessonIds.includes(lesson.id)
+  ).length;
+  const riskManagementUnlocked = chartChallengeCompleted;
+  const riskChallengeUnlocked =
+    riskManagementCompletedCount === WAVE1_RISK_MANAGEMENT_LESSONS.length;
   const reviewDue = Object.values(masteryBySkill).filter(
     (mastery) => mastery.reviewDueAt && new Date(mastery.reviewDueAt) <= new Date()
   ).length;
@@ -132,7 +148,7 @@ export function LearnHomeScreen() {
           <View style={styles.skillTop}>
             <View>
               <Text style={styles.sectionLabel}>{language === 'tr' ? 'BECERİ HARİTASI' : 'SKILL MAP'}</Text>
-              <Text style={styles.skillTitle}>{marketChallengeCompleted ? (language === 'tr' ? 'Grafik okuryazarlığı' : 'Chart literacy') : (language === 'tr' ? 'Piyasa temelleri' : 'Market foundations')}</Text>
+              <Text style={styles.skillTitle}>{chartChallengeCompleted ? (language === 'tr' ? 'Risk yönetimi' : 'Risk management') : marketChallengeCompleted ? (language === 'tr' ? 'Grafik okuryazarlığı' : 'Chart literacy') : (language === 'tr' ? 'Piyasa temelleri' : 'Market foundations')}</Text>
             </View>
             <Text style={styles.skillScore}>{Math.round(activeMastery?.score ?? 0)}%</Text>
           </View>
@@ -268,6 +284,27 @@ export function LearnHomeScreen() {
           </Pressable>
         </View>
 
+        <View style={[styles.moduleCard, !riskManagementUnlocked && styles.moduleLocked]}>
+          <Text style={styles.sectionLabel}>{language === 'tr' ? 'MODÜL 3' : 'MODULE 3'}</Text>
+          <Text style={styles.pathTitle}>{language === 'tr' ? 'Risk Yönetimi' : 'Risk Management'}</Text>
+          {!riskManagementUnlocked ? <Text style={styles.lockedText}>{language === 'tr' ? 'Grafik Dedektifi Challenge tamamlandığında açılır.' : 'Unlocks after the Chart Detective Challenge.'}</Text> : null}
+          {WAVE1_RISK_MANAGEMENT_LESSONS.map((lesson, index) => {
+            const completed = completedLessonIds.includes(lesson.id);
+            return (
+              <Pressable disabled={!riskManagementUnlocked} key={lesson.id} onPress={() => navigation.navigate('MicroLesson', { lessonId: lesson.id })} style={styles.lessonRow}>
+                <View style={[styles.lessonNumber, completed && styles.lessonNumberDone]}><Text style={styles.lessonNumberText}>{completed ? '✓' : index + 1}</Text></View>
+                <View style={styles.pathContent}><Text style={styles.lessonTitle}>{selectLocalizedText(lesson.title, language)}</Text><Text style={styles.skillMeta}>{lesson.estimatedMinutes} dk • +90 XP</Text></View>
+                <Text style={styles.archiveLink}>{riskManagementUnlocked ? '→' : '🔒'}</Text>
+              </Pressable>
+            );
+          })}
+          <Pressable disabled={!riskChallengeUnlocked} onPress={() => navigation.navigate('LearningChallenge', { challengeId: RISK_MANAGEMENT_CHALLENGE.id })} style={[styles.challengeCard, !riskChallengeUnlocked && styles.challengeCardLocked]}>
+            <View style={styles.challengeIcon}><Text style={styles.challengeIconText}>{riskChallengeUnlocked ? '◆' : '◇'}</Text></View>
+            <View style={styles.pathContent}><Text style={styles.challengeTitle}>{language === 'tr' ? 'Risk Koruyucusu Challenge' : 'Risk Guardian Challenge'}</Text><Text style={styles.skillMeta}>{riskChallengeUnlocked ? (language === 'tr' ? '2 uygulama + 6 soru • +100 XP' : '2 tasks + 6 questions • +100 XP') : (language === 'tr' ? `${riskManagementCompletedCount}/6 ders tamamlandı` : `${riskManagementCompletedCount}/6 lessons completed`)}</Text></View>
+            <Text style={styles.archiveLink}>{riskChallengeUnlocked ? '→' : '🔒'}</Text>
+          </Pressable>
+        </View>
+
         <Text style={styles.sectionTitle}>{language === 'tr' ? 'Badge koleksiyonu' : 'Badge collection'}</Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.badgeRow}>
           {INITIAL_BADGES.map((badge) => {
@@ -377,4 +414,5 @@ const styles = StyleSheet.create({
 const WAVE1_LESSON_IDS = new Set([
   ...WAVE1_MARKET_FOUNDATION_LESSONS.map((lesson) => lesson.id),
   ...WAVE1_CHART_LITERACY_LESSONS.map((lesson) => lesson.id),
+  ...WAVE1_RISK_MANAGEMENT_LESSONS.map((lesson) => lesson.id),
 ]);

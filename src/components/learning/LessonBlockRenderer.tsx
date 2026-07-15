@@ -13,6 +13,7 @@ import {
   defaultLearningTheme,
   type LearningTheme,
 } from '../../theme/learningTheme';
+import { LearningVisual } from './LearningVisual';
 
 type VisualBlock = Extract<ContentBlock, { kind: 'visual' }>;
 
@@ -59,11 +60,12 @@ export function LessonBlockRenderer({
         {renderVisual ? (
           renderVisual(block)
         ) : (
-          <View style={styles.visualPlaceholder}>
-            <Text style={styles.visualLabel}>
-              {selectLocalizedText(block.alt, language)}
-            </Text>
-          </View>
+          <LearningVisual
+            assetRef={block.assetRef}
+            alt={selectLocalizedText(block.alt, language)}
+            language={language}
+            theme={theme}
+          />
         )}
         {block.caption ? (
           <Text style={styles.caption}>
@@ -139,20 +141,4 @@ const createStyles = (theme: LearningTheme) =>
       borderRadius: theme.radius.medium,
       padding: theme.spacing.md,
     },
-    visualPlaceholder: {
-      minHeight: 220,
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundColor: theme.colors.surfaceMuted,
-      borderColor: theme.colors.border,
-      borderWidth: 1,
-      borderRadius: theme.radius.large,
-      padding: theme.spacing.lg,
-    },
-    visualLabel: {
-      color: theme.colors.textMuted,
-      textAlign: 'center',
-      fontSize: 16,
-    },
   });
-

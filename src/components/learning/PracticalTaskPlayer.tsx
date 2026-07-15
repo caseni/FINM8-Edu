@@ -7,6 +7,7 @@ import {
 } from '../../domain/learning/presentation';
 import type { LocalizedText, PracticalTask, PresentationMode } from '../../domain/learning/types';
 import { defaultLearningTheme, type LearningTheme } from '../../theme/learningTheme';
+import { LearningVisual } from './LearningVisual';
 
 export interface PracticalTaskPlayerProps {
   task: PracticalTask;
@@ -72,16 +73,16 @@ export function PracticalTaskPlayer({
         {selectAudienceCopy(task.prompt, presentationMode, language)}
       </Text>
       {task.kind === 'chart_identification' ? (
-        <View style={styles.chart}>
-          <View style={styles.levelLine} />
-          <View style={[styles.candle, styles.candleOne]} />
-          <View style={[styles.candle, styles.candleTwo]} />
-          <View style={[styles.candle, styles.candleThree]} />
-          <View style={[styles.candle, styles.candleFour]} />
-          <Text style={styles.chartLabel}>
-            {language === 'tr' ? 'Eğitim amaçlı şematik grafik' : 'Schematic training chart'}
-          </Text>
-        </View>
+        task.assetRef ? (
+          <LearningVisual
+            assetRef={task.assetRef}
+            alt={language === 'tr' ? 'Eğitim amaçlı şematik görev grafiği' : 'Schematic training task chart'}
+            language={language}
+            theme={theme}
+          />
+        ) : (
+          <View style={styles.chart}><Text style={styles.chartLabel}>{language === 'tr' ? 'Eğitim amaçlı şematik grafik' : 'Schematic training chart'}</Text></View>
+        )
       ) : (
         <View style={styles.scenarioPanel}>
           <Text style={styles.scenarioMark}>?</Text>
@@ -150,12 +151,6 @@ const createStyles = (theme: LearningTheme) =>
     eyebrow: { color: theme.colors.primary, fontSize: 12, fontWeight: '900' },
     prompt: { color: theme.colors.text, fontSize: 23, lineHeight: 31, fontWeight: '800' },
     chart: { height: 190, overflow: 'hidden', backgroundColor: theme.colors.background, borderRadius: theme.radius.medium, borderWidth: 1, borderColor: theme.colors.border },
-    levelLine: { position: 'absolute', left: 20, right: 20, top: 62, height: 2, backgroundColor: theme.colors.warning },
-    candle: { position: 'absolute', width: 18, borderRadius: 3, backgroundColor: theme.colors.primary },
-    candleOne: { left: '16%', bottom: 30, height: 52 },
-    candleTwo: { left: '36%', bottom: 52, height: 76 },
-    candleThree: { left: '57%', bottom: 44, height: 64 },
-    candleFour: { left: '77%', bottom: 70, height: 92 },
     chartLabel: { position: 'absolute', left: 12, bottom: 8, color: theme.colors.textMuted, fontSize: 10 },
     scenarioPanel: { minHeight: 120, flexDirection: 'row', alignItems: 'center', gap: theme.spacing.md, padding: theme.spacing.lg, backgroundColor: theme.colors.background, borderRadius: theme.radius.medium, borderWidth: 1, borderColor: theme.colors.border },
     scenarioMark: { color: theme.colors.primary, fontSize: 38, fontWeight: '900' },
