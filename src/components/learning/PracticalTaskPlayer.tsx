@@ -132,6 +132,8 @@ export function PracticalTaskPlayer({
         </Text>
       ) : null}
       <Pressable
+        accessibilityRole="button"
+        accessibilityState={{ disabled: selected.length === 0 }}
         disabled={selected.length === 0}
         onPress={action}
         style={[styles.button, selected.length === 0 && styles.disabled]}
@@ -162,7 +164,7 @@ const createStyles = (theme: LearningTheme) =>
     scenarioText: { flex: 1, color: theme.colors.textMuted, fontSize: 15, lineHeight: 22 },
     helper: { color: theme.colors.textMuted, fontSize: 13 },
     choices: { gap: theme.spacing.sm },
-    choice: { padding: theme.spacing.md, borderRadius: theme.radius.medium, borderWidth: 1, borderColor: theme.colors.border, backgroundColor: theme.colors.surfaceMuted },
+    choice: { minHeight: 52, padding: theme.spacing.md, borderRadius: theme.radius.medium, borderWidth: 1, borderColor: theme.colors.border, backgroundColor: theme.colors.surfaceMuted },
     choiceSelected: { borderColor: theme.colors.primary, borderWidth: 2 },
     choiceCorrect: { borderColor: theme.colors.success, borderWidth: 2 },
     choiceWrong: { borderColor: theme.colors.risk, borderWidth: 2 },
@@ -174,7 +176,7 @@ const createStyles = (theme: LearningTheme) =>
     feedback: { fontSize: 14, lineHeight: 20, fontWeight: '700' },
     feedbackPassed: { color: theme.colors.success },
     feedbackRetry: { color: theme.colors.warning },
-    button: { alignItems: 'center', padding: theme.spacing.md, borderRadius: theme.radius.medium, backgroundColor: theme.colors.primary },
+    button: { minHeight: 52, alignItems: 'center', justifyContent: 'center', padding: theme.spacing.md, borderRadius: theme.radius.medium, backgroundColor: theme.colors.primary },
     buttonText: { color: theme.colors.primaryText, fontSize: 16, fontWeight: '900' },
     disabled: { opacity: 0.35 },
   });
