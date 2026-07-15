@@ -103,6 +103,8 @@ export function PracticalTaskPlayer({
           const isWrong = checked && isSelected && !isExpected;
           return (
             <Pressable
+              accessibilityRole="button"
+              accessibilityState={{ disabled: checked, selected: isSelected }}
               key={choice.id}
               onPress={() => toggle(choice.id)}
               style={[
@@ -112,9 +114,12 @@ export function PracticalTaskPlayer({
                 isWrong && styles.choiceWrong,
               ]}
             >
-              <Text style={styles.choiceText}>
-                {selectLocalizedText(choice.label, language)}
-              </Text>
+              <View style={styles.choiceContent}>
+                <Text style={[styles.choiceMark, isExpected && styles.choiceMarkCorrect, isWrong && styles.choiceMarkWrong]}>
+                  {isExpected ? '✓' : isWrong ? '×' : isSelected ? '●' : '○'}
+                </Text>
+                <Text style={styles.choiceText}>{selectLocalizedText(choice.label, language)}</Text>
+              </View>
             </Pressable>
           );
         })}
@@ -161,7 +166,11 @@ const createStyles = (theme: LearningTheme) =>
     choiceSelected: { borderColor: theme.colors.primary, borderWidth: 2 },
     choiceCorrect: { borderColor: theme.colors.success, borderWidth: 2 },
     choiceWrong: { borderColor: theme.colors.risk, borderWidth: 2 },
-    choiceText: { color: theme.colors.text, fontSize: 15, fontWeight: '700' },
+    choiceContent: { flexDirection: 'row', alignItems: 'flex-start', gap: theme.spacing.sm },
+    choiceMark: { width: 20, color: theme.colors.textMuted, fontSize: 15, lineHeight: 21, fontWeight: '900' },
+    choiceMarkCorrect: { color: theme.colors.success },
+    choiceMarkWrong: { color: theme.colors.risk },
+    choiceText: { flex: 1, color: theme.colors.text, fontSize: 15, lineHeight: 21, fontWeight: '700' },
     feedback: { fontSize: 14, lineHeight: 20, fontWeight: '700' },
     feedbackPassed: { color: theme.colors.success },
     feedbackRetry: { color: theme.colors.warning },

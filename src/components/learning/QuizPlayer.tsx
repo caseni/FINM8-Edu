@@ -24,6 +24,7 @@ export function QuizPlayer({
   const [submissions, setSubmissions] = useState<QuizSubmission[]>([]);
   const styles = useMemo(() => createStyles(theme), [theme]);
   const question = quiz.questions[questionIndex];
+  const selectedIsCorrect = selectedOptionId === question.correctOptionId;
 
   const reveal = () => {
     if (!selectedOptionId) return;
@@ -63,6 +64,7 @@ export function QuizPlayer({
           return (
             <Pressable
               accessibilityRole="button"
+              accessibilityState={{ disabled: revealed, selected }}
               disabled={revealed}
               key={option.id}
               onPress={() => setSelectedOptionId(option.id)}
@@ -73,15 +75,23 @@ export function QuizPlayer({
                 incorrect && styles.incorrectOption,
               ]}
             >
-              <Text style={styles.optionText}>
-                {selectLocalizedText(option.label, language)}
-              </Text>
+              <View style={styles.optionContent}>
+                <Text style={[styles.optionMark, correct && styles.correctMark, incorrect && styles.incorrectMark]}>
+                  {correct ? '✓' : incorrect ? '×' : selected ? '●' : '○'}
+                </Text>
+                <Text style={styles.optionText}>{selectLocalizedText(option.label, language)}</Text>
+              </View>
             </Pressable>
           );
         })}
       </View>
       {revealed ? (
-        <View style={styles.explanation}>
+        <View style={[styles.explanation, selectedIsCorrect ? styles.explanationCorrect : styles.explanationIncorrect]}>
+          <Text style={[styles.feedbackTitle, selectedIsCorrect ? styles.feedbackCorrect : styles.feedbackIncorrect]}>
+            {selectedIsCorrect
+              ? language === 'tr' ? '✓ Doğru' : '✓ Correct'
+              : language === 'tr' ? '× Henüz değil' : '× Not yet'}
+          </Text>
           <Text style={styles.explanationText}>
             {selectLocalizedText(question.explanation, language)}
           </Text>
@@ -136,6 +146,10 @@ const createStyles = (theme: LearningTheme) =>
       borderRadius: theme.radius.medium,
       backgroundColor: theme.colors.surfaceMuted,
     },
+    optionContent: { flexDirection: 'row', alignItems: 'flex-start', gap: theme.spacing.sm },
+    optionMark: { width: 20, color: theme.colors.textMuted, fontSize: 16, lineHeight: 23, fontWeight: '900' },
+    correctMark: { color: theme.colors.success },
+    incorrectMark: { color: theme.colors.risk },
     selectedOption: { borderColor: theme.colors.primary, borderWidth: 2 },
     correctOption: { borderColor: theme.colors.success, borderWidth: 2 },
     incorrectOption: { borderColor: theme.colors.risk, borderWidth: 2 },
@@ -146,7 +160,13 @@ const createStyles = (theme: LearningTheme) =>
       borderLeftWidth: 4,
       backgroundColor: theme.colors.surfaceMuted,
       borderRadius: theme.radius.small,
+      gap: theme.spacing.sm,
     },
+    explanationCorrect: { borderLeftColor: theme.colors.success },
+    explanationIncorrect: { borderLeftColor: theme.colors.warning },
+    feedbackTitle: { fontSize: 14, fontWeight: '900' },
+    feedbackCorrect: { color: theme.colors.success },
+    feedbackIncorrect: { color: theme.colors.warning },
     explanationText: { color: theme.colors.text, fontSize: 15, lineHeight: 22 },
     button: {
       alignItems: 'center',
@@ -157,4 +177,3 @@ const createStyles = (theme: LearningTheme) =>
     buttonText: { color: theme.colors.primaryText, fontSize: 16, fontWeight: '800' },
     disabled: { opacity: 0.35 },
   });
-

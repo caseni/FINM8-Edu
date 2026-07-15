@@ -17,6 +17,7 @@ export function LessonQuizScreen({ route, navigation }: Props) {
   const rawLanguage = useLanguageStore((state) => state.language);
   const language: LearningLanguage = rawLanguage === 'en' ? 'en' : 'tr';
   const submitQuiz = useLearningProgressStore((state) => state.submitQuiz);
+  const completeLesson = useLearningProgressStore((state) => state.completeLesson);
   const tryAwardBadge = useLearningProgressStore((state) => state.tryAwardBadge);
   const [result, setResult] = useState<QuizResult>();
   const [newBadgeTitle, setNewBadgeTitle] = useState<string>();
@@ -32,7 +33,25 @@ export function LessonQuizScreen({ route, navigation }: Props) {
           <Text style={styles.score}>%{result.score}</Text>
           <Text style={styles.body}>{result.correctAnswers}/{result.totalQuestions} {language === 'tr' ? 'doğru cevap' : 'correct answers'}</Text>
           {newBadgeTitle ? <Text style={styles.badgeNotice}>◆ {language === 'tr' ? 'Yeni badge' : 'New badge'}: {newBadgeTitle}</Text> : null}
-          <Pressable style={styles.button} onPress={() => route.params.review ? navigation.goBack() : navigation.popToTop()}><Text style={styles.buttonText}>{route.params.review ? (language === 'tr' ? 'Review merkezine dön' : 'Return to review center') : (language === 'tr' ? 'M8 Learn’e dön' : 'Return to M8 Learn')}</Text></Pressable>
+          <Pressable
+            style={styles.button}
+            onPress={() => result.passed
+              ? (route.params.review ? navigation.goBack() : navigation.popToTop())
+              : setResult(undefined)}
+          >
+            <Text style={styles.buttonText}>
+              {result.passed
+                ? route.params.review
+                  ? language === 'tr' ? 'Review merkezine dön' : 'Return to review center'
+                  : language === 'tr' ? 'M8 Learn’e dön' : 'Return to M8 Learn'
+                : language === 'tr' ? 'Quiz’i tekrar dene' : 'Retry the quiz'}
+            </Text>
+          </Pressable>
+          {!result.passed ? (
+            <Pressable style={styles.secondaryButton} onPress={() => route.params.review ? navigation.goBack() : navigation.popToTop()}>
+              <Text style={styles.secondaryButtonText}>{route.params.review ? (language === 'tr' ? 'Review merkezine dön' : 'Return to review center') : (language === 'tr' ? 'Öğrenme yoluna dön' : 'Return to learning path')}</Text>
+            </Pressable>
+          ) : null}
         </View>
       </SafeAreaView>
     );
@@ -49,10 +68,12 @@ export function LessonQuizScreen({ route, navigation }: Props) {
               setResult(_previewResult);
               return;
             }
-            const storedResult = submitQuiz(lesson, submissions, new Date().toISOString());
+            const now = new Date().toISOString();
+            const storedResult = submitQuiz(lesson, submissions, now);
             if (storedResult.passed) {
+              completeLesson(lesson, now);
               const awarded = INITIAL_BADGES.filter((badge) =>
-                tryAwardBadge(badge, new Date().toISOString())
+                tryAwardBadge(badge, now)
               );
               if (awarded.length > 0) {
                 setNewBadgeTitle(awarded.map((badge) => selectLocalizedText(badge.title, language)).join(' · '));
@@ -77,4 +98,6 @@ const styles = StyleSheet.create({
   badgeNotice: { color: '#FBBF24', fontSize: 15, fontWeight: '800', textAlign: 'center' },
   button: { marginTop: 10, width: '100%', alignItems: 'center', padding: 16, borderRadius: 14, backgroundColor: '#2DD4BF' },
   buttonText: { color: '#042F2E', fontWeight: '900' },
+  secondaryButton: { width: '100%', alignItems: 'center', padding: 12 },
+  secondaryButtonText: { color: '#9FB0C3', fontSize: 14, fontWeight: '700' },
 });
