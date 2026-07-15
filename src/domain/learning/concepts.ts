@@ -1,4 +1,12 @@
 export const LEARNING_CONCEPT_KEYS = [
+  'market.basics.price_formation',
+  'market.basics.instruments',
+  'market.microstructure.bid_ask',
+  'market.execution.order_types',
+  'market.execution.slippage',
+  'market.chart.timeframes',
+  'market.chart.candles',
+  'market.trend.basics',
   'market.structure.bos',
   'market.structure.choch',
   'market.structure.support_resistance',
@@ -7,21 +15,30 @@ export const LEARNING_CONCEPT_KEYS = [
   'market.structure.liquidity',
   'market.timeframe.alignment',
   'risk.volatility',
+  'risk.basics',
   'risk.position_sizing',
   'risk.risk_reward',
+  'risk.stop_orders',
+  'portfolio.diversification',
   'evidence.freshness',
   'evidence.data_quality',
   'fundamental.basics',
   'onchain.basics',
   'behavior.fomo',
+  'behavior.confirmation_bias',
+  'behavior.decision_journal',
   'behavior.overtrading',
 ] as const;
 
 export type LearningConceptKey = (typeof LEARNING_CONCEPT_KEYS)[number];
 
 export type LearningConceptCategory =
+  | 'market_foundations'
+  | 'market_execution'
+  | 'chart_literacy'
   | 'market_structure'
   | 'risk'
+  | 'portfolio'
   | 'evidence'
   | 'fundamental'
   | 'onchain'
@@ -41,6 +58,54 @@ export interface LearningConceptDefinition {
 export const LEARNING_CONCEPTS: Readonly<
   Record<LearningConceptKey, LearningConceptDefinition>
 > = {
+  'market.basics.price_formation': {
+    key: 'market.basics.price_formation',
+    category: 'market_foundations',
+    titleTr: 'Piyasada fiyatın oluşumu',
+    titleEn: 'How market prices form',
+  },
+  'market.basics.instruments': {
+    key: 'market.basics.instruments',
+    category: 'market_foundations',
+    titleTr: 'Piyasa ve araç türleri',
+    titleEn: 'Market and instrument types',
+  },
+  'market.microstructure.bid_ask': {
+    key: 'market.microstructure.bid_ask',
+    category: 'market_execution',
+    titleTr: 'Alış, satış ve spread',
+    titleEn: 'Bid, ask, and spread',
+  },
+  'market.execution.order_types': {
+    key: 'market.execution.order_types',
+    category: 'market_execution',
+    titleTr: 'Emir türleri',
+    titleEn: 'Order types',
+  },
+  'market.execution.slippage': {
+    key: 'market.execution.slippage',
+    category: 'market_execution',
+    titleTr: 'Gerçekleşme fiyatı ve kayma',
+    titleEn: 'Execution price and slippage',
+  },
+  'market.chart.timeframes': {
+    key: 'market.chart.timeframes',
+    category: 'chart_literacy',
+    titleTr: 'Grafik zaman dilimleri',
+    titleEn: 'Chart timeframes',
+  },
+  'market.chart.candles': {
+    key: 'market.chart.candles',
+    category: 'chart_literacy',
+    titleTr: 'Mum grafikleri',
+    titleEn: 'Candlestick charts',
+  },
+  'market.trend.basics': {
+    key: 'market.trend.basics',
+    category: 'chart_literacy',
+    titleTr: 'Trend temelleri',
+    titleEn: 'Trend foundations',
+  },
   'market.structure.bos': {
     key: 'market.structure.bos',
     category: 'market_structure',
@@ -89,6 +154,12 @@ export const LEARNING_CONCEPTS: Readonly<
     titleTr: 'Volatilite riski',
     titleEn: 'Volatility risk',
   },
+  'risk.basics': {
+    key: 'risk.basics',
+    category: 'risk',
+    titleTr: 'Risk ve belirsizlik',
+    titleEn: 'Risk and uncertainty',
+  },
   'risk.position_sizing': {
     key: 'risk.position_sizing',
     category: 'risk',
@@ -100,6 +171,18 @@ export const LEARNING_CONCEPTS: Readonly<
     category: 'risk',
     titleTr: 'Risk/getiri oranı',
     titleEn: 'Risk/reward ratio',
+  },
+  'risk.stop_orders': {
+    key: 'risk.stop_orders',
+    category: 'risk',
+    titleTr: 'Stop emirleri ve sınırlamaları',
+    titleEn: 'Stop orders and limitations',
+  },
+  'portfolio.diversification': {
+    key: 'portfolio.diversification',
+    category: 'portfolio',
+    titleTr: 'Çeşitlendirme',
+    titleEn: 'Diversification',
   },
   'evidence.freshness': {
     key: 'evidence.freshness',
@@ -131,6 +214,18 @@ export const LEARNING_CONCEPTS: Readonly<
     titleTr: 'Fırsatı kaçırma korkusu (FOMO)',
     titleEn: 'Fear of missing out (FOMO)',
   },
+  'behavior.confirmation_bias': {
+    key: 'behavior.confirmation_bias',
+    category: 'behavior',
+    titleTr: 'Onaylama yanlılığı',
+    titleEn: 'Confirmation bias',
+  },
+  'behavior.decision_journal': {
+    key: 'behavior.decision_journal',
+    category: 'behavior',
+    titleTr: 'Karar günlüğü',
+    titleEn: 'Decision journal',
+  },
   'behavior.overtrading': {
     key: 'behavior.overtrading',
     category: 'behavior',
@@ -138,4 +233,3 @@ export const LEARNING_CONCEPTS: Readonly<
     titleEn: 'Overtrading',
   },
 };
-
