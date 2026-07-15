@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Language, DEFAULT_LANGUAGE } from '../constants/languages';
+import { DEFAULT_LANGUAGE, LANGUAGES } from '../constants/languages';
+import type { Language } from '../types/course';
 
 interface LanguageState {
   language: Language;
@@ -16,7 +17,7 @@ export const useLanguageStore = create<LanguageState>((set) => ({
   initialize: async () => {
     try {
       const savedLanguage = await AsyncStorage.getItem(LANGUAGE_STORAGE_KEY);
-      if (savedLanguage && ['tr', 'en', 'es', 'fr', 'ru', 'de', 'pt'].includes(savedLanguage)) {
+      if (savedLanguage && LANGUAGES.includes(savedLanguage as Language)) {
         set({ language: savedLanguage as Language });
       }
     } catch (error) {

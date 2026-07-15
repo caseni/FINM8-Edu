@@ -1,5 +1,7 @@
+import { useCallback } from 'react';
 import { useLanguageStore } from '../store/useLanguageStore';
-import { translate, TranslationKey } from '../utils/translations';
+import { translate } from '../utils/translations';
+import type { TranslationKey } from '../utils/translations';
 
 /**
  * Dil ve çeviri hook'u
@@ -13,9 +15,10 @@ export const useLanguage = () => {
    * @param key - Çeviri anahtarı
    * @returns Çevrilmiş metin
    */
-  const t = (key: TranslationKey): string => {
-    return translate(key, language);
-  };
+  const t = useCallback(
+    (key: TranslationKey): string => translate(key, language),
+    [language]
+  );
   
   return {
     language,
