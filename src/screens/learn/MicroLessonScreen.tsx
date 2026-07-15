@@ -25,8 +25,13 @@ export function MicroLessonScreen({ route, navigation }: Props) {
       lesson={lesson}
       language={language}
       presentationMode={presentationMode}
+      assessmentLabel={route.params.review ? { tr: 'Önizlemeyi kapat', en: 'Close preview' } : undefined}
       onExit={() => navigation.goBack()}
       onStartAssessment={() => {
+        if (route.params.review) {
+          navigation.goBack();
+          return;
+        }
         completeLesson(lesson, new Date().toISOString());
         navigation.replace('PracticalTask', { lessonId: lesson.id });
       }}
