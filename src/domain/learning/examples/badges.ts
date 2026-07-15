@@ -2,6 +2,37 @@ import type { LearningBadge } from '../types';
 
 export const INITIAL_BADGES: readonly LearningBadge[] = [
   {
+    id: 'badge.first-proof',
+    title: { tr: 'İlk Kanıt', en: 'First Proof' },
+    description: {
+      tr: 'İlk mikro dersi, grafik görevini ve quizini başarıyla tamamla.',
+      en: 'Complete your first micro lesson, chart task, and quiz.',
+    },
+    credentialType: 'learning_achievement',
+    definitionVersion: '0.1.0',
+    requirements: [
+      {
+        kind: 'lesson_completion',
+        targetId: 'lesson.market-structure.bos.001',
+        threshold: 1,
+      },
+      {
+        kind: 'practical_task',
+        targetId: 'task.bos.001',
+        threshold: 1,
+      },
+      {
+        kind: 'quiz_accuracy',
+        targetId: 'quiz.bos.001',
+        threshold: 67,
+      },
+    ],
+    disclaimer: {
+      tr: 'Bu badge bir öğrenme başarısıdır; sertifika veya mesleki yeterlilik değildir.',
+      en: 'This badge is a learning achievement, not a certificate or professional qualification.',
+    },
+  },
+  {
     id: 'badge.market-literacy.foundation',
     title: { tr: 'Piyasa Temelleri', en: 'Market Foundations' },
     description: {
@@ -65,4 +96,3 @@ export const INITIAL_BADGES: readonly LearningBadge[] = [
     },
   },
 ];
-
