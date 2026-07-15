@@ -16,6 +16,8 @@ import type {
   BadgeAward,
   LearningBadge,
   LearningProfile,
+  LessonCheckpoint,
+  LessonJourneyStage,
   LearningStreak,
   Mastery,
   MicroLesson,
@@ -34,6 +36,7 @@ interface LearningProgressState {
   masteryBySkill: Record<string, Mastery>;
   badgeAwards: BadgeAward[];
   streak: LearningStreak;
+  lessonCheckpoints: Record<string, LessonCheckpoint>;
   setProfile: (profile: LearningProfile) => void;
   completeLesson: (lesson: MicroLesson, completedAt: string) => void;
   submitQuiz: (
@@ -44,6 +47,8 @@ interface LearningProgressState {
   passPracticalTask: (lesson: MicroLesson, passedAt: string) => void;
   completeChallenge: (challengeId: string, completedAt: string) => void;
   tryAwardBadge: (badge: LearningBadge, awardedAt: string) => boolean;
+  saveLessonCheckpoint: (lessonId: string, stage: LessonJourneyStage, stepIndex?: number) => void;
+  clearLessonCheckpoint: (lessonId: string) => void;
   resetLocalProgress: () => void;
 }
 
@@ -79,6 +84,7 @@ export const useLearningProgressStore = create<LearningProgressState>()(
       masteryBySkill: {},
       badgeAwards: [],
       streak: initialStreak,
+      lessonCheckpoints: {},
 
       setProfile: (profile) =>
         set((state) => ({
@@ -88,7 +94,10 @@ export const useLearningProgressStore = create<LearningProgressState>()(
 
       completeLesson: (lesson, completedAt) =>
         set((state) => {
-          if (state.completedLessonIds.includes(lesson.id)) return state;
+          if (state.completedLessonIds.includes(lesson.id)) {
+            const { [lesson.id]: _finished, ...lessonCheckpoints } = state.lessonCheckpoints;
+            return { lessonCheckpoints };
+          }
           const event = createXpEvent({
             userId: state.profile.userId,
             reason: 'lesson_completed',
@@ -122,6 +131,9 @@ export const useLearningProgressStore = create<LearningProgressState>()(
               },
             },
             streak: updateLearningStreak(state.streak, learningDate(completedAt)),
+            lessonCheckpoints: Object.fromEntries(
+              Object.entries(state.lessonCheckpoints).filter(([lessonId]) => lessonId !== lesson.id)
+            ),
           };
         }),
 
@@ -262,6 +274,26 @@ export const useLearningProgressStore = create<LearningProgressState>()(
         return true;
       },
 
+      saveLessonCheckpoint: (lessonId, stage, stepIndex = 0) =>
+        set((state) => ({
+          lessonCheckpoints: {
+            ...state.lessonCheckpoints,
+            [lessonId]: {
+              lessonId,
+              stage,
+              stepIndex: Math.max(0, stepIndex),
+              updatedAt: new Date().toISOString(),
+            },
+          },
+        })),
+
+      clearLessonCheckpoint: (lessonId) =>
+        set((state) => ({
+          lessonCheckpoints: Object.fromEntries(
+            Object.entries(state.lessonCheckpoints).filter(([storedLessonId]) => storedLessonId !== lessonId)
+          ),
+        })),
+
       resetLocalProgress: () =>
         set({
           profile: initialProfile,
@@ -275,6 +307,7 @@ export const useLearningProgressStore = create<LearningProgressState>()(
           masteryBySkill: {},
           badgeAwards: [],
           streak: initialStreak,
+          lessonCheckpoints: {},
         }),
     }),
     {
