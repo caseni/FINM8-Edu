@@ -3,6 +3,7 @@ import { Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { QuizPlayer } from '../../components/learning';
 import { getMicroLessonById } from '../../domain/learning/catalog';
+import { INITIAL_BADGES } from '../../domain/learning/examples/badges';
 import type { LearningLanguage } from '../../domain/learning/presentation';
 import type { QuizResult } from '../../domain/learning/progressionEngine';
 import { useLanguageStore } from '../../store/useLanguageStore';
@@ -16,7 +17,9 @@ export function LessonQuizScreen({ route, navigation }: Props) {
   const rawLanguage = useLanguageStore((state) => state.language);
   const language: LearningLanguage = rawLanguage === 'en' ? 'en' : 'tr';
   const submitQuiz = useLearningProgressStore((state) => state.submitQuiz);
+  const tryAwardBadge = useLearningProgressStore((state) => state.tryAwardBadge);
   const [result, setResult] = useState<QuizResult>();
+  const [newBadgeTitle, setNewBadgeTitle] = useState<string>();
 
   if (!lesson) return <SafeAreaView style={styles.safeArea}><Text style={styles.title}>Ders bulunamadı.</Text></SafeAreaView>;
 
@@ -28,6 +31,7 @@ export function LessonQuizScreen({ route, navigation }: Props) {
           <Text style={styles.title}>{result.passed ? 'Quiz tamamlandı' : 'Kısa bir tekrar iyi olur'}</Text>
           <Text style={styles.score}>%{result.score}</Text>
           <Text style={styles.body}>{result.correctAnswers}/{result.totalQuestions} doğru cevap</Text>
+          {newBadgeTitle ? <Text style={styles.badgeNotice}>◆ Yeni badge: {newBadgeTitle}</Text> : null}
           <Pressable style={styles.button} onPress={() => navigation.popToTop()}><Text style={styles.buttonText}>M8 Learn’e dön</Text></Pressable>
         </View>
       </SafeAreaView>
@@ -42,6 +46,12 @@ export function LessonQuizScreen({ route, navigation }: Props) {
           language={language}
           onComplete={(_previewResult, submissions) => {
             const storedResult = submitQuiz(lesson, submissions, new Date().toISOString());
+            if (storedResult.passed) {
+              const awarded = INITIAL_BADGES.find((badge) =>
+                tryAwardBadge(badge, new Date().toISOString())
+              );
+              if (awarded) setNewBadgeTitle(awarded.title.tr);
+            }
             setResult(storedResult);
           }}
         />
@@ -58,7 +68,7 @@ const styles = StyleSheet.create({
   title: { color: '#F8FAFC', fontSize: 25, fontWeight: '900', textAlign: 'center' },
   score: { color: '#2DD4BF', fontSize: 42, fontWeight: '900' },
   body: { color: '#9FB0C3', fontSize: 15 },
+  badgeNotice: { color: '#FBBF24', fontSize: 15, fontWeight: '800', textAlign: 'center' },
   button: { marginTop: 10, width: '100%', alignItems: 'center', padding: 16, borderRadius: 14, backgroundColor: '#2DD4BF' },
   buttonText: { color: '#042F2E', fontWeight: '900' },
 });
-
