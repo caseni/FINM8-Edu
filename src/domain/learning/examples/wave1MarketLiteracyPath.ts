@@ -66,7 +66,7 @@ export const WAVE1_LESSON_BLUEPRINTS = [
     learningObjective: { tr: 'Açılış, kapanış, en yüksek ve en düşük fiyatı mum üzerinde gösterir.' },
     learningStage: 'foundation', estimatedMinutes: 4, prerequisiteLessonIds: ['lesson.market.price-formation.001'],
     legacyRefs: ['course:5/module:Grafik Temelleri'], practiceKind: 'chart_identification', requiresVisual: true,
-    sourceIds: ['source.finm8.methodology.chart-literacy'], readiness: 'planned',
+    sourceIds: ['source.cme.technical-analysis', 'source.finm8.methodology.chart-literacy'], readiness: 'draft',
   },
   {
     id: 'lesson.chart.timeframes.001', moduleId: MODULES.charts, order: 8,
@@ -74,7 +74,7 @@ export const WAVE1_LESSON_BLUEPRINTS = [
     learningObjective: { tr: 'Aynı piyasanın farklı zaman dilimlerinde farklı yapı gösterebileceğini açıklar.' },
     learningStage: 'foundation', estimatedMinutes: 4, prerequisiteLessonIds: ['lesson.chart.candles.001'],
     legacyRefs: ['course:5/module:Grafik Temelleri'], practiceKind: 'chart_identification', requiresVisual: true,
-    sourceIds: ['source.finm8.methodology.timeframes'], readiness: 'planned',
+    sourceIds: ['source.cme.technical-analysis', 'source.finm8.methodology.timeframes'], readiness: 'draft',
   },
   {
     id: 'lesson.chart.trend.001', moduleId: MODULES.charts, order: 9,
@@ -82,7 +82,7 @@ export const WAVE1_LESSON_BLUEPRINTS = [
     learningObjective: { tr: 'Yükseliş, düşüş ve yatay yapı arasındaki temel farkı tanır.' },
     learningStage: 'foundation', estimatedMinutes: 5, prerequisiteLessonIds: ['lesson.chart.timeframes.001'],
     legacyRefs: ['course:5/module:Trend Analizi'], practiceKind: 'chart_identification', requiresVisual: true,
-    sourceIds: ['source.finm8.methodology.trend'], readiness: 'planned',
+    sourceIds: ['source.cme.technical-analysis', 'source.finm8.methodology.trend'], readiness: 'draft',
   },
   {
     id: 'lesson.chart.support-resistance.001', moduleId: MODULES.charts, order: 10,
@@ -90,7 +90,7 @@ export const WAVE1_LESSON_BLUEPRINTS = [
     learningObjective: { tr: 'Tek fiyat çizgisi yerine tepki bölgesi düşünmenin nedenini açıklar.' },
     learningStage: 'foundation', estimatedMinutes: 5, prerequisiteLessonIds: ['lesson.chart.trend.001'],
     legacyRefs: ['course:5/module:Destek ve Direnç'], practiceKind: 'chart_identification', requiresVisual: true,
-    sourceIds: ['source.finm8.methodology.support-resistance'], readiness: 'planned',
+    sourceIds: ['source.cme.technical-analysis', 'source.finm8.methodology.support-resistance'], readiness: 'draft',
   },
   {
     id: 'lesson.market-structure.bos.001', moduleId: MODULES.charts, order: 11,
@@ -106,7 +106,7 @@ export const WAVE1_LESSON_BLUEPRINTS = [
     learningObjective: { tr: 'Karakter değişimini kesin dönüş iddiasından ayırır.' },
     learningStage: 'intermediate', estimatedMinutes: 5, prerequisiteLessonIds: ['lesson.market-structure.bos.001'],
     legacyRefs: ['course:5/module:Trend Analizi'], practiceKind: 'chart_identification', requiresVisual: true,
-    sourceIds: ['source.finm8.methodology.market-structure'], readiness: 'planned',
+    sourceIds: ['source.cme.technical-analysis', 'source.finm8.methodology.market-structure'], readiness: 'draft',
   },
   {
     id: 'lesson.risk.uncertainty.001', moduleId: MODULES.risk, order: 13,
@@ -232,4 +232,3 @@ export const WAVE1_CONTENT_SUMMARY = {
   draftCount: WAVE1_LESSON_BLUEPRINTS.filter((item) => item.readiness === 'draft').length,
   plannedCount: WAVE1_LESSON_BLUEPRINTS.filter((item) => item.readiness === 'planned').length,
 } as const;
-
