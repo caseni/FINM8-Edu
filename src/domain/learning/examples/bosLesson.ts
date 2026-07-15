@@ -4,8 +4,10 @@ import type { MicroLesson } from '../types';
 const bosLessonDraft = {
   id: 'lesson.market-structure.bos.001',
   slug: 'yapi-kirilimi-bos',
+  seriesId: 'series.market-structure.bos',
   conceptKey: 'market.structure.bos',
   skillId: 'skill.market-structure',
+  competencyIds: ['competency.identify-bos.foundation'],
   title: {
     tr: 'BOS: Yapı ne zaman gerçekten kırılır?',
     en: 'BOS: When does market structure really break?',
@@ -15,8 +17,14 @@ const bosLessonDraft = {
     en: 'The learner can distinguish a break of structure from a simple price overshoot.',
   },
   estimatedMinutes: 3,
-  difficulty: 'starter',
+  learningStage: 'foundation',
   accessTier: 'free',
+  marketScopes: ['general'],
+  prerequisiteConceptKeys: ['market.structure.support_resistance'],
+  relatedConceptKeys: [
+    'market.structure.choch',
+    'market.structure.liquidity',
+  ],
   contentBlocks: [
     {
       id: 'bos.prompt',
@@ -164,4 +172,3 @@ const bosLessonDraft = {
 
 /** Draft fixture proving the Phase 2 contract; it is not published content. */
 export const bosMicroLesson = microLessonSchema.parse(bosLessonDraft);
-
