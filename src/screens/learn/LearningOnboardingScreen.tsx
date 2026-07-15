@@ -3,28 +3,33 @@ import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'rea
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useLearningProgressStore } from '../../store/useLearningProgressStore';
 import type { LearningProfile, LearningStage } from '../../domain/learning/types';
+import type { LocalizedText } from '../../domain/learning/types';
+import { selectLocalizedText, type LearningLanguage } from '../../domain/learning/presentation';
+import { useLanguageStore } from '../../store/useLanguageStore';
 import type { RootStackParamList } from '../../types/navigation';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'LearningOnboarding'>;
 type Goal = LearningProfile['goals'][number];
 
-const stages: { id: LearningStage; title: string; body: string }[] = [
-  { id: 'foundation', title: 'Temelden başla', body: 'Kavramları sade dille ve görsellerle öğren.' },
-  { id: 'intermediate', title: 'Piyasaları biliyorum', body: 'Teyitler, yanlış sinyaller ve uygulamaya odaklan.' },
-  { id: 'advanced', title: 'İleri seviye çalışıyorum', body: 'Kanıt, invalidasyon ve çoklu bağlamı derinleştir.' },
+const stages: { id: LearningStage; title: LocalizedText; body: LocalizedText }[] = [
+  { id: 'foundation', title: { tr: 'Temelden başla', en: 'Start from the foundation' }, body: { tr: 'Kavramları sade dille ve görsellerle öğren.', en: 'Learn concepts through plain language and visuals.' } },
+  { id: 'intermediate', title: { tr: 'Piyasaları biliyorum', en: 'I know the markets' }, body: { tr: 'Teyitler, yanlış sinyaller ve uygulamaya odaklan.', en: 'Focus on confirmation, false signals, and practice.' } },
+  { id: 'advanced', title: { tr: 'İleri seviye çalışıyorum', en: 'I study at an advanced level' }, body: { tr: 'Kanıt, invalidasyon ve çoklu bağlamı derinleştir.', en: 'Deepen evidence, invalidation, and multi-context reasoning.' } },
 ];
 
-const goals: { id: Goal; title: string }[] = [
-  { id: 'financial_literacy', title: 'Finansal okuryazarlık' },
-  { id: 'investing', title: 'Yatırım' },
-  { id: 'trading', title: 'Trading' },
-  { id: 'risk_management', title: 'Risk yönetimi' },
-  { id: 'portfolio_management', title: 'Portföy' },
-  { id: 'data_literacy', title: 'Veri okuryazarlığı' },
+const goals: { id: Goal; title: LocalizedText }[] = [
+  { id: 'financial_literacy', title: { tr: 'Finansal okuryazarlık', en: 'Financial literacy' } },
+  { id: 'investing', title: { tr: 'Yatırım', en: 'Investing' } },
+  { id: 'trading', title: { tr: 'Trading', en: 'Trading' } },
+  { id: 'risk_management', title: { tr: 'Risk yönetimi', en: 'Risk management' } },
+  { id: 'portfolio_management', title: { tr: 'Portföy', en: 'Portfolio' } },
+  { id: 'data_literacy', title: { tr: 'Veri okuryazarlığı', en: 'Data literacy' } },
 ];
 
 export function LearningOnboardingScreen({ navigation }: Props) {
   const profile = useLearningProgressStore((state) => state.profile);
+  const rawLanguage = useLanguageStore((state) => state.language);
+  const language: LearningLanguage = rawLanguage === 'en' ? 'en' : 'tr';
   const setProfile = useLearningProgressStore((state) => state.setProfile);
   const [stage, setStage] = useState<LearningStage>(profile.selectedStage);
   const [selectedGoals, setSelectedGoals] = useState<Goal[]>(profile.goals);
@@ -49,25 +54,25 @@ export function LearningOnboardingScreen({ navigation }: Props) {
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.content}>
         <Text style={styles.eyebrow}>M8 LEARN</Text>
-        <Text style={styles.title}>Eğitim seviyeni seç</Text>
-        <Text style={styles.body}>Bu seçim Normal/Pro analiz anlatımından bağımsızdır ve daha sonra değiştirilebilir.</Text>
+        <Text style={styles.title}>{language === 'tr' ? 'Öğrenme profilini oluştur' : 'Create your learning profile'}</Text>
+        <Text style={styles.body}>{language === 'tr' ? 'Bu seçim Normal/Pro anlatımından bağımsızdır. Temel yol sırasını değiştirmez; seviyeni ve hedeflerini kaydeder.' : 'This is independent from Normal/Pro presentation. It does not change the foundation path order; it records your level and goals.'}</Text>
         <View style={styles.options}>
           {stages.map((item) => (
             <Pressable key={item.id} onPress={() => setStage(item.id)} style={[styles.option, stage === item.id && styles.optionActive]}>
-              <Text style={styles.optionTitle}>{item.title}</Text>
-              <Text style={styles.optionBody}>{item.body}</Text>
+              <Text style={styles.optionTitle}>{selectLocalizedText(item.title, language)}</Text>
+              <Text style={styles.optionBody}>{selectLocalizedText(item.body, language)}</Text>
             </Pressable>
           ))}
         </View>
-        <Text style={styles.sectionTitle}>Neleri geliştirmek istiyorsun?</Text>
+        <Text style={styles.sectionTitle}>{language === 'tr' ? 'Neleri geliştirmek istiyorsun?' : 'What do you want to improve?'}</Text>
         <View style={styles.chips}>
           {goals.map((goal) => {
             const selected = selectedGoals.includes(goal.id);
-            return <Pressable key={goal.id} onPress={() => toggleGoal(goal.id)} style={[styles.chip, selected && styles.chipActive]}><Text style={[styles.chipText, selected && styles.chipTextActive]}>{goal.title}</Text></Pressable>;
+            return <Pressable key={goal.id} onPress={() => toggleGoal(goal.id)} style={[styles.chip, selected && styles.chipActive]}><Text style={[styles.chipText, selected && styles.chipTextActive]}>{selectLocalizedText(goal.title, language)}</Text></Pressable>;
           })}
         </View>
         <Pressable disabled={selectedGoals.length === 0} onPress={complete} style={[styles.button, selectedGoals.length === 0 && styles.disabled]}>
-          <Text style={styles.buttonText}>Kişisel yolumu oluştur</Text>
+          <Text style={styles.buttonText}>{language === 'tr' ? 'Profilimi kaydet' : 'Save my profile'}</Text>
         </Pressable>
       </ScrollView>
     </SafeAreaView>
@@ -95,4 +100,3 @@ const styles = StyleSheet.create({
   buttonText: { color: '#042F2E', fontSize: 16, fontWeight: '900' },
   disabled: { opacity: 0.35 },
 });
-
