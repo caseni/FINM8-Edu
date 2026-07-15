@@ -97,7 +97,8 @@ export function LearningChallengeScreen({ route, navigation }: Props) {
   if (stage === 'result') {
     return (
       <SafeAreaView style={styles.safeArea}>
-        <View style={styles.resultCard}>
+        <ScrollView contentContainerStyle={styles.resultWrap}>
+          <View style={styles.resultCard}>
           <Text style={styles.resultIcon}>{passed ? '◆' : '↻'}</Text>
           <Text style={styles.title}>{passed ? (language === 'tr' ? 'Challenge tamamlandı' : 'Challenge completed') : (language === 'tr' ? 'Bir tekrar daha güçlendirecek' : 'One more review will strengthen it')}</Text>
           <Text style={styles.score}>%{score}</Text>
@@ -106,7 +107,8 @@ export function LearningChallengeScreen({ route, navigation }: Props) {
           <Pressable style={styles.primaryButton} onPress={() => passed ? (route.params.review ? navigation.goBack() : navigation.popToTop()) : setStage('intro')}>
             <Text style={styles.primaryButtonText}>{passed ? (route.params.review ? (language === 'tr' ? 'Review merkezine dön' : 'Return to review center') : (language === 'tr' ? 'M8 Learn’e dön' : 'Return to M8 Learn')) : (language === 'tr' ? 'Tekrar dene' : 'Retry')}</Text>
           </Pressable>
-        </View>
+          </View>
+        </ScrollView>
       </SafeAreaView>
     );
   }
@@ -168,7 +170,8 @@ const styles = StyleSheet.create({
   secondaryButton: { alignItems: 'center', padding: 12 },
   secondaryButtonText: { color: '#9FB0C3', fontSize: 14, fontWeight: '700' },
   disabled: { opacity: 0.35 },
-  resultCard: { alignSelf: 'center', width: '90%', maxWidth: 560, margin: 24, padding: 28, borderRadius: 24, backgroundColor: '#102033', borderWidth: 1, borderColor: '#294057', alignItems: 'center', gap: 14 },
+  resultWrap: { flexGrow: 1, justifyContent: 'center', width: '100%', padding: 16 },
+  resultCard: { alignSelf: 'center', width: '100%', maxWidth: 560, padding: 24, borderRadius: 24, backgroundColor: '#102033', borderWidth: 1, borderColor: '#294057', alignItems: 'center', gap: 14 },
   resultIcon: { color: '#FBBF24', fontSize: 44, fontWeight: '900' },
   score: { color: '#2DD4BF', fontSize: 44, fontWeight: '900' },
   badgeNotice: { color: '#FBBF24', fontSize: 16, fontWeight: '900', textAlign: 'center' },
