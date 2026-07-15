@@ -7,6 +7,9 @@ validated inside `FINM8-Edu` without changing the flagship analysis module.
 
 - `concepts.ts` owns stable concept identities. UI labels must never be used as
   integration keys.
+- `curriculum.ts` owns the full long-term curriculum areas independently from
+  the smaller initial concept registry.
+- `legacy/` preserves migration facts from the original nine-course catalogue.
 - `schemas.ts` validates content, paths, assessments, mastery, badges, and the
   read-only FINM8 entry context at runtime.
 - `progressionSchemas.ts` defines safe XP, challenge, streak, and badge-award
