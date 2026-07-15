@@ -55,6 +55,15 @@ export type Competency = z.infer<typeof competencySchema>;
 export type Mastery = z.infer<typeof masterySchema>;
 export type LearningBadge = z.infer<typeof learningBadgeSchema>;
 export type LearningProfile = z.infer<typeof learningProfileSchema>;
+
+export type LessonJourneyStage = 'lesson' | 'task' | 'quiz';
+
+export interface LessonCheckpoint {
+  readonly lessonId: string;
+  readonly stage: LessonJourneyStage;
+  readonly stepIndex: number;
+  readonly updatedAt: string;
+}
 export type XpEvent = z.infer<typeof xpEventSchema>;
 export type LearningChallenge = z.infer<typeof learningChallengeSchema>;
 export type BadgeAward = z.infer<typeof badgeAwardSchema>;
