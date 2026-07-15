@@ -3,7 +3,8 @@ import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'rea
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { INITIAL_BADGES } from '../../domain/learning/examples/badges';
-import { CHART_LITERACY_CHALLENGE, MARKET_FOUNDATIONS_CHALLENGE, RISK_MANAGEMENT_CHALLENGE } from '../../domain/learning/examples/wave1/challenges';
+import { BEHAVIOR_EVIDENCE_CHALLENGE, CHART_LITERACY_CHALLENGE, MARKET_FOUNDATIONS_CHALLENGE, RISK_MANAGEMENT_CHALLENGE } from '../../domain/learning/examples/wave1/challenges';
+import { WAVE1_BEHAVIOR_EVIDENCE_LESSONS } from '../../domain/learning/examples/wave1/behaviorEvidenceLessons';
 import { WAVE1_CHART_LITERACY_LESSONS } from '../../domain/learning/examples/wave1/chartLiteracyLessons';
 import { WAVE1_MARKET_FOUNDATION_LESSONS } from '../../domain/learning/examples/wave1/marketFoundationsLessons';
 import { WAVE1_RISK_MANAGEMENT_LESSONS } from '../../domain/learning/examples/wave1/riskManagementLessons';
@@ -42,6 +43,10 @@ export function LearnHomeScreen() {
     ? WAVE1_RISK_MANAGEMENT_LESSONS.find((lesson) => !completedLessonIds.includes(lesson.id))
     : undefined;
   const riskChallengeCompleted = completedChallengeIds.includes(RISK_MANAGEMENT_CHALLENGE.id);
+  const behaviorNextLesson = riskChallengeCompleted
+    ? WAVE1_BEHAVIOR_EVIDENCE_LESSONS.find((lesson) => !completedLessonIds.includes(lesson.id))
+    : undefined;
+  const behaviorChallengeCompleted = completedChallengeIds.includes(BEHAVIOR_EVIDENCE_CHALLENGE.id);
   const mission = foundationNextLesson
     ? { kind: 'lesson' as const, lesson: foundationNextLesson }
     : !marketChallengeCompleted
@@ -54,9 +59,14 @@ export function LearnHomeScreen() {
             ? { kind: 'lesson' as const, lesson: riskNextLesson }
             : !riskChallengeCompleted
               ? { kind: 'challenge' as const, challenge: RISK_MANAGEMENT_CHALLENGE }
-              : { kind: 'lesson' as const, lesson: WAVE1_MARKET_FOUNDATION_LESSONS[0] };
+              : behaviorNextLesson
+                ? { kind: 'lesson' as const, lesson: behaviorNextLesson }
+                : !behaviorChallengeCompleted
+                  ? { kind: 'challenge' as const, challenge: BEHAVIOR_EVIDENCE_CHALLENGE }
+                  : { kind: 'lesson' as const, lesson: WAVE1_MARKET_FOUNDATION_LESSONS[0] };
   const lessonCompleted = mission.kind === 'lesson' && completedLessonIds.includes(mission.lesson.id);
   const activeMastery =
+    (riskChallengeCompleted ? masteryBySkill['skill.behavior-evidence'] : undefined) ??
     (chartChallengeCompleted ? masteryBySkill['skill.risk-management'] : undefined) ??
     (marketChallengeCompleted ? masteryBySkill['skill.chart-literacy'] : undefined) ??
     masteryBySkill['skill.market-foundations'] ??
@@ -81,6 +91,12 @@ export function LearnHomeScreen() {
   const riskManagementUnlocked = chartChallengeCompleted;
   const riskChallengeUnlocked =
     riskManagementCompletedCount === WAVE1_RISK_MANAGEMENT_LESSONS.length;
+  const behaviorEvidenceCompletedCount = WAVE1_BEHAVIOR_EVIDENCE_LESSONS.filter(
+    (lesson) => completedLessonIds.includes(lesson.id)
+  ).length;
+  const behaviorEvidenceUnlocked = riskChallengeCompleted;
+  const behaviorChallengeUnlocked =
+    behaviorEvidenceCompletedCount === WAVE1_BEHAVIOR_EVIDENCE_LESSONS.length;
   const reviewDue = Object.values(masteryBySkill).filter(
     (mastery) => mastery.reviewDueAt && new Date(mastery.reviewDueAt) <= new Date()
   ).length;
@@ -148,7 +164,7 @@ export function LearnHomeScreen() {
           <View style={styles.skillTop}>
             <View>
               <Text style={styles.sectionLabel}>{language === 'tr' ? 'BECERİ HARİTASI' : 'SKILL MAP'}</Text>
-              <Text style={styles.skillTitle}>{chartChallengeCompleted ? (language === 'tr' ? 'Risk yönetimi' : 'Risk management') : marketChallengeCompleted ? (language === 'tr' ? 'Grafik okuryazarlığı' : 'Chart literacy') : (language === 'tr' ? 'Piyasa temelleri' : 'Market foundations')}</Text>
+              <Text style={styles.skillTitle}>{riskChallengeCompleted ? (language === 'tr' ? 'Davranış ve kanıt' : 'Behavior and evidence') : chartChallengeCompleted ? (language === 'tr' ? 'Risk yönetimi' : 'Risk management') : marketChallengeCompleted ? (language === 'tr' ? 'Grafik okuryazarlığı' : 'Chart literacy') : (language === 'tr' ? 'Piyasa temelleri' : 'Market foundations')}</Text>
             </View>
             <Text style={styles.skillScore}>{Math.round(activeMastery?.score ?? 0)}%</Text>
           </View>
@@ -170,7 +186,7 @@ export function LearnHomeScreen() {
             : navigation.navigate('LearningChallenge', { challengeId: mission.challenge.id })}
         >
           <View style={styles.missionTop}>
-            <Text style={styles.missionTag}>MARKET STRUCTURE</Text>
+            <Text style={styles.missionTag}>M8 LEARN</Text>
             <Text style={styles.missionTime}>{mission.kind === 'lesson' ? `${mission.lesson.estimatedMinutes} dk` : 'Final'}</Text>
           </View>
           <Text style={styles.missionTitle}>{selectLocalizedText(mission.kind === 'lesson' ? mission.lesson.title : mission.challenge.title, language)}</Text>
@@ -305,6 +321,27 @@ export function LearnHomeScreen() {
           </Pressable>
         </View>
 
+        <View style={[styles.moduleCard, !behaviorEvidenceUnlocked && styles.moduleLocked]}>
+          <Text style={styles.sectionLabel}>{language === 'tr' ? 'MODÜL 4' : 'MODULE 4'}</Text>
+          <Text style={styles.pathTitle}>{language === 'tr' ? 'Davranış ve Kanıt' : 'Behavior and Evidence'}</Text>
+          {!behaviorEvidenceUnlocked ? <Text style={styles.lockedText}>{language === 'tr' ? 'Risk Koruyucusu Challenge tamamlandığında açılır.' : 'Unlocks after the Risk Guardian Challenge.'}</Text> : null}
+          {WAVE1_BEHAVIOR_EVIDENCE_LESSONS.map((lesson, index) => {
+            const completed = completedLessonIds.includes(lesson.id);
+            return (
+              <Pressable disabled={!behaviorEvidenceUnlocked} key={lesson.id} onPress={() => navigation.navigate('MicroLesson', { lessonId: lesson.id })} style={styles.lessonRow}>
+                <View style={[styles.lessonNumber, completed && styles.lessonNumberDone]}><Text style={styles.lessonNumberText}>{completed ? '✓' : index + 1}</Text></View>
+                <View style={styles.pathContent}><Text style={styles.lessonTitle}>{selectLocalizedText(lesson.title, language)}</Text><Text style={styles.skillMeta}>{lesson.estimatedMinutes} dk • +90 XP</Text></View>
+                <Text style={styles.archiveLink}>{behaviorEvidenceUnlocked ? '→' : '🔒'}</Text>
+              </Pressable>
+            );
+          })}
+          <Pressable disabled={!behaviorChallengeUnlocked} onPress={() => navigation.navigate('LearningChallenge', { challengeId: BEHAVIOR_EVIDENCE_CHALLENGE.id })} style={[styles.challengeCard, !behaviorChallengeUnlocked && styles.challengeCardLocked]}>
+            <View style={styles.challengeIcon}><Text style={styles.challengeIconText}>{behaviorChallengeUnlocked ? '◆' : '◇'}</Text></View>
+            <View style={styles.pathContent}><Text style={styles.challengeTitle}>{language === 'tr' ? 'Kanıt Dedektifi Challenge' : 'Evidence Detective Challenge'}</Text><Text style={styles.skillMeta}>{behaviorChallengeUnlocked ? (language === 'tr' ? '2 uygulama + 6 soru • +100 XP' : '2 tasks + 6 questions • +100 XP') : (language === 'tr' ? `${behaviorEvidenceCompletedCount}/6 ders tamamlandı` : `${behaviorEvidenceCompletedCount}/6 lessons completed`)}</Text></View>
+            <Text style={styles.archiveLink}>{behaviorChallengeUnlocked ? '→' : '🔒'}</Text>
+          </Pressable>
+        </View>
+
         <Text style={styles.sectionTitle}>{language === 'tr' ? 'Badge koleksiyonu' : 'Badge collection'}</Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.badgeRow}>
           {INITIAL_BADGES.map((badge) => {
@@ -415,4 +452,5 @@ const WAVE1_LESSON_IDS = new Set([
   ...WAVE1_MARKET_FOUNDATION_LESSONS.map((lesson) => lesson.id),
   ...WAVE1_CHART_LITERACY_LESSONS.map((lesson) => lesson.id),
   ...WAVE1_RISK_MANAGEMENT_LESSONS.map((lesson) => lesson.id),
+  ...WAVE1_BEHAVIOR_EVIDENCE_LESSONS.map((lesson) => lesson.id),
 ]);
