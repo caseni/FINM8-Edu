@@ -162,7 +162,7 @@ export const WAVE1_LESSON_BLUEPRINTS = [
     learningObjective: { tr: 'Fırsatı kaçırma korkusunun karar sürecindeki işaretlerini tanır.' },
     learningStage: 'foundation', estimatedMinutes: 4, prerequisiteLessonIds: [],
     legacyRefs: ['course:8/module:Psikolojik Engeller'], practiceKind: 'reflection', requiresVisual: false,
-    sourceIds: ['source.finm8.methodology.behavior'], readiness: 'planned',
+    sourceIds: ['source.investor-gov.risk', 'source.finm8.methodology.behavior'], readiness: 'draft',
   },
   {
     id: 'lesson.behavior.overtrading.001', moduleId: MODULES.behavior, order: 20,
@@ -170,7 +170,7 @@ export const WAVE1_LESSON_BLUEPRINTS = [
     learningObjective: { tr: 'Plan dışı işlem sıklığı ve dürtüsel karar işaretlerini tanır.' },
     learningStage: 'foundation', estimatedMinutes: 4, prerequisiteLessonIds: ['lesson.behavior.fomo.001'],
     legacyRefs: ['course:8/module:Psikolojik Engeller'], practiceKind: 'reflection', requiresVisual: false,
-    sourceIds: ['source.finm8.methodology.behavior'], readiness: 'planned',
+    sourceIds: ['source.investor-gov.risk', 'source.finm8.methodology.behavior'], readiness: 'draft',
   },
   {
     id: 'lesson.behavior.confirmation-bias.001', moduleId: MODULES.behavior, order: 21,
@@ -178,7 +178,7 @@ export const WAVE1_LESSON_BLUEPRINTS = [
     learningObjective: { tr: 'Onaylama yanlılığını ve karşı kanıt arama ihtiyacını açıklar.' },
     learningStage: 'foundation', estimatedMinutes: 4, prerequisiteLessonIds: ['lesson.behavior.fomo.001'],
     legacyRefs: ['course:8/module:Bilişsel Hatalar'], practiceKind: 'scenario_choice', requiresVisual: false,
-    sourceIds: ['source.finm8.methodology.behavior'], readiness: 'planned',
+    sourceIds: ['source.finm8.methodology.behavior'], readiness: 'draft',
   },
   {
     id: 'lesson.evidence.data-quality.001', moduleId: MODULES.behavior, order: 22,
@@ -186,7 +186,7 @@ export const WAVE1_LESSON_BLUEPRINTS = [
     learningObjective: { tr: 'Eksik, tutarsız ve doğrulanmamış veriyi güvenilir kanıttan ayırır.' },
     learningStage: 'foundation', estimatedMinutes: 5, prerequisiteLessonIds: [],
     legacyRefs: [], practiceKind: 'scenario_choice', requiresVisual: false,
-    sourceIds: ['source.finm8.methodology.evidence'], readiness: 'planned',
+    sourceIds: ['source.finm8.methodology.evidence'], readiness: 'draft',
   },
   {
     id: 'lesson.evidence.freshness.001', moduleId: MODULES.behavior, order: 23,
@@ -194,7 +194,7 @@ export const WAVE1_LESSON_BLUEPRINTS = [
     learningObjective: { tr: 'Veri güncelliğini piyasa ve zaman dilimi bağlamında değerlendirir.' },
     learningStage: 'intermediate', estimatedMinutes: 4, prerequisiteLessonIds: ['lesson.evidence.data-quality.001'],
     legacyRefs: [], practiceKind: 'scenario_choice', requiresVisual: false,
-    sourceIds: ['source.finm8.methodology.evidence'], readiness: 'planned',
+    sourceIds: ['source.finm8.methodology.evidence'], readiness: 'draft',
   },
   {
     id: 'lesson.behavior.decision-journal.001', moduleId: MODULES.behavior, order: 24,
@@ -202,15 +202,15 @@ export const WAVE1_LESSON_BLUEPRINTS = [
     learningObjective: { tr: 'Bir karar günlüğünde gözlem, yorum ve sonucu ayrı kaydeder.' },
     learningStage: 'foundation', estimatedMinutes: 5, prerequisiteLessonIds: ['lesson.behavior.confirmation-bias.001'],
     legacyRefs: ['course:8/module:Günlük Tutma'], practiceKind: 'reflection', requiresVisual: false,
-    sourceIds: ['source.finm8.methodology.behavior'], readiness: 'planned',
+    sourceIds: ['source.finm8.methodology.behavior'], readiness: 'draft',
   },
 ].map((blueprint) => lessonBlueprintSchema.parse(blueprint));
 
 export const WAVE1_MODULES = [
   { id: MODULES.markets, title: { tr: 'Piyasa Temelleri' }, description: { tr: 'Fiyat, araçlar, likidite ve emirlerin çalışma mantığı.' }, order: 1, lessonIds: WAVE1_LESSON_BLUEPRINTS.slice(0, 6).map((item) => item.id), prerequisiteModuleIds: [] },
   { id: MODULES.charts, title: { tr: 'Grafik Okuryazarlığı' }, description: { tr: 'Mum, zaman dilimi, trend ve piyasa yapısını okuma.' }, order: 2, lessonIds: WAVE1_LESSON_BLUEPRINTS.slice(6, 12).map((item) => item.id), prerequisiteModuleIds: [MODULES.markets] },
-  { id: MODULES.risk, title: { tr: 'Risk Yönetimi' }, description: { tr: 'Belirsizlik, volatilite, boyutlandırma ve çeşitlendirme.' }, order: 3, lessonIds: WAVE1_LESSON_BLUEPRINTS.slice(12, 18).map((item) => item.id), prerequisiteModuleIds: [MODULES.markets] },
-  { id: MODULES.behavior, title: { tr: 'Davranış ve Kanıt' }, description: { tr: 'Karar hatalarını ve kanıt kalitesini fark etme.' }, order: 4, lessonIds: WAVE1_LESSON_BLUEPRINTS.slice(18, 24).map((item) => item.id), prerequisiteModuleIds: [] },
+  { id: MODULES.risk, title: { tr: 'Risk Yönetimi' }, description: { tr: 'Belirsizlik, volatilite, boyutlandırma ve çeşitlendirme.' }, order: 3, lessonIds: WAVE1_LESSON_BLUEPRINTS.slice(12, 18).map((item) => item.id), prerequisiteModuleIds: [MODULES.charts] },
+  { id: MODULES.behavior, title: { tr: 'Davranış ve Kanıt' }, description: { tr: 'Karar hatalarını ve kanıt kalitesini fark etme.' }, order: 4, lessonIds: WAVE1_LESSON_BLUEPRINTS.slice(18, 24).map((item) => item.id), prerequisiteModuleIds: [MODULES.risk] },
 ].map((module) => learningModuleSchema.parse(module));
 
 export const WAVE1_MARKET_LITERACY_PATH = learningPathSchema.parse({
