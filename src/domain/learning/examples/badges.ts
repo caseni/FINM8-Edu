@@ -13,18 +13,39 @@ export const INITIAL_BADGES: readonly LearningBadge[] = [
     requirements: [
       {
         kind: 'lesson_completion',
-        targetId: 'lesson.market-structure.bos.001',
+        targetId: 'lesson.market.price-formation.001',
         threshold: 1,
       },
       {
         kind: 'practical_task',
-        targetId: 'task.bos.001',
+        targetId: 'task.fiyat-piyasada-nasil-olusur.001',
         threshold: 1,
       },
       {
         kind: 'quiz_accuracy',
-        targetId: 'quiz.bos.001',
+        targetId: 'quiz.fiyat-piyasada-nasil-olusur.001',
         threshold: 67,
+      },
+    ],
+    disclaimer: {
+      tr: 'Bu badge bir öğrenme başarısıdır; sertifika veya mesleki yeterlilik değildir.',
+      en: 'This badge is a learning achievement, not a certificate or professional qualification.',
+    },
+  },
+  {
+    id: 'badge.market-foundations.module',
+    title: { tr: 'Piyasa Mekaniği', en: 'Market Mechanics' },
+    description: {
+      tr: 'Piyasa Temelleri modülünü ve uygulamalı challenge’ını tamamla.',
+      en: 'Complete the Market Foundations module and its applied challenge.',
+    },
+    credentialType: 'learning_achievement',
+    definitionVersion: '0.1.0',
+    requirements: [
+      {
+        kind: 'challenge_completion',
+        targetId: 'challenge.market-foundations.foundation',
+        threshold: 1,
       },
     ],
     disclaimer: {
