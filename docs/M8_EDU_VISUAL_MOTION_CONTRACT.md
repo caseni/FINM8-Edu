@@ -26,17 +26,35 @@ proof.
 
 ## Rules
 
-1. Motion lasts roughly 0.6–2.5 seconds and can be replayed.
-2. The lesson remains understandable when motion is disabled.
-3. Reduced-motion accessibility is respected.
-4. No flashing, autoplay loops, confetti storms, or reward animation tied to
+1. Normal presentation teaches one idea per visual and shows at most 3–4
+   essential labels at once.
+2. Plain-language terms appear before abbreviations. Pro presentation may add a
+   second layer of detail, but never changes the underlying meaning.
+3. Unrelated indicators, overlays, prices, and decorative market noise are not
+   added to beginner visuals.
+4. Motion reveals one relationship, cause, or sequence; it never exists only to
+   decorate the screen.
+5. Motion lasts roughly 0.6–2.5 seconds and can be replayed.
+6. The lesson remains understandable when motion is disabled.
+7. Reduced-motion accessibility is respected.
+8. No flashing, autoplay loops, confetti storms, or reward animation tied to
    trading frequency, profit, leverage, or risk-taking.
-5. Every visual has Turkish alt text and an English fallback.
-6. Diagram colors are not the only carrier of meaning.
-7. Visual examples are schematic and clearly labeled until grounded snapshots
+9. Every visual has Turkish alt text and an English fallback.
+10. Diagram colors are not the only carrier of meaning; shape, position, labels,
+    or line styles carry the same distinction.
+11. Visual examples are schematic and clearly labeled until grounded snapshots
    are available.
-8. The visual registry resolves stable `edu://` asset references so lesson
+12. The visual registry resolves stable `edu://` asset references so lesson
    content does not depend on a specific rendering library.
+
+## Beginner comprehension gate
+
+Every Normal visual must pass a five-second check: a new learner can state the
+single idea being taught without reading the full lesson. If not, the visual is
+split into smaller steps. Complex concepts such as BOS and CHoCH are introduced
+as separate observations before they are compared. Accuracy is never traded for
+visual simplicity; omitted detail must be non-essential to the current learning
+objective.
 
 ## Production path
 
