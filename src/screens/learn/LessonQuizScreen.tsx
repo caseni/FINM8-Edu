@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { QuizPlayer } from '../../components/learning';
@@ -18,9 +18,14 @@ export function LessonQuizScreen({ route, navigation }: Props) {
   const language: LearningLanguage = rawLanguage === 'en' ? 'en' : 'tr';
   const submitQuiz = useLearningProgressStore((state) => state.submitQuiz);
   const completeLesson = useLearningProgressStore((state) => state.completeLesson);
+  const saveLessonCheckpoint = useLearningProgressStore((state) => state.saveLessonCheckpoint);
   const tryAwardBadge = useLearningProgressStore((state) => state.tryAwardBadge);
   const [result, setResult] = useState<QuizResult>();
   const [newBadgeTitle, setNewBadgeTitle] = useState<string>();
+
+  useEffect(() => {
+    if (lesson && !route.params.review) saveLessonCheckpoint(lesson.id, 'quiz');
+  }, [lesson, route.params.review, saveLessonCheckpoint]);
 
   if (!lesson) return <SafeAreaView style={styles.safeArea}><Text style={styles.title}>Ders bulunamadı.</Text></SafeAreaView>;
 
