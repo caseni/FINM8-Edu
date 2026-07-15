@@ -4,7 +4,7 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { QuizPlayer } from '../../components/learning';
 import { getMicroLessonById } from '../../domain/learning/catalog';
 import { INITIAL_BADGES } from '../../domain/learning/examples/badges';
-import type { LearningLanguage } from '../../domain/learning/presentation';
+import { selectLocalizedText, type LearningLanguage } from '../../domain/learning/presentation';
 import type { QuizResult } from '../../domain/learning/progressionEngine';
 import { useLanguageStore } from '../../store/useLanguageStore';
 import { useLearningProgressStore } from '../../store/useLearningProgressStore';
@@ -28,11 +28,11 @@ export function LessonQuizScreen({ route, navigation }: Props) {
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.resultCard}>
           <Text style={styles.resultEmoji}>{result.passed ? '✓' : '↻'}</Text>
-          <Text style={styles.title}>{result.passed ? 'Quiz tamamlandı' : 'Kısa bir tekrar iyi olur'}</Text>
+          <Text style={styles.title}>{result.passed ? (language === 'tr' ? 'Quiz tamamlandı' : 'Quiz completed') : (language === 'tr' ? 'Kısa bir tekrar iyi olur' : 'A short review will help')}</Text>
           <Text style={styles.score}>%{result.score}</Text>
-          <Text style={styles.body}>{result.correctAnswers}/{result.totalQuestions} doğru cevap</Text>
-          {newBadgeTitle ? <Text style={styles.badgeNotice}>◆ Yeni badge: {newBadgeTitle}</Text> : null}
-          <Pressable style={styles.button} onPress={() => navigation.popToTop()}><Text style={styles.buttonText}>M8 Learn’e dön</Text></Pressable>
+          <Text style={styles.body}>{result.correctAnswers}/{result.totalQuestions} {language === 'tr' ? 'doğru cevap' : 'correct answers'}</Text>
+          {newBadgeTitle ? <Text style={styles.badgeNotice}>◆ {language === 'tr' ? 'Yeni badge' : 'New badge'}: {newBadgeTitle}</Text> : null}
+          <Pressable style={styles.button} onPress={() => route.params.review ? navigation.goBack() : navigation.popToTop()}><Text style={styles.buttonText}>{route.params.review ? (language === 'tr' ? 'Review merkezine dön' : 'Return to review center') : (language === 'tr' ? 'M8 Learn’e dön' : 'Return to M8 Learn')}</Text></Pressable>
         </View>
       </SafeAreaView>
     );
@@ -45,12 +45,18 @@ export function LessonQuizScreen({ route, navigation }: Props) {
           quiz={lesson.quiz}
           language={language}
           onComplete={(_previewResult, submissions) => {
+            if (route.params.review) {
+              setResult(_previewResult);
+              return;
+            }
             const storedResult = submitQuiz(lesson, submissions, new Date().toISOString());
             if (storedResult.passed) {
-              const awarded = INITIAL_BADGES.find((badge) =>
+              const awarded = INITIAL_BADGES.filter((badge) =>
                 tryAwardBadge(badge, new Date().toISOString())
               );
-              if (awarded) setNewBadgeTitle(awarded.title.tr);
+              if (awarded.length > 0) {
+                setNewBadgeTitle(awarded.map((badge) => selectLocalizedText(badge.title, language)).join(' · '));
+              }
             }
             setResult(storedResult);
           }}
