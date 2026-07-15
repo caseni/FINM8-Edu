@@ -17,15 +17,17 @@ export function LessonQuizScreen({ route, navigation }: Props) {
   const rawLanguage = useLanguageStore((state) => state.language);
   const language: LearningLanguage = rawLanguage === 'en' ? 'en' : 'tr';
   const submitQuiz = useLearningProgressStore((state) => state.submitQuiz);
+  const submitReview = useLearningProgressStore((state) => state.submitReview);
   const completeLesson = useLearningProgressStore((state) => state.completeLesson);
   const saveLessonCheckpoint = useLearningProgressStore((state) => state.saveLessonCheckpoint);
   const tryAwardBadge = useLearningProgressStore((state) => state.tryAwardBadge);
   const [result, setResult] = useState<QuizResult>();
   const [newBadgeTitle, setNewBadgeTitle] = useState<string>();
+  const isSpacedReview = route.params.spacedReview === true;
 
   useEffect(() => {
-    if (lesson && !route.params.review) saveLessonCheckpoint(lesson.id, 'quiz');
-  }, [lesson, route.params.review, saveLessonCheckpoint]);
+    if (lesson && !route.params.review && !isSpacedReview) saveLessonCheckpoint(lesson.id, 'quiz');
+  }, [isSpacedReview, lesson, route.params.review, saveLessonCheckpoint]);
 
   if (!lesson) return <SafeAreaView style={styles.safeArea}><Text style={styles.title}>Ders bulunamadı.</Text></SafeAreaView>;
 
@@ -34,7 +36,7 @@ export function LessonQuizScreen({ route, navigation }: Props) {
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.resultCard}>
           <Text style={styles.resultEmoji}>{result.passed ? '✓' : '↻'}</Text>
-          <Text style={styles.title}>{result.passed ? (language === 'tr' ? 'Quiz tamamlandı' : 'Quiz completed') : (language === 'tr' ? 'Kısa bir tekrar iyi olur' : 'A short review will help')}</Text>
+          <Text style={styles.title}>{result.passed ? (isSpacedReview ? (language === 'tr' ? 'Tekrar tamamlandı' : 'Review completed') : (language === 'tr' ? 'Quiz tamamlandı' : 'Quiz completed')) : (language === 'tr' ? 'Kısa bir tekrar iyi olur' : 'A short review will help')}</Text>
           <Text style={styles.score}>%{result.score}</Text>
           <Text style={styles.body}>{result.correctAnswers}/{result.totalQuestions} {language === 'tr' ? 'doğru cevap' : 'correct answers'}</Text>
           {newBadgeTitle ? <Text style={styles.badgeNotice}>◆ {language === 'tr' ? 'Yeni badge' : 'New badge'}: {newBadgeTitle}</Text> : null}
@@ -49,7 +51,9 @@ export function LessonQuizScreen({ route, navigation }: Props) {
                 ? route.params.review
                   ? language === 'tr' ? 'Review merkezine dön' : 'Return to review center'
                   : language === 'tr' ? 'M8 Learn’e dön' : 'Return to M8 Learn'
-                : language === 'tr' ? 'Quiz’i tekrar dene' : 'Retry the quiz'}
+                : isSpacedReview
+                  ? language === 'tr' ? 'Tekrarı yeniden dene' : 'Retry the review'
+                  : language === 'tr' ? 'Quiz’i tekrar dene' : 'Retry the quiz'}
             </Text>
           </Pressable>
           {!result.passed ? (
@@ -68,15 +72,20 @@ export function LessonQuizScreen({ route, navigation }: Props) {
         <QuizPlayer
           quiz={lesson.quiz}
           language={language}
+          eyebrow={isSpacedReview ? { tr: 'AKTİF TEKRAR', en: 'ACTIVE REVIEW' } : undefined}
           onComplete={(_previewResult, submissions) => {
             if (route.params.review) {
               setResult(_previewResult);
               return;
             }
             const now = new Date().toISOString();
-            const storedResult = submitQuiz(lesson, submissions, now);
-            if (storedResult.passed) {
+            const storedResult = isSpacedReview
+              ? submitReview(lesson, submissions, now)
+              : submitQuiz(lesson, submissions, now);
+            if (storedResult.passed && !isSpacedReview) {
               completeLesson(lesson, now);
+            }
+            if (storedResult.passed) {
               const awarded = INITIAL_BADGES.filter((badge) =>
                 tryAwardBadge(badge, now)
               );

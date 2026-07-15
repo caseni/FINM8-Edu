@@ -44,6 +44,11 @@ interface LearningProgressState {
     submissions: readonly QuizSubmission[],
     submittedAt: string
   ) => QuizResult;
+  submitReview: (
+    lesson: MicroLesson,
+    submissions: readonly QuizSubmission[],
+    submittedAt: string
+  ) => QuizResult;
   passPracticalTask: (lesson: MicroLesson, passedAt: string) => void;
   completeChallenge: (challengeId: string, completedAt: string) => void;
   tryAwardBadge: (badge: LearningBadge, awardedAt: string) => boolean;
@@ -182,6 +187,29 @@ export const useLearningProgressStore = create<LearningProgressState>()(
             totalXp,
             level: calculateLearnerLevel(totalXp),
             streak: updateLearningStreak(state.streak, learningDate(submittedAt)),
+          };
+        });
+        return result;
+      },
+
+      submitReview: (lesson, submissions, submittedAt) => {
+        const result = get().submitQuiz(lesson, submissions, submittedAt);
+        if (!result.passed) return result;
+        set((state) => {
+          const event = createXpEvent({
+            userId: state.profile.userId,
+            reason: 'review_completed',
+            sourceId: lesson.id,
+            awardedAt: submittedAt,
+          });
+          if (state.xpEvents.some((existing) => existing.idempotencyKey === event.idempotencyKey)) {
+            return state;
+          }
+          const totalXp = state.totalXp + event.points;
+          return {
+            xpEvents: [...state.xpEvents, event],
+            totalXp,
+            level: calculateLearnerLevel(totalXp),
           };
         });
         return result;
