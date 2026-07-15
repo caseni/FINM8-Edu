@@ -5,7 +5,7 @@ export type RootStackParamList = {
   LearningOnboarding: undefined;
   MicroLesson: { lessonId: string; review?: boolean };
   PracticalTask: { lessonId: string; review?: boolean };
-  LessonQuiz: { lessonId: string; review?: boolean };
+  LessonQuiz: { lessonId: string; review?: boolean; spacedReview?: boolean };
   LearningChallenge: { challengeId: string; review?: boolean };
   LearningReview: undefined;
   LegacyCatalog: undefined;
@@ -24,7 +24,7 @@ export type MainStackParamList = {
   LearningOnboarding: undefined;
   MicroLesson: { lessonId: string; review?: boolean };
   PracticalTask: { lessonId: string; review?: boolean };
-  LessonQuiz: { lessonId: string; review?: boolean };
+  LessonQuiz: { lessonId: string; review?: boolean; spacedReview?: boolean };
   LearningChallenge: { challengeId: string; review?: boolean };
   LearningReview: undefined;
   LegacyCatalog: undefined;
