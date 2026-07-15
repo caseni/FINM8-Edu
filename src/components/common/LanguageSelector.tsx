@@ -9,7 +9,8 @@ import {
   SafeAreaView,
 } from 'react-native';
 import { useLanguage } from '../../hooks/useLanguage';
-import { LANGUAGES, LANGUAGE_NAMES, Language } from '../../constants/languages';
+import { LANGUAGES, LANGUAGE_NAMES } from '../../constants/languages';
+import type { Language } from '../../types/course';
 
 export const LanguageSelector: React.FC = () => {
   const { language, setLanguage, t } = useLanguage();
