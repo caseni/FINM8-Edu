@@ -122,7 +122,7 @@ export function LearnHomeScreen() {
             {selectLocalizedText(bosMicroLesson.learningObjective, language)}
           </Text>
           <View style={styles.missionFooter}>
-            <Text style={styles.xpReward}>+80 XP</Text>
+            <Text style={styles.xpReward}>+90 XP</Text>
             <Text style={styles.startText}>
               {lessonCompleted
                 ? language === 'tr' ? 'Tekrar et →' : 'Review →'
