@@ -4,6 +4,7 @@ export * from './curriculum';
 export * from './legacy/legacyCourseInventory';
 export * from './examples/wave1MarketLiteracyPath';
 export * from './examples/wave1/marketFoundationsLessons';
+export * from './examples/wave1/chartLiteracyLessons';
 export * from './examples/wave1/challenges';
 export * from './presentation';
 export * from './progressionEngine';

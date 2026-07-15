@@ -6,7 +6,7 @@ export type RootStackParamList = {
   MicroLesson: { lessonId: string };
   PracticalTask: { lessonId: string };
   LessonQuiz: { lessonId: string };
-  MarketFoundationsChallenge: undefined;
+  LearningChallenge: { challengeId: string };
   LegacyCatalog: undefined;
   CourseDetail: { courseId: number };
   Auth: NavigatorScreenParams<AuthStackParamList>;
@@ -24,7 +24,7 @@ export type MainStackParamList = {
   MicroLesson: { lessonId: string };
   PracticalTask: { lessonId: string };
   LessonQuiz: { lessonId: string };
-  MarketFoundationsChallenge: undefined;
+  LearningChallenge: { challengeId: string };
   LegacyCatalog: undefined;
   CourseDetail: { courseId: number };
 };

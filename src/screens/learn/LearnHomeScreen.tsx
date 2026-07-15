@@ -2,8 +2,9 @@ import React from 'react';
 import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { bosMicroLesson } from '../../domain/learning/examples/bosLesson';
 import { INITIAL_BADGES } from '../../domain/learning/examples/badges';
+import { CHART_LITERACY_CHALLENGE, MARKET_FOUNDATIONS_CHALLENGE } from '../../domain/learning/examples/wave1/challenges';
+import { WAVE1_CHART_LITERACY_LESSONS } from '../../domain/learning/examples/wave1/chartLiteracyLessons';
 import { WAVE1_MARKET_FOUNDATION_LESSONS } from '../../domain/learning/examples/wave1/marketFoundationsLessons';
 import { WAVE1_CONTENT_SUMMARY } from '../../domain/learning/examples/wave1MarketLiteracyPath';
 import { selectLocalizedText, type LearningLanguage } from '../../domain/learning/presentation';
@@ -22,17 +23,32 @@ export function LearnHomeScreen() {
   const totalXp = useLearningProgressStore((state) => state.totalXp);
   const level = useLearningProgressStore((state) => state.level);
   const completedLessonIds = useLearningProgressStore((state) => state.completedLessonIds);
+  const completedChallengeIds = useLearningProgressStore((state) => state.completedChallengeIds);
   const streak = useLearningProgressStore((state) => state.streak);
   const badgeAwards = useLearningProgressStore((state) => state.badgeAwards);
   const masteryBySkill = useLearningProgressStore((state) => state.masteryBySkill);
   const presentationMode = useLearningUiStore((state) => state.presentationMode);
   const setPresentationMode = useLearningUiStore((state) => state.setPresentationMode);
-  const nextLesson =
-    WAVE1_MARKET_FOUNDATION_LESSONS.find(
-      (lesson) => !completedLessonIds.includes(lesson.id)
-    ) ?? bosMicroLesson;
-  const lessonCompleted = completedLessonIds.includes(nextLesson.id);
+  const foundationNextLesson = WAVE1_MARKET_FOUNDATION_LESSONS.find(
+    (lesson) => !completedLessonIds.includes(lesson.id)
+  );
+  const marketChallengeCompleted = completedChallengeIds.includes(MARKET_FOUNDATIONS_CHALLENGE.id);
+  const chartNextLesson = marketChallengeCompleted
+    ? WAVE1_CHART_LITERACY_LESSONS.find((lesson) => !completedLessonIds.includes(lesson.id))
+    : undefined;
+  const chartChallengeCompleted = completedChallengeIds.includes(CHART_LITERACY_CHALLENGE.id);
+  const mission = foundationNextLesson
+    ? { kind: 'lesson' as const, lesson: foundationNextLesson }
+    : !marketChallengeCompleted
+      ? { kind: 'challenge' as const, challenge: MARKET_FOUNDATIONS_CHALLENGE }
+      : chartNextLesson
+        ? { kind: 'lesson' as const, lesson: chartNextLesson }
+        : !chartChallengeCompleted
+          ? { kind: 'challenge' as const, challenge: CHART_LITERACY_CHALLENGE }
+          : { kind: 'lesson' as const, lesson: WAVE1_MARKET_FOUNDATION_LESSONS[0] };
+  const lessonCompleted = mission.kind === 'lesson' && completedLessonIds.includes(mission.lesson.id);
   const activeMastery =
+    (marketChallengeCompleted ? masteryBySkill['skill.chart-literacy'] : undefined) ??
     masteryBySkill['skill.market-foundations'] ??
     masteryBySkill['skill.market-structure'];
   const wave1CompletedCount = completedLessonIds.filter((lessonId) =>
@@ -43,6 +59,12 @@ export function LearnHomeScreen() {
   ).length;
   const marketFoundationsUnlocked =
     marketFoundationsCompletedCount === WAVE1_MARKET_FOUNDATION_LESSONS.length;
+  const chartLiteracyCompletedCount = WAVE1_CHART_LITERACY_LESSONS.filter(
+    (lesson) => completedLessonIds.includes(lesson.id)
+  ).length;
+  const chartLiteracyUnlocked = marketChallengeCompleted;
+  const chartChallengeUnlocked =
+    chartLiteracyCompletedCount === WAVE1_CHART_LITERACY_LESSONS.length;
   const reviewDue = Object.values(masteryBySkill).filter(
     (mastery) => mastery.reviewDueAt && new Date(mastery.reviewDueAt) <= new Date()
   ).length;
@@ -110,7 +132,7 @@ export function LearnHomeScreen() {
           <View style={styles.skillTop}>
             <View>
               <Text style={styles.sectionLabel}>{language === 'tr' ? 'BECERİ HARİTASI' : 'SKILL MAP'}</Text>
-              <Text style={styles.skillTitle}>{language === 'tr' ? 'Piyasa yapısı' : 'Market structure'}</Text>
+              <Text style={styles.skillTitle}>{marketChallengeCompleted ? (language === 'tr' ? 'Grafik okuryazarlığı' : 'Chart literacy') : (language === 'tr' ? 'Piyasa temelleri' : 'Market foundations')}</Text>
             </View>
             <Text style={styles.skillScore}>{Math.round(activeMastery?.score ?? 0)}%</Text>
           </View>
@@ -127,18 +149,20 @@ export function LearnHomeScreen() {
         <Text style={styles.sectionTitle}>{language === 'tr' ? 'Bugünün görevi' : "Today's mission"}</Text>
         <Pressable
           style={styles.missionCard}
-          onPress={() => navigation.navigate('MicroLesson', { lessonId: nextLesson.id })}
+          onPress={() => mission.kind === 'lesson'
+            ? navigation.navigate('MicroLesson', { lessonId: mission.lesson.id })
+            : navigation.navigate('LearningChallenge', { challengeId: mission.challenge.id })}
         >
           <View style={styles.missionTop}>
             <Text style={styles.missionTag}>MARKET STRUCTURE</Text>
-            <Text style={styles.missionTime}>{nextLesson.estimatedMinutes} dk</Text>
+            <Text style={styles.missionTime}>{mission.kind === 'lesson' ? `${mission.lesson.estimatedMinutes} dk` : 'Final'}</Text>
           </View>
-          <Text style={styles.missionTitle}>{selectLocalizedText(nextLesson.title, language)}</Text>
+          <Text style={styles.missionTitle}>{selectLocalizedText(mission.kind === 'lesson' ? mission.lesson.title : mission.challenge.title, language)}</Text>
           <Text style={styles.missionBody}>
-            {selectLocalizedText(nextLesson.learningObjective, language)}
+            {selectLocalizedText(mission.kind === 'lesson' ? mission.lesson.learningObjective : mission.challenge.description, language)}
           </Text>
           <View style={styles.missionFooter}>
-            <Text style={styles.xpReward}>+90 XP</Text>
+            <Text style={styles.xpReward}>+{mission.kind === 'lesson' ? 90 : mission.challenge.xpReward} XP</Text>
             <Text style={styles.startText}>
               {lessonCompleted
                 ? language === 'tr' ? 'Tekrar et →' : 'Review →'
@@ -184,7 +208,7 @@ export function LearnHomeScreen() {
           })}
           <Pressable
             disabled={!marketFoundationsUnlocked}
-            onPress={() => navigation.navigate('MarketFoundationsChallenge')}
+            onPress={() => navigation.navigate('LearningChallenge', { challengeId: MARKET_FOUNDATIONS_CHALLENGE.id })}
             style={[
               styles.challengeCard,
               !marketFoundationsUnlocked && styles.challengeCardLocked,
@@ -206,6 +230,41 @@ export function LearnHomeScreen() {
               </Text>
             </View>
             <Text style={styles.archiveLink}>{marketFoundationsUnlocked ? '→' : '🔒'}</Text>
+          </Pressable>
+        </View>
+
+        <View style={[styles.moduleCard, !chartLiteracyUnlocked && styles.moduleLocked]}>
+          <Text style={styles.sectionLabel}>{language === 'tr' ? 'MODÜL 2' : 'MODULE 2'}</Text>
+          <Text style={styles.pathTitle}>{language === 'tr' ? 'Grafik Okuryazarlığı' : 'Chart Literacy'}</Text>
+          {!chartLiteracyUnlocked ? (
+            <Text style={styles.lockedText}>{language === 'tr' ? 'Piyasa Mekaniği Challenge tamamlandığında açılır.' : 'Unlocks after the Market Mechanics Challenge.'}</Text>
+          ) : null}
+          {WAVE1_CHART_LITERACY_LESSONS.map((lesson, index) => {
+            const completed = completedLessonIds.includes(lesson.id);
+            return (
+              <Pressable disabled={!chartLiteracyUnlocked} key={lesson.id} onPress={() => navigation.navigate('MicroLesson', { lessonId: lesson.id })} style={styles.lessonRow}>
+                <View style={[styles.lessonNumber, completed && styles.lessonNumberDone]}>
+                  <Text style={styles.lessonNumberText}>{completed ? '✓' : index + 1}</Text>
+                </View>
+                <View style={styles.pathContent}>
+                  <Text style={styles.lessonTitle}>{selectLocalizedText(lesson.title, language)}</Text>
+                  <Text style={styles.skillMeta}>{lesson.estimatedMinutes} dk • +90 XP</Text>
+                </View>
+                <Text style={styles.archiveLink}>{chartLiteracyUnlocked ? '→' : '🔒'}</Text>
+              </Pressable>
+            );
+          })}
+          <Pressable
+            disabled={!chartChallengeUnlocked}
+            onPress={() => navigation.navigate('LearningChallenge', { challengeId: CHART_LITERACY_CHALLENGE.id })}
+            style={[styles.challengeCard, !chartChallengeUnlocked && styles.challengeCardLocked]}
+          >
+            <View style={styles.challengeIcon}><Text style={styles.challengeIconText}>{chartChallengeUnlocked ? '◆' : '◇'}</Text></View>
+            <View style={styles.pathContent}>
+              <Text style={styles.challengeTitle}>{language === 'tr' ? 'Grafik Dedektifi Challenge' : 'Chart Detective Challenge'}</Text>
+              <Text style={styles.skillMeta}>{chartChallengeUnlocked ? (language === 'tr' ? '2 uygulama + 6 soru • +100 XP' : '2 tasks + 6 questions • +100 XP') : (language === 'tr' ? `${chartLiteracyCompletedCount}/6 ders tamamlandı` : `${chartLiteracyCompletedCount}/6 lessons completed`)}</Text>
+            </View>
+            <Text style={styles.archiveLink}>{chartChallengeUnlocked ? '→' : '🔒'}</Text>
           </Pressable>
         </View>
 
@@ -293,6 +352,8 @@ const styles = StyleSheet.create({
   pathStatus: { color: '#FBBF24', fontSize: 11, marginTop: 4 },
   pathProgress: { color: '#2DD4BF', fontSize: 12, fontWeight: '800', marginTop: 4 },
   moduleCard: { gap: 10, padding: 18, borderRadius: 18, backgroundColor: '#0C1928', borderWidth: 1, borderColor: '#1F3449' },
+  moduleLocked: { opacity: 0.65 },
+  lockedText: { color: '#FBBF24', fontSize: 12, lineHeight: 18 },
   lessonRow: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 10, borderTopWidth: 1, borderTopColor: '#172F46' },
   lessonNumber: { width: 32, height: 32, alignItems: 'center', justifyContent: 'center', borderRadius: 11, backgroundColor: '#172F46' },
   lessonNumberDone: { backgroundColor: '#123B42' },
@@ -315,5 +376,5 @@ const styles = StyleSheet.create({
 
 const WAVE1_LESSON_IDS = new Set([
   ...WAVE1_MARKET_FOUNDATION_LESSONS.map((lesson) => lesson.id),
-  bosMicroLesson.id,
+  ...WAVE1_CHART_LITERACY_LESSONS.map((lesson) => lesson.id),
 ]);

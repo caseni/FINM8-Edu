@@ -75,6 +75,27 @@ export const INITIAL_BADGES: readonly LearningBadge[] = [
     },
   },
   {
+    id: 'badge.chart-literacy.module',
+    title: { tr: 'Grafik Dedektifi', en: 'Chart Detective' },
+    description: {
+      tr: 'Grafik Okuryazarlığı modülünü ve uygulamalı challenge’ını tamamla.',
+      en: 'Complete the Chart Literacy module and its applied challenge.',
+    },
+    credentialType: 'learning_achievement',
+    definitionVersion: '0.1.0',
+    requirements: [
+      {
+        kind: 'challenge_completion',
+        targetId: 'challenge.chart-literacy.foundation',
+        threshold: 1,
+      },
+    ],
+    disclaimer: {
+      tr: 'Bu badge bir öğrenme başarısıdır; sertifika veya mesleki yeterlilik değildir.',
+      en: 'This badge is a learning achievement, not a certificate or professional qualification.',
+    },
+  },
+  {
     id: 'badge.risk-guardian.foundation',
     title: { tr: 'Risk Koruyucusu', en: 'Risk Guardian' },
     description: {
