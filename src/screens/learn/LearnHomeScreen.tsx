@@ -183,6 +183,8 @@ export function LearnHomeScreen() {
           <View style={styles.segmented}>
             {(['normal', 'pro'] as const).map((mode) => (
               <Pressable
+                accessibilityRole="button"
+                accessibilityState={{ selected: presentationMode === mode }}
                 key={mode}
                 onPress={() => setPresentationMode(mode)}
                 style={[styles.segment, presentationMode === mode && styles.segmentActive]}
@@ -409,7 +411,7 @@ const styles = StyleSheet.create({
   levelValue: { color: '#2DD4BF', fontSize: 24, fontWeight: '900' },
   onboardingCard: { backgroundColor: '#123B42', padding: 20, borderRadius: 20, borderWidth: 1, borderColor: '#2DD4BF', gap: 7 },
   profileCard: { padding: 18, borderRadius: 18, backgroundColor: '#0C1928', borderWidth: 1, borderColor: '#1F3449', gap: 12 },
-  profileTop: { flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12 },
+  profileTop: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12 },
   profileStage: { color: '#F8FAFC', fontSize: 17, fontWeight: '900', marginTop: 4 },
   profileEdit: { color: '#2DD4BF', fontSize: 12, fontWeight: '900' },
   profileGoals: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: 7 },
@@ -420,11 +422,11 @@ const styles = StyleSheet.create({
   cardEyebrow: { color: '#5EEAD4', fontSize: 11, fontWeight: '900' },
   cardTitle: { color: '#F8FAFC', fontSize: 21, fontWeight: '800' },
   cardBody: { color: '#B8D6D5', fontSize: 14, lineHeight: 20 },
-  modeRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  modeRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 12, justifyContent: 'space-between', alignItems: 'center' },
   sectionLabel: { color: '#F8FAFC', fontSize: 12, fontWeight: '800' },
   modeHint: { color: '#6F8499', fontSize: 11, marginTop: 2 },
   segmented: { flexDirection: 'row', backgroundColor: '#102033', padding: 4, borderRadius: 12 },
-  segment: { paddingVertical: 8, paddingHorizontal: 14, borderRadius: 9 },
+  segment: { minHeight: 44, justifyContent: 'center', paddingVertical: 8, paddingHorizontal: 14, borderRadius: 9 },
   segmentActive: { backgroundColor: '#2DD4BF' },
   segmentText: { color: '#9FB0C3', fontWeight: '700', fontSize: 13 },
   segmentTextActive: { color: '#042F2E' },
