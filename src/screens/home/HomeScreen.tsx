@@ -46,10 +46,6 @@ export const HomeScreen: React.FC = () => {
   }, [t]);
 
   useEffect(() => {
-    loadCourses();
-  }, [loadCourses]);
-
-  useEffect(() => {
     if (searchQuery.trim()) {
       const timeoutId = setTimeout(() => {
         loadCourses(searchQuery);
