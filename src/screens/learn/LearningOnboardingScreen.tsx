@@ -56,7 +56,7 @@ export function LearningOnboardingScreen({ navigation }: Props) {
         <Text style={styles.body}>{language === 'tr' ? 'Bu seçim Normal/Pro anlatımından bağımsızdır. Temel yol sırasını değiştirmez; görev rehberliğini seviyene ve hedeflerine göre ayarlar.' : 'This is independent from Normal/Pro presentation. It does not change the foundation path order; it adapts mission guidance to your level and goals.'}</Text>
         <View style={styles.options}>
           {stages.map((item) => (
-            <Pressable key={item.id} onPress={() => setStage(item.id)} style={[styles.option, stage === item.id && styles.optionActive]}>
+            <Pressable accessibilityRole="button" accessibilityState={{ selected: stage === item.id }} key={item.id} onPress={() => setStage(item.id)} style={[styles.option, stage === item.id && styles.optionActive]}>
               <Text style={styles.optionTitle}>{selectLocalizedText(item.title, language)}</Text>
               <Text style={styles.optionBody}>{selectLocalizedText(item.body, language)}</Text>
             </Pressable>
@@ -66,10 +66,10 @@ export function LearningOnboardingScreen({ navigation }: Props) {
         <View style={styles.chips}>
           {goals.map((goal) => {
             const selected = selectedGoals.includes(goal.id);
-            return <Pressable key={goal.id} onPress={() => toggleGoal(goal.id)} style={[styles.chip, selected && styles.chipActive]}><Text style={[styles.chipText, selected && styles.chipTextActive]}>{selectLocalizedText(goal.title, language)}</Text></Pressable>;
+            return <Pressable accessibilityRole="button" accessibilityState={{ selected }} key={goal.id} onPress={() => toggleGoal(goal.id)} style={[styles.chip, selected && styles.chipActive]}><Text style={[styles.chipText, selected && styles.chipTextActive]}>{selectLocalizedText(goal.title, language)}</Text></Pressable>;
           })}
         </View>
-        <Pressable disabled={selectedGoals.length === 0} onPress={complete} style={[styles.button, selectedGoals.length === 0 && styles.disabled]}>
+        <Pressable accessibilityRole="button" accessibilityState={{ disabled: selectedGoals.length === 0 }} disabled={selectedGoals.length === 0} onPress={complete} style={[styles.button, selectedGoals.length === 0 && styles.disabled]}>
           <Text style={styles.buttonText}>{language === 'tr' ? 'Profilimi kaydet' : 'Save my profile'}</Text>
         </Pressable>
       </ScrollView>
@@ -90,11 +90,11 @@ const styles = StyleSheet.create({
   optionBody: { color: '#9FB0C3', fontSize: 13, lineHeight: 19 },
   sectionTitle: { color: '#F8FAFC', fontSize: 19, fontWeight: '800', marginTop: 8 },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  chip: { paddingVertical: 10, paddingHorizontal: 14, borderRadius: 99, borderWidth: 1, borderColor: '#294057', backgroundColor: '#102033' },
+  chip: { minHeight: 44, justifyContent: 'center', paddingVertical: 10, paddingHorizontal: 14, borderRadius: 99, borderWidth: 1, borderColor: '#294057', backgroundColor: '#102033' },
   chipActive: { borderColor: '#2DD4BF', backgroundColor: '#123B42' },
   chipText: { color: '#9FB0C3', fontWeight: '700' },
   chipTextActive: { color: '#5EEAD4' },
-  button: { marginTop: 14, alignItems: 'center', padding: 17, borderRadius: 15, backgroundColor: '#2DD4BF' },
+  button: { minHeight: 52, marginTop: 14, alignItems: 'center', justifyContent: 'center', padding: 17, borderRadius: 15, backgroundColor: '#2DD4BF' },
   buttonText: { color: '#042F2E', fontSize: 16, fontWeight: '900' },
   disabled: { opacity: 0.35 },
 });
