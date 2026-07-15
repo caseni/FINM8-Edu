@@ -108,6 +108,12 @@ const bosLessonDraft = {
       },
     },
     assetRef: 'edu://charts/bos-starter-001',
+    choices: [
+      { id: 'structural-high', label: { tr: 'Önceki anlamlı tepe', en: 'Previous meaningful high' } },
+      { id: 'random-wick', label: { tr: 'Rastgele bir fitil', en: 'A random wick' } },
+      { id: 'confirming-close', label: { tr: 'Kırılımı teyit eden kapanış', en: 'The confirming break close' } },
+      { id: 'middle-range', label: { tr: 'Aralığın orta noktası', en: 'The middle of the range' } },
+    ],
     evaluationRule: 'exact',
     expectedEvidence: ['structural-high', 'confirming-close'],
   },
