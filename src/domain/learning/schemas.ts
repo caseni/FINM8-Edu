@@ -263,6 +263,25 @@ export const lessonSeriesSchema = z
   })
   .strict();
 
+export const lessonBlueprintSchema = z
+  .object({
+    id: idSchema,
+    moduleId: idSchema,
+    order: z.number().int().positive(),
+    conceptKey: learningConceptKeySchema,
+    title: localizedTextSchema,
+    learningObjective: localizedTextSchema,
+    learningStage: learningStageSchema,
+    estimatedMinutes: z.number().int().min(3).max(6),
+    prerequisiteLessonIds: z.array(idSchema),
+    legacyRefs: z.array(z.string().trim().min(1)),
+    practiceKind: z.enum(['scenario_choice', 'chart_identification', 'reflection']),
+    requiresVisual: z.boolean(),
+    sourceIds: z.array(idSchema).min(1),
+    readiness: z.enum(['planned', 'draft', 'in_review', 'approved']),
+  })
+  .strict();
+
 export const learningModuleSchema = z
   .object({
     id: idSchema,
