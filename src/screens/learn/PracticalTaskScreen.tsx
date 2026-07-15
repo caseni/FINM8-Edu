@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { SafeAreaView, StyleSheet, Text } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { PracticalTaskPlayer } from '../../components/learning';
@@ -17,6 +17,11 @@ export function PracticalTaskScreen({ route, navigation }: Props) {
   const language: LearningLanguage = rawLanguage === 'en' ? 'en' : 'tr';
   const presentationMode = useLearningUiStore((state) => state.presentationMode);
   const passPracticalTask = useLearningProgressStore((state) => state.passPracticalTask);
+  const saveLessonCheckpoint = useLearningProgressStore((state) => state.saveLessonCheckpoint);
+
+  useEffect(() => {
+    if (lesson && !route.params.review) saveLessonCheckpoint(lesson.id, 'task');
+  }, [lesson, route.params.review, saveLessonCheckpoint]);
 
   if (!lesson) return <SafeAreaView style={styles.safeArea}><Text style={styles.error}>Ders bulunamadı.</Text></SafeAreaView>;
 
@@ -34,6 +39,7 @@ export function PracticalTaskScreen({ route, navigation }: Props) {
             return;
           }
           passPracticalTask(lesson, new Date().toISOString());
+          saveLessonCheckpoint(lesson.id, 'quiz');
           navigation.replace('LessonQuiz', { lessonId: lesson.id });
         }}
       />
