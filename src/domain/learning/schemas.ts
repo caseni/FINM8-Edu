@@ -336,6 +336,7 @@ export const badgeRequirementSchema = z
       'quiz_accuracy',
       'practical_task',
       'mastery',
+      'challenge_completion',
     ]),
     targetId: idSchema,
     threshold: z.number().nonnegative(),
@@ -348,6 +349,7 @@ export const learningBadgeSchema = z
     title: localizedTextSchema,
     description: localizedTextSchema,
     credentialType: z.literal('learning_achievement'),
+    definitionVersion: z.string().regex(/^\d+\.\d+\.\d+$/),
     requirements: z.array(badgeRequirementSchema).min(1),
     disclaimer: localizedTextSchema,
   })
@@ -370,6 +372,7 @@ export const learningProfileSchema = z
       )
       .min(1),
     preferredMarketScopes: z.array(marketScopeSchema).min(1),
+    onboardingCompletedAt: z.string().datetime({ offset: true }).optional(),
     placementCompletedAt: z.string().datetime({ offset: true }).optional(),
   })
   .strict();
