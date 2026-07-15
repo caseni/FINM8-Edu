@@ -4,6 +4,8 @@ import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { bosMicroLesson } from '../../domain/learning/examples/bosLesson';
 import { INITIAL_BADGES } from '../../domain/learning/examples/badges';
+import { WAVE1_MARKET_FOUNDATION_LESSONS } from '../../domain/learning/examples/wave1/marketFoundationsLessons';
+import { WAVE1_CONTENT_SUMMARY } from '../../domain/learning/examples/wave1MarketLiteracyPath';
 import { selectLocalizedText, type LearningLanguage } from '../../domain/learning/presentation';
 import { useLanguageStore } from '../../store/useLanguageStore';
 import { useLearningProgressStore } from '../../store/useLearningProgressStore';
@@ -25,8 +27,22 @@ export function LearnHomeScreen() {
   const masteryBySkill = useLearningProgressStore((state) => state.masteryBySkill);
   const presentationMode = useLearningUiStore((state) => state.presentationMode);
   const setPresentationMode = useLearningUiStore((state) => state.setPresentationMode);
-  const lessonCompleted = completedLessonIds.includes(bosMicroLesson.id);
-  const marketStructureMastery = masteryBySkill['skill.market-structure'];
+  const nextLesson =
+    WAVE1_MARKET_FOUNDATION_LESSONS.find(
+      (lesson) => !completedLessonIds.includes(lesson.id)
+    ) ?? bosMicroLesson;
+  const lessonCompleted = completedLessonIds.includes(nextLesson.id);
+  const activeMastery =
+    masteryBySkill['skill.market-foundations'] ??
+    masteryBySkill['skill.market-structure'];
+  const wave1CompletedCount = completedLessonIds.filter((lessonId) =>
+    WAVE1_LESSON_IDS.has(lessonId)
+  ).length;
+  const marketFoundationsCompletedCount = WAVE1_MARKET_FOUNDATION_LESSONS.filter(
+    (lesson) => completedLessonIds.includes(lesson.id)
+  ).length;
+  const marketFoundationsUnlocked =
+    marketFoundationsCompletedCount === WAVE1_MARKET_FOUNDATION_LESSONS.length;
   const reviewDue = Object.values(masteryBySkill).filter(
     (mastery) => mastery.reviewDueAt && new Date(mastery.reviewDueAt) <= new Date()
   ).length;
@@ -96,10 +112,10 @@ export function LearnHomeScreen() {
               <Text style={styles.sectionLabel}>{language === 'tr' ? 'BECERİ HARİTASI' : 'SKILL MAP'}</Text>
               <Text style={styles.skillTitle}>{language === 'tr' ? 'Piyasa yapısı' : 'Market structure'}</Text>
             </View>
-            <Text style={styles.skillScore}>{Math.round(marketStructureMastery?.score ?? 0)}%</Text>
+            <Text style={styles.skillScore}>{Math.round(activeMastery?.score ?? 0)}%</Text>
           </View>
           <View style={styles.skillTrack}>
-            <View style={[styles.skillFill, { width: `${marketStructureMastery?.score ?? 0}%` }]} />
+            <View style={[styles.skillFill, { width: `${activeMastery?.score ?? 0}%` }]} />
           </View>
           <Text style={styles.skillMeta}>
             {reviewDue > 0
@@ -111,15 +127,15 @@ export function LearnHomeScreen() {
         <Text style={styles.sectionTitle}>{language === 'tr' ? 'Bugünün görevi' : "Today's mission"}</Text>
         <Pressable
           style={styles.missionCard}
-          onPress={() => navigation.navigate('MicroLesson', { lessonId: bosMicroLesson.id })}
+          onPress={() => navigation.navigate('MicroLesson', { lessonId: nextLesson.id })}
         >
           <View style={styles.missionTop}>
             <Text style={styles.missionTag}>MARKET STRUCTURE</Text>
-            <Text style={styles.missionTime}>{bosMicroLesson.estimatedMinutes} dk</Text>
+            <Text style={styles.missionTime}>{nextLesson.estimatedMinutes} dk</Text>
           </View>
-          <Text style={styles.missionTitle}>{selectLocalizedText(bosMicroLesson.title, language)}</Text>
+          <Text style={styles.missionTitle}>{selectLocalizedText(nextLesson.title, language)}</Text>
           <Text style={styles.missionBody}>
-            {selectLocalizedText(bosMicroLesson.learningObjective, language)}
+            {selectLocalizedText(nextLesson.learningObjective, language)}
           </Text>
           <View style={styles.missionFooter}>
             <Text style={styles.xpReward}>+90 XP</Text>
@@ -142,7 +158,55 @@ export function LearnHomeScreen() {
                 : 'Market foundations, chart literacy, risk, and behavior.'}
             </Text>
             <Text style={styles.pathStatus}>{language === 'tr' ? 'İlk yol • Taslak içerik' : 'First path • Draft content'}</Text>
+            <Text style={styles.pathProgress}>
+              {wave1CompletedCount}/{WAVE1_CONTENT_SUMMARY.lessonCount} {language === 'tr' ? 'ders •' : 'lessons •'} {WAVE1_CONTENT_SUMMARY.estimatedMinutes} dk
+            </Text>
           </View>
+        </View>
+
+        <View style={styles.moduleCard}>
+          <Text style={styles.sectionLabel}>{language === 'tr' ? 'MODÜL 1' : 'MODULE 1'}</Text>
+          <Text style={styles.pathTitle}>{language === 'tr' ? 'Piyasa Temelleri' : 'Market Foundations'}</Text>
+          {WAVE1_MARKET_FOUNDATION_LESSONS.map((lesson, index) => {
+            const completed = completedLessonIds.includes(lesson.id);
+            return (
+              <Pressable key={lesson.id} onPress={() => navigation.navigate('MicroLesson', { lessonId: lesson.id })} style={styles.lessonRow}>
+                <View style={[styles.lessonNumber, completed && styles.lessonNumberDone]}>
+                  <Text style={styles.lessonNumberText}>{completed ? '✓' : index + 1}</Text>
+                </View>
+                <View style={styles.pathContent}>
+                  <Text style={styles.lessonTitle}>{selectLocalizedText(lesson.title, language)}</Text>
+                  <Text style={styles.skillMeta}>{lesson.estimatedMinutes} dk • +90 XP</Text>
+                </View>
+                <Text style={styles.archiveLink}>→</Text>
+              </Pressable>
+            );
+          })}
+          <Pressable
+            disabled={!marketFoundationsUnlocked}
+            onPress={() => navigation.navigate('MarketFoundationsChallenge')}
+            style={[
+              styles.challengeCard,
+              !marketFoundationsUnlocked && styles.challengeCardLocked,
+            ]}
+          >
+            <View style={styles.challengeIcon}>
+              <Text style={styles.challengeIconText}>{marketFoundationsUnlocked ? '◆' : '◇'}</Text>
+            </View>
+            <View style={styles.pathContent}>
+              <Text style={styles.challengeTitle}>
+                {language === 'tr' ? 'Piyasa Mekaniği Challenge' : 'Market Mechanics Challenge'}
+              </Text>
+              <Text style={styles.skillMeta}>
+                {marketFoundationsUnlocked
+                  ? language === 'tr' ? '2 uygulama + 6 soru • +100 XP' : '2 tasks + 6 questions • +100 XP'
+                  : language === 'tr'
+                    ? `${marketFoundationsCompletedCount}/6 ders tamamlandı`
+                    : `${marketFoundationsCompletedCount}/6 lessons completed`}
+              </Text>
+            </View>
+            <Text style={styles.archiveLink}>{marketFoundationsUnlocked ? '→' : '🔒'}</Text>
+          </Pressable>
         </View>
 
         <Text style={styles.sectionTitle}>{language === 'tr' ? 'Badge koleksiyonu' : 'Badge collection'}</Text>
@@ -227,6 +291,18 @@ const styles = StyleSheet.create({
   pathTitle: { color: '#F8FAFC', fontSize: 16, fontWeight: '800' },
   pathBody: { color: '#9FB0C3', fontSize: 13, lineHeight: 18 },
   pathStatus: { color: '#FBBF24', fontSize: 11, marginTop: 4 },
+  pathProgress: { color: '#2DD4BF', fontSize: 12, fontWeight: '800', marginTop: 4 },
+  moduleCard: { gap: 10, padding: 18, borderRadius: 18, backgroundColor: '#0C1928', borderWidth: 1, borderColor: '#1F3449' },
+  lessonRow: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 10, borderTopWidth: 1, borderTopColor: '#172F46' },
+  lessonNumber: { width: 32, height: 32, alignItems: 'center', justifyContent: 'center', borderRadius: 11, backgroundColor: '#172F46' },
+  lessonNumberDone: { backgroundColor: '#123B42' },
+  lessonNumberText: { color: '#2DD4BF', fontWeight: '900', fontSize: 12 },
+  lessonTitle: { color: '#F8FAFC', fontSize: 14, fontWeight: '700' },
+  challengeCard: { flexDirection: 'row', alignItems: 'center', gap: 12, marginTop: 4, padding: 14, borderRadius: 15, backgroundColor: '#123B42', borderWidth: 1, borderColor: '#2DD4BF' },
+  challengeCardLocked: { opacity: 0.55, backgroundColor: '#102033', borderColor: '#294057' },
+  challengeIcon: { width: 38, height: 38, alignItems: 'center', justifyContent: 'center', borderRadius: 12, backgroundColor: '#172F46' },
+  challengeIconText: { color: '#FBBF24', fontSize: 20, fontWeight: '900' },
+  challengeTitle: { color: '#F8FAFC', fontSize: 15, fontWeight: '900' },
   badgeRow: { gap: 10, paddingRight: 20 },
   badgeCard: { width: 150, minHeight: 130, padding: 16, borderRadius: 18, backgroundColor: '#0C1928', borderWidth: 1, borderColor: '#1F3449', gap: 8 },
   badgeCardEarned: { borderColor: '#2DD4BF', backgroundColor: '#123B42' },
@@ -236,3 +312,8 @@ const styles = StyleSheet.create({
   archiveRow: { flexDirection: 'row', alignItems: 'center', gap: 12, padding: 18, borderRadius: 18, backgroundColor: '#0C1928' },
   archiveLink: { color: '#2DD4BF', fontWeight: '800' },
 });
+
+const WAVE1_LESSON_IDS = new Set([
+  ...WAVE1_MARKET_FOUNDATION_LESSONS.map((lesson) => lesson.id),
+  bosMicroLesson.id,
+]);
