@@ -28,9 +28,8 @@ export function MicroLessonScreen({ route, navigation }: Props) {
       onExit={() => navigation.goBack()}
       onStartAssessment={() => {
         completeLesson(lesson, new Date().toISOString());
-        navigation.replace('LessonQuiz', { lessonId: lesson.id });
+        navigation.replace('PracticalTask', { lessonId: lesson.id });
       }}
     />
   );
 }
-
