@@ -1,10 +1,10 @@
-import { bosMicroLesson } from './examples/bosLesson';
 import { WAVE1_MARKET_FOUNDATION_LESSONS } from './examples/wave1/marketFoundationsLessons';
+import { WAVE1_CHART_LITERACY_LESSONS } from './examples/wave1/chartLiteracyLessons';
 import type { MicroLesson } from './types';
 
 export const MICRO_LESSON_CATALOG: readonly MicroLesson[] = [
   ...WAVE1_MARKET_FOUNDATION_LESSONS,
-  bosMicroLesson,
+  ...WAVE1_CHART_LITERACY_LESSONS,
 ];
 
 export function getMicroLessonById(lessonId: string): MicroLesson | undefined {
