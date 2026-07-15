@@ -3,6 +3,7 @@ import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'rea
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { LearningModuleCard } from '../../components/learning';
+import { MICRO_LESSON_CATALOG } from '../../domain/learning/catalog';
 import { INITIAL_BADGES } from '../../domain/learning/examples/badges';
 import { BEHAVIOR_EVIDENCE_CHALLENGE, CHART_LITERACY_CHALLENGE, MARKET_FOUNDATIONS_CHALLENGE, RISK_MANAGEMENT_CHALLENGE } from '../../domain/learning/examples/wave1/challenges';
 import { WAVE1_BEHAVIOR_EVIDENCE_LESSONS } from '../../domain/learning/examples/wave1/behaviorEvidenceLessons';
@@ -30,6 +31,7 @@ export function LearnHomeScreen() {
   const streak = useLearningProgressStore((state) => state.streak);
   const badgeAwards = useLearningProgressStore((state) => state.badgeAwards);
   const masteryBySkill = useLearningProgressStore((state) => state.masteryBySkill);
+  const quizScores = useLearningProgressStore((state) => state.quizScores);
   const lessonCheckpoints = useLearningProgressStore((state) => state.lessonCheckpoints);
   const presentationMode = useLearningUiStore((state) => state.presentationMode);
   const setPresentationMode = useLearningUiStore((state) => state.setPresentationMode);
@@ -88,9 +90,15 @@ export function LearnHomeScreen() {
         : 4;
   const [expandedModule, setExpandedModule] = useState(activeModuleNumber);
   useEffect(() => setExpandedModule(activeModuleNumber), [activeModuleNumber]);
-  const reviewDue = Object.values(masteryBySkill).filter(
+  const dueMasteries = Object.values(masteryBySkill).filter(
     (mastery) => mastery.reviewDueAt && new Date(mastery.reviewDueAt) <= new Date()
-  ).length;
+  ).sort((a, b) => a.score - b.score);
+  const reviewDue = dueMasteries.length;
+  const reviewLesson = dueMasteries
+    .map((mastery) => MICRO_LESSON_CATALOG
+      .filter((lesson) => lesson.skillId === mastery.skillId && completedLessonIds.includes(lesson.id))
+      .sort((a, b) => (quizScores[a.quiz.id] ?? 0) - (quizScores[b.quiz.id] ?? 0))[0])
+    .find((lesson) => lesson !== undefined);
   const missionCheckpoint = mission.kind === 'lesson' ? lessonCheckpoints[mission.lesson.id] : undefined;
 
   const openLesson = (lessonId: string) => {
@@ -182,6 +190,18 @@ export function LearnHomeScreen() {
               : language === 'tr' ? 'Yeni kanıtlarla gelişir' : 'Improves with new evidence'}
           </Text>
         </View>
+
+        {reviewLesson ? (
+          <Pressable accessibilityRole="button" onPress={() => navigation.navigate('LessonQuiz', { lessonId: reviewLesson.id, spacedReview: true })} style={styles.spacedReviewCard}>
+            <View style={styles.reviewClock}><Text style={styles.reviewClockText}>↻</Text></View>
+            <View style={styles.pathContent}>
+              <Text style={styles.cardEyebrow}>{language === 'tr' ? 'TEKRAR ZAMANI' : 'REVIEW DUE'}</Text>
+              <Text style={styles.pathTitle}>{selectLocalizedText(reviewLesson.title, language)}</Text>
+              <Text style={styles.pathBody}>{language === 'tr' ? 'Kısa bir aktif tekrar bilgiyi kalıcılaştırır.' : 'A short active review helps make learning stick.'}</Text>
+            </View>
+            <Text style={styles.startText}>{language === 'tr' ? 'Başla ›' : 'Start ›'}</Text>
+          </Pressable>
+        ) : null}
 
         <Text style={styles.sectionTitle}>{language === 'tr' ? 'Bugünün görevi' : "Today's mission"}</Text>
         <Pressable
@@ -417,6 +437,9 @@ const styles = StyleSheet.create({
   reviewCard: { flexDirection: 'row', alignItems: 'center', gap: 14, padding: 18, borderRadius: 18, backgroundColor: '#101D2C', borderWidth: 1, borderColor: '#294057' },
   reviewMark: { width: 44, height: 44, borderRadius: 14, alignItems: 'center', justifyContent: 'center', backgroundColor: '#172F46' },
   reviewMarkText: { color: '#2DD4BF', fontSize: 14, fontWeight: '900' },
+  spacedReviewCard: { flexDirection: 'row', alignItems: 'center', gap: 14, padding: 18, borderRadius: 18, backgroundColor: '#171F2A', borderWidth: 1, borderColor: '#6B5A2B' },
+  reviewClock: { width: 44, height: 44, borderRadius: 14, alignItems: 'center', justifyContent: 'center', backgroundColor: '#2A2618' },
+  reviewClockText: { color: '#FBBF24', fontSize: 24, fontWeight: '900' },
 });
 
 const WAVE1_LESSON_IDS = new Set([
