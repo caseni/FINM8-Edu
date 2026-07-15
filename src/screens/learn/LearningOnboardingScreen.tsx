@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useLearningProgressStore } from '../../store/useLearningProgressStore';
-import type { LearningProfile, LearningStage } from '../../domain/learning/types';
-import type { LocalizedText } from '../../domain/learning/types';
+import type { LearningProfile, LearningStage, LocalizedText } from '../../domain/learning/types';
 import { selectLocalizedText, type LearningLanguage } from '../../domain/learning/presentation';
+import { LEARNING_GOAL_LABELS } from '../../domain/learning/personalization';
 import { useLanguageStore } from '../../store/useLanguageStore';
 import type { RootStackParamList } from '../../types/navigation';
 
@@ -17,14 +17,10 @@ const stages: { id: LearningStage; title: LocalizedText; body: LocalizedText }[]
   { id: 'advanced', title: { tr: 'İleri seviye çalışıyorum', en: 'I study at an advanced level' }, body: { tr: 'Kanıt, invalidasyon ve çoklu bağlamı derinleştir.', en: 'Deepen evidence, invalidation, and multi-context reasoning.' } },
 ];
 
-const goals: { id: Goal; title: LocalizedText }[] = [
-  { id: 'financial_literacy', title: { tr: 'Finansal okuryazarlık', en: 'Financial literacy' } },
-  { id: 'investing', title: { tr: 'Yatırım', en: 'Investing' } },
-  { id: 'trading', title: { tr: 'Trading', en: 'Trading' } },
-  { id: 'risk_management', title: { tr: 'Risk yönetimi', en: 'Risk management' } },
-  { id: 'portfolio_management', title: { tr: 'Portföy', en: 'Portfolio' } },
-  { id: 'data_literacy', title: { tr: 'Veri okuryazarlığı', en: 'Data literacy' } },
-];
+const goals = (Object.keys(LEARNING_GOAL_LABELS) as Goal[]).map((id) => ({
+  id,
+  title: LEARNING_GOAL_LABELS[id],
+}));
 
 export function LearningOnboardingScreen({ navigation }: Props) {
   const profile = useLearningProgressStore((state) => state.profile);
@@ -33,6 +29,7 @@ export function LearningOnboardingScreen({ navigation }: Props) {
   const setProfile = useLearningProgressStore((state) => state.setProfile);
   const [stage, setStage] = useState<LearningStage>(profile.selectedStage);
   const [selectedGoals, setSelectedGoals] = useState<Goal[]>(profile.goals);
+  const editing = Boolean(profile.onboardingCompletedAt);
 
   const toggleGoal = (goal: Goal) =>
     setSelectedGoals((current) =>
@@ -47,7 +44,8 @@ export function LearningOnboardingScreen({ navigation }: Props) {
       goals: selectedGoals,
       onboardingCompletedAt: new Date().toISOString(),
     });
-    navigation.replace('Home');
+    if (editing) navigation.goBack();
+    else navigation.replace('Home');
   };
 
   return (
@@ -55,7 +53,7 @@ export function LearningOnboardingScreen({ navigation }: Props) {
       <ScrollView contentContainerStyle={styles.content}>
         <Text style={styles.eyebrow}>M8 LEARN</Text>
         <Text style={styles.title}>{language === 'tr' ? 'Öğrenme profilini oluştur' : 'Create your learning profile'}</Text>
-        <Text style={styles.body}>{language === 'tr' ? 'Bu seçim Normal/Pro anlatımından bağımsızdır. Temel yol sırasını değiştirmez; seviyeni ve hedeflerini kaydeder.' : 'This is independent from Normal/Pro presentation. It does not change the foundation path order; it records your level and goals.'}</Text>
+        <Text style={styles.body}>{language === 'tr' ? 'Bu seçim Normal/Pro anlatımından bağımsızdır. Temel yol sırasını değiştirmez; görev rehberliğini seviyene ve hedeflerine göre ayarlar.' : 'This is independent from Normal/Pro presentation. It does not change the foundation path order; it adapts mission guidance to your level and goals.'}</Text>
         <View style={styles.options}>
           {stages.map((item) => (
             <Pressable key={item.id} onPress={() => setStage(item.id)} style={[styles.option, stage === item.id && styles.optionActive]}>

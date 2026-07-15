@@ -10,6 +10,7 @@ export * from './examples/wave1/behaviorEvidenceLessons';
 export * from './examples/wave1/behaviorEvidenceSources';
 export * from './examples/wave1/challenges';
 export * from './presentation';
+export * from './personalization';
 export * from './progressionEngine';
 export * from './progressionSchemas';
 export * from './schemas';
