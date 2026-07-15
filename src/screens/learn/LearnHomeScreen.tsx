@@ -12,6 +12,7 @@ import { WAVE1_MARKET_FOUNDATION_LESSONS } from '../../domain/learning/examples/
 import { WAVE1_RISK_MANAGEMENT_LESSONS } from '../../domain/learning/examples/wave1/riskManagementLessons';
 import { WAVE1_CONTENT_SUMMARY } from '../../domain/learning/examples/wave1MarketLiteracyPath';
 import { selectLocalizedText, type LearningLanguage } from '../../domain/learning/presentation';
+import { getGoalReason, getProfileGuidance, LEARNING_GOAL_LABELS, LEARNING_STAGE_LABELS, selectGoalForSkill } from '../../domain/learning/personalization';
 import { useLanguageStore } from '../../store/useLanguageStore';
 import { useLearningProgressStore } from '../../store/useLearningProgressStore';
 import { useLearningUiStore } from '../../store/useLearningUiStore';
@@ -100,6 +101,12 @@ export function LearnHomeScreen() {
       .sort((a, b) => (quizScores[a.quiz.id] ?? 0) - (quizScores[b.quiz.id] ?? 0))[0])
     .find((lesson) => lesson !== undefined);
   const missionCheckpoint = mission.kind === 'lesson' ? lessonCheckpoints[mission.lesson.id] : undefined;
+  const profileGuidance = selectLocalizedText(getProfileGuidance(profile.selectedStage), language);
+  const missionGoal = selectGoalForSkill(
+    profile.goals,
+    mission.kind === 'lesson' ? mission.lesson.skillId : 'skill.market-foundations'
+  );
+  const goalReason = selectLocalizedText(getGoalReason(missionGoal), language);
 
   const openLesson = (lessonId: string) => {
     const checkpoint = lessonCheckpoints[lessonId];
@@ -144,6 +151,27 @@ export function LearnHomeScreen() {
                 ? 'Normal/Pro anlatımından bağımsız seviyeni ve hedeflerini kaydet.'
                 : 'Save your level and goals independently from Normal/Pro presentation.'}
             </Text>
+          </Pressable>
+        ) : null}
+
+        {profile.onboardingCompletedAt ? (
+          <Pressable accessibilityRole="button" onPress={() => navigation.navigate('LearningOnboarding')} style={styles.profileCard}>
+            <View style={styles.profileTop}>
+              <View>
+                <Text style={styles.cardEyebrow}>{language === 'tr' ? 'ÖĞRENME PROFİLİN' : 'YOUR LEARNING PROFILE'}</Text>
+                <Text style={styles.profileStage}>{selectLocalizedText(LEARNING_STAGE_LABELS[profile.selectedStage], language)}</Text>
+              </View>
+              <Text style={styles.profileEdit}>{language === 'tr' ? 'Düzenle' : 'Edit'}</Text>
+            </View>
+            <View style={styles.profileGoals}>
+              {profile.goals.slice(0, 3).map((goal) => (
+                <View key={goal} style={styles.profileGoalChip}>
+                  <Text style={styles.profileGoalText}>{selectLocalizedText(LEARNING_GOAL_LABELS[goal], language)}</Text>
+                </View>
+              ))}
+              {profile.goals.length > 3 ? <Text style={styles.moreGoals}>+{profile.goals.length - 3}</Text> : null}
+            </View>
+            <Text style={styles.profileNote}>{language === 'tr' ? 'Temel yol sırası sabit; rehberlik hedeflerine göre uyarlanır.' : 'The foundation path order stays fixed; guidance adapts to your goals.'}</Text>
           </Pressable>
         ) : null}
 
@@ -226,6 +254,13 @@ export function LearnHomeScreen() {
           <Text style={styles.missionBody}>
             {selectLocalizedText(mission.kind === 'lesson' ? mission.lesson.learningObjective : mission.challenge.description, language)}
           </Text>
+          {mission.kind === 'lesson' && profile.onboardingCompletedAt ? (
+            <View style={styles.guidancePanel}>
+              <Text style={styles.guidanceLabel}>{selectLocalizedText(LEARNING_GOAL_LABELS[missionGoal], language)} · {language === 'tr' ? 'SENİN İÇİN' : 'FOR YOU'}</Text>
+              <Text style={styles.guidanceText}>{goalReason}</Text>
+              <Text style={styles.guidanceHint}>{profileGuidance}</Text>
+            </View>
+          ) : null}
           <View style={styles.missionFooter}>
             <Text style={styles.xpReward}>+{mission.kind === 'lesson' ? 90 : mission.challenge.xpReward} XP</Text>
             <Text style={styles.startText}>
@@ -373,6 +408,15 @@ const styles = StyleSheet.create({
   levelLabel: { color: '#9FB0C3', fontSize: 9, fontWeight: '800' },
   levelValue: { color: '#2DD4BF', fontSize: 24, fontWeight: '900' },
   onboardingCard: { backgroundColor: '#123B42', padding: 20, borderRadius: 20, borderWidth: 1, borderColor: '#2DD4BF', gap: 7 },
+  profileCard: { padding: 18, borderRadius: 18, backgroundColor: '#0C1928', borderWidth: 1, borderColor: '#1F3449', gap: 12 },
+  profileTop: { flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12 },
+  profileStage: { color: '#F8FAFC', fontSize: 17, fontWeight: '900', marginTop: 4 },
+  profileEdit: { color: '#2DD4BF', fontSize: 12, fontWeight: '900' },
+  profileGoals: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: 7 },
+  profileGoalChip: { paddingVertical: 7, paddingHorizontal: 10, borderRadius: 99, backgroundColor: '#172F46' },
+  profileGoalText: { color: '#B8D6D5', fontSize: 11, fontWeight: '700' },
+  moreGoals: { color: '#8094A8', fontSize: 11, fontWeight: '800' },
+  profileNote: { color: '#8094A8', fontSize: 12, lineHeight: 17 },
   cardEyebrow: { color: '#5EEAD4', fontSize: 11, fontWeight: '900' },
   cardTitle: { color: '#F8FAFC', fontSize: 21, fontWeight: '800' },
   cardBody: { color: '#B8D6D5', fontSize: 14, lineHeight: 20 },
@@ -402,6 +446,10 @@ const styles = StyleSheet.create({
   missionTime: { color: '#9FB0C3', fontSize: 12 },
   missionTitle: { color: '#F8FAFC', fontSize: 23, lineHeight: 30, fontWeight: '900' },
   missionBody: { color: '#9FB0C3', fontSize: 14, lineHeight: 21 },
+  guidancePanel: { padding: 14, borderRadius: 14, backgroundColor: '#0C1928', borderWidth: 1, borderColor: '#1F3449', gap: 5 },
+  guidanceLabel: { color: '#2DD4BF', fontSize: 10, letterSpacing: 1, fontWeight: '900' },
+  guidanceText: { color: '#F8FAFC', fontSize: 13, lineHeight: 19, fontWeight: '700' },
+  guidanceHint: { color: '#9FB0C3', fontSize: 12, lineHeight: 18 },
   missionFooter: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 4 },
   xpReward: { color: '#FBBF24', fontWeight: '800' },
   startText: { color: '#2DD4BF', fontWeight: '800' },
