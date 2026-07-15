@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { SafeAreaView, StyleSheet, Text } from 'react-native';
+import { SafeAreaView, ScrollView, StyleSheet, Text } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { PracticalTaskPlayer } from '../../components/learning';
 import { getMicroLessonById } from '../../domain/learning/catalog';
@@ -27,27 +27,30 @@ export function PracticalTaskScreen({ route, navigation }: Props) {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <PracticalTaskPlayer
-        task={lesson.practicalTask}
-        language={language}
-        presentationMode={presentationMode}
-        completionLabel={route.params.review ? { tr: 'Önizlemeyi kapat', en: 'Close preview' } : undefined}
-        onComplete={(passed) => {
-          if (!passed) return;
-          if (route.params.review) {
-            navigation.goBack();
-            return;
-          }
-          passPracticalTask(lesson, new Date().toISOString());
-          saveLessonCheckpoint(lesson.id, 'quiz');
-          navigation.replace('LessonQuiz', { lessonId: lesson.id });
-        }}
-      />
+      <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
+        <PracticalTaskPlayer
+          task={lesson.practicalTask}
+          language={language}
+          presentationMode={presentationMode}
+          completionLabel={route.params.review ? { tr: 'Önizlemeyi kapat', en: 'Close preview' } : undefined}
+          onComplete={(passed) => {
+            if (!passed) return;
+            if (route.params.review) {
+              navigation.goBack();
+              return;
+            }
+            passPracticalTask(lesson, new Date().toISOString());
+            saveLessonCheckpoint(lesson.id, 'quiz');
+            navigation.replace('LessonQuiz', { lessonId: lesson.id });
+          }}
+        />
+      </ScrollView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: { flex: 1, justifyContent: 'center', padding: 20, backgroundColor: '#07111F' },
+  safeArea: { flex: 1, backgroundColor: '#07111F' },
+  content: { flexGrow: 1, justifyContent: 'center', width: '100%', padding: 16 },
   error: { color: '#F8FAFC' },
 });
