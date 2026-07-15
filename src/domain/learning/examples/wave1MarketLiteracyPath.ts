@@ -114,7 +114,7 @@ export const WAVE1_LESSON_BLUEPRINTS = [
     learningObjective: { tr: 'Risk olasılığı, belirsizlik ve gerçekleşmiş kaybı ayırt eder.' },
     learningStage: 'foundation', estimatedMinutes: 4, prerequisiteLessonIds: [],
     legacyRefs: ['course:7/module:Risk Kavramı'], practiceKind: 'scenario_choice', requiresVisual: false,
-    sourceIds: ['source.investor-gov.risk'], readiness: 'planned',
+    sourceIds: ['source.investor-gov.risk', 'source.finra.risk'], readiness: 'draft',
   },
   {
     id: 'lesson.risk.volatility.001', moduleId: MODULES.risk, order: 14,
@@ -122,7 +122,7 @@ export const WAVE1_LESSON_BLUEPRINTS = [
     learningObjective: { tr: 'Fiyat hareket genişliğinin pozisyon riskini nasıl etkilediğini açıklar.' },
     learningStage: 'foundation', estimatedMinutes: 4, prerequisiteLessonIds: ['lesson.risk.uncertainty.001'],
     legacyRefs: ['course:7/module:Risk Kavramı'], practiceKind: 'scenario_choice', requiresVisual: true,
-    sourceIds: ['source.finm8.methodology.risk'], readiness: 'planned',
+    sourceIds: ['source.investor-gov.risk', 'source.finm8.methodology.risk'], readiness: 'draft',
   },
   {
     id: 'lesson.risk.position-sizing.001', moduleId: MODULES.risk, order: 15,
@@ -130,7 +130,7 @@ export const WAVE1_LESSON_BLUEPRINTS = [
     learningObjective: { tr: 'Pozisyon büyüklüğünün kayıp etkisini nasıl belirlediğini açıklar.' },
     learningStage: 'foundation', estimatedMinutes: 5, prerequisiteLessonIds: ['lesson.risk.volatility.001'],
     legacyRefs: ['course:7/module:Pozisyon Boyutu'], practiceKind: 'scenario_choice', requiresVisual: false,
-    sourceIds: ['source.finm8.methodology.risk'], readiness: 'planned',
+    sourceIds: ['source.finra.risk', 'source.finm8.methodology.risk'], readiness: 'draft',
   },
   {
     id: 'lesson.risk.reward.001', moduleId: MODULES.risk, order: 16,
@@ -138,7 +138,7 @@ export const WAVE1_LESSON_BLUEPRINTS = [
     learningObjective: { tr: 'Risk/getiri oranını olasılık ve gerçekleşme belirsizliğiyle birlikte yorumlar.' },
     learningStage: 'intermediate', estimatedMinutes: 5, prerequisiteLessonIds: ['lesson.risk.position-sizing.001'],
     legacyRefs: ['course:7/module:Risk/Ödül Oranı'], practiceKind: 'scenario_choice', requiresVisual: false,
-    sourceIds: ['source.finm8.methodology.risk'], readiness: 'planned',
+    sourceIds: ['source.finra.risk', 'source.finm8.methodology.risk'], readiness: 'draft',
   },
   {
     id: 'lesson.risk.stop-orders.001', moduleId: MODULES.risk, order: 17,
@@ -146,7 +146,7 @@ export const WAVE1_LESSON_BLUEPRINTS = [
     learningObjective: { tr: 'Stop emrinin tetiklenme ve gerçekleşme sınırlamalarını açıklar.' },
     learningStage: 'intermediate', estimatedMinutes: 5, prerequisiteLessonIds: ['lesson.market.order-types.001'],
     legacyRefs: ['course:7/module:Stop-Loss ve Take-Profit'], practiceKind: 'scenario_choice', requiresVisual: false,
-    sourceIds: ['source.investor-gov.order-types', 'source.finra.order-types'], readiness: 'planned',
+    sourceIds: ['source.investor-gov.order-types', 'source.finm8.methodology.risk'], readiness: 'draft',
   },
   {
     id: 'lesson.portfolio.diversification.001', moduleId: MODULES.risk, order: 18,
@@ -154,7 +154,7 @@ export const WAVE1_LESSON_BLUEPRINTS = [
     learningObjective: { tr: 'Varlık sayısı ile gerçek risk çeşitlendirmesi arasındaki farkı açıklar.' },
     learningStage: 'foundation', estimatedMinutes: 5, prerequisiteLessonIds: ['lesson.risk.uncertainty.001'],
     legacyRefs: ['course:7/module:Portföy Riskleri'], practiceKind: 'scenario_choice', requiresVisual: true,
-    sourceIds: ['source.investor-gov.diversification'], readiness: 'planned',
+    sourceIds: ['source.investor-gov.diversification', 'source.investor-gov.risk'], readiness: 'draft',
   },
   {
     id: 'lesson.behavior.fomo.001', moduleId: MODULES.behavior, order: 19,
