@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { selectLocalizedText, type LearningLanguage } from '../../domain/learning/presentation';
 import { scoreQuiz, type QuizResult, type QuizSubmission } from '../../domain/learning/progressionEngine';
-import type { Quiz } from '../../domain/learning/types';
+import type { LocalizedText, Quiz } from '../../domain/learning/types';
 import { defaultLearningTheme, type LearningTheme } from '../../theme/learningTheme';
 
 export interface QuizPlayerProps {
@@ -10,6 +10,7 @@ export interface QuizPlayerProps {
   language: LearningLanguage;
   theme?: LearningTheme;
   onComplete: (result: QuizResult, submissions: readonly QuizSubmission[]) => void;
+  eyebrow?: LocalizedText;
 }
 
 export function QuizPlayer({
@@ -17,6 +18,7 @@ export function QuizPlayer({
   language,
   theme = defaultLearningTheme,
   onComplete,
+  eyebrow,
 }: QuizPlayerProps) {
   const [questionIndex, setQuestionIndex] = useState(0);
   const [selectedOptionId, setSelectedOptionId] = useState<string>();
@@ -50,7 +52,7 @@ export function QuizPlayer({
   return (
     <View style={styles.container}>
       <View style={styles.progressRow}>
-        <Text style={styles.eyebrow}>{language === 'tr' ? 'MİNİ QUIZ' : 'MINI QUIZ'}</Text>
+        <Text style={styles.eyebrow}>{eyebrow ? selectLocalizedText(eyebrow, language) : language === 'tr' ? 'MİNİ QUIZ' : 'MINI QUIZ'}</Text>
         <Text style={styles.progress}>
           {questionIndex + 1}/{quiz.questions.length}
         </Text>
