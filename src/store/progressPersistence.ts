@@ -20,14 +20,25 @@ interface PendingWrite {
 let latestWrite: PendingWrite | undefined;
 let writeSequence = 0;
 let writeQueue: Promise<void> = Promise.resolve();
+let hideSavedTimer: ReturnType<typeof setTimeout> | undefined;
 
 export const useProgressPersistenceStatusStore =
   create<ProgressPersistenceStatusState>((set) => ({
     status: 'idle',
     lastSavedAt: undefined,
-    setSaving: () => set({ status: 'saving' }),
-    setSaved: (lastSavedAt) => set({ status: 'saved', lastSavedAt }),
-    setError: () => set({ status: 'error' }),
+    setSaving: () => {
+      if (hideSavedTimer) clearTimeout(hideSavedTimer);
+      set({ status: 'saving' });
+    },
+    setSaved: (lastSavedAt) => {
+      if (hideSavedTimer) clearTimeout(hideSavedTimer);
+      set({ status: 'saved', lastSavedAt });
+      hideSavedTimer = setTimeout(() => set({ status: 'idle' }), 2200);
+    },
+    setError: () => {
+      if (hideSavedTimer) clearTimeout(hideSavedTimer);
+      set({ status: 'error' });
+    },
   }));
 
 async function enqueueWrite(name: string, value: string) {
