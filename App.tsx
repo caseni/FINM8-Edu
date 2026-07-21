@@ -3,6 +3,10 @@ import { StatusBar } from 'expo-status-bar';
 import { AppNavigator } from './src/navigation/AppNavigator';
 import { useLanguageStore } from './src/store/useLanguageStore';
 import { useLearningProgressStore } from './src/store/useLearningProgressStore';
+import {
+  retryLatestProgressSave,
+  useProgressPersistenceStatusStore,
+} from './src/store/progressPersistence';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
 
@@ -15,6 +19,7 @@ export default function App() {
   const setProgressHydrationState = useLearningProgressStore(
     (state) => state.setHydrationState
   );
+  const saveStatus = useProgressPersistenceStatusStore((state) => state.status);
   const [retrying, setRetrying] = useState(false);
 
   useEffect(() => {
@@ -80,6 +85,43 @@ export default function App() {
           )}
         </View>
       )}
+      {bootReady && saveStatus !== 'idle' ? (
+        <View
+          accessibilityLiveRegion="polite"
+          style={[
+            styles.saveNotice,
+            saveStatus === 'error' && styles.saveNoticeError,
+          ]}
+        >
+          <Text style={styles.saveNoticeText}>
+            {saveStatus === 'saving'
+              ? language === 'en'
+                ? 'Saving on this device…'
+                : 'Bu cihaza kaydediliyor…'
+              : saveStatus === 'saved'
+                ? language === 'en'
+                  ? 'Saved on this device'
+                  : 'Bu cihazda kaydedildi'
+                : language === 'en'
+                  ? 'Could not save on this device. Try again before closing the app.'
+                  : 'Bu cihaza kaydedilemedi. Uygulamayı kapatmadan yeniden dene.'}
+          </Text>
+          {saveStatus === 'error' ? (
+            <Pressable
+              accessibilityRole="button"
+              onPress={retryLatestProgressSave}
+              style={({ pressed }) => [
+                styles.saveRetryButton,
+                pressed && styles.buttonPressed,
+              ]}
+            >
+              <Text style={styles.saveRetryText}>
+                {language === 'en' ? 'Try again' : 'Yeniden dene'}
+              </Text>
+            </Pressable>
+          ) : null}
+        </View>
+      ) : null}
       <StatusBar style="light" />
     </GestureHandlerRootView>
   );
@@ -133,5 +175,48 @@ const styles = StyleSheet.create({
   },
   buttonPressed: {
     opacity: 0.7,
+  },
+  saveNotice: {
+    position: 'absolute',
+    left: 12,
+    right: 12,
+    bottom: 12,
+    zIndex: 20,
+    minHeight: 44,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 10,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: '#2A665F',
+    backgroundColor: '#0D302F',
+  },
+  saveNoticeError: {
+    borderColor: '#F59E0B',
+    backgroundColor: '#3A2710',
+  },
+  saveNoticeText: {
+    flexShrink: 1,
+    color: '#D5F5F0',
+    fontSize: 13,
+    lineHeight: 18,
+    fontWeight: '700',
+    textAlign: 'center',
+  },
+  saveRetryButton: {
+    minHeight: 44,
+    justifyContent: 'center',
+    paddingHorizontal: 14,
+    borderRadius: 10,
+    backgroundColor: '#FBBF24',
+  },
+  saveRetryText: {
+    color: '#422006',
+    fontSize: 13,
+    fontWeight: '900',
   },
 });

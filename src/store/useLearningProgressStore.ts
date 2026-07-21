@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import {
@@ -12,6 +11,7 @@ import {
   type QuizResult,
   type QuizSubmission,
 } from '../domain/learning/progressionEngine';
+import { trackedProgressStorage } from './progressPersistence';
 import type {
   BadgeAward,
   LearningBadge,
@@ -351,7 +351,7 @@ export const useLearningProgressStore = create<LearningProgressState>()(
     }),
     {
       name: '@finm8_edu_progress_v1',
-      storage: createJSONStorage(() => AsyncStorage),
+      storage: createJSONStorage(() => trackedProgressStorage),
       partialize: ({ hasHydrated, hydrationError, setHydrationState, ...progress }) => progress,
       onRehydrateStorage: () => (state, error) => {
         state?.setHydrationState(
