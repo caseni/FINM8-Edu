@@ -5,6 +5,8 @@ import type { Language } from '../types/course';
 
 interface LanguageState {
   language: Language;
+  initialized: boolean;
+  initializationError?: 'language_load_failed';
   setLanguage: (lang: Language) => Promise<void>;
   initialize: () => Promise<void>;
 }
@@ -13,15 +15,19 @@ const LANGUAGE_STORAGE_KEY = '@app_language';
 
 export const useLanguageStore = create<LanguageState>((set) => ({
   language: DEFAULT_LANGUAGE,
-  
+  initialized: false,
+
   initialize: async () => {
+    set({ initialized: false, initializationError: undefined });
     try {
       const savedLanguage = await AsyncStorage.getItem(LANGUAGE_STORAGE_KEY);
       if (savedLanguage && LANGUAGES.includes(savedLanguage as Language)) {
         set({ language: savedLanguage as Language });
       }
+      set({ initialized: true });
     } catch (error) {
       console.error('Error loading language preference:', error);
+      set({ initialized: true, initializationError: 'language_load_failed' });
     }
   },
   
