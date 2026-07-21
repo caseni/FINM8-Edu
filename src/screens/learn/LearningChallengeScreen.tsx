@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { PracticalTaskPlayer, QuizPlayer } from '../../components/learning';
+import { LearningFlowHeader, PracticalTaskPlayer, QuizPlayer } from '../../components/learning';
 import { INITIAL_BADGES } from '../../domain/learning/examples/badges';
 import { getLearningChallengeById } from '../../domain/learning/examples/wave1/challenges';
 import { selectLocalizedText, type LearningLanguage } from '../../domain/learning/presentation';
@@ -60,6 +60,11 @@ export function LearningChallengeScreen({ route, navigation }: Props) {
     const isLastTask = taskIndex === challenge.practicalTasks.length - 1;
     return (
       <SafeAreaView style={styles.safeArea}>
+        <LearningFlowHeader
+          language={language}
+          stage={2}
+          onExit={() => navigation.goBack()}
+        />
         <ScrollView contentContainerStyle={styles.content}>
           <Text style={styles.progress}>{language === 'tr' ? 'UYGULAMA' : 'TASK'} {taskIndex + 1}/{challenge.practicalTasks.length}</Text>
           <PracticalTaskPlayer
@@ -86,6 +91,11 @@ export function LearningChallengeScreen({ route, navigation }: Props) {
   if (stage === 'quiz') {
     return (
       <SafeAreaView style={styles.safeArea}>
+        <LearningFlowHeader
+          language={language}
+          stage={3}
+          onExit={() => navigation.goBack()}
+        />
         <ScrollView contentContainerStyle={styles.content}>
           <Text style={styles.progress}>{language === 'tr' ? `FİNAL QUIZ · ${quiz.questions.length} SORU` : `FINAL QUIZ · ${quiz.questions.length} QUESTIONS`}</Text>
           <QuizPlayer quiz={quiz} language={language} onComplete={(result) => finishQuiz(result.score, result.passed)} />
