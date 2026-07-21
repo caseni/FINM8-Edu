@@ -30,6 +30,7 @@ export function PracticalTaskPlayer({
 }: PracticalTaskPlayerProps) {
   const [selected, setSelected] = useState<string[]>([]);
   const [checked, setChecked] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const styles = useMemo(() => createStyles(theme), [theme]);
   const choices = task.choices ?? [];
   const expected = [...task.expectedEvidence].sort();
@@ -48,11 +49,13 @@ export function PracticalTaskPlayer({
   };
 
   const action = () => {
+    if (submitting) return;
     if (!checked) {
       setChecked(true);
       return;
     }
     if (passed) {
+      setSubmitting(true);
       onComplete(true, selected);
       return;
     }
@@ -133,10 +136,10 @@ export function PracticalTaskPlayer({
       ) : null}
       <Pressable
         accessibilityRole="button"
-        accessibilityState={{ disabled: selected.length === 0 }}
-        disabled={selected.length === 0}
+        accessibilityState={{ disabled: selected.length === 0 || submitting }}
+        disabled={selected.length === 0 || submitting}
         onPress={action}
-        style={[styles.button, selected.length === 0 && styles.disabled]}
+        style={[styles.button, (selected.length === 0 || submitting) && styles.disabled]}
       >
         <Text style={styles.buttonText}>
           {!checked
