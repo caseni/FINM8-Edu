@@ -24,6 +24,7 @@ export function QuizPlayer({
   const [selectedOptionId, setSelectedOptionId] = useState<string>();
   const [revealed, setRevealed] = useState(false);
   const [submissions, setSubmissions] = useState<QuizSubmission[]>([]);
+  const [submitting, setSubmitting] = useState(false);
   const styles = useMemo(() => createStyles(theme), [theme]);
   const question = quiz.questions[questionIndex];
   const selectedIsCorrect = selectedOptionId === question.correctOptionId;
@@ -34,12 +35,13 @@ export function QuizPlayer({
   };
 
   const next = () => {
-    if (!selectedOptionId) return;
+    if (!selectedOptionId || submitting) return;
     const nextSubmissions = [
       ...submissions,
       { questionId: question.id, selectedOptionId },
     ];
     if (questionIndex === quiz.questions.length - 1) {
+      setSubmitting(true);
       onComplete(scoreQuiz(quiz, nextSubmissions), nextSubmissions);
       return;
     }
@@ -101,10 +103,10 @@ export function QuizPlayer({
       ) : null}
       <Pressable
         accessibilityRole="button"
-        accessibilityState={{ disabled: !selectedOptionId }}
-        disabled={!selectedOptionId}
+        accessibilityState={{ disabled: !selectedOptionId || submitting }}
+        disabled={!selectedOptionId || submitting}
         onPress={revealed ? next : reveal}
-        style={[styles.button, !selectedOptionId && styles.disabled]}
+        style={[styles.button, (!selectedOptionId || submitting) && styles.disabled]}
       >
         <Text style={styles.buttonText}>
           {revealed
