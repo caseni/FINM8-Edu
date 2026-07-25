@@ -4,6 +4,9 @@ import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { LearningModuleCard, LearningPreferencesCard } from '../../components/learning';
 import { MICRO_LESSON_CATALOG } from '../../domain/learning/catalog';
+import { getCurrentQuizLearningGainSummary, getCurrentQuizPreviewDimensions } from '../../domain/learning/currentQuizLearningGain';
+import { CURRENT_QUIZ_EVIDENCE_LABELS, CURRENT_QUIZ_TRACKS, getCurrentQuizReadiness } from '../../domain/learning/currentQuizReadiness';
+import { getCurrentQuizReviewRecommendation } from '../../domain/learning/currentQuizReview';
 import { INITIAL_BADGES } from '../../domain/learning/examples/badges';
 import { BEHAVIOR_EVIDENCE_CHALLENGE, CHART_LITERACY_CHALLENGE, MARKET_FOUNDATIONS_CHALLENGE, RISK_MANAGEMENT_CHALLENGE } from '../../domain/learning/examples/wave1/challenges';
 import { WAVE1_BEHAVIOR_EVIDENCE_LESSONS } from '../../domain/learning/examples/wave1/behaviorEvidenceLessons';
@@ -34,6 +37,8 @@ export function LearnHomeScreen() {
   const masteryBySkill = useLearningProgressStore((state) => state.masteryBySkill);
   const quizScores = useLearningProgressStore((state) => state.quizScores);
   const lessonCheckpoints = useLearningProgressStore((state) => state.lessonCheckpoints);
+  const currentQuizAnswerEvidence = useLearningProgressStore((state) => state.currentQuizAnswerEvidence);
+  const currentQuizReviewCompletions = useLearningProgressStore((state) => state.currentQuizReviewCompletions);
   const presentationMode = useLearningUiStore((state) => state.presentationMode);
   const setPresentationMode = useLearningUiStore((state) => state.setPresentationMode);
   const foundationNextLesson = WAVE1_MARKET_FOUNDATION_LESSONS.find(
@@ -89,6 +94,12 @@ export function LearnHomeScreen() {
       : !riskChallengeCompleted
         ? 3
         : 4;
+  const completedModuleCount = [
+    marketChallengeCompleted,
+    chartChallengeCompleted,
+    riskChallengeCompleted,
+    behaviorChallengeCompleted,
+  ].filter(Boolean).length;
   const [expandedModule, setExpandedModule] = useState(activeModuleNumber);
   const [preferencesExpanded, setPreferencesExpanded] = useState(false);
   useEffect(() => setExpandedModule(activeModuleNumber), [activeModuleNumber]);
@@ -108,6 +119,36 @@ export function LearnHomeScreen() {
     mission.kind === 'lesson' ? mission.lesson.skillId : 'skill.market-foundations'
   );
   const goalReason = selectLocalizedText(getGoalReason(missionGoal), language);
+  const currentQuizReadiness = getCurrentQuizReadiness({
+    completedLessonIds,
+    completedChallengeIds,
+    selectedStage: profile.selectedStage,
+    presentationMode,
+  });
+  const unlockedCurrentQuizTracks = CURRENT_QUIZ_TRACKS.filter((track) =>
+    currentQuizReadiness.unlockedTrackIds.includes(track.id)
+  );
+  const latestCurrentQuizTrack = unlockedCurrentQuizTracks.at(-1);
+  const currentQuizPreviewDimensions = getCurrentQuizPreviewDimensions(
+    currentQuizReadiness.unlockedTrackIds.length > 0
+      ? currentQuizReadiness.unlockedTrackIds
+      : ['daily_basics']
+  ).slice(0, 3);
+  const currentQuizProgress =
+    currentQuizReadiness.unlockedTrackIds.length === 0
+      ? (currentQuizReadiness.completedDailyPrerequisites /
+          currentQuizReadiness.dailyPrerequisiteCount) *
+        20
+      : (currentQuizReadiness.unlockedTrackIds.length / CURRENT_QUIZ_TRACKS.length) *
+        100;
+  const currentQuizLearningGain = getCurrentQuizLearningGainSummary(
+    currentQuizAnswerEvidence
+  );
+  const currentQuizReview = getCurrentQuizReviewRecommendation(
+    currentQuizLearningGain,
+    completedLessonIds,
+    currentQuizReviewCompletions
+  );
 
   const openLesson = (lessonId: string) => {
     const checkpoint = lessonCheckpoints[lessonId];
@@ -246,6 +287,131 @@ export function LearnHomeScreen() {
           </Pressable>
         ) : null}
 
+        {currentQuizReview && !reviewLesson ? (
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={
+              language === 'tr'
+                ? `Bugünkü kısa tekrar: ${selectLocalizedText(currentQuizReview.lessonTitle, language)}`
+                : `Today's short review: ${selectLocalizedText(currentQuizReview.lessonTitle, language)}`
+            }
+            onPress={() =>
+              navigation.navigate('MicroLesson', {
+                lessonId: currentQuizReview.lessonId,
+                currentQuizReview: {
+                  conceptKey: currentQuizReview.conceptKey,
+                  reviewedEvidenceThroughAt:
+                    currentQuizReview.evidenceThroughAt,
+                },
+              })
+            }
+            style={styles.currentQuizReviewCard}
+          >
+            <View style={styles.currentQuizReviewMark}>
+              <Text style={styles.currentQuizReviewMarkText}>↺</Text>
+            </View>
+            <View style={styles.pathContent}>
+              <Text style={styles.currentQuizReviewEyebrow}>
+                {language === 'tr' ? 'BUGÜNKÜ KISA TEKRAR' : "TODAY'S SHORT REVIEW"}
+              </Text>
+              <Text style={styles.pathTitle}>
+                {selectLocalizedText(currentQuizReview.lessonTitle, language)}
+              </Text>
+              <Text style={styles.pathBody}>
+                {selectLocalizedText(currentQuizReview.guidance, language)}
+              </Text>
+              <Text style={styles.currentQuizReviewMeta}>
+                {language === 'tr'
+                  ? `${currentQuizReview.estimatedMinutes} dk · ${currentQuizReview.acceptedAnswerCount} tekrarlı kanıt`
+                  : `${currentQuizReview.estimatedMinutes} min · ${currentQuizReview.acceptedAnswerCount} repeated evidence`}
+              </Text>
+            </View>
+            <Text style={styles.startText}>
+              {language === 'tr' ? 'Aç ›' : 'Open ›'}
+            </Text>
+          </Pressable>
+        ) : null}
+
+        <View style={styles.currentQuizCard}>
+          <View style={styles.currentQuizTop}>
+            <View style={styles.currentQuizMark}>
+              <Text style={styles.currentQuizMarkText}>Q</Text>
+            </View>
+            <View style={styles.pathContent}>
+              <Text style={styles.currentQuizEyebrow}>
+                {language === 'tr' ? 'YAKINDA · GÜNCEL ÖĞRENME' : 'COMING SOON · CURRENT LEARNING'}
+              </Text>
+              <Text style={styles.currentQuizTitle}>
+                {language === 'tr' ? 'Günün Güncel Piyasa Quizi' : "Today's Current Market Quiz"}
+              </Text>
+            </View>
+            <View style={styles.currentQuizCount}>
+              <Text style={styles.currentQuizCountValue}>
+                {currentQuizReadiness.unlockedTrackIds.length}/5
+              </Text>
+              <Text style={styles.currentQuizCountLabel}>
+                {language === 'tr' ? 'TÜR' : 'TYPES'}
+              </Text>
+            </View>
+          </View>
+
+          <Text style={styles.currentQuizBody}>
+            {latestCurrentQuizTrack
+              ? selectLocalizedText(latestCurrentQuizTrack.description, language)
+              : language === 'tr'
+                ? 'İlk temel derslerini tamamladıkça güncel olayları öğrendiğin kavramlarla yorumlayacaksın.'
+                : 'As you complete the first foundation lessons, you will interpret current events with concepts you have learned.'}
+          </Text>
+
+          <View style={styles.currentQuizProgressTrack}>
+            <View
+              style={[
+                styles.currentQuizProgressFill,
+                {
+                  width: `${currentQuizProgress}%`,
+                },
+              ]}
+            />
+          </View>
+
+          <Text style={styles.currentQuizRequirement}>
+            {selectLocalizedText(currentQuizReadiness.nextRequirement, language)}
+          </Text>
+          <View style={styles.currentQuizGainPanel}>
+            <Text style={styles.currentQuizGainLabel}>
+              {language === 'tr'
+                ? currentQuizReadiness.unlockedTrackIds.length > 0
+                  ? 'ÖLÇÜLECEK KAZANIMLAR'
+                  : 'İLK AÇILACAK KAZANIMLAR'
+                : currentQuizReadiness.unlockedTrackIds.length > 0
+                  ? 'LEARNING GAINS'
+                  : 'FIRST LEARNING GAINS'}
+            </Text>
+            <View style={styles.currentQuizGainRow}>
+              {currentQuizPreviewDimensions.map((dimension) => (
+                <View key={dimension} style={styles.currentQuizGainChip}>
+                  <Text style={styles.currentQuizGainChipText}>
+                    {selectLocalizedText(
+                      CURRENT_QUIZ_EVIDENCE_LABELS[dimension],
+                      language
+                    )}
+                  </Text>
+                </View>
+              ))}
+            </View>
+            <Text style={styles.currentQuizGainHint}>
+              {language === 'tr'
+                ? 'Tek cevapla etiketleme yok; özet için farklı soru ve günlerden tekrar eden kanıt gerekir.'
+                : 'No labels from one answer; summaries require repeated evidence across different questions and days.'}
+            </Text>
+          </View>
+          <Text style={styles.currentQuizSafety}>
+            {language === 'tr'
+              ? 'Sorular seviyene ve tamamladığın konulara uyarlanacak; yatırım önerisi üretmeyecek.'
+              : 'Questions will adapt to your level and completed topics without generating investment advice.'}
+          </Text>
+        </View>
+
         <Text style={styles.sectionTitle}>{language === 'tr' ? 'Öğrenme yolları' : 'Learning paths'}</Text>
         <View style={styles.pathCard}>
           <View style={styles.pathIcon}><Text style={styles.pathIconText}>01</Text></View>
@@ -261,6 +427,43 @@ export function LearnHomeScreen() {
               {wave1CompletedCount}/{WAVE1_CONTENT_SUMMARY.lessonCount} {language === 'tr' ? 'ders •' : 'lessons •'} {WAVE1_CONTENT_SUMMARY.estimatedMinutes} dk
             </Text>
           </View>
+        </View>
+
+        <View
+          style={styles.pathNavigator}
+          accessibilityRole="progressbar"
+          accessibilityLabel={language === 'tr' ? 'Öğrenme yolu ilerlemesi' : 'Learning path progress'}
+          accessibilityValue={{ min: 0, max: 4, now: completedModuleCount }}
+        >
+          <View style={styles.pathNavigatorTop}>
+            <Text style={styles.pathNavigatorLabel}>{language === 'tr' ? 'YOL HARİTASI' : 'PATH MAP'}</Text>
+            <Text style={styles.pathNavigatorMeta}>
+              {language === 'tr'
+                ? `${completedModuleCount}/4 modül tamamlandı`
+                : `${completedModuleCount}/4 modules completed`}
+            </Text>
+          </View>
+          <View style={styles.pathSteps}>
+            {[1, 2, 3, 4].map((step) => {
+              const complete = step <= completedModuleCount;
+              const active = step === activeModuleNumber && !complete;
+              return (
+                <View key={step} style={styles.pathStepWrap}>
+                  <View style={[styles.pathStep, complete && styles.pathStepComplete, active && styles.pathStepActive]}>
+                    <Text style={[styles.pathStepText, (complete || active) && styles.pathStepTextActive]}>
+                      {complete ? '✓' : step}
+                    </Text>
+                  </View>
+                  {step < 4 ? <View style={[styles.pathConnector, step <= completedModuleCount && styles.pathConnectorComplete]} /> : null}
+                </View>
+              );
+            })}
+          </View>
+          <Text style={styles.pathNavigatorHint}>
+            {language === 'tr'
+              ? `Şimdi: Modül ${activeModuleNumber} — aşağıdan dersini seç veya bugünün görevine devam et.`
+              : `Now: Module ${activeModuleNumber} — choose a lesson below or continue today's mission.`}
+          </Text>
         </View>
 
         {[
@@ -418,6 +621,20 @@ const styles = StyleSheet.create({
   pathBody: { color: '#9FB0C3', fontSize: 13, lineHeight: 18 },
   pathStatus: { color: '#FBBF24', fontSize: 11, marginTop: 4 },
   pathProgress: { color: '#2DD4BF', fontSize: 12, fontWeight: '800', marginTop: 4 },
+  pathNavigator: { padding: 18, borderRadius: 18, backgroundColor: '#0C1928', borderWidth: 1, borderColor: '#1F3449', gap: 13 },
+  pathNavigatorTop: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 12 },
+  pathNavigatorLabel: { color: '#F8FAFC', fontSize: 12, fontWeight: '900', letterSpacing: 1 },
+  pathNavigatorMeta: { color: '#9FB0C3', fontSize: 12, fontWeight: '700' },
+  pathSteps: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  pathStepWrap: { flex: 1, flexDirection: 'row', alignItems: 'center' },
+  pathStep: { width: 32, height: 32, borderRadius: 16, alignItems: 'center', justifyContent: 'center', backgroundColor: '#172F46', borderWidth: 1, borderColor: '#294057' },
+  pathStepComplete: { backgroundColor: '#123B42', borderColor: '#2DD4BF' },
+  pathStepActive: { backgroundColor: '#2DD4BF', borderColor: '#5EEAD4' },
+  pathStepText: { color: '#8094A8', fontSize: 12, fontWeight: '900' },
+  pathStepTextActive: { color: '#07111F' },
+  pathConnector: { flex: 1, height: 3, backgroundColor: '#172F46' },
+  pathConnectorComplete: { backgroundColor: '#2DD4BF' },
+  pathNavigatorHint: { color: '#9FB0C3', fontSize: 12, lineHeight: 18 },
   moduleCard: { gap: 10, padding: 18, borderRadius: 18, backgroundColor: '#0C1928', borderWidth: 1, borderColor: '#1F3449' },
   moduleLocked: { opacity: 0.65 },
   lockedText: { color: '#FBBF24', fontSize: 12, lineHeight: 18 },
@@ -444,6 +661,31 @@ const styles = StyleSheet.create({
   reviewMarkText: { color: '#2DD4BF', fontSize: 14, fontWeight: '900' },
   spacedReviewCard: { flexDirection: 'row', alignItems: 'center', gap: 14, padding: 18, borderRadius: 18, backgroundColor: '#171F2A', borderWidth: 1, borderColor: '#6B5A2B' },
   reviewClock: { width: 44, height: 44, borderRadius: 14, alignItems: 'center', justifyContent: 'center', backgroundColor: '#2A2618' },
+  currentQuizReviewCard: { flexDirection: 'row', alignItems: 'center', gap: 14, padding: 18, borderRadius: 18, backgroundColor: '#102A2D', borderWidth: 1, borderColor: '#2F766F' },
+  currentQuizReviewMark: { width: 44, height: 44, borderRadius: 14, alignItems: 'center', justifyContent: 'center', backgroundColor: '#153E3D' },
+  currentQuizReviewMarkText: { color: '#5EEAD4', fontSize: 23, fontWeight: '900' },
+  currentQuizReviewEyebrow: { color: '#5EEAD4', fontSize: 10, lineHeight: 14, fontWeight: '900', letterSpacing: 0.7 },
+  currentQuizReviewMeta: { color: '#8FC4C5', fontSize: 11, lineHeight: 16, fontWeight: '700', marginTop: 2 },
+  currentQuizCard: { padding: 18, borderRadius: 20, backgroundColor: '#0D2630', borderWidth: 1, borderColor: '#1F5961', gap: 13 },
+  currentQuizTop: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  currentQuizMark: { width: 44, height: 44, borderRadius: 14, alignItems: 'center', justifyContent: 'center', backgroundColor: '#153E46' },
+  currentQuizMarkText: { color: '#5EEAD4', fontSize: 18, fontWeight: '900' },
+  currentQuizEyebrow: { color: '#5EEAD4', fontSize: 10, lineHeight: 14, fontWeight: '900', letterSpacing: 0.7 },
+  currentQuizTitle: { color: '#F8FAFC', fontSize: 18, lineHeight: 24, fontWeight: '900', marginTop: 2 },
+  currentQuizCount: { minWidth: 48, alignItems: 'center', paddingVertical: 7, paddingHorizontal: 8, borderRadius: 12, backgroundColor: '#102F37' },
+  currentQuizCountValue: { color: '#F8FAFC', fontSize: 15, fontWeight: '900' },
+  currentQuizCountLabel: { color: '#8FC4C5', fontSize: 8, fontWeight: '900', marginTop: 1 },
+  currentQuizBody: { color: '#C3DCDD', fontSize: 14, lineHeight: 20 },
+  currentQuizProgressTrack: { height: 7, borderRadius: 999, overflow: 'hidden', backgroundColor: '#173942' },
+  currentQuizProgressFill: { height: '100%', borderRadius: 999, backgroundColor: '#2DD4BF' },
+  currentQuizRequirement: { color: '#F8FAFC', fontSize: 13, lineHeight: 19, fontWeight: '800' },
+  currentQuizGainPanel: { gap: 9, padding: 12, borderRadius: 14, backgroundColor: '#102F37' },
+  currentQuizGainLabel: { color: '#8FC4C5', fontSize: 9, lineHeight: 13, fontWeight: '900', letterSpacing: 0.6 },
+  currentQuizGainRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 7 },
+  currentQuizGainChip: { paddingVertical: 6, paddingHorizontal: 9, borderRadius: 999, backgroundColor: '#153E46', borderWidth: 1, borderColor: '#1F5961' },
+  currentQuizGainChipText: { color: '#D9F4F0', fontSize: 11, lineHeight: 15, fontWeight: '700' },
+  currentQuizGainHint: { color: '#9CCBCC', fontSize: 11, lineHeight: 16 },
+  currentQuizSafety: { color: '#8FC4C5', fontSize: 12, lineHeight: 18 },
   reviewClockText: { color: '#FBBF24', fontSize: 24, fontWeight: '900' },
 });
 

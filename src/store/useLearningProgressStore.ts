@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import {
@@ -11,7 +12,11 @@ import {
   type QuizResult,
   type QuizSubmission,
 } from '../domain/learning/progressionEngine';
-import { trackedProgressStorage } from './progressPersistence';
+import type { CurrentQuizAnswerEvidence } from '../domain/learning/currentQuizLearningGain';
+import {
+  createCurrentQuizReviewCompletion,
+  type CurrentQuizReviewCompletion,
+} from '../domain/learning/currentQuizReview';
 import type {
   BadgeAward,
   LearningBadge,
@@ -25,8 +30,6 @@ import type {
 } from '../domain/learning/types';
 
 interface LearningProgressState {
-  hasHydrated: boolean;
-  hydrationError?: 'progress_load_failed';
   profile: LearningProfile;
   xpEvents: XpEvent[];
   totalXp: number;
@@ -39,6 +42,12 @@ interface LearningProgressState {
   badgeAwards: BadgeAward[];
   streak: LearningStreak;
   lessonCheckpoints: Record<string, LessonCheckpoint>;
+  /**
+   * Reserved for the owner-reviewed current-quiz runtime. There is deliberately
+   * no public writer while live retrieval and publication remain disabled.
+   */
+  currentQuizAnswerEvidence: CurrentQuizAnswerEvidence[];
+  currentQuizReviewCompletions: CurrentQuizReviewCompletion[];
   setProfile: (profile: LearningProfile) => void;
   completeLesson: (lesson: MicroLesson, completedAt: string) => void;
   submitQuiz: (
@@ -56,11 +65,13 @@ interface LearningProgressState {
   tryAwardBadge: (badge: LearningBadge, awardedAt: string) => boolean;
   saveLessonCheckpoint: (lessonId: string, stage: LessonJourneyStage, stepIndex?: number) => void;
   clearLessonCheckpoint: (lessonId: string) => void;
+  completeCurrentQuizReview: (input: {
+    conceptKey: CurrentQuizReviewCompletion['conceptKey'];
+    lessonId: string;
+    reviewedEvidenceThroughAt: string;
+    completedAt: string;
+  }) => void;
   resetLocalProgress: () => void;
-  setHydrationState: (
-    hasHydrated: boolean,
-    hydrationError?: 'progress_load_failed'
-  ) => void;
 }
 
 const initialProfile: LearningProfile = {
@@ -84,8 +95,6 @@ function learningDate(isoDateTime: string) {
 export const useLearningProgressStore = create<LearningProgressState>()(
   persist(
     (set, get) => ({
-      hasHydrated: false,
-      hydrationError: undefined,
       profile: initialProfile,
       xpEvents: [],
       totalXp: 0,
@@ -98,9 +107,8 @@ export const useLearningProgressStore = create<LearningProgressState>()(
       badgeAwards: [],
       streak: initialStreak,
       lessonCheckpoints: {},
-
-      setHydrationState: (hasHydrated, hydrationError) =>
-        set({ hasHydrated, hydrationError }),
+      currentQuizAnswerEvidence: [],
+      currentQuizReviewCompletions: [],
 
       setProfile: (profile) =>
         set((state) => ({
@@ -333,6 +341,24 @@ export const useLearningProgressStore = create<LearningProgressState>()(
           ),
         })),
 
+      completeCurrentQuizReview: (input) =>
+        set((state) => {
+          const completion = createCurrentQuizReviewCompletion(input);
+          if (
+            state.currentQuizReviewCompletions.some(
+              (existing) => existing.id === completion.id
+            )
+          ) {
+            return state;
+          }
+          return {
+            currentQuizReviewCompletions: [
+              ...state.currentQuizReviewCompletions,
+              completion,
+            ],
+          };
+        }),
+
       resetLocalProgress: () =>
         set({
           profile: initialProfile,
@@ -347,18 +373,13 @@ export const useLearningProgressStore = create<LearningProgressState>()(
           badgeAwards: [],
           streak: initialStreak,
           lessonCheckpoints: {},
+          currentQuizAnswerEvidence: [],
+          currentQuizReviewCompletions: [],
         }),
     }),
     {
       name: '@finm8_edu_progress_v1',
-      storage: createJSONStorage(() => trackedProgressStorage),
-      partialize: ({ hasHydrated, hydrationError, setHydrationState, ...progress }) => progress,
-      onRehydrateStorage: () => (state, error) => {
-        state?.setHydrationState(
-          true,
-          error ? 'progress_load_failed' : undefined
-        );
-      },
+      storage: createJSONStorage(() => AsyncStorage),
     }
   )
 );

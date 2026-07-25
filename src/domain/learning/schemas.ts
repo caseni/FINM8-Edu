@@ -137,6 +137,13 @@ export const questionSchema = z
     kind: z.enum(['single_choice', 'true_false']),
     conceptKey: learningConceptKeySchema,
     prompt: localizedTextSchema,
+    visual: z
+      .object({
+        assetRef: z.string().trim().min(1),
+        alt: localizedTextSchema,
+      })
+      .strict()
+      .optional(),
     options: z.array(questionOptionSchema).min(2).max(5),
     correctOptionId: idSchema,
     explanation: localizedTextSchema,

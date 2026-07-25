@@ -27,7 +27,12 @@ export function LearningFlowHeader({ language, stage, onExit }: LearningFlowHead
         <Text style={styles.exitText}>×</Text>
       </Pressable>
       <View style={styles.progressGroup}>
-        <View style={styles.progressTrack}>
+        <View
+          accessibilityRole="progressbar"
+          accessibilityLabel={language === 'tr' ? 'Öğrenme akışı ilerlemesi' : 'Learning flow progress'}
+          accessibilityValue={{ min: 1, max: 3, now: stage }}
+          style={styles.progressTrack}
+        >
           <View style={[styles.progressFill, { width: `${(stage / 3) * 100}%` }]} />
         </View>
         <Text style={styles.stageText}>{stage}/3 · {label}</Text>

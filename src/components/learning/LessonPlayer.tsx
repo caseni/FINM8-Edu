@@ -106,12 +106,24 @@ export function LessonPlayer({
         >
           <Text style={styles.exitText}>×</Text>
         </Pressable>
-        <View style={styles.progressTrack}>
-          <View style={[styles.progressFill, { width: `${progress * 100}%` }]} />
+        <View style={styles.progressGroup}>
+          <View style={styles.progressCopy}>
+            <Text style={styles.flowLabel}>{language === 'tr' ? 'DERS · 1/3' : 'LESSON · 1/3'}</Text>
+            <Text style={styles.stepText}>
+              {language === 'tr'
+                ? `Adım ${stepIndex + 1}/${totalSteps}`
+                : `Step ${stepIndex + 1}/${totalSteps}`}
+            </Text>
+          </View>
+          <View
+            accessibilityRole="progressbar"
+            accessibilityLabel={language === 'tr' ? 'Ders ilerlemesi' : 'Lesson progress'}
+            accessibilityValue={{ min: 0, max: totalSteps, now: stepIndex + 1 }}
+            style={styles.progressTrack}
+          >
+            <View style={[styles.progressFill, { width: `${progress * 100}%` }]} />
+          </View>
         </View>
-        <Text style={styles.stepText}>
-          {stepIndex + 1}/{totalSteps}
-        </Text>
       </View>
 
       <ScrollView ref={scrollRef} contentContainerStyle={styles.content}>
@@ -152,6 +164,7 @@ export function LessonPlayer({
       <View style={styles.footer}>
         <Pressable
           accessibilityRole="button"
+          accessibilityState={{ disabled: stepIndex === 0 }}
           disabled={stepIndex === 0}
           onPress={back}
           style={[styles.secondaryButton, stepIndex === 0 && styles.disabled]}
@@ -160,7 +173,22 @@ export function LessonPlayer({
             {language === 'tr' ? 'Geri' : 'Back'}
           </Text>
         </Pressable>
-        <Pressable accessibilityRole="button" onPress={next} style={styles.primaryButton}>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={
+            isTakeaway
+              ? assessmentLabel
+                ? selectLocalizedText(assessmentLabel, language)
+                : language === 'tr'
+                  ? 'Göreve geç'
+                  : 'Start assessment'
+              : language === 'tr'
+                ? 'Sonraki adıma geç'
+                : 'Continue to the next step'
+          }
+          onPress={next}
+          style={styles.primaryButton}
+        >
           <Text style={styles.primaryText}>
             {isTakeaway
               ? assessmentLabel
@@ -187,9 +215,14 @@ const createStyles = (theme: LearningTheme) =>
       gap: theme.spacing.md,
       paddingHorizontal: theme.spacing.md,
       paddingVertical: theme.spacing.sm,
+      borderBottomColor: theme.colors.border,
+      borderBottomWidth: 1,
     },
     exitButton: { width: 44, height: 44, alignItems: 'center', justifyContent: 'center' },
     exitText: { color: theme.colors.textMuted, fontSize: 28 },
+    progressGroup: { flex: 1, gap: theme.spacing.xs },
+    progressCopy: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: theme.spacing.sm },
+    flowLabel: { color: theme.colors.primary, fontSize: 11, fontWeight: '800', letterSpacing: 0.7 },
     progressTrack: {
       flex: 1,
       height: 8,
@@ -198,7 +231,7 @@ const createStyles = (theme: LearningTheme) =>
       borderRadius: theme.radius.small,
     },
     progressFill: { height: 8, backgroundColor: theme.colors.primary },
-    stepText: { color: theme.colors.textMuted, fontSize: 13 },
+    stepText: { color: theme.colors.textMuted, fontSize: 12, fontWeight: '700' },
     content: {
       flexGrow: 1,
       width: '100%',
@@ -211,10 +244,10 @@ const createStyles = (theme: LearningTheme) =>
     stage: { color: theme.colors.primary, fontSize: 12, fontWeight: '800' },
     duration: { color: theme.colors.textMuted, fontSize: 12 },
     contextLabel: { color: theme.colors.textMuted, fontSize: 12 },
-    lessonTitle: { color: theme.colors.text, fontSize: 18, fontWeight: '700' },
+    lessonTitle: { color: theme.colors.text, fontSize: 21, lineHeight: 28, fontWeight: '800' },
     slide: {
       flex: 1,
-      minHeight: 360,
+      minHeight: 300,
       justifyContent: 'center',
       padding: theme.spacing.lg,
       backgroundColor: theme.colors.surface,
@@ -232,6 +265,7 @@ const createStyles = (theme: LearningTheme) =>
       padding: theme.spacing.md,
       borderTopColor: theme.colors.border,
       borderTopWidth: 1,
+      backgroundColor: theme.colors.background,
     },
     primaryButton: {
       flex: 1,

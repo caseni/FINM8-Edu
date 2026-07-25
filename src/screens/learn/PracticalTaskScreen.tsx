@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { SafeAreaView, ScrollView, StyleSheet, Text } from 'react-native';
+import { SafeAreaView, StyleSheet, Text } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { LearningFlowHeader, PracticalTaskPlayer } from '../../components/learning';
 import { getMicroLessonById } from '../../domain/learning/catalog';
@@ -32,30 +32,27 @@ export function PracticalTaskScreen({ route, navigation }: Props) {
         stage={2}
         onExit={() => route.params.review ? navigation.goBack() : navigation.popToTop()}
       />
-      <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
-        <PracticalTaskPlayer
-          task={lesson.practicalTask}
-          language={language}
-          presentationMode={presentationMode}
-          completionLabel={route.params.review ? { tr: 'Önizlemeyi kapat', en: 'Close preview' } : undefined}
-          onComplete={(passed) => {
-            if (!passed) return;
-            if (route.params.review) {
-              navigation.goBack();
-              return;
-            }
-            passPracticalTask(lesson, new Date().toISOString());
-            saveLessonCheckpoint(lesson.id, 'quiz');
-            navigation.replace('LessonQuiz', { lessonId: lesson.id });
-          }}
-        />
-      </ScrollView>
+      <PracticalTaskPlayer
+        task={lesson.practicalTask}
+        language={language}
+        presentationMode={presentationMode}
+        completionLabel={route.params.review ? { tr: 'Önizlemeyi kapat', en: 'Close preview' } : undefined}
+        onComplete={(passed) => {
+          if (!passed) return;
+          if (route.params.review) {
+            navigation.goBack();
+            return;
+          }
+          passPracticalTask(lesson, new Date().toISOString());
+          saveLessonCheckpoint(lesson.id, 'quiz');
+          navigation.replace('LessonQuiz', { lessonId: lesson.id });
+        }}
+      />
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   safeArea: { flex: 1, backgroundColor: '#07111F' },
-  content: { flexGrow: 1, justifyContent: 'center', width: '100%', padding: 16 },
   error: { color: '#F8FAFC' },
 });

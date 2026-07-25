@@ -1,5 +1,5 @@
-import React, { useMemo, useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import React, { useMemo, useRef, useState } from 'react';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import {
   selectAudienceCopy,
   selectLocalizedText,
@@ -30,7 +30,7 @@ export function PracticalTaskPlayer({
 }: PracticalTaskPlayerProps) {
   const [selected, setSelected] = useState<string[]>([]);
   const [checked, setChecked] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
+  const completionLocked = useRef(false);
   const styles = useMemo(() => createStyles(theme), [theme]);
   const choices = task.choices ?? [];
   const expected = [...task.expectedEvidence].sort();
@@ -49,13 +49,13 @@ export function PracticalTaskPlayer({
   };
 
   const action = () => {
-    if (submitting) return;
+    if (completionLocked.current) return;
     if (!checked) {
       setChecked(true);
       return;
     }
     if (passed) {
-      setSubmitting(true);
+      completionLocked.current = true;
       onComplete(true, selected);
       return;
     }
@@ -63,8 +63,18 @@ export function PracticalTaskPlayer({
     setChecked(false);
   };
 
+  const actionLabel = !checked
+    ? language === 'tr' ? 'Kontrol et' : 'Check'
+    : passed
+      ? completionLabel
+        ? selectLocalizedText(completionLabel, language)
+        : language === 'tr' ? 'Quiz’e geç' : 'Continue to quiz'
+      : language === 'tr' ? 'Tekrar dene' : 'Try again';
+
   return (
-    <View style={styles.container}>
+    <View style={styles.shell}>
+      <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled">
+        <View style={styles.container}>
       <Text style={styles.eyebrow}>
         {eyebrow
           ? selectLocalizedText(eyebrow, language)
@@ -134,29 +144,28 @@ export function PracticalTaskPlayer({
             : language === 'tr' ? 'Henüz değil. Senaryodaki ipuçlarını birlikte değerlendir.' : 'Not yet. Evaluate the clues in the scenario together.'}
         </Text>
       ) : null}
+        </View>
+      </ScrollView>
+      <View style={styles.footer}>
       <Pressable
         accessibilityRole="button"
-        accessibilityState={{ disabled: selected.length === 0 || submitting }}
-        disabled={selected.length === 0 || submitting}
+        accessibilityLabel={actionLabel}
+        accessibilityState={{ disabled: selected.length === 0 }}
+        disabled={selected.length === 0}
         onPress={action}
-        style={[styles.button, (selected.length === 0 || submitting) && styles.disabled]}
+        style={[styles.button, selected.length === 0 && styles.disabled]}
       >
-        <Text style={styles.buttonText}>
-          {!checked
-            ? language === 'tr' ? 'Kontrol et' : 'Check'
-            : passed
-              ? completionLabel
-                ? selectLocalizedText(completionLabel, language)
-                : language === 'tr' ? 'Quiz’e geç' : 'Continue to quiz'
-              : language === 'tr' ? 'Tekrar dene' : 'Try again'}
-        </Text>
+        <Text style={styles.buttonText}>{actionLabel}</Text>
       </Pressable>
+      </View>
     </View>
   );
 }
 
 const createStyles = (theme: LearningTheme) =>
   StyleSheet.create({
+    shell: { flex: 1, width: '100%' },
+    scrollContent: { flexGrow: 1, width: '100%', padding: theme.spacing.md },
     container: { width: '100%', maxWidth: 760, alignSelf: 'center', gap: theme.spacing.md, padding: theme.spacing.lg, backgroundColor: theme.colors.surface, borderRadius: theme.radius.large, borderWidth: 1, borderColor: theme.colors.border },
     eyebrow: { color: theme.colors.primary, fontSize: 12, fontWeight: '900' },
     prompt: { color: theme.colors.text, fontSize: 23, lineHeight: 31, fontWeight: '800' },
@@ -179,7 +188,8 @@ const createStyles = (theme: LearningTheme) =>
     feedback: { fontSize: 14, lineHeight: 20, fontWeight: '700' },
     feedbackPassed: { color: theme.colors.success },
     feedbackRetry: { color: theme.colors.warning },
-    button: { minHeight: 52, alignItems: 'center', justifyContent: 'center', padding: theme.spacing.md, borderRadius: theme.radius.medium, backgroundColor: theme.colors.primary },
+    footer: { paddingHorizontal: theme.spacing.md, paddingVertical: theme.spacing.sm, borderTopColor: theme.colors.border, borderTopWidth: 1, backgroundColor: theme.colors.background },
+    button: { minHeight: 52, width: '100%', maxWidth: 760, alignSelf: 'center', alignItems: 'center', justifyContent: 'center', padding: theme.spacing.md, borderRadius: theme.radius.medium, backgroundColor: theme.colors.primary },
     buttonText: { color: theme.colors.primaryText, fontSize: 16, fontWeight: '900' },
     disabled: { opacity: 0.35 },
   });

@@ -1,9 +1,10 @@
-import React, { useMemo, useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { selectLocalizedText, type LearningLanguage } from '../../domain/learning/presentation';
 import { scoreQuiz, type QuizResult, type QuizSubmission } from '../../domain/learning/progressionEngine';
 import type { LocalizedText, Quiz } from '../../domain/learning/types';
 import { defaultLearningTheme, type LearningTheme } from '../../theme/learningTheme';
+import { LearningVisual } from './LearningVisual';
 
 export interface QuizPlayerProps {
   quiz: Quiz;
@@ -24,10 +25,14 @@ export function QuizPlayer({
   const [selectedOptionId, setSelectedOptionId] = useState<string>();
   const [revealed, setRevealed] = useState(false);
   const [submissions, setSubmissions] = useState<QuizSubmission[]>([]);
-  const [submitting, setSubmitting] = useState(false);
+  const advancingRef = useRef(false);
   const styles = useMemo(() => createStyles(theme), [theme]);
   const question = quiz.questions[questionIndex];
   const selectedIsCorrect = selectedOptionId === question.correctOptionId;
+
+  useEffect(() => {
+    advancingRef.current = false;
+  }, [questionIndex]);
 
   const reveal = () => {
     if (!selectedOptionId) return;
@@ -35,13 +40,13 @@ export function QuizPlayer({
   };
 
   const next = () => {
-    if (!selectedOptionId || submitting) return;
+    if (!selectedOptionId || advancingRef.current) return;
+    advancingRef.current = true;
     const nextSubmissions = [
       ...submissions,
       { questionId: question.id, selectedOptionId },
     ];
     if (questionIndex === quiz.questions.length - 1) {
-      setSubmitting(true);
       onComplete(scoreQuiz(quiz, nextSubmissions), nextSubmissions);
       return;
     }
@@ -51,8 +56,16 @@ export function QuizPlayer({
     setRevealed(false);
   };
 
+  const actionLabel = revealed
+    ? questionIndex === quiz.questions.length - 1
+      ? language === 'tr' ? 'Sonucu gör' : 'See result'
+      : language === 'tr' ? 'Sonraki soru' : 'Next question'
+    : language === 'tr' ? 'Cevabı kontrol et' : 'Check answer';
+
   return (
-    <View style={styles.container}>
+    <View style={styles.shell}>
+      <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled">
+        <View style={styles.container}>
       <View style={styles.progressRow}>
         <Text style={styles.eyebrow}>{eyebrow ? selectLocalizedText(eyebrow, language) : language === 'tr' ? 'MİNİ QUIZ' : 'MINI QUIZ'}</Text>
         <Text style={styles.progress}>
@@ -60,6 +73,19 @@ export function QuizPlayer({
         </Text>
       </View>
       <Text style={styles.question}>{selectLocalizedText(question.prompt, language)}</Text>
+      {question.visual ? (
+        <View style={styles.visualWrap}>
+          <Text style={styles.visualEyebrow}>
+            {language === 'tr' ? 'GRAFİĞİ İNCELE' : 'READ THE CHART'}
+          </Text>
+          <LearningVisual
+            assetRef={question.visual.assetRef}
+            alt={selectLocalizedText(question.visual.alt, language)}
+            language={language}
+            theme={theme}
+          />
+        </View>
+      ) : null}
       <View style={styles.options}>
         {question.options.map((option) => {
           const selected = option.id === selectedOptionId;
@@ -101,33 +127,28 @@ export function QuizPlayer({
           </Text>
         </View>
       ) : null}
+        </View>
+      </ScrollView>
+      <View style={styles.footer}>
       <Pressable
         accessibilityRole="button"
-        accessibilityState={{ disabled: !selectedOptionId || submitting }}
-        disabled={!selectedOptionId || submitting}
+        accessibilityLabel={actionLabel}
+        accessibilityState={{ disabled: !selectedOptionId }}
+        disabled={!selectedOptionId}
         onPress={revealed ? next : reveal}
-        style={[styles.button, (!selectedOptionId || submitting) && styles.disabled]}
+        style={[styles.button, !selectedOptionId && styles.disabled]}
       >
-        <Text style={styles.buttonText}>
-          {revealed
-            ? questionIndex === quiz.questions.length - 1
-              ? language === 'tr'
-                ? 'Sonucu gör'
-                : 'See result'
-              : language === 'tr'
-                ? 'Sonraki soru'
-                : 'Next question'
-            : language === 'tr'
-              ? 'Cevabı kontrol et'
-              : 'Check answer'}
-        </Text>
+        <Text style={styles.buttonText}>{actionLabel}</Text>
       </Pressable>
+      </View>
     </View>
   );
 }
 
 const createStyles = (theme: LearningTheme) =>
   StyleSheet.create({
+    shell: { flex: 1, width: '100%' },
+    scrollContent: { flexGrow: 1, width: '100%', padding: theme.spacing.md },
     container: {
       width: '100%',
       maxWidth: 760,
@@ -143,6 +164,8 @@ const createStyles = (theme: LearningTheme) =>
     eyebrow: { color: theme.colors.primary, fontSize: 12, fontWeight: '800' },
     progress: { color: theme.colors.textMuted, fontSize: 13 },
     question: { color: theme.colors.text, fontSize: 24, lineHeight: 32, fontWeight: '800' },
+    visualWrap: { gap: theme.spacing.xs },
+    visualEyebrow: { color: theme.colors.primary, fontSize: 11, fontWeight: '900', letterSpacing: 0.7 },
     options: { gap: theme.spacing.sm },
     option: {
       minHeight: 52,
@@ -174,8 +197,12 @@ const createStyles = (theme: LearningTheme) =>
     feedbackCorrect: { color: theme.colors.success },
     feedbackIncorrect: { color: theme.colors.warning },
     explanationText: { color: theme.colors.text, fontSize: 15, lineHeight: 22 },
+    footer: { paddingHorizontal: theme.spacing.md, paddingVertical: theme.spacing.sm, borderTopColor: theme.colors.border, borderTopWidth: 1, backgroundColor: theme.colors.background },
     button: {
       minHeight: 52,
+      width: '100%',
+      maxWidth: 760,
+      alignSelf: 'center',
       alignItems: 'center',
       justifyContent: 'center',
       padding: theme.spacing.md,

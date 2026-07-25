@@ -18,6 +18,11 @@ export function MicroLessonScreen({ route, navigation }: Props) {
   const presentationMode = useLearningUiStore((state) => state.presentationMode);
   const checkpoint = useLearningProgressStore((state) => state.lessonCheckpoints[route.params.lessonId]);
   const saveLessonCheckpoint = useLearningProgressStore((state) => state.saveLessonCheckpoint);
+  const completeCurrentQuizReview = useLearningProgressStore(
+    (state) => state.completeCurrentQuizReview
+  );
+  const currentQuizReview = route.params.currentQuizReview;
+  const isReadOnlyReview = route.params.review || Boolean(currentQuizReview);
 
   if (!lesson) return <View><Text>Ders bulunamadı.</Text></View>;
 
@@ -26,13 +31,30 @@ export function MicroLessonScreen({ route, navigation }: Props) {
       lesson={lesson}
       language={language}
       presentationMode={presentationMode}
-      initialStepIndex={route.params.review ? 0 : checkpoint?.stepIndex ?? 0}
+      initialStepIndex={isReadOnlyReview ? 0 : checkpoint?.stepIndex ?? 0}
       onStepChange={(stepIndex) => {
-        if (!route.params.review) saveLessonCheckpoint(lesson.id, 'lesson', stepIndex);
+        if (!isReadOnlyReview) saveLessonCheckpoint(lesson.id, 'lesson', stepIndex);
       }}
-      assessmentLabel={route.params.review ? { tr: 'Önizlemeyi kapat', en: 'Close preview' } : undefined}
+      assessmentLabel={
+        currentQuizReview
+          ? { tr: 'Tekrarı tamamla', en: 'Complete review' }
+          : route.params.review
+            ? { tr: 'Önizlemeyi kapat', en: 'Close preview' }
+            : undefined
+      }
       onExit={() => navigation.goBack()}
       onStartAssessment={() => {
+        if (currentQuizReview) {
+          completeCurrentQuizReview({
+            conceptKey: currentQuizReview.conceptKey,
+            lessonId: lesson.id,
+            reviewedEvidenceThroughAt:
+              currentQuizReview.reviewedEvidenceThroughAt,
+            completedAt: new Date().toISOString(),
+          });
+          navigation.goBack();
+          return;
+        }
         if (route.params.review) {
           navigation.goBack();
           return;
