@@ -14,6 +14,12 @@ module by module only when the full learning object is translated:
 or editorial review can avoid presenting partially translated curriculum as
 finished content.
 
-Wave 17 starts English coverage with the six Market Foundations lessons. The
-remaining Chart Literacy, Risk Management, and Behavior/Evidence lessons stay in
-draft coverage until their English fields are completed and reviewed.
+Current executable coverage is 14 of 24 lessons:
+
+- all six Market Foundations lessons;
+- all six Chart Literacy lessons;
+- the Risk and Uncertainty and Volatility lessons.
+
+The remaining four Risk Management lessons and all six Behavior/Evidence
+lessons stay in draft coverage until every required English field is completed
+and reviewed.
