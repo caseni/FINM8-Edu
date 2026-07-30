@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import {
@@ -17,6 +16,7 @@ import {
   createCurrentQuizReviewCompletion,
   type CurrentQuizReviewCompletion,
 } from '../domain/learning/currentQuizReview';
+import { trackedProgressStorage } from './progressPersistence';
 import type {
   BadgeAward,
   LearningBadge,
@@ -30,6 +30,8 @@ import type {
 } from '../domain/learning/types';
 
 interface LearningProgressState {
+  hasHydrated: boolean;
+  hydrationError?: 'progress_load_failed';
   profile: LearningProfile;
   xpEvents: XpEvent[];
   totalXp: number;
@@ -72,6 +74,10 @@ interface LearningProgressState {
     completedAt: string;
   }) => void;
   resetLocalProgress: () => void;
+  setHydrationState: (
+    hasHydrated: boolean,
+    hydrationError?: 'progress_load_failed'
+  ) => void;
 }
 
 const initialProfile: LearningProfile = {
@@ -95,6 +101,8 @@ function learningDate(isoDateTime: string) {
 export const useLearningProgressStore = create<LearningProgressState>()(
   persist(
     (set, get) => ({
+      hasHydrated: false,
+      hydrationError: undefined,
       profile: initialProfile,
       xpEvents: [],
       totalXp: 0,
@@ -109,6 +117,9 @@ export const useLearningProgressStore = create<LearningProgressState>()(
       lessonCheckpoints: {},
       currentQuizAnswerEvidence: [],
       currentQuizReviewCompletions: [],
+
+      setHydrationState: (hasHydrated, hydrationError) =>
+        set({ hasHydrated, hydrationError }),
 
       setProfile: (profile) =>
         set((state) => ({
@@ -379,7 +390,14 @@ export const useLearningProgressStore = create<LearningProgressState>()(
     }),
     {
       name: '@finm8_edu_progress_v1',
-      storage: createJSONStorage(() => AsyncStorage),
+      storage: createJSONStorage(() => trackedProgressStorage),
+      partialize: ({ hasHydrated, hydrationError, setHydrationState, ...progress }) => progress,
+      onRehydrateStorage: () => (state, error) => {
+        state?.setHydrationState(
+          true,
+          error ? 'progress_load_failed' : undefined
+        );
+      },
     }
   )
 );
