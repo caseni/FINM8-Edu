@@ -124,7 +124,44 @@ function TrendScene({ styles, language }: SceneProps) {
 }
 
 function ZoneScene({ styles, language }: SceneProps) {
-  return <View style={styles.sceneColumn}><View style={[styles.zone, styles.resistanceZone]}><Text style={styles.zoneText}>{language === 'tr' ? 'DİRENÇ BÖLGESİ' : 'RESISTANCE ZONE'}</Text></View><View style={styles.zoneCandles}>{[34, 68, 50, 78, 45, 62].map((height, index) => <View key={index} style={[styles.zoneCandle, { height }]} />)}</View><View style={[styles.zone, styles.supportZone]}><Text style={styles.zoneText}>{language === 'tr' ? 'DESTEK BÖLGESİ' : 'SUPPORT ZONE'}</Text></View></View>;
+  const candles = [
+    { bottom: 68, height: 20, bullish: false },
+    { bottom: 48, height: 27, bullish: false },
+    { bottom: 17, height: 28, bullish: true, touch: true },
+    { bottom: 35, height: 24, bullish: true },
+    { bottom: 55, height: 22, bullish: false },
+    { bottom: 17, height: 30, bullish: true, touch: true },
+    { bottom: 42, height: 26, bullish: true },
+    { bottom: 30, height: 21, bullish: false },
+    { bottom: 17, height: 27, bullish: true, touch: true },
+    { bottom: 45, height: 25, bullish: true },
+  ];
+
+  return (
+    <View style={styles.sceneColumn}>
+      <View style={[styles.zone, styles.resistanceZone]}>
+        <Text style={styles.zoneText}>{language === 'tr' ? 'DİRENÇ BÖLGESİ' : 'RESISTANCE ZONE'}</Text>
+      </View>
+      <View style={styles.zoneCandles}>
+        <View style={styles.zoneGridLine} />
+        {candles.map((candle, index) => (
+          <View key={index} style={styles.zoneCandleSlot}>
+            <View style={[styles.zoneWick, { height: candle.height + 16, bottom: candle.bottom - 8 }]} />
+            <View style={[
+              styles.zoneCandle,
+              candle.bullish ? styles.zoneCandleUp : styles.zoneCandleDown,
+              { height: candle.height, bottom: candle.bottom },
+            ]} />
+            {candle.touch ? <View style={styles.supportTouch} /> : null}
+          </View>
+        ))}
+      </View>
+      <View style={[styles.zone, styles.supportZone]}>
+        <Text style={styles.zoneText}>{language === 'tr' ? 'DESTEK BÖLGESİ · 3 TEMAS' : 'SUPPORT ZONE · 3 TOUCHES'}</Text>
+      </View>
+      <Text style={styles.sceneLabel}>{language === 'tr' ? 'Bölge tepkiyi garanti etmez; bağlamı kontrol et.' : 'A zone does not guarantee a reaction; check the context.'}</Text>
+    </View>
+  );
 }
 
 function StructureScene({ styles, progress, mode, language }: { styles: ReturnType<typeof createStyles>; progress: Animated.Value; mode: 'bos' | 'choch'; language: LearningLanguage }) {
@@ -187,12 +224,18 @@ const createStyles = (theme: LearningTheme) => StyleSheet.create({
   legendRow: { flexDirection: 'row', justifyContent: 'space-around' },
   positive: { color: theme.colors.success, fontSize: 11, fontWeight: '800' },
   warning: { color: theme.colors.warning, fontSize: 11, fontWeight: '800', textAlign: 'center' },
-  zone: { height: 30, justifyContent: 'center', alignItems: 'center', borderRadius: 8 },
-  resistanceZone: { backgroundColor: 'rgba(251,113,133,0.22)', borderWidth: 1, borderColor: theme.colors.risk },
-  supportZone: { backgroundColor: 'rgba(45,212,191,0.18)', borderWidth: 1, borderColor: theme.colors.primary },
-  zoneText: { color: theme.colors.text, fontSize: 9, fontWeight: '900', letterSpacing: 1 },
-  zoneCandles: { height: 90, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around' },
-  zoneCandle: { width: 12, borderRadius: 3, backgroundColor: theme.colors.textMuted },
+  zone: { height: 28, justifyContent: 'center', alignItems: 'center', borderRadius: 8 },
+  resistanceZone: { backgroundColor: 'rgba(251,113,133,0.14)', borderWidth: 1, borderColor: 'rgba(251,113,133,0.56)' },
+  supportZone: { backgroundColor: 'rgba(45,212,191,0.12)', borderWidth: 1, borderColor: 'rgba(45,212,191,0.58)' },
+  zoneText: { color: theme.colors.text, fontSize: 9, fontWeight: '900', letterSpacing: 0.7 },
+  zoneCandles: { height: 102, position: 'relative', flexDirection: 'row', alignItems: 'stretch', overflow: 'hidden' },
+  zoneGridLine: { position: 'absolute', left: 0, right: 0, top: 51, borderTopWidth: 1, borderColor: 'rgba(159,176,195,0.16)' },
+  zoneCandleSlot: { flex: 1, position: 'relative', alignItems: 'center' },
+  zoneWick: { position: 'absolute', width: 2, borderRadius: 1, backgroundColor: 'rgba(159,176,195,0.62)' },
+  zoneCandle: { position: 'absolute', width: 10, borderRadius: 2 },
+  zoneCandleUp: { backgroundColor: 'rgba(52,211,153,0.78)' },
+  zoneCandleDown: { backgroundColor: 'rgba(251,113,133,0.66)' },
+  supportTouch: { position: 'absolute', bottom: 7, width: 5, height: 5, borderRadius: 3, backgroundColor: theme.colors.primary },
   structureLevel: { position: 'absolute', left: 30, right: 30, top: 58, height: 2, backgroundColor: theme.colors.warning },
   structureLabel: { position: 'absolute', top: 35, color: theme.colors.warning, fontSize: 10, fontWeight: '700' },
   structurePath: { position: 'absolute', left: 35, right: 35, bottom: 30, height: 110, flexDirection: 'row', justifyContent: 'space-around' },
