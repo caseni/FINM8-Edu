@@ -270,7 +270,64 @@ function DataQualityScene({ styles, language }: SceneProps) {
   );
 }
 function QualityRow({ styles, label, value, good = false, risk = false }: { styles: ReturnType<typeof createStyles>; label: string; value: number; good?: boolean; risk?: boolean }) { return <View style={styles.qualityRow}><Text style={styles.qualityLabel}>{label}</Text><View style={styles.qualityTrack}><View style={[styles.qualityFill, { width: `${value}%` as `${number}%` }, good ? styles.qualityGood : risk ? styles.qualityRisk : styles.qualityWarn]} /></View></View>; }
-function FreshnessScene({ styles, language }: SceneProps) { return <View style={styles.sceneColumn}><SceneHeader styles={styles} title={language === 'tr' ? 'Verinin zamanı bağlamın parçasıdır' : 'Data time is part of the context'} /><View style={styles.timeline}><View style={styles.timelineStep}><Text style={styles.timelineTime}>09:00</Text><View style={styles.timelineDot} /></View><View style={styles.timelineStep}><Text style={styles.timelineTime}>12:00</Text><View style={styles.timelineDot} /></View><View style={styles.timelineStep}><Text style={styles.timelineTime}>{language === 'tr' ? 'ŞİMDİ' : 'NOW'}</Text><View style={styles.timelineDotNow} /></View></View><Text style={styles.warning}>{language === 'tr' ? 'Eski veri • yeniden doğrula' : 'Older data • verify again'}</Text></View>; }
+function FreshnessScene({ styles, language }: SceneProps) {
+  const tr = language === 'tr';
+  return (
+    <View style={styles.sceneColumn}>
+      <SceneHeader
+        styles={styles}
+        title={tr ? 'Aynı veri, bağlam değişince eskir' : 'Data becomes stale when context changes'}
+        detail={tr ? 'Doğru olduğu an ≠ hâlâ yeterli olduğu an' : 'Correct then ≠ sufficient now'}
+      />
+      <View style={styles.freshnessStack}>
+        <View style={[styles.freshnessCard, styles.freshnessCardStale]}>
+          <View style={styles.freshnessCardHeader}>
+            <Text style={styles.freshnessTime}>09:00</Text>
+            <Text style={styles.freshnessStaleTag}>{tr ? 'ESKİ ANLIK GÖRÜNTÜ' : 'OLDER SNAPSHOT'}</Text>
+          </View>
+          <View style={styles.freshnessMetrics}>
+            <View style={styles.freshnessMetric}>
+              <Text style={styles.freshnessMetricLabel}>{tr ? 'FİYAT' : 'PRICE'}</Text>
+              <Text style={styles.freshnessMetricValue}>100</Text>
+            </View>
+            <View style={styles.freshnessMetric}>
+              <Text style={styles.freshnessMetricLabel}>{tr ? 'HACİM' : 'VOLUME'}</Text>
+              <Text style={styles.freshnessMetricValue}>{tr ? 'NORMAL' : 'NORMAL'}</Text>
+            </View>
+          </View>
+        </View>
+        <View style={styles.freshnessEventRow}>
+          <Text style={styles.freshnessArrow}>↓</Text>
+          <View style={styles.freshnessEventCard}>
+            <Text style={styles.freshnessEventTime}>12:00</Text>
+            <Text style={styles.freshnessEventText}>{tr ? 'Yeni haber + hacim artışı' : 'New release + volume increase'}</Text>
+          </View>
+        </View>
+        <View style={[styles.freshnessCard, styles.freshnessCardCurrent]}>
+          <View style={styles.freshnessCardHeader}>
+            <Text style={styles.freshnessTime}>{tr ? 'ŞİMDİ' : 'NOW'}</Text>
+            <Text style={styles.freshnessCurrentTag}>{tr ? 'YENİDEN DOĞRULA' : 'VERIFY AGAIN'}</Text>
+          </View>
+          <View style={styles.freshnessMetrics}>
+            <View style={styles.freshnessMetric}>
+              <Text style={styles.freshnessMetricLabel}>{tr ? 'FİYAT' : 'PRICE'}</Text>
+              <Text style={styles.freshnessMetricValue}>108</Text>
+            </View>
+            <View style={styles.freshnessMetric}>
+              <Text style={styles.freshnessMetricLabel}>{tr ? 'HACİM' : 'VOLUME'}</Text>
+              <Text style={styles.freshnessMetricValue}>{tr ? 'YÜKSEK' : 'HIGH'}</Text>
+            </View>
+          </View>
+        </View>
+      </View>
+      <Text style={styles.warning}>
+        {tr
+          ? 'Eski veri yanlış olmayabilir; güncel bağlam için yetersiz olabilir.'
+          : 'Older data may not be wrong; it may be insufficient for the current context.'}
+      </Text>
+    </View>
+  );
+}
 function JournalScene({ styles, language }: SceneProps) { return <View style={styles.sceneColumn}><SceneHeader styles={styles} title={language === 'tr' ? 'Sonucu değil, kararı kaydet' : 'Record the decision, not only the outcome'} /><View style={styles.journalCard}><Text style={styles.journalTitle}>{language === 'tr' ? 'KARAR NOTU' : 'DECISION NOTE'}</Text>{[language === 'tr' ? 'Neye dayanıyorum?' : 'What is my evidence?', language === 'tr' ? 'Riskim ne?' : 'What is my risk?', language === 'tr' ? 'Ne değiştirir?' : 'What would change my view?'].map((item) => <View key={item} style={styles.journalLine}><Text style={styles.sceneLabel}>□</Text><Text style={styles.journalText}>{item}</Text></View>)}</View></View>; }
 
 function GenericScene({ styles, language }: SceneProps) { return <View style={styles.center}><Text style={styles.genericIcon}>◎</Text><Text style={styles.sceneTitle}>{language === 'tr' ? 'Şematik eğitim görseli' : 'Schematic learning visual'}</Text></View>; }
@@ -484,6 +541,23 @@ const createStyles = (theme: LearningTheme) => StyleSheet.create({
   timelineTime: { color: theme.colors.textMuted, fontSize: 10, fontWeight: '800' },
   timelineDot: { width: 12, height: 12, marginBottom: -7, borderRadius: 6, backgroundColor: theme.colors.textMuted },
   timelineDotNow: { width: 14, height: 14, marginBottom: -8, borderRadius: 7, backgroundColor: theme.colors.primary },
+  freshnessStack: { gap: 5 },
+  freshnessCard: { gap: 6, padding: 8, borderRadius: 10, backgroundColor: theme.colors.surfaceMuted, borderWidth: 1 },
+  freshnessCardStale: { borderColor: 'rgba(251,191,36,0.42)' },
+  freshnessCardCurrent: { borderColor: 'rgba(45,212,191,0.52)' },
+  freshnessCardHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8 },
+  freshnessTime: { color: theme.colors.text, fontSize: 10, fontWeight: '900' },
+  freshnessStaleTag: { color: theme.colors.warning, fontSize: 8, fontWeight: '900', letterSpacing: 0.45 },
+  freshnessCurrentTag: { color: theme.colors.primary, fontSize: 8, fontWeight: '900', letterSpacing: 0.45 },
+  freshnessMetrics: { flexDirection: 'row', gap: 6 },
+  freshnessMetric: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 5, paddingHorizontal: 7, paddingVertical: 5, borderRadius: 7, backgroundColor: 'rgba(159,176,195,0.08)' },
+  freshnessMetricLabel: { color: theme.colors.textMuted, fontSize: 8, fontWeight: '800' },
+  freshnessMetricValue: { color: theme.colors.text, fontSize: 10, fontWeight: '900' },
+  freshnessEventRow: { minHeight: 29, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 },
+  freshnessArrow: { color: theme.colors.warning, fontSize: 15, fontWeight: '900' },
+  freshnessEventCard: { flexDirection: 'row', alignItems: 'center', gap: 7, paddingHorizontal: 9, paddingVertical: 5, borderRadius: 8, backgroundColor: 'rgba(251,191,36,0.09)', borderWidth: 1, borderColor: 'rgba(251,191,36,0.30)' },
+  freshnessEventTime: { color: theme.colors.warning, fontSize: 9, fontWeight: '900' },
+  freshnessEventText: { color: theme.colors.textMuted, fontSize: 9, fontWeight: '700' },
   journalCard: { gap: 8, padding: 11, borderRadius: 12, backgroundColor: theme.colors.surfaceMuted },
   journalTitle: { color: theme.colors.primary, fontSize: 10, fontWeight: '900', letterSpacing: 1 },
   journalLine: { flexDirection: 'row', gap: 7 },
