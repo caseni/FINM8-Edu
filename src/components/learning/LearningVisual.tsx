@@ -245,7 +245,39 @@ function VolatilityBand({ styles, label, values, risk = false }: { styles: Retur
 }
 
 function DiversificationScene({ styles, language }: SceneProps) {
-  return <View style={styles.diversificationRow}><View style={styles.basket}><Text style={styles.sceneTitle}>{language === 'tr' ? 'Aynı faktör' : 'Same factor'}</Text><View style={styles.chipRow}>{['A', 'B', 'C', 'D'].map((item) => <View key={item} style={[styles.chip, styles.chipRisk]}><Text style={styles.chipText}>{item}</Text></View>)}</View><Text style={styles.warning}>{language === 'tr' ? 'Yoğunlaşma' : 'Concentration'}</Text></View><View style={styles.basket}><Text style={styles.sceneTitle}>{language === 'tr' ? 'Farklı riskler' : 'Different risks'}</Text><View style={styles.chipRow}>{['A', 'B', 'C', 'D'].map((item, index) => <View key={item} style={[styles.chip, index % 2 === 0 ? styles.chipGood : styles.chipWarn]}><Text style={styles.chipText}>{item}</Text></View>)}</View><Text style={styles.positive}>{language === 'tr' ? 'Dağılım' : 'Spread'}</Text></View></View>;
+  const tr = language === 'tr';
+  const concentrated = tr ? ['Tek sektör', 'Aynı piyasa', 'Benzer tepki'] : ['One sector', 'Same market', 'Similar reaction'];
+  const distributed = tr ? ['Farklı alan', 'Farklı risk', 'Farklı tepki'] : ['Different area', 'Different risk', 'Different reaction'];
+
+  return (
+    <View style={styles.sceneColumn}>
+      <SceneHeader
+        styles={styles}
+        title={tr ? 'Sayı değil, ortak risk önemlidir' : 'Shared risk matters more than count'}
+        detail={tr ? 'Dört varlık da aynı anda benzer davranabilir' : 'Four assets can still move alike'}
+      />
+      <View style={styles.diversificationRow}>
+        <ExposureCard styles={styles} title={tr ? 'YOĞUNLAŞMA' : 'CONCENTRATION'} items={concentrated} tone="risk" />
+        <ExposureCard styles={styles} title={tr ? 'DAĞILIM' : 'SPREAD'} items={distributed} tone="balanced" />
+      </View>
+      <Text style={styles.sceneLabel}>{tr ? 'Dağılım kaybı ortadan kaldırmaz; tek etkene bağımlılığı azaltmayı hedefler.' : 'Diversification does not remove loss; it aims to reduce reliance on one factor.'}</Text>
+    </View>
+  );
+}
+
+function ExposureCard({ styles, title, items, tone }: { styles: ReturnType<typeof createStyles>; title: string; items: readonly string[]; tone: 'risk' | 'balanced' }) {
+  const risk = tone === 'risk';
+  return (
+    <View style={[styles.exposureCard, risk ? styles.exposureCardRisk : styles.exposureCardBalanced]}>
+      <Text style={[styles.exposureTitle, risk ? styles.riskText : styles.positive]}>{title}</Text>
+      <View style={styles.exposureLinks}>{items.map((item, index) => (
+        <View key={item} style={styles.exposureItem}>
+          <View style={[styles.exposureDot, risk ? styles.exposureDotRisk : index === 1 ? styles.exposureDotWarn : styles.exposureDotGood]} />
+          <Text style={styles.exposureText}>{item}</Text>
+        </View>
+      ))}</View>
+    </View>
+  );
 }
 
 function RiskRangeScene({ styles, language }: SceneProps) { return <View style={styles.sceneColumn}><SceneHeader styles={styles} title={language === 'tr' ? 'Sonuç tek bir sayı değildir' : 'An outcome is not one number'} /><View style={styles.rangeTrack}><View style={styles.rangeLeft} /><View style={styles.rangeCenter}><Text style={styles.rangeText}>{language === 'tr' ? 'OLASI SONUÇLAR' : 'POSSIBLE OUTCOMES'}</Text></View><View style={styles.rangeRight} /></View><View style={styles.legendRow}><Text style={styles.riskText}>{language === 'tr' ? 'Kayıp' : 'Loss'}</Text><Text style={styles.sceneLabel}>{language === 'tr' ? 'Belirsizlik' : 'Uncertainty'}</Text><Text style={styles.positive}>{language === 'tr' ? 'Kazanç' : 'Gain'}</Text></View></View>; }
@@ -338,9 +370,56 @@ function StopOrderScene({ styles, language }: SceneProps) {
   );
 }
 
-function PauseScene({ styles, language }: SceneProps) { return <View style={styles.sceneColumn}><SceneHeader styles={styles} title={language === 'tr' ? 'Duygudan önce durakla' : 'Pause before acting on emotion'} /><View style={styles.pauseFlow}><Text style={styles.socialBurst}>↑↑</Text><Text style={styles.pauseArrow}>→</Text><View style={styles.pauseCard}><Text style={styles.pauseIcon}>Ⅱ</Text><Text style={styles.pauseLabel}>{language === 'tr' ? 'KONTROL ET' : 'CHECK'}</Text></View><Text style={styles.pauseArrow}>→</Text><Text style={styles.sceneLabel}>{language === 'tr' ? 'Kanıt' : 'Evidence'}</Text></View></View>; }
-function OvertradingScene({ styles, language }: SceneProps) { return <View style={styles.sceneColumn}><SceneHeader styles={styles} title={language === 'tr' ? 'İşlem sayısı karar kalitesi değildir' : 'More trades do not mean better decisions'} /><View style={styles.tradeRow}>{[1,2,3,4,5,6,7].map((n) => <View key={n} style={[styles.tradeMark, n > 4 && styles.tradeMarkRisk]}><Text style={styles.tradeNumber}>{n}</Text></View>)}</View><Text style={styles.warning}>{language === 'tr' ? 'Hızlı tekrar • kontrol listesi ihtiyacı' : 'Rapid repetition • use a checklist'}</Text></View>; }
-function EvidenceScene({ styles, language }: SceneProps) { return <View style={styles.sceneColumn}><SceneHeader styles={styles} title={language === 'tr' ? 'Kanıtı iki taraftan ara' : 'Look for evidence on both sides'} /><View style={styles.evidenceRow}><View style={styles.evidenceCard}><Text style={styles.positive}>✓</Text><Text style={styles.sceneLabel}>{language === 'tr' ? 'Destekleyen' : 'Supports'}</Text></View><View style={styles.evidenceDivider} /><View style={styles.evidenceCard}><Text style={styles.riskText}>?</Text><Text style={styles.sceneLabel}>{language === 'tr' ? 'Çürüten' : 'Challenges'}</Text></View></View><Text style={styles.sceneLabel}>{language === 'tr' ? 'Tek taraflı veri, kararın tamamı değildir' : 'One-sided data is not the whole decision'}</Text></View>; }
+function PauseScene({ styles, language }: SceneProps) {
+  const tr = language === 'tr';
+  return (
+    <View style={styles.sceneColumn}>
+      <SceneHeader styles={styles} title={tr ? 'Duygudan önce bir kontrol döngüsü kur' : 'Use a check loop before acting on emotion'} />
+      <View style={styles.decisionLoop}>
+        <DecisionStep styles={styles} marker="1" label={tr ? 'DUR' : 'PAUSE'} detail={tr ? 'Dürtüyü fark et' : 'Notice the impulse'} />
+        <Text style={styles.loopArrow}>→</Text>
+        <DecisionStep styles={styles} marker="2" label={tr ? 'KONTROL' : 'CHECK'} detail={tr ? 'Plan ve risk' : 'Plan and risk'} active />
+        <Text style={styles.loopArrow}>→</Text>
+        <DecisionStep styles={styles} marker="3" label={tr ? 'KANIT' : 'EVIDENCE'} detail={tr ? 'Tersi ne der?' : 'What challenges it?'} />
+      </View>
+      <Text style={styles.sceneLabel}>{tr ? 'Duygu bilgi olabilir; tek başına karar kuralı değildir.' : 'Emotion can be information; it is not a decision rule on its own.'}</Text>
+    </View>
+  );
+}
+
+function DecisionStep({ styles, marker, label, detail, active = false }: { styles: ReturnType<typeof createStyles>; marker: string; label: string; detail: string; active?: boolean }) {
+  return <View style={[styles.decisionStep, active && styles.decisionStepActive]}><Text style={[styles.decisionMarker, active && styles.decisionMarkerActive]}>{marker}</Text><Text style={styles.decisionLabel}>{label}</Text><Text style={styles.decisionDetail}>{detail}</Text></View>;
+}
+
+function OvertradingScene({ styles, language }: SceneProps) {
+  const tr = language === 'tr';
+  return (
+    <View style={styles.sceneColumn}>
+      <SceneHeader styles={styles} title={tr ? 'İşlem sayısı karar kalitesi değildir' : 'More trades do not mean better decisions'} />
+      <View style={styles.paceComparison}>
+        <View style={styles.paceCard}><Text style={styles.sceneLabel}>{tr ? 'DÜRTÜSEL DÖNGÜ' : 'IMPULSE LOOP'}</Text><Text style={styles.paceMarks}>● ● ● ● ●</Text><Text style={styles.riskText}>{tr ? 'Kontrol azalır' : 'Less checking'}</Text></View>
+        <View style={styles.paceDivider} />
+        <View style={styles.paceCard}><Text style={styles.sceneLabel}>{tr ? 'PLANLI DÖNGÜ' : 'PLANNED LOOP'}</Text><Text style={styles.paceMarksQuiet}>●   ●   ●</Text><Text style={styles.positive}>{tr ? 'Her adımda kontrol' : 'Check each step'}</Text></View>
+      </View>
+      <Text style={styles.sceneLabel}>{tr ? 'Sıklığı değil, her kararın gerekçesini ve maliyetini gözden geçir.' : 'Review the reason and cost of each decision, not just frequency.'}</Text>
+    </View>
+  );
+}
+
+function EvidenceScene({ styles, language }: SceneProps) {
+  const tr = language === 'tr';
+  return (
+    <View style={styles.sceneColumn}>
+      <SceneHeader styles={styles} title={tr ? 'Kanıtı iki taraftan ara' : 'Look for evidence on both sides'} />
+      <View style={styles.evidenceBalance}>
+        <View style={styles.evidenceColumn}><Text style={styles.positive}>✓ {tr ? 'DESTEKLEYEN' : 'SUPPORTS'}</Text><Text style={styles.evidencePrompt}>{tr ? 'Neyi doğruluyor?' : 'What confirms it?'}</Text></View>
+        <View style={styles.evidenceCenter}><View style={styles.evidenceBeam} /><Text style={styles.sceneLabel}>{tr ? 'KARAR' : 'DECISION'}</Text></View>
+        <View style={styles.evidenceColumn}><Text style={styles.riskText}>? {tr ? 'ÇÜRÜTEN' : 'CHALLENGES'}</Text><Text style={styles.evidencePrompt}>{tr ? 'Neyi yanlışlayabilir?' : 'What could disprove it?'}</Text></View>
+      </View>
+      <Text style={styles.sceneLabel}>{tr ? 'Tek taraflı veri, kararın tamamı değildir.' : 'One-sided evidence is not the whole decision.'}</Text>
+    </View>
+  );
+}
 function DataQualityScene({ styles, language }: SceneProps) { return <View style={styles.sceneColumn}><SceneHeader styles={styles} title={language === 'tr' ? 'Her veri aynı güveni taşımaz' : 'Not all data carries the same confidence'} /><View style={styles.qualityStack}><QualityRow styles={styles} label={language === 'tr' ? 'KAYNAK' : 'SOURCE'} value={100} good /><QualityRow styles={styles} label={language === 'tr' ? 'BAĞLAM' : 'CONTEXT'} value={68} /><QualityRow styles={styles} label={language === 'tr' ? 'EKSİK VERİ' : 'MISSING'} value={32} risk /></View></View>; }
 function QualityRow({ styles, label, value, good = false, risk = false }: { styles: ReturnType<typeof createStyles>; label: string; value: number; good?: boolean; risk?: boolean }) { return <View style={styles.qualityRow}><Text style={styles.qualityLabel}>{label}</Text><View style={styles.qualityTrack}><View style={[styles.qualityFill, { width: `${value}%` as `${number}%` }, good ? styles.qualityGood : risk ? styles.qualityRisk : styles.qualityWarn]} /></View></View>; }
 function FreshnessScene({ styles, language }: SceneProps) { return <View style={styles.sceneColumn}><SceneHeader styles={styles} title={language === 'tr' ? 'Verinin zamanı bağlamın parçasıdır' : 'Data time is part of the context'} /><View style={styles.timeline}><View style={styles.timelineStep}><Text style={styles.timelineTime}>09:00</Text><View style={styles.timelineDot} /></View><View style={styles.timelineStep}><Text style={styles.timelineTime}>12:00</Text><View style={styles.timelineDot} /></View><View style={styles.timelineStep}><Text style={styles.timelineTime}>{language === 'tr' ? 'ŞİMDİ' : 'NOW'}</Text><View style={styles.timelineDotNow} /></View></View><Text style={styles.warning}>{language === 'tr' ? 'Eski veri • yeniden doğrula' : 'Older data • verify again'}</Text></View>; }
@@ -410,14 +489,18 @@ const createStyles = (theme: LearningTheme) => StyleSheet.create({
   volRow: { height: 48, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around' },
   volBar: { width: 13, borderRadius: 4, backgroundColor: 'rgba(45,212,191,0.68)' },
   volBarRisk: { backgroundColor: 'rgba(251,113,133,0.66)' },
-  diversificationRow: { minHeight: 170, flexDirection: 'row', gap: 10 },
-  basket: { flex: 1, justifyContent: 'center', gap: 14, padding: 10, borderRadius: 12, backgroundColor: theme.colors.surfaceMuted },
-  chipRow: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', gap: 7 },
-  chip: { width: 28, height: 28, borderRadius: 9, alignItems: 'center', justifyContent: 'center' },
-  chipRisk: { backgroundColor: theme.colors.risk },
-  chipGood: { backgroundColor: theme.colors.primary },
-  chipWarn: { backgroundColor: theme.colors.warning },
-  chipText: { color: theme.colors.primaryText, fontSize: 11, fontWeight: '900' },
+  diversificationRow: { flexDirection: 'row', gap: 10 },
+  exposureCard: { flex: 1, gap: 8, padding: 9, borderRadius: 11, borderWidth: 1, backgroundColor: theme.colors.surfaceMuted },
+  exposureCardRisk: { borderColor: 'rgba(251,113,133,0.38)' },
+  exposureCardBalanced: { borderColor: 'rgba(45,212,191,0.34)' },
+  exposureTitle: { fontSize: 9, fontWeight: '900', letterSpacing: 0.7, textAlign: 'center' },
+  exposureLinks: { gap: 6 },
+  exposureItem: { minHeight: 20, flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 5, borderRadius: 5, backgroundColor: 'rgba(159,176,195,0.07)' },
+  exposureDot: { width: 7, height: 7, borderRadius: 4 },
+  exposureDotRisk: { backgroundColor: theme.colors.risk },
+  exposureDotGood: { backgroundColor: theme.colors.success },
+  exposureDotWarn: { backgroundColor: theme.colors.warning },
+  exposureText: { flex: 1, color: theme.colors.textMuted, fontSize: 9, fontWeight: '700' },
   genericIcon: { color: theme.colors.primary, fontSize: 54, fontWeight: '300' },
   orderMatch: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 16 },
   bookColumn: { width: 86, gap: 5 },
@@ -503,19 +586,24 @@ const createStyles = (theme: LearningTheme) => StyleSheet.create({
   fillLabel: { width: 42, color: theme.colors.risk, fontSize: 8, fontWeight: '900', letterSpacing: 0.4 },
   fillValue: { color: theme.colors.text, fontSize: 11, fontWeight: '900' },
   fillNote: { marginLeft: 'auto', color: theme.colors.risk, fontSize: 8, fontWeight: '800' },
-  pauseFlow: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 10 },
-  socialBurst: { color: theme.colors.risk, fontSize: 26, fontWeight: '900' },
-  pauseArrow: { color: theme.colors.textMuted, fontSize: 17 },
-  pauseCard: { width: 61, height: 61, borderRadius: 14, alignItems: 'center', justifyContent: 'center', backgroundColor: theme.colors.surfaceMuted, borderWidth: 1, borderColor: theme.colors.primary },
-  pauseIcon: { color: theme.colors.primary, fontSize: 20, fontWeight: '900' },
-  pauseLabel: { color: theme.colors.primary, fontSize: 8, fontWeight: '900' },
-  tradeRow: { flexDirection: 'row', justifyContent: 'center', gap: 6 },
-  tradeMark: { width: 25, height: 25, borderRadius: 8, alignItems: 'center', justifyContent: 'center', backgroundColor: theme.colors.primary },
-  tradeMarkRisk: { backgroundColor: theme.colors.risk },
-  tradeNumber: { color: theme.colors.primaryText, fontSize: 10, fontWeight: '900' },
-  evidenceRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 14 },
-  evidenceCard: { width: 86, height: 62, borderRadius: 12, justifyContent: 'center', alignItems: 'center', gap: 5, backgroundColor: theme.colors.surfaceMuted },
-  evidenceDivider: { height: 38, borderLeftWidth: 1, borderColor: theme.colors.border },
+  decisionLoop: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 5 },
+  decisionStep: { width: 77, minHeight: 74, alignItems: 'center', justifyContent: 'center', gap: 3, padding: 6, borderRadius: 10, backgroundColor: theme.colors.surfaceMuted, borderWidth: 1, borderColor: theme.colors.border },
+  decisionStepActive: { borderColor: 'rgba(45,212,191,0.68)', backgroundColor: 'rgba(45,212,191,0.08)' },
+  decisionMarker: { width: 17, height: 17, borderRadius: 9, overflow: 'hidden', color: theme.colors.textMuted, fontSize: 9, lineHeight: 17, textAlign: 'center', fontWeight: '900', backgroundColor: 'rgba(159,176,195,0.14)' },
+  decisionMarkerActive: { color: theme.colors.primaryText, backgroundColor: theme.colors.primary },
+  decisionLabel: { color: theme.colors.text, fontSize: 9, fontWeight: '900', letterSpacing: 0.45 },
+  decisionDetail: { color: theme.colors.textMuted, fontSize: 8, textAlign: 'center' },
+  loopArrow: { color: theme.colors.textMuted, fontSize: 13, fontWeight: '700' },
+  paceComparison: { flexDirection: 'row', gap: 8, alignItems: 'stretch' },
+  paceCard: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 6, padding: 8, borderRadius: 10, backgroundColor: theme.colors.surfaceMuted },
+  paceMarks: { color: theme.colors.risk, fontSize: 13, letterSpacing: 1 },
+  paceMarksQuiet: { color: theme.colors.primary, fontSize: 13, letterSpacing: 1 },
+  paceDivider: { borderLeftWidth: 1, borderColor: theme.colors.border },
+  evidenceBalance: { flexDirection: 'row', alignItems: 'center', gap: 7 },
+  evidenceColumn: { flex: 1, minHeight: 61, justifyContent: 'center', gap: 7, padding: 7, borderRadius: 10, backgroundColor: theme.colors.surfaceMuted },
+  evidencePrompt: { color: theme.colors.textMuted, fontSize: 9, textAlign: 'center' },
+  evidenceCenter: { width: 43, alignItems: 'center', gap: 5 },
+  evidenceBeam: { width: 36, borderTopWidth: 2, borderColor: theme.colors.warning },
   qualityStack: { gap: 10 },
   qualityRow: { flexDirection: 'row', alignItems: 'center', gap: 9 },
   qualityLabel: { width: 65, color: theme.colors.textMuted, fontSize: 9, fontWeight: '800' },
