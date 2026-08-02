@@ -249,9 +249,94 @@ function DiversificationScene({ styles, language }: SceneProps) {
 }
 
 function RiskRangeScene({ styles, language }: SceneProps) { return <View style={styles.sceneColumn}><SceneHeader styles={styles} title={language === 'tr' ? 'Sonuç tek bir sayı değildir' : 'An outcome is not one number'} /><View style={styles.rangeTrack}><View style={styles.rangeLeft} /><View style={styles.rangeCenter}><Text style={styles.rangeText}>{language === 'tr' ? 'OLASI SONUÇLAR' : 'POSSIBLE OUTCOMES'}</Text></View><View style={styles.rangeRight} /></View><View style={styles.legendRow}><Text style={styles.riskText}>{language === 'tr' ? 'Kayıp' : 'Loss'}</Text><Text style={styles.sceneLabel}>{language === 'tr' ? 'Belirsizlik' : 'Uncertainty'}</Text><Text style={styles.positive}>{language === 'tr' ? 'Kazanç' : 'Gain'}</Text></View></View>; }
-function PositionSizeScene({ styles, language }: SceneProps) { return <View style={styles.sceneColumn}><SceneHeader styles={styles} title={language === 'tr' ? 'Risk sabit, boyut değişken' : 'Risk fixed, size variable'} /><View style={styles.sizeRow}><View style={styles.sizeCard}><Text style={styles.sceneLabel}>{language === 'tr' ? 'DAR DURDURMA' : 'TIGHT STOP'}</Text><View style={[styles.sizeBlock, { height: 74 }]} /><Text style={styles.positive}>{language === 'tr' ? 'Daha büyük boyut' : 'Larger size'}</Text></View><View style={styles.sizeCard}><Text style={styles.sceneLabel}>{language === 'tr' ? 'GENİŞ DURDURMA' : 'WIDE STOP'}</Text><View style={[styles.sizeBlock, styles.sizeBlockRisk, { height: 42 }]} /><Text style={styles.warning}>{language === 'tr' ? 'Daha küçük boyut' : 'Smaller size'}</Text></View></View></View>; }
-function RiskRewardScene({ styles, language }: SceneProps) { return <View style={styles.sceneColumn}><SceneHeader styles={styles} title={language === 'tr' ? 'Oran, olasılığın yerine geçmez' : 'A ratio does not replace probability'} /><View style={styles.rewardRow}><View style={styles.lossSide}><Text style={styles.lossText}>−1R</Text></View><View style={styles.gainSide}><Text style={styles.gainText}>+2R</Text></View></View><Text style={styles.sceneLabel}>{language === 'tr' ? 'Risk / getiri • kararın tek ölçütü değildir' : 'Risk / reward • not the only decision input'}</Text></View>; }
-function StopOrderScene({ styles, language }: SceneProps) { return <View style={styles.sceneColumn}><SceneHeader styles={styles} title={language === 'tr' ? 'Stop, fiyat garantisi değildir' : 'A stop does not guarantee a price'} /><View style={styles.stopChart}><View style={styles.stopLevel}><Text style={styles.stopLabel}>STOP</Text></View><View style={styles.stopPath}><View style={styles.stopPoint} /><View style={styles.stopPoint} /><View style={styles.stopPoint} /><View style={styles.stopPointRisk} /></View></View><Text style={styles.warning}>{language === 'tr' ? 'Hızlı piyasada gerçekleşme farklı olabilir' : 'Execution can differ in fast markets'}</Text></View>; }
+function PositionSizeScene({ styles, language }: SceneProps) {
+  const tr = language === 'tr';
+  return (
+    <View style={styles.sceneColumn}>
+      <SceneHeader
+        styles={styles}
+        title={tr ? 'Önce risk sınırı, sonra pozisyon boyutu' : 'Set risk limit before position size'}
+        detail={tr ? 'Aynı para riski · farklı stop mesafesi' : 'Same cash risk · different stop distance'}
+      />
+      <View style={styles.riskBudget}>
+        <Text style={styles.riskBudgetLabel}>{tr ? 'ÖRNEK RİSK SINIRI' : 'EXAMPLE RISK LIMIT'}</Text>
+        <Text style={styles.riskBudgetValue}>1R</Text>
+        <Text style={styles.riskBudgetNote}>{tr ? 'sabit kalır' : 'stays fixed'}</Text>
+      </View>
+      <View style={styles.sizingPlans}>
+        <SizingPlan styles={styles} shortDistance language={language} />
+        <SizingPlan styles={styles} language={language} />
+      </View>
+      <Text style={styles.sceneLabel}>{tr ? 'Mesafe genişledikçe, aynı riski taşımak için boyut küçülür.' : 'As the distance widens, size decreases to keep the same risk.'}</Text>
+    </View>
+  );
+}
+
+function SizingPlan({ styles, shortDistance = false, language }: SceneProps & { shortDistance?: boolean }) {
+  const tr = language === 'tr';
+  const distance = shortDistance ? (tr ? 'DAR MESAFE' : 'TIGHT DISTANCE') : (tr ? 'GENİŞ MESAFE' : 'WIDE DISTANCE');
+  const size = shortDistance ? (tr ? 'DAHA BÜYÜK BOYUT' : 'LARGER SIZE') : (tr ? 'DAHA KÜÇÜK BOYUT' : 'SMALLER SIZE');
+  return (
+    <View style={styles.sizingPlan}>
+      <View style={styles.sizingPlanHead}>
+        <Text style={styles.sizingPlanLabel}>{distance}</Text>
+        <Text style={[styles.sizingPlanValue, shortDistance ? styles.positive : styles.warning]}>{shortDistance ? '2' : '5'}%</Text>
+      </View>
+      <View style={styles.distanceTrack}>
+        <View style={styles.entryMarker}><Text style={styles.entryMarkerText}>{tr ? 'GİRİŞ' : 'ENTRY'}</Text></View>
+        <View style={[styles.stopMarker, shortDistance ? styles.stopMarkerTight : styles.stopMarkerWide]}><Text style={styles.stopMarkerText}>STOP</Text></View>
+      </View>
+      <View style={styles.sizeMeter}>
+        <View style={[styles.sizeMeterFill, shortDistance ? styles.sizeMeterLarge : styles.sizeMeterSmall]} />
+      </View>
+      <Text style={styles.sizePlanResult}>{size}</Text>
+    </View>
+  );
+}
+
+function RiskRewardScene({ styles, language }: SceneProps) {
+  const tr = language === 'tr';
+  return (
+    <View style={styles.sceneColumn}>
+      <SceneHeader
+        styles={styles}
+        title={tr ? 'Oran, olasılığın yerine geçmez' : 'A ratio does not replace probability'}
+        detail={tr ? 'Planlanan büyüklük ≠ beklenen sonuç' : 'Planned size ≠ expected outcome'}
+      />
+      <View style={styles.rewardPlan}>
+        <View style={styles.targetZone}><Text style={styles.targetZoneText}>{tr ? 'HEDEF  +2R' : 'TARGET  +2R'}</Text></View>
+        <View style={styles.entryLine}><Text style={styles.entryLineText}>{tr ? 'GİRİŞ' : 'ENTRY'}</Text></View>
+        <View style={styles.lossZone}><Text style={styles.lossZoneText}>{tr ? 'RİSK  −1R' : 'RISK  −1R'}</Text></View>
+      </View>
+      <View style={styles.rewardChecks}>
+        <View style={styles.rewardCheck}><Text style={styles.rewardCheckMark}>?</Text><Text style={styles.rewardCheckText}>{tr ? 'OLASILIK' : 'PROBABILITY'}</Text></View>
+        <View style={styles.rewardCheck}><Text style={styles.rewardCheckMark}>?</Text><Text style={styles.rewardCheckText}>{tr ? 'MALİYETLER' : 'COSTS'}</Text></View>
+      </View>
+      <Text style={styles.sceneLabel}>{tr ? 'Oranı; kanıt, gerçekleşme olasılığı ve maliyetlerle birlikte değerlendir.' : 'Assess the ratio together with evidence, fill probability, and costs.'}</Text>
+    </View>
+  );
+}
+
+function StopOrderScene({ styles, language }: SceneProps) {
+  const tr = language === 'tr';
+  return (
+    <View style={styles.sceneColumn}>
+      <SceneHeader
+        styles={styles}
+        title={tr ? 'Stop tetiklenir; fiyat garanti edilmez' : 'A stop triggers; price is not guaranteed'}
+        detail={tr ? 'Hızlı hareket · kayma riski' : 'Fast move · slippage risk'}
+      />
+      <View style={styles.stopSequence}>
+        <View style={styles.stopPriceRow}><Text style={styles.stopPriceLabel}>{tr ? 'GİRİŞ' : 'ENTRY'}</Text><Text style={styles.stopPriceValue}>100.0</Text></View>
+        <View style={styles.stopArrow}>↓</View>
+        <View style={styles.stopPriceRow}><Text style={styles.stopPriceLabel}>STOP</Text><Text style={styles.stopPriceValue}>98.0</Text><Text style={styles.stopTrigger}>{tr ? 'TETİKLENİR' : 'TRIGGERS'}</Text></View>
+        <View style={styles.stopArrowRisk}>↓</View>
+        <View style={[styles.stopPriceRow, styles.fillRow]}><Text style={styles.fillLabel}>{tr ? 'GERÇEKLEŞME' : 'FILL'}</Text><Text style={styles.fillValue}>97.4</Text><Text style={styles.fillNote}>{tr ? 'daha kötü fiyat' : 'worse price'}</Text></View>
+      </View>
+      <Text style={styles.warning}>{tr ? 'Stop bir risk aracıdır; hızlı piyasada maksimum kaybı kesinleştirmez.' : 'A stop manages risk; fast markets can still exceed the planned loss.'}</Text>
+    </View>
+  );
+}
 
 function PauseScene({ styles, language }: SceneProps) { return <View style={styles.sceneColumn}><SceneHeader styles={styles} title={language === 'tr' ? 'Duygudan önce durakla' : 'Pause before acting on emotion'} /><View style={styles.pauseFlow}><Text style={styles.socialBurst}>↑↑</Text><Text style={styles.pauseArrow}>→</Text><View style={styles.pauseCard}><Text style={styles.pauseIcon}>Ⅱ</Text><Text style={styles.pauseLabel}>{language === 'tr' ? 'KONTROL ET' : 'CHECK'}</Text></View><Text style={styles.pauseArrow}>→</Text><Text style={styles.sceneLabel}>{language === 'tr' ? 'Kanıt' : 'Evidence'}</Text></View></View>; }
 function OvertradingScene({ styles, language }: SceneProps) { return <View style={styles.sceneColumn}><SceneHeader styles={styles} title={language === 'tr' ? 'İşlem sayısı karar kalitesi değildir' : 'More trades do not mean better decisions'} /><View style={styles.tradeRow}>{[1,2,3,4,5,6,7].map((n) => <View key={n} style={[styles.tradeMark, n > 4 && styles.tradeMarkRisk]}><Text style={styles.tradeNumber}>{n}</Text></View>)}</View><Text style={styles.warning}>{language === 'tr' ? 'Hızlı tekrar • kontrol listesi ihtiyacı' : 'Rapid repetition • use a checklist'}</Text></View>; }
@@ -375,21 +460,49 @@ const createStyles = (theme: LearningTheme) => StyleSheet.create({
   rangeRight: { flex: 1, backgroundColor: theme.colors.success },
   rangeText: { color: theme.colors.primaryText, fontSize: 9, fontWeight: '900' },
   riskText: { color: theme.colors.risk, fontSize: 11, fontWeight: '800' },
-  sizeRow: { flexDirection: 'row', gap: 10 },
-  sizeCard: { flex: 1, alignItems: 'center', gap: 7, padding: 8, borderRadius: 10, backgroundColor: theme.colors.surfaceMuted },
-  sizeBlock: { width: 34, borderRadius: 8, backgroundColor: theme.colors.primary },
-  sizeBlockRisk: { backgroundColor: theme.colors.warning },
-  rewardRow: { flexDirection: 'row', height: 48, borderRadius: 10, overflow: 'hidden' },
-  lossSide: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: theme.colors.risk },
-  gainSide: { flex: 2, alignItems: 'center', justifyContent: 'center', backgroundColor: theme.colors.success },
-  lossText: { color: theme.colors.text, fontSize: 17, fontWeight: '900' },
-  gainText: { color: theme.colors.primaryText, fontSize: 17, fontWeight: '900' },
-  stopChart: { height: 70, justifyContent: 'center', position: 'relative', borderBottomWidth: 1, borderColor: theme.colors.border },
-  stopLevel: { position: 'absolute', left: 10, right: 10, top: 33, borderTopWidth: 2, borderColor: theme.colors.risk },
-  stopLabel: { position: 'absolute', right: 0, top: -18, color: theme.colors.risk, fontSize: 10, fontWeight: '900' },
-  stopPath: { height: 55, flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-around' },
-  stopPoint: { width: 11, height: 11, borderRadius: 6, backgroundColor: theme.colors.primary },
-  stopPointRisk: { width: 11, height: 11, borderRadius: 6, backgroundColor: theme.colors.risk },
+  riskBudget: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 7, paddingVertical: 6, borderRadius: 9, backgroundColor: 'rgba(45,212,191,0.08)', borderWidth: 1, borderColor: 'rgba(45,212,191,0.32)' },
+  riskBudgetLabel: { color: theme.colors.textMuted, fontSize: 9, fontWeight: '900', letterSpacing: 0.55 },
+  riskBudgetValue: { color: theme.colors.primary, fontSize: 16, fontWeight: '900' },
+  riskBudgetNote: { color: theme.colors.textMuted, fontSize: 10 },
+  sizingPlans: { flexDirection: 'row', gap: 9 },
+  sizingPlan: { flex: 1, gap: 6, padding: 8, borderRadius: 10, backgroundColor: theme.colors.surfaceMuted, borderWidth: 1, borderColor: theme.colors.border },
+  sizingPlanHead: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  sizingPlanLabel: { color: theme.colors.textMuted, fontSize: 9, fontWeight: '900', letterSpacing: 0.45 },
+  sizingPlanValue: { fontSize: 12, fontWeight: '900' },
+  distanceTrack: { height: 22, position: 'relative', borderBottomWidth: 1, borderColor: 'rgba(159,176,195,0.28)' },
+  entryMarker: { position: 'absolute', left: 1, bottom: 0, height: 13, paddingHorizontal: 3, borderRadius: 3, backgroundColor: 'rgba(45,212,191,0.24)' },
+  entryMarkerText: { color: theme.colors.primary, fontSize: 7, fontWeight: '900' },
+  stopMarker: { position: 'absolute', bottom: 0, height: 13, paddingHorizontal: 3, borderRadius: 3, backgroundColor: 'rgba(251,113,133,0.24)' },
+  stopMarkerTight: { left: '39%' },
+  stopMarkerWide: { right: 0 },
+  stopMarkerText: { color: theme.colors.risk, fontSize: 7, fontWeight: '900' },
+  sizeMeter: { height: 7, overflow: 'hidden', borderRadius: 4, backgroundColor: 'rgba(159,176,195,0.16)' },
+  sizeMeterFill: { height: '100%', borderRadius: 4, backgroundColor: theme.colors.primary },
+  sizeMeterLarge: { width: '78%' },
+  sizeMeterSmall: { width: '35%', backgroundColor: theme.colors.warning },
+  sizePlanResult: { color: theme.colors.text, fontSize: 9, fontWeight: '800', textAlign: 'center' },
+  rewardPlan: { height: 84, overflow: 'hidden', borderRadius: 10, borderWidth: 1, borderColor: theme.colors.border, backgroundColor: theme.colors.surfaceMuted },
+  targetZone: { height: '48%', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(52,211,153,0.18)' },
+  targetZoneText: { color: theme.colors.success, fontSize: 12, fontWeight: '900', letterSpacing: 0.35 },
+  entryLine: { height: '10%', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(159,176,195,0.18)' },
+  entryLineText: { color: theme.colors.textMuted, fontSize: 8, fontWeight: '900', letterSpacing: 0.55 },
+  lossZone: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(251,113,133,0.16)' },
+  lossZoneText: { color: theme.colors.risk, fontSize: 12, fontWeight: '900', letterSpacing: 0.35 },
+  rewardChecks: { flexDirection: 'row', justifyContent: 'center', gap: 8 },
+  rewardCheck: { flexDirection: 'row', alignItems: 'center', gap: 4, paddingHorizontal: 8, paddingVertical: 4, borderRadius: 8, backgroundColor: theme.colors.surfaceMuted },
+  rewardCheckMark: { color: theme.colors.warning, fontSize: 12, fontWeight: '900' },
+  rewardCheckText: { color: theme.colors.textMuted, fontSize: 8, fontWeight: '900', letterSpacing: 0.45 },
+  stopSequence: { gap: 2, padding: 8, borderRadius: 10, backgroundColor: theme.colors.surfaceMuted, borderWidth: 1, borderColor: theme.colors.border },
+  stopPriceRow: { minHeight: 23, flexDirection: 'row', alignItems: 'center', gap: 7, paddingHorizontal: 7, borderRadius: 6, backgroundColor: 'rgba(159,176,195,0.08)' },
+  stopPriceLabel: { width: 42, color: theme.colors.textMuted, fontSize: 8, fontWeight: '900', letterSpacing: 0.4 },
+  stopPriceValue: { color: theme.colors.text, fontSize: 11, fontWeight: '900' },
+  stopArrow: { alignSelf: 'center', color: theme.colors.textMuted, fontSize: 12, lineHeight: 12 },
+  stopTrigger: { marginLeft: 'auto', color: theme.colors.warning, fontSize: 8, fontWeight: '900' },
+  stopArrowRisk: { alignSelf: 'center', color: theme.colors.risk, fontSize: 12, lineHeight: 12 },
+  fillRow: { backgroundColor: 'rgba(251,113,133,0.13)', borderWidth: 1, borderColor: 'rgba(251,113,133,0.36)' },
+  fillLabel: { width: 42, color: theme.colors.risk, fontSize: 8, fontWeight: '900', letterSpacing: 0.4 },
+  fillValue: { color: theme.colors.text, fontSize: 11, fontWeight: '900' },
+  fillNote: { marginLeft: 'auto', color: theme.colors.risk, fontSize: 8, fontWeight: '800' },
   pauseFlow: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 10 },
   socialBurst: { color: theme.colors.risk, fontSize: 26, fontWeight: '900' },
   pauseArrow: { color: theme.colors.textMuted, fontSize: 17 },
