@@ -207,7 +207,41 @@ function StructureScene({ styles, progress, mode, language }: { styles: ReturnTy
 }
 
 function VolatilityScene({ styles, language }: SceneProps) {
-  return <View style={styles.sceneColumn}><Text style={styles.sceneLabel}>{language === 'tr' ? 'Düşük volatilite' : 'Lower volatility'}</Text><View style={styles.volRow}>{[28, 34, 30, 38, 32, 36].map((height, index) => <View key={index} style={[styles.volBar, { height }]} />)}</View><Text style={styles.warning}>{language === 'tr' ? 'Yüksek volatilite • daha geniş sonuç aralığı' : 'Higher volatility • wider outcome range'}</Text><View style={styles.volRow}>{[24, 72, 34, 88, 30, 76].map((height, index) => <View key={index} style={[styles.volBar, styles.volBarRisk, { height }]} />)}</View></View>;
+  return (
+    <View style={styles.sceneColumn}>
+      <SceneHeader
+        styles={styles}
+        title={language === 'tr' ? 'Aynı süre, farklı hareket aralığı' : 'Same time, different movement range'}
+        detail={language === 'tr' ? 'Volatilite sonucu değil, belirsizlik aralığını anlatır' : 'Volatility describes uncertainty range, not outcome'}
+      />
+      <VolatilityBand
+        styles={styles}
+        label={language === 'tr' ? 'DAR HAREKET' : 'NARROW RANGE'}
+        values={[28, 34, 30, 38, 32, 36]}
+      />
+      <VolatilityBand
+        styles={styles}
+        label={language === 'tr' ? 'GENİŞ HAREKET' : 'WIDE RANGE'}
+        values={[24, 72, 34, 88, 30, 76]}
+        risk
+      />
+      <Text style={styles.sceneLabel}>{language === 'tr' ? 'Geniş aralık · risk boyutu ve planı yeniden kontrol et' : 'Wider range · re-check risk size and plan'}</Text>
+    </View>
+  );
+}
+
+function VolatilityBand({ styles, label, values, risk = false }: { styles: ReturnType<typeof createStyles>; label: string; values: readonly number[]; risk?: boolean }) {
+  return (
+    <View style={styles.volatilityBand}>
+      <View style={styles.volatilityBandHeader}>
+        <Text style={[styles.volatilityLabel, risk ? styles.riskText : styles.positive]}>{label}</Text>
+        <Text style={styles.sceneLabel}>{risk ? '↕' : '↔'}</Text>
+      </View>
+      <View style={styles.volRow}>
+        {values.map((height, index) => <View key={index} style={[styles.volBar, risk && styles.volBarRisk, { height }]} />)}
+      </View>
+    </View>
+  );
 }
 
 function DiversificationScene({ styles, language }: SceneProps) {
@@ -285,9 +319,12 @@ const createStyles = (theme: LearningTheme) => StyleSheet.create({
   structurePoint: { position: 'relative', width: 11, height: 11, borderRadius: 6, backgroundColor: theme.colors.textMuted },
   breakMarker: { position: 'absolute', top: 48, width: 18, height: 18, borderRadius: 9 },
   breakLabel: { position: 'absolute', bottom: 3, color: theme.colors.text, fontSize: 11, fontWeight: '800' },
-  volRow: { height: 58, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around' },
-  volBar: { width: 15, borderRadius: 4, backgroundColor: theme.colors.primary },
-  volBarRisk: { backgroundColor: theme.colors.risk },
+  volatilityBand: { gap: 2, paddingHorizontal: 8, paddingVertical: 5, borderRadius: 9, backgroundColor: theme.colors.surfaceMuted, borderWidth: 1, borderColor: theme.colors.border },
+  volatilityBandHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  volatilityLabel: { fontSize: 9, fontWeight: '900', letterSpacing: 0.65 },
+  volRow: { height: 48, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around' },
+  volBar: { width: 13, borderRadius: 4, backgroundColor: 'rgba(45,212,191,0.68)' },
+  volBarRisk: { backgroundColor: 'rgba(251,113,133,0.66)' },
   diversificationRow: { minHeight: 170, flexDirection: 'row', gap: 10 },
   basket: { flex: 1, justifyContent: 'center', gap: 14, padding: 10, borderRadius: 12, backgroundColor: theme.colors.surfaceMuted },
   chipRow: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', gap: 7 },
