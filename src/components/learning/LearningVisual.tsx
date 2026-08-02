@@ -201,9 +201,68 @@ function ZoneScene({ styles, language }: SceneProps) {
   );
 }
 
-function StructureScene({ styles, progress, mode, language }: { styles: ReturnType<typeof createStyles>; progress: Animated.Value; mode: 'bos' | 'choch'; language: LearningLanguage }) {
-  const markerX = progress.interpolate({ inputRange: [0, 1], outputRange: [-70, 70] });
-  return <View style={styles.center}><View style={styles.structureLevel} /><Text style={styles.structureLabel}>{mode === 'bos' ? (language === 'tr' ? 'Anlamlı yapı seviyesi' : 'Meaningful structure level') : (language === 'tr' ? 'Korunan salınım' : 'Protected swing')}</Text><View style={styles.structurePath}>{[22, 52, 36, 76, 54].map((height, index) => <View key={index} style={[styles.structurePoint, { bottom: height }]} />)}</View><Animated.View style={[styles.breakMarker, { transform: [{ translateX: markerX }], backgroundColor: mode === 'bos' ? '#2DD4BF' : '#FBBF24' }]} /><Text style={styles.breakLabel}>{mode === 'bos' ? 'BOS' : 'CHoCH'} • {language === 'tr' ? 'teyit izle' : 'seek confirmation'}</Text></View>;
+function StructureScene({ styles, mode, language }: { styles: ReturnType<typeof createStyles>; progress: Animated.Value; mode: 'bos' | 'choch'; language: LearningLanguage }) {
+  const isBos = mode === 'bos';
+  const level = isBos ? 61 : 39;
+  const candles = isBos
+    ? [
+        { bottom: 22, height: 18, bullish: true },
+        { bottom: 38, height: 17, bullish: true },
+        { bottom: 31, height: 19, bullish: false },
+        { bottom: 49, height: 18, bullish: true },
+        { bottom: 44, height: 17, bullish: false },
+        { bottom: 57, height: 27, bullish: true, breaks: true },
+      ]
+    : [
+        { bottom: 52, height: 18, bullish: true },
+        { bottom: 63, height: 17, bullish: true },
+        { bottom: 48, height: 18, bullish: false },
+        { bottom: 59, height: 18, bullish: true },
+        { bottom: 42, height: 18, bullish: false },
+        { bottom: 19, height: 29, bullish: false, breaks: true },
+      ];
+
+  return (
+    <View style={styles.sceneColumn}>
+      <SceneHeader
+        styles={styles}
+        title={isBos
+          ? language === 'tr' ? 'Seviye üzerindeki kapanışı izle' : 'Watch for a close beyond the level'
+          : language === 'tr' ? 'Korunan seviye kırılırsa yapı değişebilir' : 'Structure can change when a protected level breaks'}
+        detail={isBos
+          ? language === 'tr' ? 'BOS · devam ihtimali, garanti değil' : 'BOS · continuation possibility, not a guarantee'
+          : language === 'tr' ? 'CHoCH · karakter değişimi sinyali' : 'CHoCH · character-change signal'}
+      />
+      <View style={styles.structureChart}>
+        <View style={[styles.structureLevelLine, { bottom: level }]} />
+        <Text style={[styles.structureLevelText, { bottom: level + 5 }]}>
+          {isBos
+            ? language === 'tr' ? 'YAPI SEVİYESİ' : 'STRUCTURE LEVEL'
+            : language === 'tr' ? 'KORUNAN DİP' : 'PROTECTED LOW'}
+        </Text>
+        {candles.map((candle, index) => (
+          <View key={index} style={styles.structureCandleSlot}>
+            <View style={[styles.structureWick, { height: candle.height + 16, bottom: candle.bottom - 8 }]} />
+            <View style={[
+              styles.structureCandle,
+              candle.bullish ? styles.structureCandleUp : styles.structureCandleDown,
+              { height: candle.height, bottom: candle.bottom },
+            ]} />
+            {candle.breaks ? (
+              <Text style={[styles.structureBreakTag, isBos ? styles.structureBosTag : styles.structureChochTag, { bottom: candle.bottom + candle.height + 4 }]}>
+                {isBos ? 'BOS' : 'CHoCH'}
+              </Text>
+            ) : null}
+          </View>
+        ))}
+      </View>
+      <Text style={styles.sceneLabel}>
+        {language === 'tr'
+          ? 'Tek kırılım tek başına teyit değildir; kapanış ve bağlamı birlikte değerlendir.'
+          : 'One break is not confirmation by itself; assess the close and context together.'}
+      </Text>
+    </View>
+  );
 }
 
 function VolatilityScene({ styles, language }: SceneProps) {
