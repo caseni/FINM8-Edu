@@ -120,7 +120,44 @@ function MiniBars({ styles, count, activeEvery }: { styles: ReturnType<typeof cr
 }
 
 function TrendScene({ styles, language }: SceneProps) {
-  return <View style={styles.sceneColumn}><Text style={styles.sceneTitle}>{language === 'tr' ? 'Salınım dizisi' : 'Swing sequence'}</Text><View style={styles.trendRow}>{[18, 42, 28, 62, 46, 82].map((height, index) => <View key={index} style={styles.trendPointWrap}><View style={[styles.trendPoint, { bottom: height }]} /></View>)}</View><View style={styles.legendRow}><Text style={styles.positive}>HH ↑</Text><Text style={styles.positive}>HL ↑</Text><Text style={styles.sceneLabel}>{language === 'tr' ? 'tek mum değil' : 'not one candle'}</Text></View></View>;
+  const candles = [
+    { bottom: 18, height: 22, bullish: false },
+    { bottom: 42, height: 24, bullish: true },
+    { bottom: 31, height: 19, bullish: false, label: 'HL' },
+    { bottom: 67, height: 24, bullish: true, label: 'HH' },
+    { bottom: 52, height: 20, bullish: false, label: 'HL' },
+    { bottom: 80, height: 21, bullish: true, label: 'HH' },
+  ];
+
+  return (
+    <View style={styles.sceneColumn}>
+      <SceneHeader
+        styles={styles}
+        title={language === 'tr' ? 'Yön, mumdan çok yapıdır' : 'Direction is structure, not one candle'}
+        detail={language === 'tr' ? 'Daha yüksek dipler ve tepeler' : 'Higher lows and higher highs'}
+      />
+      <View style={styles.trendChart}>
+        <View style={styles.trendGridLine} />
+        {candles.map((candle, index) => (
+          <View key={index} style={styles.trendCandleSlot}>
+            <View style={[styles.trendWick, { height: candle.height + 16, bottom: candle.bottom - 8 }]} />
+            <View style={[
+              styles.trendCandle,
+              candle.bullish ? styles.trendCandleUp : styles.trendCandleDown,
+              { height: candle.height, bottom: candle.bottom },
+            ]} />
+            {candle.label ? (
+              <Text style={[styles.trendTag, { bottom: candle.bottom + candle.height + 3 }]}>{candle.label}</Text>
+            ) : null}
+          </View>
+        ))}
+      </View>
+      <View style={styles.trendReadout}>
+        <Text style={styles.positive}>HH + HL</Text>
+        <Text style={styles.sceneLabel}>{language === 'tr' ? 'Yükseliş yapısı · teyit ara' : 'Uptrend structure · seek confirmation'}</Text>
+      </View>
+    </View>
+  );
 }
 
 function ZoneScene({ styles, language }: SceneProps) {
@@ -218,9 +255,15 @@ const createStyles = (theme: LearningTheme) => StyleSheet.create({
   barRow: { height: 44, flexDirection: 'row', justifyContent: 'center', alignItems: 'flex-end', gap: 4 },
   miniBar: { width: 9, borderRadius: 3, backgroundColor: '#294057' },
   miniBarActive: { backgroundColor: theme.colors.primary },
-  trendRow: { height: 100, flexDirection: 'row', justifyContent: 'space-around', borderBottomWidth: 1, borderBottomColor: theme.colors.border },
-  trendPointWrap: { flex: 1, position: 'relative' },
-  trendPoint: { position: 'absolute', left: '40%', width: 12, height: 12, borderRadius: 6, backgroundColor: theme.colors.primary },
+  trendChart: { height: 108, position: 'relative', flexDirection: 'row', overflow: 'hidden', borderRadius: 10, backgroundColor: theme.colors.surfaceMuted, borderWidth: 1, borderColor: theme.colors.border },
+  trendGridLine: { position: 'absolute', left: 0, right: 0, top: 54, borderTopWidth: 1, borderColor: 'rgba(159,176,195,0.14)' },
+  trendCandleSlot: { flex: 1, position: 'relative', alignItems: 'center' },
+  trendWick: { position: 'absolute', width: 2, borderRadius: 1, backgroundColor: 'rgba(159,176,195,0.56)' },
+  trendCandle: { position: 'absolute', width: 11, borderRadius: 2 },
+  trendCandleUp: { backgroundColor: 'rgba(52,211,153,0.72)' },
+  trendCandleDown: { backgroundColor: 'rgba(251,113,133,0.60)' },
+  trendTag: { position: 'absolute', color: theme.colors.primary, fontSize: 9, fontWeight: '900' },
+  trendReadout: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 4 },
   legendRow: { flexDirection: 'row', justifyContent: 'space-around' },
   positive: { color: theme.colors.success, fontSize: 11, fontWeight: '800' },
   warning: { color: theme.colors.warning, fontSize: 11, fontWeight: '800', textAlign: 'center' },
