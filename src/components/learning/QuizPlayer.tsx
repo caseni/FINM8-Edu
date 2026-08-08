@@ -5,6 +5,7 @@ import { scoreQuiz, type QuizResult, type QuizSubmission } from '../../domain/le
 import type { LocalizedText, Quiz } from '../../domain/learning/types';
 import { defaultLearningTheme, type LearningTheme } from '../../theme/learningTheme';
 import { LearningVisual } from './LearningVisual';
+import { RiskBasicsVisual } from './RiskBasicsVisual';
 
 export interface QuizPlayerProps {
   quiz: Quiz;
@@ -29,6 +30,8 @@ export function QuizPlayer({
   const styles = useMemo(() => createStyles(theme), [theme]);
   const question = quiz.questions[questionIndex];
   const selectedIsCorrect = selectedOptionId === question.correctOptionId;
+  const isRiskBasicsVisual =
+    question.visual?.assetRef.includes('risk-belirsizlik-kayip') ?? false;
 
   useEffect(() => {
     advancingRef.current = false;
@@ -76,14 +79,24 @@ export function QuizPlayer({
       {question.visual ? (
         <View style={styles.visualWrap}>
           <Text style={styles.visualEyebrow}>
-            {language === 'tr' ? 'GRAFİĞİ İNCELE' : 'READ THE CHART'}
+            {isRiskBasicsVisual
+              ? language === 'tr' ? 'GÖRSELİ İNCELE' : 'READ THE VISUAL'
+              : language === 'tr' ? 'GRAFİĞİ İNCELE' : 'READ THE CHART'}
           </Text>
-          <LearningVisual
-            assetRef={question.visual.assetRef}
-            alt={selectLocalizedText(question.visual.alt, language)}
-            language={language}
-            theme={theme}
-          />
+          {isRiskBasicsVisual ? (
+            <RiskBasicsVisual
+              alt={selectLocalizedText(question.visual.alt, language)}
+              language={language}
+              theme={theme}
+            />
+          ) : (
+            <LearningVisual
+              assetRef={question.visual.assetRef}
+              alt={selectLocalizedText(question.visual.alt, language)}
+              language={language}
+              theme={theme}
+            />
+          )}
         </View>
       ) : null}
       <View style={styles.options}>

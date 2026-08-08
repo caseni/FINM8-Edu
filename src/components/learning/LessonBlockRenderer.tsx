@@ -14,6 +14,7 @@ import {
   type LearningTheme,
 } from '../../theme/learningTheme';
 import { LearningVisual } from './LearningVisual';
+import { RiskBasicsVisual } from './RiskBasicsVisual';
 
 type VisualBlock = Extract<ContentBlock, { kind: 'visual' }>;
 
@@ -55,14 +56,19 @@ export function LessonBlockRenderer({
   }
 
   if (block.kind === 'visual') {
+    const alt = selectLocalizedText(block.alt, language);
+    const isRiskBasicsVisual = block.assetRef.includes('risk-belirsizlik-kayip');
+
     return (
       <View style={styles.block}>
         {renderVisual ? (
           renderVisual(block)
+        ) : isRiskBasicsVisual ? (
+          <RiskBasicsVisual alt={alt} language={language} theme={theme} />
         ) : (
           <LearningVisual
             assetRef={block.assetRef}
-            alt={selectLocalizedText(block.alt, language)}
+            alt={alt}
             language={language}
             theme={theme}
           />
