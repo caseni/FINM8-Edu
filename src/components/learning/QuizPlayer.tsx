@@ -11,6 +11,7 @@ import { LiquidityImpactVisual } from './LiquidityImpactVisual';
 import { OrderTypesVisual } from './OrderTypesVisual';
 import { PriceFormationVisual } from './PriceFormationVisual';
 import { RiskBasicsVisual } from './RiskBasicsVisual';
+import { SlippageExecutionVisual } from './SlippageExecutionVisual';
 
 export interface QuizPlayerProps {
   quiz: Quiz;
@@ -43,6 +44,8 @@ export function QuizPlayer({
     question.visual?.assetRef.includes('bid-ask-spread-nedir') ?? false;
   const isOrderTypesVisual =
     question.visual?.assetRef.includes('piyasa-limit-stop-emirleri') ?? false;
+  const isSlippageExecutionVisual =
+    question.visual?.assetRef.includes('gerceklesme-fiyati-kayma') ?? false;
   const isRiskBasicsVisual =
     question.visual?.assetRef.includes('risk-belirsizlik-kayip') ?? false;
   const isCandleAnatomyVisual =
@@ -54,6 +57,7 @@ export function QuizPlayer({
     isLiquidityImpactVisual ||
     isBidAskSpreadVisual ||
     isOrderTypesVisual ||
+    isSlippageExecutionVisual ||
     isRiskBasicsVisual ||
     isCandleAnatomyVisual;
 
@@ -127,6 +131,12 @@ export function QuizPlayer({
             />
           ) : isOrderTypesVisual ? (
             <OrderTypesVisual
+              alt={selectLocalizedText(question.visual.alt, language)}
+              language={language}
+              theme={theme}
+            />
+          ) : isSlippageExecutionVisual ? (
+            <SlippageExecutionVisual
               alt={selectLocalizedText(question.visual.alt, language)}
               language={language}
               theme={theme}
