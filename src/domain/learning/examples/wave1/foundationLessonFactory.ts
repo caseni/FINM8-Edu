@@ -158,6 +158,8 @@ export interface FoundationLessonSpec {
   explanationEn?: string;
   proExplanation?: string;
   proExplanationEn?: string;
+  traderTip?: string;
+  traderTipEn?: string;
   misconception: string;
   misconceptionEn?: string;
   takeaway: string;
@@ -218,16 +220,31 @@ export function createFoundationLesson(spec: FoundationLessonSpec): MicroLesson 
           },
         ]
       : []),
+    ...(spec.traderTip
+      ? [
+          {
+            id: `${spec.id}.trader-tip`,
+            order: 3,
+            audience: 'all' as const,
+            kind: 'callout' as const,
+            tone: 'evidence' as const,
+            copy: audienceCopy(
+              `TRADER PRATİK NOTU · ${spec.traderTip}`,
+              spec.traderTipEn ? `TRADER PRACTICAL NOTE · ${spec.traderTipEn}` : undefined,
+            ),
+          },
+        ]
+      : []),
     {
       id: `${spec.id}.misconception`,
-      order: 3,
+      order: spec.traderTip ? 4 : 3,
       audience: 'all',
       kind: 'misconception',
       copy: audienceCopy(spec.misconception, spec.misconceptionEn),
     },
     {
       id: `${spec.id}.safety`,
-      order: 4,
+      order: spec.traderTip ? 5 : 4,
       audience: 'all',
       kind: 'callout',
       tone: 'risk',
