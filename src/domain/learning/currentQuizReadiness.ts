@@ -2,6 +2,7 @@ import {
   BEHAVIOR_EVIDENCE_CHALLENGE,
   CHART_LITERACY_CHALLENGE,
   MARKET_FOUNDATIONS_CHALLENGE,
+  MARKET_STRUCTURE_CHALLENGE,
   RISK_MANAGEMENT_CHALLENGE,
 } from './examples/wave1/challenges';
 import { WAVE1_MARKET_FOUNDATION_LESSONS } from './examples/wave1/marketFoundationsLessons';
@@ -172,6 +173,7 @@ export function getCurrentQuizReadiness({
     completedLessons.has(lessonId)
   ).length;
   const unlockedTrackIds: CurrentQuizTrackId[] = [];
+  const marketStructureCompleted = completedChallenges.has(MARKET_STRUCTURE_CHALLENGE.id);
 
   if (completedDailyPrerequisites === DAILY_BASICS_PREREQUISITE_IDS.length) {
     unlockedTrackIds.push('daily_basics');
@@ -182,10 +184,16 @@ export function getCurrentQuizReadiness({
   if (completedChallenges.has(CHART_LITERACY_CHALLENGE.id)) {
     unlockedTrackIds.push('chart_context');
   }
-  if (completedChallenges.has(RISK_MANAGEMENT_CHALLENGE.id)) {
+  if (
+    marketStructureCompleted &&
+    completedChallenges.has(RISK_MANAGEMENT_CHALLENGE.id)
+  ) {
     unlockedTrackIds.push('risk_context');
   }
-  if (completedChallenges.has(BEHAVIOR_EVIDENCE_CHALLENGE.id)) {
+  if (
+    marketStructureCompleted &&
+    completedChallenges.has(BEHAVIOR_EVIDENCE_CHALLENGE.id)
+  ) {
     unlockedTrackIds.push('multi_evidence');
   }
 
@@ -227,13 +235,13 @@ function getNextRequirement(
       };
     case 'risk_context':
       return {
-        tr: 'Risk Koruyucusu Challenge tamamlandığında risk senaryoları açılır.',
-        en: 'Risk scenarios unlock after the Risk Guardian Challenge.',
+        tr: 'Piyasa Yapısı ve Risk Koruyucusu challenge’ları tamamlandığında risk senaryoları açılır.',
+        en: 'Risk scenarios unlock after the Market Structure and Risk Guardian challenges.',
       };
     case 'multi_evidence':
       return {
-        tr: 'Davranış ve Kanıt Challenge tamamlandığında çoklu kanıt senaryoları açılır.',
-        en: 'Multi-evidence scenarios unlock after the Behavior and Evidence Challenge.',
+        tr: 'Piyasa Yapısı dahil önceki seviye kapıları ve Davranış/Kanıt Challenge tamamlandığında çoklu kanıt senaryoları açılır.',
+        en: 'Multi-evidence scenarios unlock after the prior level gates, including Market Structure, and the Behavior/Evidence Challenge.',
       };
     default:
       return {

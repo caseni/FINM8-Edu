@@ -57,11 +57,11 @@ export const INITIAL_BADGES: readonly LearningBadge[] = [
     id: 'badge.market-literacy.foundation',
     title: { tr: 'Piyasa Okuryazarı', en: 'Market Literate' },
     description: {
-      tr: 'Piyasa Okuryazarlığı yolundaki dört modül challenge’ını tamamla.',
-      en: 'Complete all four module challenges in the Market Literacy path.',
+      tr: 'Piyasa Okuryazarlığı yolundaki beş modül challenge’ını tamamla.',
+      en: 'Complete all five module challenges in the Market Literacy path.',
     },
     credentialType: 'learning_achievement',
-    definitionVersion: '0.1.0',
+    definitionVersion: '0.2.0',
     requirements: [
       {
         kind: 'challenge_completion',
@@ -71,6 +71,11 @@ export const INITIAL_BADGES: readonly LearningBadge[] = [
       {
         kind: 'challenge_completion',
         targetId: 'challenge.chart-literacy.foundation',
+        threshold: 1,
+      },
+      {
+        kind: 'challenge_completion',
+        targetId: 'challenge.market-structure.intermediate',
         threshold: 1,
       },
       {
@@ -102,6 +107,27 @@ export const INITIAL_BADGES: readonly LearningBadge[] = [
       {
         kind: 'challenge_completion',
         targetId: 'challenge.chart-literacy.foundation',
+        threshold: 1,
+      },
+    ],
+    disclaimer: {
+      tr: 'Bu badge bir öğrenme başarısıdır; sertifika veya mesleki yeterlilik değildir.',
+      en: 'This badge is a learning achievement, not a certificate or professional qualification.',
+    },
+  },
+  {
+    id: 'badge.market-structure.intermediate',
+    title: { tr: 'Yapı Okuyucusu', en: 'Structure Reader' },
+    description: {
+      tr: 'BOS ve CHoCH’u tek taşmadan ayırıp piyasa yapısı challenge’ını tamamla.',
+      en: 'Distinguish BOS and CHoCH from simple overshoots and complete the Market Structure Challenge.',
+    },
+    credentialType: 'learning_achievement',
+    definitionVersion: '0.1.0',
+    requirements: [
+      {
+        kind: 'challenge_completion',
+        targetId: 'challenge.market-structure.intermediate',
         threshold: 1,
       },
     ],

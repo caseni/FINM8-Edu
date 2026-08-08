@@ -8,9 +8,9 @@ import { getCurrentQuizLearningGainSummary, getCurrentQuizPreviewDimensions } fr
 import { CURRENT_QUIZ_EVIDENCE_LABELS, CURRENT_QUIZ_TRACKS, getCurrentQuizReadiness } from '../../domain/learning/currentQuizReadiness';
 import { getCurrentQuizReviewRecommendation } from '../../domain/learning/currentQuizReview';
 import { INITIAL_BADGES } from '../../domain/learning/examples/badges';
-import { BEHAVIOR_EVIDENCE_CHALLENGE, CHART_LITERACY_CHALLENGE, MARKET_FOUNDATIONS_CHALLENGE, RISK_MANAGEMENT_CHALLENGE } from '../../domain/learning/examples/wave1/challenges';
+import { BEHAVIOR_EVIDENCE_CHALLENGE, CHART_LITERACY_CHALLENGE, MARKET_FOUNDATIONS_CHALLENGE, MARKET_STRUCTURE_CHALLENGE, RISK_MANAGEMENT_CHALLENGE } from '../../domain/learning/examples/wave1/challenges';
 import { WAVE1_BEHAVIOR_EVIDENCE_LESSONS } from '../../domain/learning/examples/wave1/behaviorEvidenceLessons';
-import { WAVE1_CHART_LITERACY_LESSONS } from '../../domain/learning/examples/wave1/chartLiteracyLessons';
+import { WAVE1_CHART_LITERACY_CORE_LESSONS, WAVE1_MARKET_STRUCTURE_LESSONS } from '../../domain/learning/examples/wave1/levelledLessonGroups';
 import { WAVE1_MARKET_FOUNDATION_LESSONS } from '../../domain/learning/examples/wave1/marketFoundationsLessons';
 import { WAVE1_RISK_MANAGEMENT_LESSONS } from '../../domain/learning/examples/wave1/riskManagementLessons';
 import { WAVE1_CONTENT_SUMMARY } from '../../domain/learning/examples/wave1MarketLiteracyPath';
@@ -46,10 +46,14 @@ export function LearnHomeScreen() {
   );
   const marketChallengeCompleted = completedChallengeIds.includes(MARKET_FOUNDATIONS_CHALLENGE.id);
   const chartNextLesson = marketChallengeCompleted
-    ? WAVE1_CHART_LITERACY_LESSONS.find((lesson) => !completedLessonIds.includes(lesson.id))
+    ? WAVE1_CHART_LITERACY_CORE_LESSONS.find((lesson) => !completedLessonIds.includes(lesson.id))
     : undefined;
   const chartChallengeCompleted = completedChallengeIds.includes(CHART_LITERACY_CHALLENGE.id);
-  const riskNextLesson = chartChallengeCompleted
+  const marketStructureNextLesson = chartChallengeCompleted
+    ? WAVE1_MARKET_STRUCTURE_LESSONS.find((lesson) => !completedLessonIds.includes(lesson.id))
+    : undefined;
+  const marketStructureChallengeCompleted = completedChallengeIds.includes(MARKET_STRUCTURE_CHALLENGE.id);
+  const riskNextLesson = marketStructureChallengeCompleted
     ? WAVE1_RISK_MANAGEMENT_LESSONS.find((lesson) => !completedLessonIds.includes(lesson.id))
     : undefined;
   const riskChallengeCompleted = completedChallengeIds.includes(RISK_MANAGEMENT_CHALLENGE.id);
@@ -65,38 +69,46 @@ export function LearnHomeScreen() {
         ? { kind: 'lesson' as const, lesson: chartNextLesson }
         : !chartChallengeCompleted
           ? { kind: 'challenge' as const, challenge: CHART_LITERACY_CHALLENGE }
-          : riskNextLesson
-            ? { kind: 'lesson' as const, lesson: riskNextLesson }
-            : !riskChallengeCompleted
-              ? { kind: 'challenge' as const, challenge: RISK_MANAGEMENT_CHALLENGE }
-              : behaviorNextLesson
-                ? { kind: 'lesson' as const, lesson: behaviorNextLesson }
-                : !behaviorChallengeCompleted
-                  ? { kind: 'challenge' as const, challenge: BEHAVIOR_EVIDENCE_CHALLENGE }
-                  : { kind: 'lesson' as const, lesson: WAVE1_MARKET_FOUNDATION_LESSONS[0] };
+          : marketStructureNextLesson
+            ? { kind: 'lesson' as const, lesson: marketStructureNextLesson }
+            : !marketStructureChallengeCompleted
+              ? { kind: 'challenge' as const, challenge: MARKET_STRUCTURE_CHALLENGE }
+              : riskNextLesson
+                ? { kind: 'lesson' as const, lesson: riskNextLesson }
+                : !riskChallengeCompleted
+                  ? { kind: 'challenge' as const, challenge: RISK_MANAGEMENT_CHALLENGE }
+                  : behaviorNextLesson
+                    ? { kind: 'lesson' as const, lesson: behaviorNextLesson }
+                    : !behaviorChallengeCompleted
+                      ? { kind: 'challenge' as const, challenge: BEHAVIOR_EVIDENCE_CHALLENGE }
+                      : { kind: 'lesson' as const, lesson: WAVE1_MARKET_FOUNDATION_LESSONS[0] };
   const lessonCompleted = mission.kind === 'lesson' && completedLessonIds.includes(mission.lesson.id);
   const activeMastery =
     (riskChallengeCompleted ? masteryBySkill['skill.behavior-evidence'] : undefined) ??
-    (chartChallengeCompleted ? masteryBySkill['skill.risk-management'] : undefined) ??
+    (marketStructureChallengeCompleted ? masteryBySkill['skill.risk-management'] : undefined) ??
+    (chartChallengeCompleted ? masteryBySkill['skill.market-structure'] : undefined) ??
     (marketChallengeCompleted ? masteryBySkill['skill.chart-literacy'] : undefined) ??
-    masteryBySkill['skill.market-foundations'] ??
-    masteryBySkill['skill.market-structure'];
+    masteryBySkill['skill.market-foundations'];
   const wave1CompletedCount = completedLessonIds.filter((lessonId) =>
     WAVE1_LESSON_IDS.has(lessonId)
   ).length;
   const chartLiteracyUnlocked = marketChallengeCompleted;
-  const riskManagementUnlocked = chartChallengeCompleted;
+  const marketStructureUnlocked = chartChallengeCompleted;
+  const riskManagementUnlocked = marketStructureChallengeCompleted;
   const behaviorEvidenceUnlocked = riskChallengeCompleted;
   const activeModuleNumber = !marketChallengeCompleted
     ? 1
     : !chartChallengeCompleted
       ? 2
-      : !riskChallengeCompleted
+      : !marketStructureChallengeCompleted
         ? 3
-        : 4;
+        : !riskChallengeCompleted
+          ? 4
+          : 5;
   const completedModuleCount = [
     marketChallengeCompleted,
     chartChallengeCompleted,
+    marketStructureChallengeCompleted,
     riskChallengeCompleted,
     behaviorChallengeCompleted,
   ].filter(Boolean).length;
@@ -116,7 +128,7 @@ export function LearnHomeScreen() {
   const profileGuidance = selectLocalizedText(getProfileGuidance(profile.selectedStage), language);
   const missionGoal = selectGoalForSkill(
     profile.goals,
-    mission.kind === 'lesson' ? mission.lesson.skillId : 'skill.market-foundations'
+    mission.kind === 'lesson' ? mission.lesson.skillId : mission.challenge.skillIds[0]
   );
   const goalReason = selectLocalizedText(getGoalReason(missionGoal), language);
   const currentQuizReadiness = getCurrentQuizReadiness({
@@ -249,7 +261,17 @@ export function LearnHomeScreen() {
           <View style={styles.skillTop}>
             <View>
               <Text style={styles.sectionLabel}>{language === 'tr' ? 'BECERİ HARİTASI' : 'SKILL MAP'}</Text>
-              <Text style={styles.skillTitle}>{riskChallengeCompleted ? (language === 'tr' ? 'Davranış ve kanıt' : 'Behavior and evidence') : chartChallengeCompleted ? (language === 'tr' ? 'Risk yönetimi' : 'Risk management') : marketChallengeCompleted ? (language === 'tr' ? 'Grafik okuryazarlığı' : 'Chart literacy') : (language === 'tr' ? 'Piyasa temelleri' : 'Market foundations')}</Text>
+              <Text style={styles.skillTitle}>
+                {riskChallengeCompleted
+                  ? language === 'tr' ? 'Davranış ve kanıt' : 'Behavior and evidence'
+                  : marketStructureChallengeCompleted
+                    ? language === 'tr' ? 'Risk yönetimi' : 'Risk management'
+                    : chartChallengeCompleted
+                      ? language === 'tr' ? 'Piyasa yapısı' : 'Market structure'
+                      : marketChallengeCompleted
+                        ? language === 'tr' ? 'Grafik okuryazarlığı' : 'Chart literacy'
+                        : language === 'tr' ? 'Piyasa temelleri' : 'Market foundations'}
+              </Text>
             </View>
             <Text style={styles.skillScore}>{Math.round(activeMastery?.score ?? 0)}%</Text>
           </View>
@@ -419,10 +441,10 @@ export function LearnHomeScreen() {
             <Text style={styles.pathTitle}>{language === 'tr' ? 'Piyasa Okuryazarlığı' : 'Market Literacy'}</Text>
             <Text style={styles.pathBody}>
               {language === 'tr'
-                ? 'Piyasa temelleri, grafik okuma, risk ve davranış.'
-                : 'Market foundations, chart literacy, risk, and behavior.'}
+                ? 'Piyasa temelleri, grafik okuma, piyasa yapısı, risk ve davranış.'
+                : 'Market foundations, chart literacy, market structure, risk, and behavior.'}
             </Text>
-            <Text style={styles.pathStatus}>{language === 'tr' ? '4 modül · Tamamen ücretsiz' : '4 modules · Completely free'}</Text>
+            <Text style={styles.pathStatus}>{language === 'tr' ? '5 modül · Kademe kademe' : '5 modules · Step by step'}</Text>
             <Text style={styles.pathProgress}>
               {wave1CompletedCount}/{WAVE1_CONTENT_SUMMARY.lessonCount} {language === 'tr' ? 'ders •' : 'lessons •'} {WAVE1_CONTENT_SUMMARY.estimatedMinutes} dk
             </Text>
@@ -433,18 +455,18 @@ export function LearnHomeScreen() {
           style={styles.pathNavigator}
           accessibilityRole="progressbar"
           accessibilityLabel={language === 'tr' ? 'Öğrenme yolu ilerlemesi' : 'Learning path progress'}
-          accessibilityValue={{ min: 0, max: 4, now: completedModuleCount }}
+          accessibilityValue={{ min: 0, max: 5, now: completedModuleCount }}
         >
           <View style={styles.pathNavigatorTop}>
             <Text style={styles.pathNavigatorLabel}>{language === 'tr' ? 'YOL HARİTASI' : 'PATH MAP'}</Text>
             <Text style={styles.pathNavigatorMeta}>
               {language === 'tr'
-                ? `${completedModuleCount}/4 modül tamamlandı`
-                : `${completedModuleCount}/4 modules completed`}
+                ? `${completedModuleCount}/5 modül tamamlandı`
+                : `${completedModuleCount}/5 modules completed`}
             </Text>
           </View>
           <View style={styles.pathSteps}>
-            {[1, 2, 3, 4].map((step) => {
+            {[1, 2, 3, 4, 5].map((step) => {
               const complete = step <= completedModuleCount;
               const active = step === activeModuleNumber && !complete;
               return (
@@ -454,7 +476,7 @@ export function LearnHomeScreen() {
                       {complete ? '✓' : step}
                     </Text>
                   </View>
-                  {step < 4 ? <View style={[styles.pathConnector, step <= completedModuleCount && styles.pathConnectorComplete]} /> : null}
+                  {step < 5 ? <View style={[styles.pathConnector, step <= completedModuleCount && styles.pathConnectorComplete]} /> : null}
                 </View>
               );
             })}
@@ -480,8 +502,8 @@ export function LearnHomeScreen() {
           {
             number: 2,
             title: language === 'tr' ? 'Grafik Okuryazarlığı' : 'Chart Literacy',
-            description: language === 'tr' ? 'Mum, zaman dilimi, trend ve yapıyı sade kanıtlarla oku.' : 'Read candles, timeframes, trends, and structure through clear evidence.',
-            lessons: WAVE1_CHART_LITERACY_LESSONS,
+            description: language === 'tr' ? 'Mum, zaman dilimi, trend ve destek/direnci sade kanıtlarla oku.' : 'Read candles, timeframes, trends, and support/resistance through clear evidence.',
+            lessons: WAVE1_CHART_LITERACY_CORE_LESSONS,
             challenge: CHART_LITERACY_CHALLENGE,
             unlocked: chartLiteracyUnlocked,
             completed: chartChallengeCompleted,
@@ -489,16 +511,26 @@ export function LearnHomeScreen() {
           },
           {
             number: 3,
+            title: language === 'tr' ? 'Piyasa Yapısı' : 'Market Structure',
+            description: language === 'tr' ? 'Anlamlı swing seviyelerini, BOS ve CHoCH’u fiyat taşmasından ayır.' : 'Separate meaningful swing levels, BOS, and CHoCH from simple price overshoots.',
+            lessons: WAVE1_MARKET_STRUCTURE_LESSONS,
+            challenge: MARKET_STRUCTURE_CHALLENGE,
+            unlocked: marketStructureUnlocked,
+            completed: marketStructureChallengeCompleted,
+            unlockMessage: language === 'tr' ? 'Grafik Dedektifi Challenge tamamlandığında açılır.' : 'Unlocks after the Chart Detective Challenge.',
+          },
+          {
+            number: 4,
             title: language === 'tr' ? 'Risk Yönetimi' : 'Risk Management',
             description: language === 'tr' ? 'Belirsizlik, volatilite ve boyutlandırmayı birlikte yönet.' : 'Manage uncertainty, volatility, and sizing together.',
             lessons: WAVE1_RISK_MANAGEMENT_LESSONS,
             challenge: RISK_MANAGEMENT_CHALLENGE,
             unlocked: riskManagementUnlocked,
             completed: riskChallengeCompleted,
-            unlockMessage: language === 'tr' ? 'Grafik Dedektifi Challenge tamamlandığında açılır.' : 'Unlocks after the Chart Detective Challenge.',
+            unlockMessage: language === 'tr' ? 'Piyasa Yapısı Challenge tamamlandığında açılır.' : 'Unlocks after the Market Structure Challenge.',
           },
           {
-            number: 4,
+            number: 5,
             title: language === 'tr' ? 'Davranış ve Kanıt' : 'Behavior and Evidence',
             description: language === 'tr' ? 'Karar hatalarını fark et, veri kalitesini sorgula.' : 'Recognize decision errors and question evidence quality.',
             lessons: WAVE1_BEHAVIOR_EVIDENCE_LESSONS,
@@ -691,7 +723,8 @@ const styles = StyleSheet.create({
 
 const WAVE1_LESSON_IDS = new Set([
   ...WAVE1_MARKET_FOUNDATION_LESSONS.map((lesson) => lesson.id),
-  ...WAVE1_CHART_LITERACY_LESSONS.map((lesson) => lesson.id),
+  ...WAVE1_CHART_LITERACY_CORE_LESSONS.map((lesson) => lesson.id),
+  ...WAVE1_MARKET_STRUCTURE_LESSONS.map((lesson) => lesson.id),
   ...WAVE1_RISK_MANAGEMENT_LESSONS.map((lesson) => lesson.id),
   ...WAVE1_BEHAVIOR_EVIDENCE_LESSONS.map((lesson) => lesson.id),
 ]);

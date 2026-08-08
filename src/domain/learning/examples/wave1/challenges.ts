@@ -1,6 +1,9 @@
 import { learningChallengeSchema } from '../../progressionSchemas';
 import { WAVE1_MARKET_FOUNDATION_LESSONS } from './marketFoundationsLessons';
-import { WAVE1_CHART_LITERACY_LESSONS } from './chartLiteracyLessons';
+import {
+  WAVE1_CHART_LITERACY_CORE_LESSONS,
+  WAVE1_MARKET_STRUCTURE_LESSONS,
+} from './levelledLessonGroups';
 import { WAVE1_RISK_MANAGEMENT_LESSONS } from './riskManagementLessons';
 import { WAVE1_BEHAVIOR_EVIDENCE_LESSONS } from './behaviorEvidenceLessons';
 import type { LearningChallenge } from '../../types';
@@ -35,7 +38,7 @@ export const MARKET_FOUNDATIONS_CHALLENGE = learningChallengeSchema.parse({
   badgeId: 'badge.market-foundations.module',
 });
 
-const chartQuestions = WAVE1_CHART_LITERACY_LESSONS.map((lesson, index) => ({
+const chartQuestions = WAVE1_CHART_LITERACY_CORE_LESSONS.map((lesson, index) => ({
   ...lesson.quiz.questions[0],
   id: `question.challenge.chart-literacy.${index + 1}`,
 }));
@@ -44,25 +47,56 @@ export const CHART_LITERACY_CHALLENGE = learningChallengeSchema.parse({
   id: 'challenge.chart-literacy.foundation',
   title: { tr: 'Grafik Dedektifi Challenge' },
   description: {
-    tr: 'Mum, zaman dilimi, trend, tepki bölgesi, BOS ve CHoCH kanıtlarını birlikte değerlendir.',
+    tr: 'Mum, zaman dilimi, trend ve destek/direnç bölgesini birlikte değerlendir.',
   },
   stage: 'foundation',
-  skillIds: ['skill.chart-literacy', 'skill.market-structure'],
-  prerequisiteLessonIds: WAVE1_CHART_LITERACY_LESSONS.map((lesson) => lesson.id),
+  skillIds: ['skill.chart-literacy'],
+  prerequisiteLessonIds: WAVE1_CHART_LITERACY_CORE_LESSONS.map((lesson) => lesson.id),
   questions: chartQuestions,
   practicalTasks: [
     {
-      ...WAVE1_CHART_LITERACY_LESSONS[2].practicalTask,
+      ...WAVE1_CHART_LITERACY_CORE_LESSONS[2].practicalTask,
       id: 'task.challenge.chart-literacy.trend',
     },
     {
-      ...WAVE1_CHART_LITERACY_LESSONS[5].practicalTask,
-      id: 'task.challenge.chart-literacy.structure-change',
+      ...WAVE1_CHART_LITERACY_CORE_LESSONS[3].practicalTask,
+      id: 'task.challenge.chart-literacy.support-resistance',
     },
   ],
   passingScore: 75,
   xpReward: 100,
   badgeId: 'badge.chart-literacy.module',
+});
+
+const marketStructureQuestions = WAVE1_MARKET_STRUCTURE_LESSONS.map((lesson, index) => ({
+  ...lesson.quiz.questions[0],
+  id: `question.challenge.market-structure.${index + 1}`,
+}));
+
+export const MARKET_STRUCTURE_CHALLENGE = learningChallengeSchema.parse({
+  id: 'challenge.market-structure.intermediate',
+  title: { tr: 'Piyasa Yapısı Challenge', en: 'Market Structure Challenge' },
+  description: {
+    tr: 'BOS ve CHoCH kavramlarını anlamlı swing, kapanış ve bağlam üzerinden ayırt et.',
+    en: 'Distinguish BOS and CHoCH through meaningful swings, closes, and context.',
+  },
+  stage: 'intermediate',
+  skillIds: ['skill.market-structure'],
+  prerequisiteLessonIds: WAVE1_MARKET_STRUCTURE_LESSONS.map((lesson) => lesson.id),
+  questions: marketStructureQuestions,
+  practicalTasks: [
+    {
+      ...WAVE1_MARKET_STRUCTURE_LESSONS[0].practicalTask,
+      id: 'task.challenge.market-structure.bos',
+    },
+    {
+      ...WAVE1_MARKET_STRUCTURE_LESSONS[1].practicalTask,
+      id: 'task.challenge.market-structure.choch',
+    },
+  ],
+  passingScore: 75,
+  xpReward: 100,
+  badgeId: 'badge.market-structure.intermediate',
 });
 
 const riskQuestions = WAVE1_RISK_MANAGEMENT_LESSONS.map((lesson, index) => ({
@@ -128,6 +162,7 @@ export const BEHAVIOR_EVIDENCE_CHALLENGE = learningChallengeSchema.parse({
 export const LEARNING_CHALLENGE_CATALOG: readonly LearningChallenge[] = [
   MARKET_FOUNDATIONS_CHALLENGE,
   CHART_LITERACY_CHALLENGE,
+  MARKET_STRUCTURE_CHALLENGE,
   RISK_MANAGEMENT_CHALLENGE,
   BEHAVIOR_EVIDENCE_CHALLENGE,
 ];

@@ -119,7 +119,9 @@ export function LearningModuleCard({
               <Text style={styles.challengeTitle}>{selectLocalizedText(challenge.title, language)}</Text>
               <Text style={styles.lessonMeta}>
                 {lessonsCompleted
-                  ? language === 'tr' ? '2 uygulama · 6 soru · +100 XP' : '2 tasks · 6 questions · +100 XP'
+                  ? language === 'tr'
+                    ? `${challenge.practicalTasks.length} uygulama · ${challenge.questions.length} soru · +${challenge.xpReward} XP`
+                    : `${challenge.practicalTasks.length} tasks · ${challenge.questions.length} questions · +${challenge.xpReward} XP`
                   : language === 'tr' ? 'Tüm derslerden sonra açılır' : 'Unlocks after every lesson'}
               </Text>
             </View>
