@@ -12,6 +12,7 @@ import { OrderTypesVisual } from './OrderTypesVisual';
 import { PriceFormationVisual } from './PriceFormationVisual';
 import { RiskBasicsVisual } from './RiskBasicsVisual';
 import { SlippageExecutionVisual } from './SlippageExecutionVisual';
+import { TrendStructureVisual } from './TrendStructureVisual';
 
 export interface QuizPlayerProps {
   quiz: Quiz;
@@ -46,6 +47,10 @@ export function QuizPlayer({
     question.visual?.assetRef.includes('piyasa-limit-stop-emirleri') ?? false;
   const isSlippageExecutionVisual =
     question.visual?.assetRef.includes('gerceklesme-fiyati-kayma') ?? false;
+  const isTrendStructureVisual =
+    question.visual?.assetRef.includes('trend-yon-mu-yapi-mi') ||
+    question.visual?.assetRef.includes('trend-structure') ||
+    false;
   const isRiskBasicsVisual =
     question.visual?.assetRef.includes('risk-belirsizlik-kayip') ?? false;
   const isCandleAnatomyVisual =
@@ -58,6 +63,7 @@ export function QuizPlayer({
     isBidAskSpreadVisual ||
     isOrderTypesVisual ||
     isSlippageExecutionVisual ||
+    isTrendStructureVisual ||
     isRiskBasicsVisual ||
     isCandleAnatomyVisual;
 
@@ -137,6 +143,12 @@ export function QuizPlayer({
             />
           ) : isSlippageExecutionVisual ? (
             <SlippageExecutionVisual
+              alt={selectLocalizedText(question.visual.alt, language)}
+              language={language}
+              theme={theme}
+            />
+          ) : isTrendStructureVisual ? (
+            <TrendStructureVisual
               alt={selectLocalizedText(question.visual.alt, language)}
               language={language}
               theme={theme}

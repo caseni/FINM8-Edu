@@ -9,6 +9,7 @@ import type { LocalizedText, PracticalTask, PresentationMode } from '../../domai
 import { defaultLearningTheme, type LearningTheme } from '../../theme/learningTheme';
 import { CandleAnatomyVisual } from './CandleAnatomyVisual';
 import { LearningVisual } from './LearningVisual';
+import { TrendStructureVisual } from './TrendStructureVisual';
 
 export interface PracticalTaskPlayerProps {
   task: PracticalTask;
@@ -41,6 +42,8 @@ export function PracticalTaskPlayer({
     actual.every((value, index) => value === expected[index]);
   const isCandleAnatomyVisual =
     task.assetRef?.includes('candle-ohlc') || task.assetRef?.includes('bir-mum');
+  const isTrendStructureVisual =
+    task.assetRef?.includes('trend-structure') || task.assetRef?.includes('trend-yon-mu-yapi-mi');
 
   const toggle = (choiceId: string) => {
     if (checked) return;
@@ -95,6 +98,14 @@ export function PracticalTaskPlayer({
               alt={language === 'tr'
                 ? 'Açılış, kapanış, en yüksek ve en düşük seviyeleri gösteren eğitim mumu'
                 : 'Training candle showing open, close, high, and low levels'}
+              language={language}
+              theme={theme}
+            />
+          ) : isTrendStructureVisual ? (
+            <TrendStructureVisual
+              alt={language === 'tr'
+                ? 'Yükseliş, düşüş ve yatay salınım dizilerini karşılaştıran eğitim grafiği'
+                : 'Training chart comparing upward, downward, and sideways swing sequences'}
               language={language}
               theme={theme}
             />
