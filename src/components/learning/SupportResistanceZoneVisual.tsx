@@ -21,68 +21,38 @@ export function SupportResistanceZoneVisual({
     <View style={styles.shell} accessibilityRole="image" accessibilityLabel={alt}>
       <View style={styles.canvas}>
         <View style={styles.header}>
-          <Text style={styles.title}>
-            {tr ? 'Destek ve direnç çoğu zaman bir bölgedir' : 'Support and resistance are often zones'}
-          </Text>
+          <Text style={styles.title}>{tr ? 'Destek ve direnç' : 'Support and resistance'}</Text>
           <Text style={styles.subtitle}>
             {tr
-              ? 'Tepkiler aynı alanda olabilir; aynı fiyatta olmak zorunda değildir.'
-              : 'Reactions can cluster in the same area without occurring at one exact price.'}
+              ? 'Tek bir çizgi yerine tepki görülen alanlara bak.'
+              : 'Look for reaction areas instead of one exact line.'}
           </Text>
         </View>
 
         <ReactionZone
           styles={styles}
           tone="resistance"
-          title={tr ? 'DİRENÇ BÖLGESİ · 108–110' : 'RESISTANCE ZONE · 108–110'}
-          note={tr ? 'Satıcı tepkileri bu aralıkta görülmüş' : 'Seller reactions appeared in this range'}
-          detail={tr ? 'Fitiller ve kapanışlar aynı alanda kümeleniyor.' : 'Wicks and closes cluster in the same area.'}
-          arrows={['↓', '↓', '↓']}
+          title={tr ? 'DİRENÇ' : 'RESISTANCE'}
+          note={tr ? 'Fiyatın daha önce zorlandığı üst alan' : 'Upper area where price struggled before'}
+          bandLabel={tr ? 'TEPKİ ALANI' : 'REACTION AREA'}
         />
-
-        <View style={styles.middleHint}>
-          <Text style={styles.middleHintText}>
-            {tr ? 'Fiyat iki alan arasında hareket eder' : 'Price moves between the two areas'}
-          </Text>
-        </View>
 
         <ReactionZone
           styles={styles}
           tone="support"
-          title={tr ? 'DESTEK BÖLGESİ · 98–100' : 'SUPPORT ZONE · 98–100'}
-          note={tr ? 'Alıcı tepkileri bu aralıkta görülmüş' : 'Buyer reactions appeared in this range'}
-          detail={tr ? 'Tepkiler tek bir kusursuz fiyata sıkışmaz.' : 'Reactions do not have to land on one perfect price.'}
-          arrows={['↑', '↑', '↑']}
+          title={tr ? 'DESTEK' : 'SUPPORT'}
+          note={tr ? 'Fiyatın daha önce tepki aldığı alt alan' : 'Lower area where price reacted before'}
+          bandLabel={tr ? 'TEPKİ ALANI' : 'REACTION AREA'}
         />
-
-        <View style={styles.compareCard}>
-          <View style={styles.compareRow}>
-            <Text style={styles.cross}>×</Text>
-            <View style={styles.compareCopy}>
-              <Text style={styles.compareLabel}>{tr ? 'TEK ÇİZGİ' : 'ONE LINE'}</Text>
-              <Text style={styles.compareText}>{tr ? '109.0 kesin duvar gibi düşünmek' : 'Treating 109.0 like a certain wall'}</Text>
-            </View>
-          </View>
-          <View style={styles.compareRow}>
-            <Text style={styles.check}>✓</Text>
-            <View style={styles.compareCopy}>
-              <Text style={styles.compareLabel}>{tr ? 'BÖLGE' : 'ZONE'}</Text>
-              <Text style={styles.compareText}>{tr ? '108–110 aralığını tepki alanı olarak okumak' : 'Reading 108–110 as a reaction area'}</Text>
-            </View>
-          </View>
-        </View>
 
         <View style={styles.boundary}>
           <Text style={styles.boundaryMark}>!</Text>
           <Text style={styles.boundaryText}>
             {tr
-              ? 'Geçmişte tepki verdi diye bölgenin tekrar tutması veya kırılması garanti değildir.'
-              : 'Past reactions do not guarantee that the zone will hold or break next time.'}
+              ? 'Bölge, fiyatın tekrar döneceğini garanti etmez.'
+              : 'A zone does not guarantee that price will reverse there again.'}
           </Text>
         </View>
-      </View>
-      <View style={styles.footer}>
-        <Text numberOfLines={2} style={styles.alt}>{alt}</Text>
       </View>
     </View>
   );
@@ -93,38 +63,35 @@ function ReactionZone({
   tone,
   title,
   note,
-  detail,
-  arrows,
+  bandLabel,
 }: {
   styles: ReturnType<typeof createStyles>;
   tone: 'support' | 'resistance';
   title: string;
   note: string;
-  detail: string;
-  arrows: readonly string[];
+  bandLabel: string;
 }) {
   const support = tone === 'support';
+  const markers = [0, 1, 2] as const;
+
   return (
     <View style={[styles.zoneCard, support ? styles.supportCard : styles.resistanceCard]}>
-      <View style={styles.zoneHeader}>
-        <View style={styles.zoneCopy}>
-          <Text style={[styles.zoneTitle, support ? styles.supportText : styles.resistanceText]}>{title}</Text>
-          <Text style={styles.zoneNote}>{note}</Text>
-        </View>
-        <View style={styles.reactions}>
-          {arrows.map((arrow, index) => (
-            <View key={`${tone}.${index}`} style={[styles.reactionDot, support ? styles.supportDot : styles.resistanceDot]}>
-              <Text style={[styles.reactionArrow, support ? styles.supportText : styles.resistanceText]}>{arrow}</Text>
+      <View style={styles.zoneCopy}>
+        <Text style={[styles.zoneTitle, support ? styles.supportText : styles.resistanceText]}>{title}</Text>
+        <Text style={styles.zoneNote}>{note}</Text>
+      </View>
+
+      <View style={[styles.zoneBand, support ? styles.supportBand : styles.resistanceBand]}>
+        <Text style={[styles.bandLabel, support ? styles.supportText : styles.resistanceText]}>{bandLabel}</Text>
+        <View style={styles.markers}>
+          {markers.map((marker) => (
+            <View key={`${tone}.${marker}`} style={styles.marker}>
+              <View style={[styles.markerWick, support ? styles.supportMarker : styles.resistanceMarker]} />
+              <View style={[styles.markerBody, support ? styles.supportMarker : styles.resistanceMarker]} />
             </View>
           ))}
         </View>
       </View>
-      <View style={[styles.rangeBand, support ? styles.supportBand : styles.resistanceBand]}>
-        <View style={styles.rangeTick} />
-        <View style={styles.rangeTick} />
-        <View style={styles.rangeTick} />
-      </View>
-      <Text style={styles.zoneDetail}>{detail}</Text>
     </View>
   );
 }
@@ -132,7 +99,7 @@ function ReactionZone({
 const createStyles = (theme: LearningTheme) =>
   StyleSheet.create({
     shell: {
-      minHeight: 420,
+      minHeight: 330,
       overflow: 'hidden',
       borderRadius: theme.radius.large,
       backgroundColor: theme.colors.background,
@@ -140,43 +107,138 @@ const createStyles = (theme: LearningTheme) =>
       borderColor: theme.colors.border,
     },
     canvas: {
+      flex: 1,
+      justifyContent: 'center',
       padding: theme.spacing.md,
-      gap: 10,
+      gap: 12,
     },
-    header: { gap: 4, alignItems: 'center', paddingHorizontal: 4 },
-    title: { color: theme.colors.text, fontSize: 15, lineHeight: 21, fontWeight: '900', textAlign: 'center' },
-    subtitle: { color: theme.colors.textMuted, fontSize: 11, lineHeight: 16, fontWeight: '700', textAlign: 'center' },
-    zoneCard: { gap: 8, padding: 12, borderRadius: 12, borderWidth: 1, backgroundColor: theme.colors.surfaceMuted },
-    resistanceCard: { borderColor: 'rgba(248,113,113,0.28)' },
-    supportCard: { borderColor: 'rgba(45,212,191,0.30)' },
-    zoneHeader: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-    zoneCopy: { flex: 1, gap: 3 },
-    zoneTitle: { fontSize: 10, fontWeight: '900', letterSpacing: 0.5 },
-    resistanceText: { color: theme.colors.risk },
-    supportText: { color: theme.colors.primary },
-    zoneNote: { color: theme.colors.text, fontSize: 11, lineHeight: 15, fontWeight: '800' },
-    reactions: { flexDirection: 'row', gap: 5 },
-    reactionDot: { width: 26, height: 26, borderRadius: 13, alignItems: 'center', justifyContent: 'center', borderWidth: 1 },
-    resistanceDot: { backgroundColor: 'rgba(248,113,113,0.08)', borderColor: 'rgba(248,113,113,0.26)' },
-    supportDot: { backgroundColor: 'rgba(45,212,191,0.08)', borderColor: 'rgba(45,212,191,0.28)' },
-    reactionArrow: { fontSize: 14, fontWeight: '900' },
-    rangeBand: { height: 28, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', borderRadius: 8, borderWidth: 1 },
-    resistanceBand: { backgroundColor: 'rgba(248,113,113,0.10)', borderColor: 'rgba(248,113,113,0.24)' },
-    supportBand: { backgroundColor: 'rgba(45,212,191,0.10)', borderColor: 'rgba(45,212,191,0.25)' },
-    rangeTick: { width: 3, height: 16, borderRadius: 2, backgroundColor: 'rgba(159,176,195,0.62)' },
-    zoneDetail: { color: theme.colors.textMuted, fontSize: 10, lineHeight: 14, fontWeight: '700' },
-    middleHint: { alignItems: 'center', paddingVertical: 2 },
-    middleHintText: { color: theme.colors.textMuted, fontSize: 10, fontWeight: '800' },
-    compareCard: { gap: 7, padding: 10, borderRadius: 11, borderWidth: 1, borderColor: theme.colors.border, backgroundColor: 'rgba(159,176,195,0.04)' },
-    compareRow: { flexDirection: 'row', alignItems: 'flex-start', gap: 8 },
-    compareCopy: { flex: 1, gap: 1 },
-    compareLabel: { color: theme.colors.textMuted, fontSize: 8, fontWeight: '900', letterSpacing: 0.5 },
-    compareText: { color: theme.colors.text, fontSize: 10, lineHeight: 14, fontWeight: '800' },
-    cross: { width: 16, color: theme.colors.risk, fontSize: 15, lineHeight: 18, fontWeight: '900' },
-    check: { width: 16, color: theme.colors.success, fontSize: 14, lineHeight: 18, fontWeight: '900' },
-    boundary: { flexDirection: 'row', gap: 8, padding: 10, borderRadius: 11, borderWidth: 1, borderColor: 'rgba(250,204,21,0.22)', backgroundColor: 'rgba(250,204,21,0.06)' },
-    boundaryMark: { color: theme.colors.warning, fontSize: 14, fontWeight: '900' },
-    boundaryText: { flex: 1, color: theme.colors.text, fontSize: 10, lineHeight: 15, fontWeight: '800' },
-    footer: { minHeight: 44, justifyContent: 'center', paddingHorizontal: theme.spacing.md, paddingVertical: theme.spacing.sm, borderTopWidth: 1, borderTopColor: theme.colors.border },
-    alt: { color: theme.colors.textMuted, fontSize: 11, lineHeight: 15 },
+    header: {
+      gap: 4,
+      alignItems: 'center',
+      paddingHorizontal: 8,
+      paddingBottom: 2,
+    },
+    title: {
+      color: theme.colors.text,
+      fontSize: 16,
+      lineHeight: 22,
+      fontWeight: '900',
+      textAlign: 'center',
+    },
+    subtitle: {
+      color: theme.colors.textMuted,
+      fontSize: 12,
+      lineHeight: 17,
+      fontWeight: '700',
+      textAlign: 'center',
+    },
+    zoneCard: {
+      gap: 10,
+      padding: 13,
+      borderRadius: 13,
+      borderWidth: 1,
+      backgroundColor: theme.colors.surfaceMuted,
+    },
+    resistanceCard: {
+      borderColor: 'rgba(248,113,113,0.24)',
+    },
+    supportCard: {
+      borderColor: 'rgba(45,212,191,0.26)',
+    },
+    zoneCopy: {
+      gap: 3,
+    },
+    zoneTitle: {
+      fontSize: 10,
+      fontWeight: '900',
+      letterSpacing: 0.7,
+    },
+    resistanceText: {
+      color: theme.colors.risk,
+    },
+    supportText: {
+      color: theme.colors.primary,
+    },
+    zoneNote: {
+      color: theme.colors.text,
+      fontSize: 12,
+      lineHeight: 17,
+      fontWeight: '800',
+    },
+    zoneBand: {
+      minHeight: 48,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      gap: 12,
+      paddingHorizontal: 12,
+      borderRadius: 10,
+      borderWidth: 1,
+    },
+    resistanceBand: {
+      backgroundColor: 'rgba(248,113,113,0.08)',
+      borderColor: 'rgba(248,113,113,0.20)',
+    },
+    supportBand: {
+      backgroundColor: 'rgba(45,212,191,0.08)',
+      borderColor: 'rgba(45,212,191,0.22)',
+    },
+    bandLabel: {
+      fontSize: 9,
+      fontWeight: '900',
+      letterSpacing: 0.6,
+    },
+    markers: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 9,
+    },
+    marker: {
+      width: 8,
+      height: 28,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    markerWick: {
+      position: 'absolute',
+      width: 2,
+      height: 26,
+      borderRadius: 1,
+      opacity: 0.45,
+    },
+    markerBody: {
+      width: 7,
+      height: 11,
+      borderRadius: 2,
+      opacity: 0.72,
+    },
+    resistanceMarker: {
+      backgroundColor: theme.colors.risk,
+    },
+    supportMarker: {
+      backgroundColor: theme.colors.primary,
+    },
+    boundary: {
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+      gap: 8,
+      padding: 10,
+      borderRadius: 11,
+      borderWidth: 1,
+      borderColor: 'rgba(250,204,21,0.20)',
+      backgroundColor: 'rgba(250,204,21,0.05)',
+    },
+    boundaryMark: {
+      color: theme.colors.warning,
+      fontSize: 14,
+      lineHeight: 18,
+      fontWeight: '900',
+    },
+    boundaryText: {
+      flex: 1,
+      color: theme.colors.text,
+      fontSize: 11,
+      lineHeight: 16,
+      fontWeight: '800',
+    },
   });
