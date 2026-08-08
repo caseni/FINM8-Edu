@@ -32,6 +32,7 @@ import { RiskRewardVisual } from './RiskRewardVisual';
 import { SlippageExecutionVisual } from './SlippageExecutionVisual';
 import { StopOrderVisual } from './StopOrderVisual';
 import { SupportResistanceZoneVisual } from './SupportResistanceZoneVisual';
+import { TimeframeContextVisual } from './TimeframeContextVisual';
 import { TrendStructureVisual } from './TrendStructureVisual';
 import { VolatilityRangeVisual } from './VolatilityRangeVisual';
 
@@ -81,6 +82,7 @@ export function LessonBlockRenderer({
     const isBidAskSpreadVisual = block.assetRef.includes('bid-ask-spread-nedir');
     const isOrderTypesVisual = block.assetRef.includes('piyasa-limit-stop-emirleri');
     const isSlippageExecutionVisual = block.assetRef.includes('gerceklesme-fiyati-kayma');
+    const isTimeframeContextVisual = block.assetRef.includes('zaman-dilimi-neyi-degistirir');
     const isTrendStructureVisual = block.assetRef.includes('trend-yon-mu-yapi-mi');
     const isSupportResistanceZoneVisual = block.assetRef.includes('destek-direnc-bolgedir');
     const isBreakOfStructureVisual = block.assetRef.includes('bos-starter');
@@ -112,6 +114,8 @@ export function LessonBlockRenderer({
           <OrderTypesVisual alt={alt} language={language} theme={theme} />
         ) : isSlippageExecutionVisual ? (
           <SlippageExecutionVisual alt={alt} language={language} theme={theme} />
+        ) : isTimeframeContextVisual ? (
+          <TimeframeContextVisual alt={alt} language={language} theme={theme} />
         ) : isTrendStructureVisual ? (
           <TrendStructureVisual alt={alt} language={language} theme={theme} />
         ) : isSupportResistanceZoneVisual ? (
