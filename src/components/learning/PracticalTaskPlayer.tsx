@@ -12,6 +12,7 @@ import { CandleAnatomyVisual } from './CandleAnatomyVisual';
 import { ChangeOfCharacterVisual } from './ChangeOfCharacterVisual';
 import { LearningVisual } from './LearningVisual';
 import { PositionSizingVisual } from './PositionSizingVisual';
+import { RiskRewardVisual } from './RiskRewardVisual';
 import { SupportResistanceZoneVisual } from './SupportResistanceZoneVisual';
 import { TrendStructureVisual } from './TrendStructureVisual';
 import { VolatilityRangeVisual } from './VolatilityRangeVisual';
@@ -55,6 +56,7 @@ export function PracticalTaskPlayer({
   const isChangeOfCharacterVisual = task.assetRef?.includes('choch') ?? false;
   const isVolatilityRangeVisual = task.assetRef?.includes('volatility-range') ?? false;
   const isPositionSizingVisual = task.conceptKey === 'risk.position_sizing';
+  const isRiskRewardVisual = task.conceptKey === 'risk.risk_reward';
 
   const toggle = (choiceId: string) => {
     if (checked) return;
@@ -107,6 +109,14 @@ export function PracticalTaskPlayer({
           alt={language === 'tr'
             ? 'Aynı risk bütçesinde dar ve geniş risk mesafesine göre pozisyon büyüklüğünün değişmesini gösteren eğitim görseli'
             : 'Training visual showing position size changing with tighter and wider risk distance under the same risk budget'}
+          language={language}
+          theme={theme}
+        />
+      ) : isRiskRewardVisual ? (
+        <RiskRewardVisual
+          alt={language === 'tr'
+            ? 'Yüksek risk getiri oranının olasılık ve maliyet bilgisi olmadan tek başına yeterli olmadığını gösteren eğitim görseli'
+            : 'Training visual showing that a high risk reward ratio is insufficient without probability and cost information'}
           language={language}
           theme={theme}
         />
