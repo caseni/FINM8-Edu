@@ -4,6 +4,7 @@ import { selectLocalizedText, type LearningLanguage } from '../../domain/learnin
 import { scoreQuiz, type QuizResult, type QuizSubmission } from '../../domain/learning/progressionEngine';
 import type { LocalizedText, Quiz } from '../../domain/learning/types';
 import { defaultLearningTheme, type LearningTheme } from '../../theme/learningTheme';
+import { CandleAnatomyVisual } from './CandleAnatomyVisual';
 import { LearningVisual } from './LearningVisual';
 import { RiskBasicsVisual } from './RiskBasicsVisual';
 
@@ -32,6 +33,11 @@ export function QuizPlayer({
   const selectedIsCorrect = selectedOptionId === question.correctOptionId;
   const isRiskBasicsVisual =
     question.visual?.assetRef.includes('risk-belirsizlik-kayip') ?? false;
+  const isCandleAnatomyVisual =
+    question.visual?.assetRef.includes('bir-mum') ||
+    question.visual?.assetRef.includes('candle-ohlc') ||
+    false;
+  const isConceptVisual = isRiskBasicsVisual || isCandleAnatomyVisual;
 
   useEffect(() => {
     advancingRef.current = false;
@@ -79,12 +85,18 @@ export function QuizPlayer({
       {question.visual ? (
         <View style={styles.visualWrap}>
           <Text style={styles.visualEyebrow}>
-            {isRiskBasicsVisual
+            {isConceptVisual
               ? language === 'tr' ? 'GÖRSELİ İNCELE' : 'READ THE VISUAL'
               : language === 'tr' ? 'GRAFİĞİ İNCELE' : 'READ THE CHART'}
           </Text>
           {isRiskBasicsVisual ? (
             <RiskBasicsVisual
+              alt={selectLocalizedText(question.visual.alt, language)}
+              language={language}
+              theme={theme}
+            />
+          ) : isCandleAnatomyVisual ? (
+            <CandleAnatomyVisual
               alt={selectLocalizedText(question.visual.alt, language)}
               language={language}
               theme={theme}

@@ -7,6 +7,7 @@ import {
 } from '../../domain/learning/presentation';
 import type { LocalizedText, PracticalTask, PresentationMode } from '../../domain/learning/types';
 import { defaultLearningTheme, type LearningTheme } from '../../theme/learningTheme';
+import { CandleAnatomyVisual } from './CandleAnatomyVisual';
 import { LearningVisual } from './LearningVisual';
 
 export interface PracticalTaskPlayerProps {
@@ -38,6 +39,8 @@ export function PracticalTaskPlayer({
   const passed =
     actual.length === expected.length &&
     actual.every((value, index) => value === expected[index]);
+  const isCandleAnatomyVisual =
+    task.assetRef?.includes('candle-ohlc') || task.assetRef?.includes('bir-mum');
 
   const toggle = (choiceId: string) => {
     if (checked) return;
@@ -87,12 +90,22 @@ export function PracticalTaskPlayer({
       </Text>
       {task.kind === 'chart_identification' ? (
         task.assetRef ? (
-          <LearningVisual
-            assetRef={task.assetRef}
-            alt={language === 'tr' ? 'Eğitim amaçlı şematik görev grafiği' : 'Schematic training task chart'}
-            language={language}
-            theme={theme}
-          />
+          isCandleAnatomyVisual ? (
+            <CandleAnatomyVisual
+              alt={language === 'tr'
+                ? 'Açılış, kapanış, en yüksek ve en düşük seviyeleri gösteren eğitim mumu'
+                : 'Training candle showing open, close, high, and low levels'}
+              language={language}
+              theme={theme}
+            />
+          ) : (
+            <LearningVisual
+              assetRef={task.assetRef}
+              alt={language === 'tr' ? 'Eğitim amaçlı şematik görev grafiği' : 'Schematic training task chart'}
+              language={language}
+              theme={theme}
+            />
+          )
         ) : (
           <View style={styles.chart}><Text style={styles.chartLabel}>{language === 'tr' ? 'Eğitim amaçlı şematik grafik' : 'Schematic training chart'}</Text></View>
         )
