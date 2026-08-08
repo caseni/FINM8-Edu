@@ -11,6 +11,7 @@ import { BreakOfStructureVisual } from './BreakOfStructureVisual';
 import { CandleAnatomyVisual } from './CandleAnatomyVisual';
 import { ChangeOfCharacterVisual } from './ChangeOfCharacterVisual';
 import { DiversificationVisual } from './DiversificationVisual';
+import { FomoDecisionVisual } from './FomoDecisionVisual';
 import { LearningVisual } from './LearningVisual';
 import { PositionSizingVisual } from './PositionSizingVisual';
 import { RiskRewardVisual } from './RiskRewardVisual';
@@ -61,6 +62,7 @@ export function PracticalTaskPlayer({
   const isRiskRewardVisual = task.conceptKey === 'risk.risk_reward';
   const isStopOrderVisual = task.conceptKey === 'risk.stop_orders';
   const isDiversificationVisual = task.conceptKey === 'portfolio.diversification';
+  const isFomoDecisionVisual = task.conceptKey === 'behavior.fomo';
 
   const toggle = (choiceId: string) => {
     if (checked) return;
@@ -137,6 +139,14 @@ export function PracticalTaskPlayer({
           alt={language === 'tr'
             ? 'Çok sayıda benzer varlığın aynı risk kaynağına bağlı kalabildiğini ve farklı risk kaynaklarına yayılmanın yoğunlaşmayı azaltabildiğini gösteren eğitim görseli'
             : 'Training visual showing that many similar assets can share one risk source while spreading across different risk sources can reduce concentration'}
+          language={language}
+          theme={theme}
+        />
+      ) : isFomoDecisionVisual ? (
+        <FomoDecisionVisual
+          alt={language === 'tr'
+            ? 'Yükselen fiyat ve sosyal baskı karşısında dürtüsel karar ile dur planı kontrol et ve karşı kanıt ara akışını karşılaştıran FOMO eğitim görseli'
+            : 'FOMO training visual comparing an impulsive decision under rising price and social pressure with pause, plan check, and counter-evidence steps'}
           language={language}
           theme={theme}
         />
