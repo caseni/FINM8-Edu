@@ -16,6 +16,7 @@ import { RiskBasicsVisual } from './RiskBasicsVisual';
 import { SlippageExecutionVisual } from './SlippageExecutionVisual';
 import { SupportResistanceZoneVisual } from './SupportResistanceZoneVisual';
 import { TrendStructureVisual } from './TrendStructureVisual';
+import { VolatilityRangeVisual } from './VolatilityRangeVisual';
 
 export interface QuizPlayerProps {
   quiz: Quiz;
@@ -62,6 +63,10 @@ export function QuizPlayer({
     question.visual?.assetRef.includes('bos-starter') ?? false;
   const isChangeOfCharacterVisual =
     question.visual?.assetRef.includes('choch') ?? false;
+  const isVolatilityRangeVisual =
+    question.visual?.assetRef.includes('volatilite-once-risktir') ||
+    question.visual?.assetRef.includes('volatility-range') ||
+    false;
   const isRiskBasicsVisual =
     question.visual?.assetRef.includes('risk-belirsizlik-kayip') ?? false;
   const isCandleAnatomyVisual =
@@ -78,6 +83,7 @@ export function QuizPlayer({
     isSupportResistanceZoneVisual ||
     isBreakOfStructureVisual ||
     isChangeOfCharacterVisual ||
+    isVolatilityRangeVisual ||
     isRiskBasicsVisual ||
     isCandleAnatomyVisual;
 
@@ -181,6 +187,12 @@ export function QuizPlayer({
             />
           ) : isChangeOfCharacterVisual ? (
             <ChangeOfCharacterVisual
+              alt={selectLocalizedText(question.visual.alt, language)}
+              language={language}
+              theme={theme}
+            />
+          ) : isVolatilityRangeVisual ? (
+            <VolatilityRangeVisual
               alt={selectLocalizedText(question.visual.alt, language)}
               language={language}
               theme={theme}

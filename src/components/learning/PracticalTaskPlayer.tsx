@@ -13,6 +13,7 @@ import { ChangeOfCharacterVisual } from './ChangeOfCharacterVisual';
 import { LearningVisual } from './LearningVisual';
 import { SupportResistanceZoneVisual } from './SupportResistanceZoneVisual';
 import { TrendStructureVisual } from './TrendStructureVisual';
+import { VolatilityRangeVisual } from './VolatilityRangeVisual';
 
 export interface PracticalTaskPlayerProps {
   task: PracticalTask;
@@ -51,6 +52,7 @@ export function PracticalTaskPlayer({
     task.assetRef?.includes('support-resistance-zone') || task.assetRef?.includes('destek-direnc-bolgedir');
   const isBreakOfStructureVisual = task.assetRef?.includes('bos-starter') ?? false;
   const isChangeOfCharacterVisual = task.assetRef?.includes('choch') ?? false;
+  const isVolatilityRangeVisual = task.assetRef?.includes('volatility-range') ?? false;
 
   const toggle = (choiceId: string) => {
     if (checked) return;
@@ -137,6 +139,14 @@ export function PracticalTaskPlayer({
               alt={language === 'tr'
                 ? 'Yükseliş yapısında korunan anlamlı dibin karşı yönlü kapanışla kaybedilmesini gösteren CHoCH eğitim görseli'
                 : 'CHoCH training visual showing a meaningful protected low lost by an opposing structural close'}
+              language={language}
+              theme={theme}
+            />
+          ) : isVolatilityRangeVisual ? (
+            <VolatilityRangeVisual
+              alt={language === 'tr'
+                ? 'Aynı başlangıç ve pozisyon büyüklüğünde dar ve geniş fiyat hareketlerini karşılaştıran volatilite eğitim görseli'
+                : 'Volatility training visual comparing narrow and wide price movement with the same starting point and position size'}
               language={language}
               theme={theme}
             />

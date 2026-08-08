@@ -25,6 +25,7 @@ import { RiskBasicsVisual } from './RiskBasicsVisual';
 import { SlippageExecutionVisual } from './SlippageExecutionVisual';
 import { SupportResistanceZoneVisual } from './SupportResistanceZoneVisual';
 import { TrendStructureVisual } from './TrendStructureVisual';
+import { VolatilityRangeVisual } from './VolatilityRangeVisual';
 
 type VisualBlock = Extract<ContentBlock, { kind: 'visual' }>;
 
@@ -76,6 +77,7 @@ export function LessonBlockRenderer({
     const isSupportResistanceZoneVisual = block.assetRef.includes('destek-direnc-bolgedir');
     const isBreakOfStructureVisual = block.assetRef.includes('bos-starter');
     const isChangeOfCharacterVisual = block.assetRef.includes('choch');
+    const isVolatilityRangeVisual = block.assetRef.includes('volatilite-once-risktir');
     const isRiskBasicsVisual = block.assetRef.includes('risk-belirsizlik-kayip');
     const isCandleAnatomyVisual =
       block.assetRef.includes('bir-mum') || block.assetRef.includes('candle-ohlc');
@@ -102,6 +104,8 @@ export function LessonBlockRenderer({
           <BreakOfStructureVisual alt={alt} language={language} theme={theme} />
         ) : isChangeOfCharacterVisual ? (
           <ChangeOfCharacterVisual alt={alt} language={language} theme={theme} />
+        ) : isVolatilityRangeVisual ? (
+          <VolatilityRangeVisual alt={alt} language={language} theme={theme} />
         ) : isRiskBasicsVisual ? (
           <RiskBasicsVisual alt={alt} language={language} theme={theme} />
         ) : isCandleAnatomyVisual ? (
