@@ -67,6 +67,7 @@ export function PracticalTaskPlayer({
   const isFomoDecisionVisual = task.conceptKey === 'behavior.fomo';
   const isOvertradingDecisionVisual = task.conceptKey === 'behavior.overtrading';
   const isConfirmationBiasVisual = task.conceptKey === 'behavior.confirmation_bias';
+  const isDataQualityVisual = task.conceptKey === 'evidence.data_quality';
 
   const toggle = (choiceId: string) => {
     if (checked) return;
@@ -167,6 +168,15 @@ export function PracticalTaskPlayer({
           alt={language === 'tr'
             ? 'Yalnız destekleyen kanıtları toplamak ile görüşü çürütebilecek kanıtı da aramayı karşılaştıran onaylama yanlılığı eğitim görseli'
             : 'Confirmation-bias training visual comparing one-sided supporting evidence with deliberately seeking evidence that could disprove the view'}
+          language={language}
+          theme={theme}
+        />
+      ) : isDataQualityVisual ? (
+        <LearningVisual
+          assetRef="edu://wave1/her-veri-ayni-kalitede-degildir"
+          alt={language === 'tr'
+            ? 'Kaynak, zaman, kapsam ve bağlam kontrollerini daha güçlü ve daha zayıf veri örnekleriyle karşılaştıran veri kalitesi eğitim görseli'
+            : 'Data-quality training visual comparing source, time, coverage, and context checks across stronger and weaker evidence'}
           language={language}
           theme={theme}
         />
