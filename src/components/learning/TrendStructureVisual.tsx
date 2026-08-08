@@ -44,10 +44,10 @@ export function TrendStructureVisual({
             summary={tr ? 'Tepeler ↑ · Dipler ↑' : 'Highs ↑ · Lows ↑'}
             detail={tr ? 'HH = daha yüksek tepe · HL = daha yüksek dip' : 'HH = higher high · HL = higher low'}
             points={[
-              { top: 55 },
-              { top: 30 },
-              { top: 42, label: 'HL' },
-              { top: 14, label: 'HH' },
+              { top: 50 },
+              { top: 26 },
+              { top: 38, label: 'HL' },
+              { top: 10, label: 'HH' },
             ]}
             arrows={['↗', '↘', '↗']}
           />
@@ -58,10 +58,10 @@ export function TrendStructureVisual({
             summary={tr ? 'Tepeler ↓ · Dipler ↓' : 'Highs ↓ · Lows ↓'}
             detail={tr ? 'LH = daha düşük tepe · LL = daha düşük dip' : 'LH = lower high · LL = lower low'}
             points={[
-              { top: 14 },
-              { top: 40 },
-              { top: 30, label: 'LH' },
-              { top: 58, label: 'LL' },
+              { top: 10 },
+              { top: 36 },
+              { top: 26, label: 'LH' },
+              { top: 52, label: 'LL' },
             ]}
             arrows={['↘', '↗', '↘']}
           />
@@ -70,12 +70,12 @@ export function TrendStructureVisual({
             tone="sideways"
             title={tr ? 'YATAY' : 'SIDEWAYS'}
             summary={tr ? 'Belirgin ilerleme yok' : 'No clear progress'}
-            detail={tr ? 'Tepeler ve dipler aynı alan içinde kalır' : 'Highs and lows stay in a similar area'}
+            detail={tr ? 'Tepeler ve dipler benzer alanlarda kalır' : 'Highs and lows stay in similar areas'}
             points={[
-              { top: 44 },
-              { top: 22 },
-              { top: 45 },
-              { top: 23 },
+              { top: 38 },
+              { top: 18 },
+              { top: 39 },
+              { top: 19 },
             ]}
             arrows={['↗', '↘', '↗']}
           />
@@ -89,8 +89,8 @@ export function TrendStructureVisual({
             </Text>
             <Text style={styles.boundaryText}>
               {tr
-                ? 'Son mumun rengi tek başına trendi belirlemez; salınım dizisine ve zaman dilimine bakılır.'
-                : 'The last candle color alone does not define a trend; read the swing sequence and timeframe.'}
+                ? 'Son mumun rengi tek başına trendi belirlemez. Salınım dizisine ve zaman dilimine bakılır.'
+                : 'The last candle color alone does not define a trend. Read the swing sequence and timeframe.'}
             </Text>
           </View>
         </View>
@@ -126,14 +126,18 @@ function StructureCard({
 
   return (
     <View style={[styles.card, card]}>
-      <Text style={[styles.cardTitle, accent]}>{title}</Text>
+      <View style={styles.cardCopy}>
+        <Text style={[styles.cardTitle, accent]}>{title}</Text>
+        <Text style={styles.summary}>{summary}</Text>
+        <Text style={styles.detail}>{detail}</Text>
+      </View>
       <View style={styles.graph}>
         {points.map((point, index) => (
           <React.Fragment key={`${title}.${index}`}>
             <View style={styles.pointSlot}>
               <View style={[styles.point, dot, { top: point.top }]} />
               {point.label ? (
-                <Text style={[styles.pointLabel, accent, { top: Math.max(0, point.top - 12) }]}>{point.label}</Text>
+                <Text style={[styles.pointLabel, accent, { top: Math.max(0, point.top - 14) }]}>{point.label}</Text>
               ) : null}
             </View>
             {index < arrows.length ? (
@@ -142,8 +146,6 @@ function StructureCard({
           </React.Fragment>
         ))}
       </View>
-      <Text style={styles.summary}>{summary}</Text>
-      <Text style={styles.detail}>{detail}</Text>
     </View>
   );
 }
@@ -151,7 +153,7 @@ function StructureCard({
 const createStyles = (theme: LearningTheme) =>
   StyleSheet.create({
     shell: {
-      minHeight: 330,
+      minHeight: 442,
       overflow: 'hidden',
       borderRadius: theme.radius.large,
       backgroundColor: theme.colors.background,
@@ -159,32 +161,34 @@ const createStyles = (theme: LearningTheme) =>
       borderColor: theme.colors.border,
     },
     canvas: {
-      minHeight: 282,
+      minHeight: 394,
       padding: theme.spacing.md,
       justifyContent: 'center',
-      gap: 12,
+      gap: 11,
     },
     header: { alignItems: 'center', gap: 3 },
     title: {
       color: theme.colors.text,
-      fontSize: 15,
-      lineHeight: 20,
+      fontSize: 16,
+      lineHeight: 21,
       fontWeight: '900',
       textAlign: 'center',
     },
     subtitle: {
       color: theme.colors.textMuted,
-      fontSize: 10,
-      lineHeight: 14,
+      fontSize: 11,
+      lineHeight: 15,
       fontWeight: '700',
       textAlign: 'center',
     },
-    cards: { flexDirection: 'row', gap: 7 },
+    cards: { gap: 8 },
     card: {
-      flex: 1,
-      minHeight: 166,
-      padding: 9,
-      gap: 6,
+      minHeight: 92,
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 10,
+      paddingHorizontal: 11,
+      paddingVertical: 9,
       borderRadius: 11,
       backgroundColor: theme.colors.surfaceMuted,
       borderWidth: 1,
@@ -192,23 +196,27 @@ const createStyles = (theme: LearningTheme) =>
     upCard: { borderColor: 'rgba(45,212,191,0.34)' },
     downCard: { borderColor: 'rgba(248,113,113,0.24)' },
     sidewaysCard: { borderColor: 'rgba(159,176,195,0.22)' },
-    cardTitle: { fontSize: 8, lineHeight: 11, fontWeight: '900', letterSpacing: 0.55 },
+    cardCopy: { width: 138, gap: 3 },
+    cardTitle: { fontSize: 9, lineHeight: 12, fontWeight: '900', letterSpacing: 0.55 },
     upText: { color: theme.colors.primary },
     downText: { color: theme.colors.risk },
     sidewaysText: { color: theme.colors.textMuted },
+    summary: { color: theme.colors.text, fontSize: 11, lineHeight: 15, fontWeight: '900' },
+    detail: { color: theme.colors.textMuted, fontSize: 9, lineHeight: 13, fontWeight: '700' },
     graph: {
-      minHeight: 76,
+      flex: 1,
+      minHeight: 66,
       flexDirection: 'row',
       alignItems: 'flex-start',
       justifyContent: 'center',
     },
-    pointSlot: { width: 18, height: 76, position: 'relative' },
+    pointSlot: { flex: 1, maxWidth: 34, height: 66, position: 'relative' },
     point: {
       position: 'absolute',
-      left: 5,
-      width: 8,
-      height: 8,
-      borderRadius: 4,
+      alignSelf: 'center',
+      width: 9,
+      height: 9,
+      borderRadius: 5,
       borderWidth: 1,
       borderColor: 'rgba(255,255,255,0.28)',
     },
@@ -217,39 +225,37 @@ const createStyles = (theme: LearningTheme) =>
     sidewaysDot: { backgroundColor: theme.colors.textMuted },
     pointLabel: {
       position: 'absolute',
-      left: -1,
-      width: 20,
+      alignSelf: 'center',
+      width: 28,
       textAlign: 'center',
-      fontSize: 7,
-      lineHeight: 10,
+      fontSize: 8,
+      lineHeight: 11,
       fontWeight: '900',
     },
     arrow: {
-      width: 13,
-      marginTop: 29,
+      width: 18,
+      marginTop: 25,
       textAlign: 'center',
-      fontSize: 12,
-      lineHeight: 16,
+      fontSize: 14,
+      lineHeight: 18,
       fontWeight: '900',
     },
-    summary: { color: theme.colors.text, fontSize: 9, lineHeight: 12, fontWeight: '900' },
-    detail: { color: theme.colors.textMuted, fontSize: 7, lineHeight: 10, fontWeight: '700' },
     boundary: {
-      minHeight: 58,
+      minHeight: 62,
       flexDirection: 'row',
       alignItems: 'center',
-      gap: 9,
-      paddingHorizontal: 10,
-      paddingVertical: 8,
+      gap: 10,
+      paddingHorizontal: 11,
+      paddingVertical: 9,
       borderRadius: 10,
       backgroundColor: 'rgba(45,212,191,0.06)',
       borderWidth: 1,
       borderColor: 'rgba(45,212,191,0.20)',
     },
-    boundaryMark: { color: theme.colors.primary, fontSize: 22, fontWeight: '900' },
-    boundaryCopy: { flex: 1, gap: 1 },
-    boundaryTitle: { color: theme.colors.text, fontSize: 9, lineHeight: 12, fontWeight: '900' },
-    boundaryText: { color: theme.colors.textMuted, fontSize: 8, lineHeight: 11, fontWeight: '700' },
+    boundaryMark: { color: theme.colors.primary, fontSize: 23, fontWeight: '900' },
+    boundaryCopy: { flex: 1, gap: 2 },
+    boundaryTitle: { color: theme.colors.text, fontSize: 10, lineHeight: 14, fontWeight: '900' },
+    boundaryText: { color: theme.colors.textMuted, fontSize: 9, lineHeight: 13, fontWeight: '700' },
     footer: {
       minHeight: 44,
       justifyContent: 'center',
