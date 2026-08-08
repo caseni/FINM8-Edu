@@ -11,6 +11,7 @@ import { BreakOfStructureVisual } from './BreakOfStructureVisual';
 import { CandleAnatomyVisual } from './CandleAnatomyVisual';
 import { ChangeOfCharacterVisual } from './ChangeOfCharacterVisual';
 import { LearningVisual } from './LearningVisual';
+import { PositionSizingVisual } from './PositionSizingVisual';
 import { SupportResistanceZoneVisual } from './SupportResistanceZoneVisual';
 import { TrendStructureVisual } from './TrendStructureVisual';
 import { VolatilityRangeVisual } from './VolatilityRangeVisual';
@@ -53,6 +54,7 @@ export function PracticalTaskPlayer({
   const isBreakOfStructureVisual = task.assetRef?.includes('bos-starter') ?? false;
   const isChangeOfCharacterVisual = task.assetRef?.includes('choch') ?? false;
   const isVolatilityRangeVisual = task.assetRef?.includes('volatility-range') ?? false;
+  const isPositionSizingVisual = task.conceptKey === 'risk.position_sizing';
 
   const toggle = (choiceId: string) => {
     if (checked) return;
@@ -100,7 +102,15 @@ export function PracticalTaskPlayer({
       <Text style={styles.prompt}>
         {selectAudienceCopy(task.prompt, presentationMode, language)}
       </Text>
-      {task.kind === 'chart_identification' ? (
+      {isPositionSizingVisual ? (
+        <PositionSizingVisual
+          alt={language === 'tr'
+            ? 'Aynı risk bütçesinde dar ve geniş risk mesafesine göre pozisyon büyüklüğünün değişmesini gösteren eğitim görseli'
+            : 'Training visual showing position size changing with tighter and wider risk distance under the same risk budget'}
+          language={language}
+          theme={theme}
+        />
+      ) : task.kind === 'chart_identification' ? (
         task.assetRef ? (
           isCandleAnatomyVisual ? (
             <CandleAnatomyVisual
