@@ -4,6 +4,7 @@ import { selectLocalizedText, type LearningLanguage } from '../../domain/learnin
 import { scoreQuiz, type QuizResult, type QuizSubmission } from '../../domain/learning/progressionEngine';
 import type { LocalizedText, Quiz } from '../../domain/learning/types';
 import { defaultLearningTheme, type LearningTheme } from '../../theme/learningTheme';
+import { BidAskSpreadVisual } from './BidAskSpreadVisual';
 import { CandleAnatomyVisual } from './CandleAnatomyVisual';
 import { LearningVisual } from './LearningVisual';
 import { LiquidityImpactVisual } from './LiquidityImpactVisual';
@@ -37,6 +38,8 @@ export function QuizPlayer({
     question.visual?.assetRef.includes('fiyat-piyasada-nasil-olusur') ?? false;
   const isLiquidityImpactVisual =
     question.visual?.assetRef.includes('likidite-neden-onemlidir') ?? false;
+  const isBidAskSpreadVisual =
+    question.visual?.assetRef.includes('bid-ask-spread-nedir') ?? false;
   const isRiskBasicsVisual =
     question.visual?.assetRef.includes('risk-belirsizlik-kayip') ?? false;
   const isCandleAnatomyVisual =
@@ -46,6 +49,7 @@ export function QuizPlayer({
   const isConceptVisual =
     isPriceFormationVisual ||
     isLiquidityImpactVisual ||
+    isBidAskSpreadVisual ||
     isRiskBasicsVisual ||
     isCandleAnatomyVisual;
 
@@ -107,6 +111,12 @@ export function QuizPlayer({
             />
           ) : isLiquidityImpactVisual ? (
             <LiquidityImpactVisual
+              alt={selectLocalizedText(question.visual.alt, language)}
+              language={language}
+              theme={theme}
+            />
+          ) : isBidAskSpreadVisual ? (
+            <BidAskSpreadVisual
               alt={selectLocalizedText(question.visual.alt, language)}
               language={language}
               theme={theme}

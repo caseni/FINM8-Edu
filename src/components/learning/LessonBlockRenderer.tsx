@@ -13,6 +13,7 @@ import {
   defaultLearningTheme,
   type LearningTheme,
 } from '../../theme/learningTheme';
+import { BidAskSpreadVisual } from './BidAskSpreadVisual';
 import { CandleAnatomyVisual } from './CandleAnatomyVisual';
 import { LearningVisual } from './LearningVisual';
 import { LiquidityImpactVisual } from './LiquidityImpactVisual';
@@ -62,6 +63,7 @@ export function LessonBlockRenderer({
     const alt = selectLocalizedText(block.alt, language);
     const isPriceFormationVisual = block.assetRef.includes('fiyat-piyasada-nasil-olusur');
     const isLiquidityImpactVisual = block.assetRef.includes('likidite-neden-onemlidir');
+    const isBidAskSpreadVisual = block.assetRef.includes('bid-ask-spread-nedir');
     const isRiskBasicsVisual = block.assetRef.includes('risk-belirsizlik-kayip');
     const isCandleAnatomyVisual =
       block.assetRef.includes('bir-mum') || block.assetRef.includes('candle-ohlc');
@@ -74,6 +76,8 @@ export function LessonBlockRenderer({
           <PriceFormationVisual alt={alt} language={language} theme={theme} />
         ) : isLiquidityImpactVisual ? (
           <LiquidityImpactVisual alt={alt} language={language} theme={theme} />
+        ) : isBidAskSpreadVisual ? (
+          <BidAskSpreadVisual alt={alt} language={language} theme={theme} />
         ) : isRiskBasicsVisual ? (
           <RiskBasicsVisual alt={alt} language={language} theme={theme} />
         ) : isCandleAnatomyVisual ? (
