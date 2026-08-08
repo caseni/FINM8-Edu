@@ -20,6 +20,7 @@ import { PositionSizingVisual } from './PositionSizingVisual';
 import { RiskRewardVisual } from './RiskRewardVisual';
 import { StopOrderVisual } from './StopOrderVisual';
 import { SupportResistanceZoneVisual } from './SupportResistanceZoneVisual';
+import { TimeframeContextVisual } from './TimeframeContextVisual';
 import { TrendStructureVisual } from './TrendStructureVisual';
 import { VolatilityRangeVisual } from './VolatilityRangeVisual';
 
@@ -54,6 +55,8 @@ export function PracticalTaskPlayer({
     actual.every((value, index) => value === expected[index]);
   const isCandleAnatomyVisual =
     task.assetRef?.includes('candle-ohlc') || task.assetRef?.includes('bir-mum');
+  const isTimeframeContextVisual =
+    task.assetRef?.includes('timeframes') || task.assetRef?.includes('zaman-dilimi');
   const isTrendStructureVisual =
     task.assetRef?.includes('trend-structure') || task.assetRef?.includes('trend-yon-mu-yapi-mi');
   const isSupportResistanceZoneVisual =
@@ -217,6 +220,14 @@ export function PracticalTaskPlayer({
               alt={language === 'tr'
                 ? 'Açılış, kapanış, en yüksek ve en düşük seviyeleri gösteren eğitim mumu'
                 : 'Training candle showing open, close, high, and low levels'}
+              language={language}
+              theme={theme}
+            />
+          ) : isTimeframeContextVisual ? (
+            <TimeframeContextVisual
+              alt={language === 'tr'
+                ? 'Aynı piyasada 15 dakikalık kısa geri çekilme ile günlük daha geniş yapının aynı anda görülebileceğini gösteren eğitim görseli'
+                : 'Training visual showing that a 15-minute pullback and a broader daily structure can exist at the same time'}
               language={language}
               theme={theme}
             />
