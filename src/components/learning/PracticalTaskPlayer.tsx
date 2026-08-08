@@ -9,6 +9,7 @@ import type { LocalizedText, PracticalTask, PresentationMode } from '../../domai
 import { defaultLearningTheme, type LearningTheme } from '../../theme/learningTheme';
 import { CandleAnatomyVisual } from './CandleAnatomyVisual';
 import { LearningVisual } from './LearningVisual';
+import { SupportResistanceZoneVisual } from './SupportResistanceZoneVisual';
 import { TrendStructureVisual } from './TrendStructureVisual';
 
 export interface PracticalTaskPlayerProps {
@@ -44,6 +45,8 @@ export function PracticalTaskPlayer({
     task.assetRef?.includes('candle-ohlc') || task.assetRef?.includes('bir-mum');
   const isTrendStructureVisual =
     task.assetRef?.includes('trend-structure') || task.assetRef?.includes('trend-yon-mu-yapi-mi');
+  const isSupportResistanceZoneVisual =
+    task.assetRef?.includes('support-resistance-zone') || task.assetRef?.includes('destek-direnc-bolgedir');
 
   const toggle = (choiceId: string) => {
     if (checked) return;
@@ -106,6 +109,14 @@ export function PracticalTaskPlayer({
               alt={language === 'tr'
                 ? 'Yükseliş, düşüş ve yatay salınım dizilerini karşılaştıran eğitim grafiği'
                 : 'Training chart comparing upward, downward, and sideways swing sequences'}
+              language={language}
+              theme={theme}
+            />
+          ) : isSupportResistanceZoneVisual ? (
+            <SupportResistanceZoneVisual
+              alt={language === 'tr'
+                ? 'Birden fazla tepkinin aynı destek ve direnç alanlarında toplandığını gösteren eğitim görseli'
+                : 'Training visual showing multiple reactions clustering in support and resistance areas'}
               language={language}
               theme={theme}
             />

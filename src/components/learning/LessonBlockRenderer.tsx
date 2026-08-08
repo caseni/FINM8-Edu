@@ -21,6 +21,7 @@ import { OrderTypesVisual } from './OrderTypesVisual';
 import { PriceFormationVisual } from './PriceFormationVisual';
 import { RiskBasicsVisual } from './RiskBasicsVisual';
 import { SlippageExecutionVisual } from './SlippageExecutionVisual';
+import { SupportResistanceZoneVisual } from './SupportResistanceZoneVisual';
 import { TrendStructureVisual } from './TrendStructureVisual';
 
 type VisualBlock = Extract<ContentBlock, { kind: 'visual' }>;
@@ -70,6 +71,7 @@ export function LessonBlockRenderer({
     const isOrderTypesVisual = block.assetRef.includes('piyasa-limit-stop-emirleri');
     const isSlippageExecutionVisual = block.assetRef.includes('gerceklesme-fiyati-kayma');
     const isTrendStructureVisual = block.assetRef.includes('trend-yon-mu-yapi-mi');
+    const isSupportResistanceZoneVisual = block.assetRef.includes('destek-direnc-bolgedir');
     const isRiskBasicsVisual = block.assetRef.includes('risk-belirsizlik-kayip');
     const isCandleAnatomyVisual =
       block.assetRef.includes('bir-mum') || block.assetRef.includes('candle-ohlc');
@@ -90,6 +92,8 @@ export function LessonBlockRenderer({
           <SlippageExecutionVisual alt={alt} language={language} theme={theme} />
         ) : isTrendStructureVisual ? (
           <TrendStructureVisual alt={alt} language={language} theme={theme} />
+        ) : isSupportResistanceZoneVisual ? (
+          <SupportResistanceZoneVisual alt={alt} language={language} theme={theme} />
         ) : isRiskBasicsVisual ? (
           <RiskBasicsVisual alt={alt} language={language} theme={theme} />
         ) : isCandleAnatomyVisual ? (

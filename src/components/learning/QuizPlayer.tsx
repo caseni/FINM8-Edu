@@ -12,6 +12,7 @@ import { OrderTypesVisual } from './OrderTypesVisual';
 import { PriceFormationVisual } from './PriceFormationVisual';
 import { RiskBasicsVisual } from './RiskBasicsVisual';
 import { SlippageExecutionVisual } from './SlippageExecutionVisual';
+import { SupportResistanceZoneVisual } from './SupportResistanceZoneVisual';
 import { TrendStructureVisual } from './TrendStructureVisual';
 
 export interface QuizPlayerProps {
@@ -51,6 +52,10 @@ export function QuizPlayer({
     question.visual?.assetRef.includes('trend-yon-mu-yapi-mi') ||
     question.visual?.assetRef.includes('trend-structure') ||
     false;
+  const isSupportResistanceZoneVisual =
+    question.visual?.assetRef.includes('destek-direnc-bolgedir') ||
+    question.visual?.assetRef.includes('support-resistance-zone') ||
+    false;
   const isRiskBasicsVisual =
     question.visual?.assetRef.includes('risk-belirsizlik-kayip') ?? false;
   const isCandleAnatomyVisual =
@@ -64,6 +69,7 @@ export function QuizPlayer({
     isOrderTypesVisual ||
     isSlippageExecutionVisual ||
     isTrendStructureVisual ||
+    isSupportResistanceZoneVisual ||
     isRiskBasicsVisual ||
     isCandleAnatomyVisual;
 
@@ -149,6 +155,12 @@ export function QuizPlayer({
             />
           ) : isTrendStructureVisual ? (
             <TrendStructureVisual
+              alt={selectLocalizedText(question.visual.alt, language)}
+              language={language}
+              theme={theme}
+            />
+          ) : isSupportResistanceZoneVisual ? (
+            <SupportResistanceZoneVisual
               alt={selectLocalizedText(question.visual.alt, language)}
               language={language}
               theme={theme}
