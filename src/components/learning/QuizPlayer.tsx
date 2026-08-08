@@ -9,6 +9,7 @@ import { BreakOfStructureVisual } from './BreakOfStructureVisual';
 import { CandleAnatomyVisual } from './CandleAnatomyVisual';
 import { ChangeOfCharacterVisual } from './ChangeOfCharacterVisual';
 import { DiversificationVisual } from './DiversificationVisual';
+import { FomoDecisionVisual } from './FomoDecisionVisual';
 import { LearningVisual } from './LearningVisual';
 import { LiquidityImpactVisual } from './LiquidityImpactVisual';
 import { OrderTypesVisual } from './OrderTypesVisual';
@@ -79,6 +80,8 @@ export function QuizPlayer({
     question.visual?.assetRef.includes('stop-emri-garanti-midir') ?? false;
   const isDiversificationVisual =
     question.visual?.assetRef.includes('cok-varlik-cesitlendirme-degildir') ?? false;
+  const isFomoDecisionVisual =
+    question.visual?.assetRef.includes('fomo-karari-nasil-bozar') ?? false;
   const isRiskBasicsVisual =
     question.visual?.assetRef.includes('risk-belirsizlik-kayip') ?? false;
   const isCandleAnatomyVisual =
@@ -100,6 +103,7 @@ export function QuizPlayer({
     isRiskRewardVisual ||
     isStopOrderVisual ||
     isDiversificationVisual ||
+    isFomoDecisionVisual ||
     isRiskBasicsVisual ||
     isCandleAnatomyVisual;
 
@@ -233,6 +237,12 @@ export function QuizPlayer({
             />
           ) : isDiversificationVisual ? (
             <DiversificationVisual
+              alt={selectLocalizedText(question.visual.alt, language)}
+              language={language}
+              theme={theme}
+            />
+          ) : isFomoDecisionVisual ? (
+            <FomoDecisionVisual
               alt={selectLocalizedText(question.visual.alt, language)}
               language={language}
               theme={theme}
