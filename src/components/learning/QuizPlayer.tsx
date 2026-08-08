@@ -16,6 +16,7 @@ import { PriceFormationVisual } from './PriceFormationVisual';
 import { RiskBasicsVisual } from './RiskBasicsVisual';
 import { RiskRewardVisual } from './RiskRewardVisual';
 import { SlippageExecutionVisual } from './SlippageExecutionVisual';
+import { StopOrderVisual } from './StopOrderVisual';
 import { SupportResistanceZoneVisual } from './SupportResistanceZoneVisual';
 import { TrendStructureVisual } from './TrendStructureVisual';
 import { VolatilityRangeVisual } from './VolatilityRangeVisual';
@@ -73,6 +74,8 @@ export function QuizPlayer({
     question.visual?.assetRef.includes('pozisyon-buyuklugu-once-gelir') ?? false;
   const isRiskRewardVisual =
     question.visual?.assetRef.includes('risk-getiri-tek-basina-yetmez') ?? false;
+  const isStopOrderVisual =
+    question.visual?.assetRef.includes('stop-emri-garanti-midir') ?? false;
   const isRiskBasicsVisual =
     question.visual?.assetRef.includes('risk-belirsizlik-kayip') ?? false;
   const isCandleAnatomyVisual =
@@ -92,6 +95,7 @@ export function QuizPlayer({
     isVolatilityRangeVisual ||
     isPositionSizingVisual ||
     isRiskRewardVisual ||
+    isStopOrderVisual ||
     isRiskBasicsVisual ||
     isCandleAnatomyVisual;
 
@@ -213,6 +217,12 @@ export function QuizPlayer({
             />
           ) : isRiskRewardVisual ? (
             <RiskRewardVisual
+              alt={selectLocalizedText(question.visual.alt, language)}
+              language={language}
+              theme={theme}
+            />
+          ) : isStopOrderVisual ? (
+            <StopOrderVisual
               alt={selectLocalizedText(question.visual.alt, language)}
               language={language}
               theme={theme}
