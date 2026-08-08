@@ -11,6 +11,7 @@ import { ChangeOfCharacterVisual } from './ChangeOfCharacterVisual';
 import { LearningVisual } from './LearningVisual';
 import { LiquidityImpactVisual } from './LiquidityImpactVisual';
 import { OrderTypesVisual } from './OrderTypesVisual';
+import { PositionSizingVisual } from './PositionSizingVisual';
 import { PriceFormationVisual } from './PriceFormationVisual';
 import { RiskBasicsVisual } from './RiskBasicsVisual';
 import { SlippageExecutionVisual } from './SlippageExecutionVisual';
@@ -67,6 +68,8 @@ export function QuizPlayer({
     question.visual?.assetRef.includes('volatilite-once-risktir') ||
     question.visual?.assetRef.includes('volatility-range') ||
     false;
+  const isPositionSizingVisual =
+    question.visual?.assetRef.includes('pozisyon-buyuklugu-once-gelir') ?? false;
   const isRiskBasicsVisual =
     question.visual?.assetRef.includes('risk-belirsizlik-kayip') ?? false;
   const isCandleAnatomyVisual =
@@ -84,6 +87,7 @@ export function QuizPlayer({
     isBreakOfStructureVisual ||
     isChangeOfCharacterVisual ||
     isVolatilityRangeVisual ||
+    isPositionSizingVisual ||
     isRiskBasicsVisual ||
     isCandleAnatomyVisual;
 
@@ -193,6 +197,12 @@ export function QuizPlayer({
             />
           ) : isVolatilityRangeVisual ? (
             <VolatilityRangeVisual
+              alt={selectLocalizedText(question.visual.alt, language)}
+              language={language}
+              theme={theme}
+            />
+          ) : isPositionSizingVisual ? (
+            <PositionSizingVisual
               alt={selectLocalizedText(question.visual.alt, language)}
               language={language}
               theme={theme}
