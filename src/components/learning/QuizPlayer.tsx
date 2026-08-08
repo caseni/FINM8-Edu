@@ -9,6 +9,7 @@ import { BreakOfStructureVisual } from './BreakOfStructureVisual';
 import { CandleAnatomyVisual } from './CandleAnatomyVisual';
 import { ChangeOfCharacterVisual } from './ChangeOfCharacterVisual';
 import { ConfirmationBiasVisual } from './ConfirmationBiasVisual';
+import { DecisionJournalVisual } from './DecisionJournalVisual';
 import { DiversificationVisual } from './DiversificationVisual';
 import { FomoDecisionVisual } from './FomoDecisionVisual';
 import { LearningVisual } from './LearningVisual';
@@ -88,6 +89,8 @@ export function QuizPlayer({
     question.visual?.assetRef.includes('asiri-islem-nasil-fark-edilir') ?? false;
   const isConfirmationBiasVisual =
     question.visual?.assetRef.includes('sadece-hakli-cikaran-kanit') ?? false;
+  const isDecisionJournalVisual =
+    question.visual?.assetRef.includes('sonucu-degil-karari-kaydet') ?? false;
   const isRiskBasicsVisual =
     question.visual?.assetRef.includes('risk-belirsizlik-kayip') ?? false;
   const isCandleAnatomyVisual =
@@ -112,6 +115,7 @@ export function QuizPlayer({
     isFomoDecisionVisual ||
     isOvertradingDecisionVisual ||
     isConfirmationBiasVisual ||
+    isDecisionJournalVisual ||
     isRiskBasicsVisual ||
     isCandleAnatomyVisual;
 
@@ -263,6 +267,12 @@ export function QuizPlayer({
             />
           ) : isConfirmationBiasVisual ? (
             <ConfirmationBiasVisual
+              alt={selectLocalizedText(question.visual.alt, language)}
+              language={language}
+              theme={theme}
+            />
+          ) : isDecisionJournalVisual ? (
+            <DecisionJournalVisual
               alt={selectLocalizedText(question.visual.alt, language)}
               language={language}
               theme={theme}
