@@ -13,6 +13,7 @@ import { FomoDecisionVisual } from './FomoDecisionVisual';
 import { LearningVisual } from './LearningVisual';
 import { LiquidityImpactVisual } from './LiquidityImpactVisual';
 import { OrderTypesVisual } from './OrderTypesVisual';
+import { OvertradingDecisionVisual } from './OvertradingDecisionVisual';
 import { PositionSizingVisual } from './PositionSizingVisual';
 import { PriceFormationVisual } from './PriceFormationVisual';
 import { RiskBasicsVisual } from './RiskBasicsVisual';
@@ -82,6 +83,8 @@ export function QuizPlayer({
     question.visual?.assetRef.includes('cok-varlik-cesitlendirme-degildir') ?? false;
   const isFomoDecisionVisual =
     question.visual?.assetRef.includes('fomo-karari-nasil-bozar') ?? false;
+  const isOvertradingDecisionVisual =
+    question.visual?.assetRef.includes('asiri-islem-nasil-fark-edilir') ?? false;
   const isRiskBasicsVisual =
     question.visual?.assetRef.includes('risk-belirsizlik-kayip') ?? false;
   const isCandleAnatomyVisual =
@@ -104,6 +107,7 @@ export function QuizPlayer({
     isStopOrderVisual ||
     isDiversificationVisual ||
     isFomoDecisionVisual ||
+    isOvertradingDecisionVisual ||
     isRiskBasicsVisual ||
     isCandleAnatomyVisual;
 
@@ -243,6 +247,12 @@ export function QuizPlayer({
             />
           ) : isFomoDecisionVisual ? (
             <FomoDecisionVisual
+              alt={selectLocalizedText(question.visual.alt, language)}
+              language={language}
+              theme={theme}
+            />
+          ) : isOvertradingDecisionVisual ? (
+            <OvertradingDecisionVisual
               alt={selectLocalizedText(question.visual.alt, language)}
               language={language}
               theme={theme}
