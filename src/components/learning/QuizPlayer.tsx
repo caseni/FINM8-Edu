@@ -23,6 +23,7 @@ import { RiskRewardVisual } from './RiskRewardVisual';
 import { SlippageExecutionVisual } from './SlippageExecutionVisual';
 import { StopOrderVisual } from './StopOrderVisual';
 import { SupportResistanceZoneVisual } from './SupportResistanceZoneVisual';
+import { TimeframeContextVisual } from './TimeframeContextVisual';
 import { TrendStructureVisual } from './TrendStructureVisual';
 import { VolatilityRangeVisual } from './VolatilityRangeVisual';
 
@@ -59,6 +60,10 @@ export function QuizPlayer({
     question.visual?.assetRef.includes('piyasa-limit-stop-emirleri') ?? false;
   const isSlippageExecutionVisual =
     question.visual?.assetRef.includes('gerceklesme-fiyati-kayma') ?? false;
+  const isTimeframeContextVisual =
+    question.visual?.assetRef.includes('timeframes') ||
+    question.visual?.assetRef.includes('zaman-dilimi') ||
+    false;
   const isTrendStructureVisual =
     question.visual?.assetRef.includes('trend-yon-mu-yapi-mi') ||
     question.visual?.assetRef.includes('trend-structure') ||
@@ -103,6 +108,7 @@ export function QuizPlayer({
     isBidAskSpreadVisual ||
     isOrderTypesVisual ||
     isSlippageExecutionVisual ||
+    isTimeframeContextVisual ||
     isTrendStructureVisual ||
     isSupportResistanceZoneVisual ||
     isBreakOfStructureVisual ||
@@ -195,6 +201,12 @@ export function QuizPlayer({
             />
           ) : isSlippageExecutionVisual ? (
             <SlippageExecutionVisual
+              alt={selectLocalizedText(question.visual.alt, language)}
+              language={language}
+              theme={theme}
+            />
+          ) : isTimeframeContextVisual ? (
+            <TimeframeContextVisual
               alt={selectLocalizedText(question.visual.alt, language)}
               language={language}
               theme={theme}
