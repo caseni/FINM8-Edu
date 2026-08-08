@@ -13,6 +13,7 @@ import { ChangeOfCharacterVisual } from './ChangeOfCharacterVisual';
 import { LearningVisual } from './LearningVisual';
 import { PositionSizingVisual } from './PositionSizingVisual';
 import { RiskRewardVisual } from './RiskRewardVisual';
+import { StopOrderVisual } from './StopOrderVisual';
 import { SupportResistanceZoneVisual } from './SupportResistanceZoneVisual';
 import { TrendStructureVisual } from './TrendStructureVisual';
 import { VolatilityRangeVisual } from './VolatilityRangeVisual';
@@ -57,6 +58,7 @@ export function PracticalTaskPlayer({
   const isVolatilityRangeVisual = task.assetRef?.includes('volatility-range') ?? false;
   const isPositionSizingVisual = task.conceptKey === 'risk.position_sizing';
   const isRiskRewardVisual = task.conceptKey === 'risk.risk_reward';
+  const isStopOrderVisual = task.conceptKey === 'risk.stop_orders';
 
   const toggle = (choiceId: string) => {
     if (checked) return;
@@ -117,6 +119,14 @@ export function PracticalTaskPlayer({
           alt={language === 'tr'
             ? 'Yüksek risk getiri oranının olasılık ve maliyet bilgisi olmadan tek başına yeterli olmadığını gösteren eğitim görseli'
             : 'Training visual showing that a high risk reward ratio is insufficient without probability and cost information'}
+          language={language}
+          theme={theme}
+        />
+      ) : isStopOrderVisual ? (
+        <StopOrderVisual
+          alt={language === 'tr'
+            ? 'Stop seviyesinin yalnız tetikleyici olduğunu ve hızlı piyasada gerçekleşme fiyatının farklılaşabileceğini gösteren eğitim görseli'
+            : 'Training visual showing that the stop level is only a trigger and the execution price can differ in a fast market'}
           language={language}
           theme={theme}
         />
