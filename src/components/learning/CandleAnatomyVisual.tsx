@@ -10,55 +10,42 @@ export interface CandleAnatomyVisualProps {
 }
 
 export function CandleAnatomyVisual({
-  alt,
   language,
   theme = defaultLearningTheme,
 }: CandleAnatomyVisualProps) {
   const styles = createStyles(theme);
   const tr = language === 'tr';
+  const accessibilityLabel = tr
+    ? 'Gövdesi ile üst ve alt fitilleri gösterilen tek mum şeması'
+    : 'Single candlestick diagram showing its body and upper and lower wicks';
 
   return (
-    <View style={styles.shell} accessibilityRole="image" accessibilityLabel={alt}>
+    <View style={styles.shell} accessibilityRole="image" accessibilityLabel={accessibilityLabel}>
       <View style={styles.canvas}>
         <View style={styles.header}>
-          <Text style={styles.title}>{tr ? 'Bir mum = dört fiyat' : 'One candle = four prices'}</Text>
+          <Text style={styles.title}>
+            {tr ? 'Bir mum, seçilen sürenin özetidir' : 'One candle summarizes the selected period'}
+          </Text>
           <Text style={styles.subtitle}>
-            {tr ? 'Seçilen dönemin OHLC kaydı' : 'OHLC record for the selected period'}
+            {tr
+              ? 'Başlangıç, bitiş ve ulaşılan uç noktaları gösterir.'
+              : 'It shows the start, the finish, and the extremes reached.'}
           </Text>
         </View>
 
-        <View style={styles.chartCard}>
-          <PriceLevel
-            styles={styles}
-            label={tr ? 'EN YÜKSEK' : 'HIGH'}
-            price="108"
-            tone="high"
-          />
-          <PriceLevel
-            styles={styles}
-            label={tr ? 'KAPANIŞ' : 'CLOSE'}
-            price="105"
-            tone="close"
-          />
-          <PriceLevel
-            styles={styles}
-            label={tr ? 'AÇILIŞ' : 'OPEN'}
-            price="101"
-            tone="open"
-          />
-          <PriceLevel
-            styles={styles}
-            label={tr ? 'EN DÜŞÜK' : 'LOW'}
-            price="98"
-            tone="low"
-          />
-
-          <View style={styles.candleStage} pointerEvents="none">
-            <View style={styles.upperWick} />
-            <View style={styles.body} />
-            <View style={styles.lowerWick} />
-            <View style={styles.highDot} />
-            <View style={styles.lowDot} />
+        <View style={styles.diagramCard}>
+          <View style={styles.candleColumn}>
+            <Text style={styles.edgeLabel}>{tr ? 'ÜST UÇ' : 'UPPER END'}</Text>
+            <View style={styles.candle}>
+              <View style={styles.wick} />
+              <View style={styles.body}>
+                <Text style={styles.bodyText}>
+                  {tr ? 'BAŞLANGIÇ\n↕\nBİTİŞ' : 'START\n↕\nFINISH'}
+                </Text>
+              </View>
+              <View style={styles.wick} />
+            </View>
+            <Text style={styles.edgeLabel}>{tr ? 'ALT UÇ' : 'LOWER END'}</Text>
           </View>
         </View>
 
@@ -68,61 +55,30 @@ export function CandleAnatomyVisual({
             <View style={styles.legendCopy}>
               <Text style={styles.legendTitle}>{tr ? 'GÖVDE' : 'BODY'}</Text>
               <Text style={styles.legendText}>
-                {tr ? 'Açılış ↔ kapanış' : 'Open ↔ close'}
+                {tr ? 'Başlangıç ile bitiş arasındaki bölüm' : 'The section between start and finish'}
               </Text>
             </View>
           </View>
           <View style={styles.legendCard}>
             <View style={styles.wickSwatch} />
             <View style={styles.legendCopy}>
-              <Text style={styles.legendTitle}>{tr ? 'FİTİLLER' : 'WICKS'}</Text>
+              <Text style={styles.legendTitle}>{tr ? 'FİTİL' : 'WICK'}</Text>
               <Text style={styles.legendText}>
-                {tr ? 'Dönem içi uçlar' : 'Period extremes'}
+                {tr ? 'Gövdenin üstündeki ve altındaki ince çizgi' : 'The thin line above and below the body'}
               </Text>
             </View>
           </View>
         </View>
 
-        <Text style={styles.boundary}>
-          {tr
-            ? 'Mum seçilen dönemi kaydeder; sonraki hareketi garanti etmez.'
-            : 'A candle records the selected period; it does not guarantee the next move.'}
-        </Text>
+        <View style={styles.boundary}>
+          <Text style={styles.boundaryMark}>!</Text>
+          <Text style={styles.boundaryText}>
+            {tr
+              ? 'Mum yalnız seçilen dönemi anlatır; sonraki hareketi garanti etmez.'
+              : 'A candle describes only the selected period; it does not guarantee the next move.'}
+          </Text>
+        </View>
       </View>
-      <View style={styles.footer}>
-        <Text numberOfLines={2} style={styles.alt}>{alt}</Text>
-      </View>
-    </View>
-  );
-}
-
-function PriceLevel({
-  styles,
-  label,
-  price,
-  tone,
-}: {
-  styles: ReturnType<typeof createStyles>;
-  label: string;
-  price: string;
-  tone: 'high' | 'close' | 'open' | 'low';
-}) {
-  const toneStyle =
-    tone === 'high'
-      ? styles.levelHigh
-      : tone === 'close'
-        ? styles.levelClose
-        : tone === 'open'
-          ? styles.levelOpen
-          : styles.levelLow;
-
-  return (
-    <View style={styles.levelRow}>
-      <View style={styles.levelCopy}>
-        <Text style={[styles.levelLabel, toneStyle]}>{label}</Text>
-        <Text style={styles.levelPrice}>{price}</Text>
-      </View>
-      <View style={[styles.levelLine, toneStyle]} />
     </View>
   );
 }
@@ -130,7 +86,7 @@ function PriceLevel({
 const createStyles = (theme: LearningTheme) =>
   StyleSheet.create({
     shell: {
-      minHeight: 300,
+      minHeight: 330,
       overflow: 'hidden',
       borderRadius: theme.radius.large,
       backgroundColor: theme.colors.background,
@@ -138,152 +94,146 @@ const createStyles = (theme: LearningTheme) =>
       borderColor: theme.colors.border,
     },
     canvas: {
-      minHeight: 252,
-      padding: theme.spacing.md,
+      flex: 1,
       justifyContent: 'center',
-      gap: 9,
+      padding: theme.spacing.md,
+      gap: 12,
     },
-    header: { alignItems: 'center', gap: 3 },
+    header: {
+      alignItems: 'center',
+      gap: 4,
+      paddingHorizontal: 8,
+    },
     title: {
       color: theme.colors.text,
-      fontSize: 14,
+      fontSize: 16,
+      lineHeight: 22,
       fontWeight: '900',
       textAlign: 'center',
     },
     subtitle: {
       color: theme.colors.textMuted,
-      fontSize: 10,
+      fontSize: 12,
+      lineHeight: 17,
       fontWeight: '700',
       textAlign: 'center',
     },
-    chartCard: {
-      minHeight: 132,
-      position: 'relative',
-      justifyContent: 'space-between',
-      paddingVertical: 9,
-      paddingHorizontal: 8,
-      borderRadius: 12,
-      overflow: 'hidden',
+    diagramCard: {
+      minHeight: 138,
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingVertical: 12,
+      borderRadius: 13,
       backgroundColor: theme.colors.surfaceMuted,
       borderWidth: 1,
       borderColor: theme.colors.border,
     },
-    levelRow: {
-      minHeight: 24,
-      flexDirection: 'row',
+    candleColumn: {
       alignItems: 'center',
-      gap: 7,
-      zIndex: 2,
-    },
-    levelCopy: {
-      width: 83,
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
       gap: 5,
     },
-    levelLabel: { fontSize: 8, fontWeight: '900', letterSpacing: 0.45 },
-    levelPrice: { color: theme.colors.text, fontSize: 10, fontWeight: '900' },
-    levelLine: { flex: 1, borderTopWidth: 1 },
-    levelHigh: { color: theme.colors.warning, borderColor: 'rgba(251,191,36,0.40)' },
-    levelClose: { color: theme.colors.success, borderColor: 'rgba(52,211,153,0.34)' },
-    levelOpen: { color: theme.colors.primary, borderColor: 'rgba(45,212,191,0.32)' },
-    levelLow: { color: theme.colors.warning, borderColor: 'rgba(251,191,36,0.40)' },
-    candleStage: {
-      position: 'absolute',
-      top: 12,
-      bottom: 12,
-      left: '68%',
-      width: 42,
+    edgeLabel: {
+      color: theme.colors.textMuted,
+      fontSize: 9,
+      fontWeight: '900',
+      letterSpacing: 0.7,
+    },
+    candle: {
       alignItems: 'center',
     },
-    upperWick: {
-      position: 'absolute',
-      top: 0,
+    wick: {
       width: 2,
-      height: 34,
+      height: 27,
       borderRadius: 1,
-      backgroundColor: 'rgba(159,176,195,0.78)',
+      backgroundColor: 'rgba(159,176,195,0.76)',
     },
     body: {
-      position: 'absolute',
-      top: 34,
-      width: 24,
-      height: 44,
-      borderRadius: 4,
-      backgroundColor: 'rgba(52,211,153,0.64)',
+      width: 66,
+      minHeight: 58,
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingVertical: 6,
+      borderRadius: 7,
+      backgroundColor: 'rgba(45,212,191,0.14)',
       borderWidth: 1,
-      borderColor: 'rgba(94,234,212,0.78)',
+      borderColor: 'rgba(45,212,191,0.34)',
     },
-    lowerWick: {
-      position: 'absolute',
-      top: 78,
-      width: 2,
-      height: 34,
-      borderRadius: 1,
-      backgroundColor: 'rgba(159,176,195,0.78)',
+    bodyText: {
+      color: theme.colors.primary,
+      fontSize: 9,
+      lineHeight: 12,
+      fontWeight: '900',
+      letterSpacing: 0.45,
+      textAlign: 'center',
     },
-    highDot: {
-      position: 'absolute',
-      top: -2,
-      width: 6,
-      height: 6,
-      borderRadius: 3,
-      backgroundColor: theme.colors.warning,
+    legendRow: {
+      flexDirection: 'row',
+      gap: 8,
     },
-    lowDot: {
-      position: 'absolute',
-      bottom: -2,
-      width: 6,
-      height: 6,
-      borderRadius: 3,
-      backgroundColor: theme.colors.warning,
-    },
-    legendRow: { flexDirection: 'row', gap: 8 },
     legendCard: {
       flex: 1,
-      minHeight: 42,
+      minHeight: 58,
       flexDirection: 'row',
       alignItems: 'center',
-      gap: 7,
-      paddingHorizontal: 8,
-      paddingVertical: 6,
-      borderRadius: 9,
+      gap: 8,
+      padding: 9,
+      borderRadius: 10,
       backgroundColor: theme.colors.surfaceMuted,
       borderWidth: 1,
       borderColor: theme.colors.border,
     },
     bodySwatch: {
-      width: 13,
-      height: 24,
-      borderRadius: 3,
-      backgroundColor: 'rgba(52,211,153,0.58)',
+      width: 14,
+      height: 28,
+      borderRadius: 4,
+      backgroundColor: 'rgba(45,212,191,0.14)',
       borderWidth: 1,
-      borderColor: 'rgba(94,234,212,0.70)',
+      borderColor: 'rgba(45,212,191,0.34)',
     },
     wickSwatch: {
       width: 2,
-      height: 28,
+      height: 31,
       marginHorizontal: 6,
       borderRadius: 1,
       backgroundColor: 'rgba(159,176,195,0.76)',
     },
-    legendCopy: { flex: 1, gap: 1 },
-    legendTitle: { color: theme.colors.text, fontSize: 8, fontWeight: '900', letterSpacing: 0.5 },
-    legendText: { color: theme.colors.textMuted, fontSize: 9, fontWeight: '700' },
-    boundary: {
-      color: theme.colors.textMuted,
+    legendCopy: {
+      flex: 1,
+      gap: 2,
+    },
+    legendTitle: {
+      color: theme.colors.text,
       fontSize: 9,
-      lineHeight: 13,
-      textAlign: 'center',
+      fontWeight: '900',
+      letterSpacing: 0.6,
     },
-    footer: {
-      minHeight: 44,
-      justifyContent: 'center',
-      paddingHorizontal: theme.spacing.md,
-      paddingVertical: theme.spacing.sm,
-      borderTopWidth: 1,
-      borderTopColor: theme.colors.border,
+    legendText: {
+      color: theme.colors.textMuted,
+      fontSize: 10,
+      lineHeight: 14,
+      fontWeight: '700',
     },
-    alt: { color: theme.colors.textMuted, fontSize: 11, lineHeight: 15 },
+    boundary: {
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+      gap: 8,
+      padding: 10,
+      borderRadius: 11,
+      borderWidth: 1,
+      borderColor: 'rgba(250,204,21,0.20)',
+      backgroundColor: 'rgba(250,204,21,0.05)',
+    },
+    boundaryMark: {
+      color: theme.colors.warning,
+      fontSize: 14,
+      lineHeight: 18,
+      fontWeight: '900',
+    },
+    boundaryText: {
+      flex: 1,
+      color: theme.colors.text,
+      fontSize: 11,
+      lineHeight: 16,
+      fontWeight: '800',
+    },
   });
