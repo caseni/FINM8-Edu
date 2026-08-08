@@ -16,6 +16,7 @@ import {
 import { BidAskSpreadVisual } from './BidAskSpreadVisual';
 import { BreakOfStructureVisual } from './BreakOfStructureVisual';
 import { CandleAnatomyVisual } from './CandleAnatomyVisual';
+import { ChangeOfCharacterVisual } from './ChangeOfCharacterVisual';
 import { LearningVisual } from './LearningVisual';
 import { LiquidityImpactVisual } from './LiquidityImpactVisual';
 import { OrderTypesVisual } from './OrderTypesVisual';
@@ -74,6 +75,7 @@ export function LessonBlockRenderer({
     const isTrendStructureVisual = block.assetRef.includes('trend-yon-mu-yapi-mi');
     const isSupportResistanceZoneVisual = block.assetRef.includes('destek-direnc-bolgedir');
     const isBreakOfStructureVisual = block.assetRef.includes('bos-starter');
+    const isChangeOfCharacterVisual = block.assetRef.includes('choch');
     const isRiskBasicsVisual = block.assetRef.includes('risk-belirsizlik-kayip');
     const isCandleAnatomyVisual =
       block.assetRef.includes('bir-mum') || block.assetRef.includes('candle-ohlc');
@@ -98,6 +100,8 @@ export function LessonBlockRenderer({
           <SupportResistanceZoneVisual alt={alt} language={language} theme={theme} />
         ) : isBreakOfStructureVisual ? (
           <BreakOfStructureVisual alt={alt} language={language} theme={theme} />
+        ) : isChangeOfCharacterVisual ? (
+          <ChangeOfCharacterVisual alt={alt} language={language} theme={theme} />
         ) : isRiskBasicsVisual ? (
           <RiskBasicsVisual alt={alt} language={language} theme={theme} />
         ) : isCandleAnatomyVisual ? (

@@ -9,6 +9,7 @@ import type { LocalizedText, PracticalTask, PresentationMode } from '../../domai
 import { defaultLearningTheme, type LearningTheme } from '../../theme/learningTheme';
 import { BreakOfStructureVisual } from './BreakOfStructureVisual';
 import { CandleAnatomyVisual } from './CandleAnatomyVisual';
+import { ChangeOfCharacterVisual } from './ChangeOfCharacterVisual';
 import { LearningVisual } from './LearningVisual';
 import { SupportResistanceZoneVisual } from './SupportResistanceZoneVisual';
 import { TrendStructureVisual } from './TrendStructureVisual';
@@ -49,6 +50,7 @@ export function PracticalTaskPlayer({
   const isSupportResistanceZoneVisual =
     task.assetRef?.includes('support-resistance-zone') || task.assetRef?.includes('destek-direnc-bolgedir');
   const isBreakOfStructureVisual = task.assetRef?.includes('bos-starter') ?? false;
+  const isChangeOfCharacterVisual = task.assetRef?.includes('choch') ?? false;
 
   const toggle = (choiceId: string) => {
     if (checked) return;
@@ -127,6 +129,14 @@ export function PracticalTaskPlayer({
               alt={language === 'tr'
                 ? 'Fitil taşması ile anlamlı tepe üzerindeki teyit kapanışını karşılaştıran BOS eğitim görseli'
                 : 'BOS training visual comparing a wick overshoot with a confirming close above a meaningful high'}
+              language={language}
+              theme={theme}
+            />
+          ) : isChangeOfCharacterVisual ? (
+            <ChangeOfCharacterVisual
+              alt={language === 'tr'
+                ? 'Yükseliş yapısında korunan anlamlı dibin karşı yönlü kapanışla kaybedilmesini gösteren CHoCH eğitim görseli'
+                : 'CHoCH training visual showing a meaningful protected low lost by an opposing structural close'}
               language={language}
               theme={theme}
             />

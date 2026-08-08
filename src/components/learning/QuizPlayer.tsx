@@ -7,6 +7,7 @@ import { defaultLearningTheme, type LearningTheme } from '../../theme/learningTh
 import { BidAskSpreadVisual } from './BidAskSpreadVisual';
 import { BreakOfStructureVisual } from './BreakOfStructureVisual';
 import { CandleAnatomyVisual } from './CandleAnatomyVisual';
+import { ChangeOfCharacterVisual } from './ChangeOfCharacterVisual';
 import { LearningVisual } from './LearningVisual';
 import { LiquidityImpactVisual } from './LiquidityImpactVisual';
 import { OrderTypesVisual } from './OrderTypesVisual';
@@ -59,6 +60,8 @@ export function QuizPlayer({
     false;
   const isBreakOfStructureVisual =
     question.visual?.assetRef.includes('bos-starter') ?? false;
+  const isChangeOfCharacterVisual =
+    question.visual?.assetRef.includes('choch') ?? false;
   const isRiskBasicsVisual =
     question.visual?.assetRef.includes('risk-belirsizlik-kayip') ?? false;
   const isCandleAnatomyVisual =
@@ -74,6 +77,7 @@ export function QuizPlayer({
     isTrendStructureVisual ||
     isSupportResistanceZoneVisual ||
     isBreakOfStructureVisual ||
+    isChangeOfCharacterVisual ||
     isRiskBasicsVisual ||
     isCandleAnatomyVisual;
 
@@ -171,6 +175,12 @@ export function QuizPlayer({
             />
           ) : isBreakOfStructureVisual ? (
             <BreakOfStructureVisual
+              alt={selectLocalizedText(question.visual.alt, language)}
+              language={language}
+              theme={theme}
+            />
+          ) : isChangeOfCharacterVisual ? (
+            <ChangeOfCharacterVisual
               alt={selectLocalizedText(question.visual.alt, language)}
               language={language}
               theme={theme}
