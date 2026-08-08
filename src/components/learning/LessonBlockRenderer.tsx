@@ -22,6 +22,7 @@ import { FomoDecisionVisual } from './FomoDecisionVisual';
 import { LearningVisual } from './LearningVisual';
 import { LiquidityImpactVisual } from './LiquidityImpactVisual';
 import { OrderTypesVisual } from './OrderTypesVisual';
+import { OvertradingDecisionVisual } from './OvertradingDecisionVisual';
 import { PositionSizingVisual } from './PositionSizingVisual';
 import { PriceFormationVisual } from './PriceFormationVisual';
 import { RiskBasicsVisual } from './RiskBasicsVisual';
@@ -88,6 +89,7 @@ export function LessonBlockRenderer({
     const isStopOrderVisual = block.assetRef.includes('stop-emri-garanti-midir');
     const isDiversificationVisual = block.assetRef.includes('cok-varlik-cesitlendirme-degildir');
     const isFomoDecisionVisual = block.assetRef.includes('fomo-karari-nasil-bozar');
+    const isOvertradingDecisionVisual = block.assetRef.includes('asiri-islem-nasil-fark-edilir');
     const isRiskBasicsVisual = block.assetRef.includes('risk-belirsizlik-kayip');
     const isCandleAnatomyVisual =
       block.assetRef.includes('bir-mum') || block.assetRef.includes('candle-ohlc');
@@ -126,6 +128,8 @@ export function LessonBlockRenderer({
           <DiversificationVisual alt={alt} language={language} theme={theme} />
         ) : isFomoDecisionVisual ? (
           <FomoDecisionVisual alt={alt} language={language} theme={theme} />
+        ) : isOvertradingDecisionVisual ? (
+          <OvertradingDecisionVisual alt={alt} language={language} theme={theme} />
         ) : isRiskBasicsVisual ? (
           <RiskBasicsVisual alt={alt} language={language} theme={theme} />
         ) : isCandleAnatomyVisual ? (
