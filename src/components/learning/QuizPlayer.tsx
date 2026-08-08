@@ -6,6 +6,7 @@ import type { LocalizedText, Quiz } from '../../domain/learning/types';
 import { defaultLearningTheme, type LearningTheme } from '../../theme/learningTheme';
 import { CandleAnatomyVisual } from './CandleAnatomyVisual';
 import { LearningVisual } from './LearningVisual';
+import { LiquidityImpactVisual } from './LiquidityImpactVisual';
 import { PriceFormationVisual } from './PriceFormationVisual';
 import { RiskBasicsVisual } from './RiskBasicsVisual';
 
@@ -34,6 +35,8 @@ export function QuizPlayer({
   const selectedIsCorrect = selectedOptionId === question.correctOptionId;
   const isPriceFormationVisual =
     question.visual?.assetRef.includes('fiyat-piyasada-nasil-olusur') ?? false;
+  const isLiquidityImpactVisual =
+    question.visual?.assetRef.includes('likidite-neden-onemlidir') ?? false;
   const isRiskBasicsVisual =
     question.visual?.assetRef.includes('risk-belirsizlik-kayip') ?? false;
   const isCandleAnatomyVisual =
@@ -41,7 +44,10 @@ export function QuizPlayer({
     question.visual?.assetRef.includes('candle-ohlc') ||
     false;
   const isConceptVisual =
-    isPriceFormationVisual || isRiskBasicsVisual || isCandleAnatomyVisual;
+    isPriceFormationVisual ||
+    isLiquidityImpactVisual ||
+    isRiskBasicsVisual ||
+    isCandleAnatomyVisual;
 
   useEffect(() => {
     advancingRef.current = false;
@@ -95,6 +101,12 @@ export function QuizPlayer({
           </Text>
           {isPriceFormationVisual ? (
             <PriceFormationVisual
+              alt={selectLocalizedText(question.visual.alt, language)}
+              language={language}
+              theme={theme}
+            />
+          ) : isLiquidityImpactVisual ? (
+            <LiquidityImpactVisual
               alt={selectLocalizedText(question.visual.alt, language)}
               language={language}
               theme={theme}
