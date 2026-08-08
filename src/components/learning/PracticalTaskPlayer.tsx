@@ -10,6 +10,7 @@ import { defaultLearningTheme, type LearningTheme } from '../../theme/learningTh
 import { BreakOfStructureVisual } from './BreakOfStructureVisual';
 import { CandleAnatomyVisual } from './CandleAnatomyVisual';
 import { ChangeOfCharacterVisual } from './ChangeOfCharacterVisual';
+import { DiversificationVisual } from './DiversificationVisual';
 import { LearningVisual } from './LearningVisual';
 import { PositionSizingVisual } from './PositionSizingVisual';
 import { RiskRewardVisual } from './RiskRewardVisual';
@@ -59,6 +60,7 @@ export function PracticalTaskPlayer({
   const isPositionSizingVisual = task.conceptKey === 'risk.position_sizing';
   const isRiskRewardVisual = task.conceptKey === 'risk.risk_reward';
   const isStopOrderVisual = task.conceptKey === 'risk.stop_orders';
+  const isDiversificationVisual = task.conceptKey === 'portfolio.diversification';
 
   const toggle = (choiceId: string) => {
     if (checked) return;
@@ -127,6 +129,14 @@ export function PracticalTaskPlayer({
           alt={language === 'tr'
             ? 'Stop seviyesinin yalnız tetikleyici olduğunu ve hızlı piyasada gerçekleşme fiyatının farklılaşabileceğini gösteren eğitim görseli'
             : 'Training visual showing that the stop level is only a trigger and the execution price can differ in a fast market'}
+          language={language}
+          theme={theme}
+        />
+      ) : isDiversificationVisual ? (
+        <DiversificationVisual
+          alt={language === 'tr'
+            ? 'Çok sayıda benzer varlığın aynı risk kaynağına bağlı kalabildiğini ve farklı risk kaynaklarına yayılmanın yoğunlaşmayı azaltabildiğini gösteren eğitim görseli'
+            : 'Training visual showing that many similar assets can share one risk source while spreading across different risk sources can reduce concentration'}
           language={language}
           theme={theme}
         />
