@@ -61,6 +61,7 @@ export function PracticalTaskPlayer({
   const isBreakOfStructureVisual = task.assetRef?.includes('bos-starter') ?? false;
   const isChangeOfCharacterVisual = task.assetRef?.includes('choch') ?? false;
   const isVolatilityRangeVisual = task.assetRef?.includes('volatility-range') ?? false;
+  const isMarketInstrumentsVisual = task.conceptKey === 'market.basics.instruments';
   const isPositionSizingVisual = task.conceptKey === 'risk.position_sizing';
   const isRiskRewardVisual = task.conceptKey === 'risk.risk_reward';
   const isStopOrderVisual = task.conceptKey === 'risk.stop_orders';
@@ -118,7 +119,16 @@ export function PracticalTaskPlayer({
       <Text style={styles.prompt}>
         {selectAudienceCopy(task.prompt, presentationMode, language)}
       </Text>
-      {isPositionSizingVisual ? (
+      {isMarketInstrumentsVisual ? (
+        <LearningVisual
+          assetRef="edu://wave1/piyasa-araclari-ayni-degildir"
+          alt={language === 'tr'
+            ? 'Hisse, tahvil, döviz ve emtianın neyi temsil ettiğini dört basit kartla karşılaştıran eğitim görseli'
+            : 'Training visual comparing what stocks, bonds, currencies, and commodities represent in four simple cards'}
+          language={language}
+          theme={theme}
+        />
+      ) : isPositionSizingVisual ? (
         <PositionSizingVisual
           alt={language === 'tr'
             ? 'Aynı risk bütçesinde dar ve geniş risk mesafesine göre pozisyon büyüklüğünün değişmesini gösteren eğitim görseli'
