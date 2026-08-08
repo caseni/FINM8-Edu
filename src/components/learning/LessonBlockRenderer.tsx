@@ -15,6 +15,7 @@ import {
 } from '../../theme/learningTheme';
 import { CandleAnatomyVisual } from './CandleAnatomyVisual';
 import { LearningVisual } from './LearningVisual';
+import { PriceFormationVisual } from './PriceFormationVisual';
 import { RiskBasicsVisual } from './RiskBasicsVisual';
 
 type VisualBlock = Extract<ContentBlock, { kind: 'visual' }>;
@@ -58,6 +59,7 @@ export function LessonBlockRenderer({
 
   if (block.kind === 'visual') {
     const alt = selectLocalizedText(block.alt, language);
+    const isPriceFormationVisual = block.assetRef.includes('fiyat-piyasada-nasil-olusur');
     const isRiskBasicsVisual = block.assetRef.includes('risk-belirsizlik-kayip');
     const isCandleAnatomyVisual =
       block.assetRef.includes('bir-mum') || block.assetRef.includes('candle-ohlc');
@@ -66,6 +68,8 @@ export function LessonBlockRenderer({
       <View style={styles.block}>
         {renderVisual ? (
           renderVisual(block)
+        ) : isPriceFormationVisual ? (
+          <PriceFormationVisual alt={alt} language={language} theme={theme} />
         ) : isRiskBasicsVisual ? (
           <RiskBasicsVisual alt={alt} language={language} theme={theme} />
         ) : isCandleAnatomyVisual ? (
