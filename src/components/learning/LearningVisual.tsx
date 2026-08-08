@@ -14,6 +14,7 @@ export function LearningVisual({ assetRef, alt, language, theme = defaultLearnin
   const [reduceMotion, setReduceMotion] = useState(false);
   const progress = useMemo(() => new Animated.Value(1), []);
   const styles = useMemo(() => createStyles(theme), [theme]);
+  const hideFooter = assetRef.includes('veri-ayni-kalitede');
 
   useEffect(() => {
     AccessibilityInfo.isReduceMotionEnabled().then(setReduceMotion).catch(() => setReduceMotion(false));
@@ -40,14 +41,16 @@ export function LearningVisual({ assetRef, alt, language, theme = defaultLearnin
       <Animated.View style={[styles.canvas, animatedStyle]}>
         <VisualScene assetRef={assetRef} styles={styles} progress={progress} language={language} />
       </Animated.View>
-      <View style={styles.footer}>
-        <Text numberOfLines={2} style={styles.alt}>{alt}</Text>
-        {!reduceMotion ? (
-          <Pressable accessibilityRole="button" onPress={play} style={styles.replay}>
-            <Text style={styles.replayText}>{language === 'tr' ? '↻ Tekrar' : '↻ Replay'}</Text>
-          </Pressable>
-        ) : null}
-      </View>
+      {!hideFooter ? (
+        <View style={styles.footer}>
+          <Text numberOfLines={2} style={styles.alt}>{alt}</Text>
+          {!reduceMotion ? (
+            <Pressable accessibilityRole="button" onPress={play} style={styles.replay}>
+              <Text style={styles.replayText}>{language === 'tr' ? '↻ Tekrar' : '↻ Replay'}</Text>
+            </Pressable>
+          ) : null}
+        </View>
+      ) : null}
     </View>
   );
 }
@@ -243,28 +246,22 @@ function OvertradingScene({ styles, language }: SceneProps) { const tr = languag
 function EvidenceScene({ styles, language }: SceneProps) { const tr = language === 'tr'; return <View style={styles.sceneColumn}><SceneHeader styles={styles} title={tr ? 'Kanıtı iki taraftan ara' : 'Look for evidence on both sides'} /><View style={styles.evidenceBalance}><View style={styles.evidenceColumn}><Text style={styles.positive}>✓ {tr ? 'DESTEKLEYEN' : 'SUPPORTS'}</Text><Text style={styles.evidencePrompt}>{tr ? 'Neyi doğruluyor?' : 'What confirms it?'}</Text></View><View style={styles.evidenceCenter}><View style={styles.evidenceBeam} /><Text style={styles.sceneLabel}>{tr ? 'KARAR' : 'DECISION'}</Text></View><View style={styles.evidenceColumn}><Text style={styles.riskText}>? {tr ? 'ÇÜRÜTEN' : 'CHALLENGES'}</Text><Text style={styles.evidencePrompt}>{tr ? 'Neyi yanlışlayabilir?' : 'What could disprove it?'}</Text></View></View><Text style={styles.sceneLabel}>{tr ? 'Tek taraflı veri, kararın tamamı değildir.' : 'One-sided evidence is not the whole decision.'}</Text></View>; }
 function DataQualityScene({ styles, language }: SceneProps) {
   const tr = language === 'tr';
-  const stronger = tr
-    ? ['Kaynak · biliniyor', 'Zaman · güncel', 'Kapsam · tam', 'Bağlam · açık']
-    : ['Source · known', 'Time · current', 'Coverage · complete', 'Context · clear'];
-  const weaker = tr
-    ? ['Kaynak · belirsiz', 'Zaman · eski', 'Kapsam · eksik', 'Bağlam · kopuk']
-    : ['Source · unclear', 'Time · stale', 'Coverage · incomplete', 'Context · missing'];
-
   return (
     <View style={styles.sceneColumn}>
       <SceneHeader
         styles={styles}
-        title={tr ? 'Veri kalitesi dört kontrolle okunur' : 'Read data quality through four checks'}
-        detail={tr ? 'Kaynak · zaman · kapsam · bağlam' : 'Source · time · coverage · context'}
+        title={tr ? 'Kesin görünen sayı, güvenilir veri demek değildir' : 'A precise-looking number is not automatically reliable'}
+        detail={tr ? 'Çok ondalık ≠ doğrulanmış bilgi' : 'More decimals ≠ verified information'}
       />
-      <View style={styles.diversificationRow}>
-        <ExposureCard styles={styles} title={tr ? 'DAHA GÜÇLÜ' : 'STRONGER'} items={stronger} tone="balanced" />
-        <ExposureCard styles={styles} title={tr ? 'DAHA ZAYIF' : 'WEAKER'} items={weaker} tone="risk" />
+      <View style={[styles.exposureCard, styles.exposureCardBalanced]}>
+        <Text style={styles.sceneLabel}>{tr ? 'EKRANDA GÖRÜNEN' : 'ON SCREEN'}</Text>
+        <Text style={styles.spreadValue}>42.739184</Text>
+        <Text style={styles.sceneLabel}>{tr ? 'Çok hassas görünüyor' : 'It looks very precise'}</Text>
       </View>
+      <Text style={styles.warning}>?</Text>
+      <Text style={styles.sceneTitle}>{tr ? 'Tek başına yeterli mi?' : 'Is that enough on its own?'}</Text>
       <Text style={styles.sceneLabel}>
-        {tr
-          ? 'Daha güçlü veri kesinlik değildir; karşı kanıt ve güncellik yine kontrol edilir.'
-          : 'Stronger data is not certainty; recency and counter-evidence still need checking.'}
+        {tr ? 'Görünüş doğruluk garantisi değildir.' : 'Appearance does not guarantee accuracy.'}
       </Text>
     </View>
   );
