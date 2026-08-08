@@ -108,6 +108,8 @@ const trend = createFoundationLesson({
   explanationEn: 'A trend is not the color of one candle; it is the structure of price swings over time. In general, higher highs and higher lows support an upward structure, while lower highs and lower lows support a downward structure. Without clear directional progress, the market may be sideways or in transition.',
   proExplanation: 'Trend sınıflaması swing dizisi, seçilen pivot ölçeği ve timeframe’e bağlıdır. Tek indikatör veya tek günlük getiri, yapısal trendin yerine geçmez.',
   proExplanationEn: 'Trend classification depends on the swing sequence, the chosen pivot scale, and the timeframe. A single indicator or one day’s return does not replace structural trend analysis.',
+  traderTip: 'Ana trendi önce daha geniş bir zaman diliminde okumak, kısa vadeli gürültü ile ana yapıyı karıştırmayı azaltabilir; daha kısa zaman dilimini detay için kullan. Yükseliş yapısı korunurken sırf fiyat çok yükseldi diye düşüş yönüne geçmek ana yapıya karşı pozisyon almaktır ve ek teyit ile daha sıkı risk kontrolü gerektirir. Üst zaman dilimi otomatik olarak daha doğru değildir.',
+  traderTipEn: 'Reading the main trend on a broader timeframe first can reduce confusion between short-term noise and the main structure; use the shorter timeframe for detail. Moving short simply because price has risen a lot while the upward structure remains intact means positioning against the main structure and calls for extra confirmation and tighter risk control. A higher timeframe is not automatically more correct.',
   misconception: 'Yaygın hata: Son mum yeşilse yükseliş trendi, kırmızıysa düşüş trendi demek.',
   misconceptionEn: 'Common mistake: calling the market an uptrend because the last candle is green, or a downtrend because it is red.',
   takeaway: 'Trend bir anlık yön değil, seçilen zaman dilimindeki salınım dizisidir.',
@@ -132,7 +134,7 @@ const trend = createFoundationLesson({
     { prompt: 'Trend neden zaman dilimiyle birlikte belirtilmelidir?', promptEn: 'Why should a trend be stated together with its timeframe?', choices: [{ id: 'a', label: 'Yapı ölçeğe göre değişebildiği için', labelEn: 'Because structure can change by scale' }, { id: 'b', label: 'Mum renkleri değiştiği için', labelEn: 'Because candle colors change' }, { id: 'c', label: 'Komisyon değiştiği için', labelEn: 'Because commission changes' }], correctId: 'a', explanation: 'Kısa ve uzun zaman dilimleri farklı salınım yapıları gösterebilir.', explanationEn: 'Short and long timeframes can show different swing structures.' },
     { prompt: 'Yatay yapı neyi anlatabilir?', promptEn: 'What can a sideways structure indicate?', choices: [{ id: 'a', label: 'Belirgin yönlü ilerlemenin zayıf olduğunu', labelEn: 'That clear directional progress is weak' }, { id: 'b', label: 'Fiyatın artık değişmeyeceğini', labelEn: 'That price will no longer change' }, { id: 'c', label: 'Kesin dönüş başladığını', labelEn: 'That a reversal has certainly begun' }], correctId: 'a', explanation: 'Yatay yapı, yönlü salınım dizisinin belirgin olmadığını gösterir.', explanationEn: 'A sideways structure shows that a directional swing sequence is not clear.' },
   ],
-  sources: [CHART_LITERACY_SOURCES.cmeTechnicalAnalysis, CHART_LITERACY_SOURCES.trend],
+  sources: [CHART_LITERACY_SOURCES.cmeTechnicalAnalysis, CHART_LITERACY_SOURCES.trend, CHART_LITERACY_SOURCES.timeframes],
 });
 
 const supportResistance = createFoundationLesson({
@@ -152,6 +154,8 @@ const supportResistance = createFoundationLesson({
   explanationEn: 'Support and resistance describe prices or areas where buyer or seller reactions have concentrated in the past. Because reactions do not always occur at one perfect price, a zone is often a more realistic model. A zone shows the possibility of a reaction; it does not guarantee a hold or a break.',
   proExplanation: 'Bölge genişliği volatilite, wick dağılımı, kapanış kümeleri ve test sayısıyla değerlendirilir. Çok test edilmiş seviye otomatik olarak daha güçlü kabul edilmez; likidite tüketimi ve bağlam önemlidir.',
   proExplanationEn: 'Zone width can be assessed through volatility, wick distribution, clusters of closes, and number of tests. A heavily tested level is not automatically stronger; liquidity consumption and context matter.',
+  traderTip: 'Önce daha geniş zaman diliminde belirgin tepki alanlarını işaretleyip, sonra daha kısa zaman diliminde bölgeyi hassaslaştırmak grafikteki gürültüyü azaltabilir. Bölgeyi tek bir fiyata sıkıştırma ve test sayısını tek başına güç kanıtı sayma. Üst zaman dilimindeki bölge de fiyatı durdurmayı garanti etmez.',
+  traderTipEn: 'Marking clear reaction areas on a broader timeframe first and then refining the zone on a shorter timeframe can reduce chart noise. Do not compress the zone into one exact price or treat the number of tests alone as proof of strength. A higher-timeframe zone still does not guarantee that price will stop there.',
   misconception: 'Yaygın hata: Çizilen seviyenin fiyatı kesin durduracağını varsaymak.',
   misconceptionEn: 'Common mistake: assuming a drawn level will stop price with certainty.',
   takeaway: 'Destek ve direnç kesin duvar değildir; tek fiyat veya bölge olarak çizilse de geçmiş tepkiyi gösteren bağlamsal referanslardır.',
@@ -176,7 +180,7 @@ const supportResistance = createFoundationLesson({
     { prompt: 'Bir direnç bölgesi neyi garanti eder?', promptEn: 'What does a resistance zone guarantee?', choices: [{ id: 'a', label: 'Hiçbir sonucu garanti etmez', labelEn: 'It guarantees no outcome' }, { id: 'b', label: 'Kesin düşüşü', labelEn: 'A certain decline' }, { id: 'c', label: 'Kesin kırılımı', labelEn: 'A certain breakout' }], correctId: 'a', explanation: 'Bölge geçmiş tepkiyi gösterir; gelecek sonuç bağlama bağlıdır.', explanationEn: 'A zone shows past reaction; the future outcome depends on context.' },
     { prompt: 'Bölge kırılımında hangisi daha anlamlıdır?', promptEn: 'What is more meaningful when a zone is crossed?', choices: [{ id: 'a', label: 'Seviye, kapanış ve bağlamı birlikte değerlendirmek', labelEn: 'Assessing the level, the close, and the context together' }, { id: 'b', label: 'Yalnız anlık fitile bakmak', labelEn: 'Looking only at an instant wick' }, { id: 'c', label: 'Çizginin rengini değiştirmek', labelEn: 'Changing the color of the line' }], correctId: 'a', explanation: 'Tek taşma yerine yapısal seviye ve teyit birlikte okunur.', explanationEn: 'Rather than one overshoot, the structural level and confirmation should be read together.' },
   ],
-  sources: [CHART_LITERACY_SOURCES.cmeTechnicalAnalysis, CHART_LITERACY_SOURCES.supportResistance],
+  sources: [CHART_LITERACY_SOURCES.cmeTechnicalAnalysis, CHART_LITERACY_SOURCES.supportResistance, CHART_LITERACY_SOURCES.timeframes],
 });
 
 const choch = createFoundationLesson({
