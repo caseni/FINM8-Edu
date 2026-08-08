@@ -8,6 +8,7 @@ import { BidAskSpreadVisual } from './BidAskSpreadVisual';
 import { BreakOfStructureVisual } from './BreakOfStructureVisual';
 import { CandleAnatomyVisual } from './CandleAnatomyVisual';
 import { ChangeOfCharacterVisual } from './ChangeOfCharacterVisual';
+import { DiversificationVisual } from './DiversificationVisual';
 import { LearningVisual } from './LearningVisual';
 import { LiquidityImpactVisual } from './LiquidityImpactVisual';
 import { OrderTypesVisual } from './OrderTypesVisual';
@@ -76,6 +77,8 @@ export function QuizPlayer({
     question.visual?.assetRef.includes('risk-getiri-tek-basina-yetmez') ?? false;
   const isStopOrderVisual =
     question.visual?.assetRef.includes('stop-emri-garanti-midir') ?? false;
+  const isDiversificationVisual =
+    question.visual?.assetRef.includes('cok-varlik-cesitlendirme-degildir') ?? false;
   const isRiskBasicsVisual =
     question.visual?.assetRef.includes('risk-belirsizlik-kayip') ?? false;
   const isCandleAnatomyVisual =
@@ -96,6 +99,7 @@ export function QuizPlayer({
     isPositionSizingVisual ||
     isRiskRewardVisual ||
     isStopOrderVisual ||
+    isDiversificationVisual ||
     isRiskBasicsVisual ||
     isCandleAnatomyVisual;
 
@@ -223,6 +227,12 @@ export function QuizPlayer({
             />
           ) : isStopOrderVisual ? (
             <StopOrderVisual
+              alt={selectLocalizedText(question.visual.alt, language)}
+              language={language}
+              theme={theme}
+            />
+          ) : isDiversificationVisual ? (
+            <DiversificationVisual
               alt={selectLocalizedText(question.visual.alt, language)}
               language={language}
               theme={theme}
