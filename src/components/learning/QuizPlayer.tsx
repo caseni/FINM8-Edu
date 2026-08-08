@@ -8,6 +8,7 @@ import { BidAskSpreadVisual } from './BidAskSpreadVisual';
 import { BreakOfStructureVisual } from './BreakOfStructureVisual';
 import { CandleAnatomyVisual } from './CandleAnatomyVisual';
 import { ChangeOfCharacterVisual } from './ChangeOfCharacterVisual';
+import { ConfirmationBiasVisual } from './ConfirmationBiasVisual';
 import { DiversificationVisual } from './DiversificationVisual';
 import { FomoDecisionVisual } from './FomoDecisionVisual';
 import { LearningVisual } from './LearningVisual';
@@ -85,6 +86,8 @@ export function QuizPlayer({
     question.visual?.assetRef.includes('fomo-karari-nasil-bozar') ?? false;
   const isOvertradingDecisionVisual =
     question.visual?.assetRef.includes('asiri-islem-nasil-fark-edilir') ?? false;
+  const isConfirmationBiasVisual =
+    question.visual?.assetRef.includes('sadece-hakli-cikaran-kanit') ?? false;
   const isRiskBasicsVisual =
     question.visual?.assetRef.includes('risk-belirsizlik-kayip') ?? false;
   const isCandleAnatomyVisual =
@@ -108,6 +111,7 @@ export function QuizPlayer({
     isDiversificationVisual ||
     isFomoDecisionVisual ||
     isOvertradingDecisionVisual ||
+    isConfirmationBiasVisual ||
     isRiskBasicsVisual ||
     isCandleAnatomyVisual;
 
@@ -253,6 +257,12 @@ export function QuizPlayer({
             />
           ) : isOvertradingDecisionVisual ? (
             <OvertradingDecisionVisual
+              alt={selectLocalizedText(question.visual.alt, language)}
+              language={language}
+              theme={theme}
+            />
+          ) : isConfirmationBiasVisual ? (
+            <ConfirmationBiasVisual
               alt={selectLocalizedText(question.visual.alt, language)}
               language={language}
               theme={theme}
