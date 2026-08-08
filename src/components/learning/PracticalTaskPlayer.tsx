@@ -68,6 +68,7 @@ export function PracticalTaskPlayer({
   const isOvertradingDecisionVisual = task.conceptKey === 'behavior.overtrading';
   const isConfirmationBiasVisual = task.conceptKey === 'behavior.confirmation_bias';
   const isDataQualityVisual = task.conceptKey === 'evidence.data_quality';
+  const isFreshnessVisual = task.conceptKey === 'evidence.freshness';
 
   const toggle = (choiceId: string) => {
     if (checked) return;
@@ -177,6 +178,15 @@ export function PracticalTaskPlayer({
           alt={language === 'tr'
             ? 'Kaynak, zaman, kapsam ve bağlam kontrollerini daha güçlü ve daha zayıf veri örnekleriyle karşılaştıran veri kalitesi eğitim görseli'
             : 'Data-quality training visual comparing source, time, coverage, and context checks across stronger and weaker evidence'}
+          language={language}
+          theme={theme}
+        />
+      ) : isFreshnessVisual ? (
+        <LearningVisual
+          assetRef="edu://wave1/dogru-veri-ne-zaman-eskir"
+          alt={language === 'tr'
+            ? 'Daha önce doğru olan bir verinin yeni bir olaydan sonra yeniden kontrol edilmesi gerektiğini gösteren basit zaman çizelgesi'
+            : 'Simple timeline showing that previously correct information may need to be checked again after a new event'}
           language={language}
           theme={theme}
         />
