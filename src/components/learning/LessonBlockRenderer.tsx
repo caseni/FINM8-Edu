@@ -18,6 +18,7 @@ import { BreakOfStructureVisual } from './BreakOfStructureVisual';
 import { CandleAnatomyVisual } from './CandleAnatomyVisual';
 import { ChangeOfCharacterVisual } from './ChangeOfCharacterVisual';
 import { DiversificationVisual } from './DiversificationVisual';
+import { FomoDecisionVisual } from './FomoDecisionVisual';
 import { LearningVisual } from './LearningVisual';
 import { LiquidityImpactVisual } from './LiquidityImpactVisual';
 import { OrderTypesVisual } from './OrderTypesVisual';
@@ -86,6 +87,7 @@ export function LessonBlockRenderer({
     const isRiskRewardVisual = block.assetRef.includes('risk-getiri-tek-basina-yetmez');
     const isStopOrderVisual = block.assetRef.includes('stop-emri-garanti-midir');
     const isDiversificationVisual = block.assetRef.includes('cok-varlik-cesitlendirme-degildir');
+    const isFomoDecisionVisual = block.assetRef.includes('fomo-karari-nasil-bozar');
     const isRiskBasicsVisual = block.assetRef.includes('risk-belirsizlik-kayip');
     const isCandleAnatomyVisual =
       block.assetRef.includes('bir-mum') || block.assetRef.includes('candle-ohlc');
@@ -122,6 +124,8 @@ export function LessonBlockRenderer({
           <StopOrderVisual alt={alt} language={language} theme={theme} />
         ) : isDiversificationVisual ? (
           <DiversificationVisual alt={alt} language={language} theme={theme} />
+        ) : isFomoDecisionVisual ? (
+          <FomoDecisionVisual alt={alt} language={language} theme={theme} />
         ) : isRiskBasicsVisual ? (
           <RiskBasicsVisual alt={alt} language={language} theme={theme} />
         ) : isCandleAnatomyVisual ? (
