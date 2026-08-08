@@ -18,6 +18,7 @@ import { BreakOfStructureVisual } from './BreakOfStructureVisual';
 import { CandleAnatomyVisual } from './CandleAnatomyVisual';
 import { ChangeOfCharacterVisual } from './ChangeOfCharacterVisual';
 import { ConfirmationBiasVisual } from './ConfirmationBiasVisual';
+import { DecisionJournalVisual } from './DecisionJournalVisual';
 import { DiversificationVisual } from './DiversificationVisual';
 import { FomoDecisionVisual } from './FomoDecisionVisual';
 import { LearningVisual } from './LearningVisual';
@@ -92,6 +93,7 @@ export function LessonBlockRenderer({
     const isFomoDecisionVisual = block.assetRef.includes('fomo-karari-nasil-bozar');
     const isOvertradingDecisionVisual = block.assetRef.includes('asiri-islem-nasil-fark-edilir');
     const isConfirmationBiasVisual = block.assetRef.includes('sadece-hakli-cikaran-kanit');
+    const isDecisionJournalVisual = block.assetRef.includes('sonucu-degil-karari-kaydet');
     const isRiskBasicsVisual = block.assetRef.includes('risk-belirsizlik-kayip');
     const isCandleAnatomyVisual =
       block.assetRef.includes('bir-mum') || block.assetRef.includes('candle-ohlc');
@@ -134,6 +136,8 @@ export function LessonBlockRenderer({
           <OvertradingDecisionVisual alt={alt} language={language} theme={theme} />
         ) : isConfirmationBiasVisual ? (
           <ConfirmationBiasVisual alt={alt} language={language} theme={theme} />
+        ) : isDecisionJournalVisual ? (
+          <DecisionJournalVisual alt={alt} language={language} theme={theme} />
         ) : isRiskBasicsVisual ? (
           <RiskBasicsVisual alt={alt} language={language} theme={theme} />
         ) : isCandleAnatomyVisual ? (
