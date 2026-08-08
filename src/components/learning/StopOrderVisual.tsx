@@ -10,90 +10,91 @@ export interface StopOrderVisualProps {
 }
 
 export function StopOrderVisual({
-  alt,
   language,
   theme = defaultLearningTheme,
 }: StopOrderVisualProps) {
   const styles = createStyles(theme);
   const tr = language === 'tr';
+  const accessibilityLabel = tr
+    ? 'Fiyat hareketinden stop seviyesine ve çıkış sürecine ilerleyen sade şema'
+    : 'Simple diagram moving from price movement to a stop level and then an exit process';
 
   return (
-    <View style={styles.shell} accessibilityRole="image" accessibilityLabel={alt}>
+    <View style={styles.shell} accessibilityRole="image" accessibilityLabel={accessibilityLabel}>
       <View style={styles.canvas}>
         <View style={styles.header}>
-          <Text style={styles.title}>{tr ? 'Stop = tetikleyici, fiyat garantisi değil' : 'Stop = trigger, not a price guarantee'}</Text>
+          <Text style={styles.title}>
+            {tr ? 'Stop, çıkışı önceden planlamaya yardım eder' : 'A stop helps plan an exit in advance'}
+          </Text>
           <Text style={styles.subtitle}>
-            {tr ? 'Stop seviyesi ile gerçekleşme fiyatını ayır.' : 'Separate the stop level from the execution price.'}
-          </Text>
-        </View>
-
-        <View style={styles.sequenceCard}>
-          <Step styles={styles} label={tr ? 'GİRİŞ' : 'ENTRY'} value="100.0" />
-          <Text style={styles.arrow}>↓</Text>
-          <Step styles={styles} label="STOP" value="98.0" tone="trigger" note={tr ? 'tetiklenir' : 'triggers'} />
-          <Text style={styles.fastMove}>{tr ? 'HIZLI HAREKET  ↓' : 'FAST MOVE  ↓'}</Text>
-          <Step styles={styles} label={tr ? 'GERÇEKLEŞME' : 'FILL'} value="97.4" tone="risk" note={tr ? 'farklı olabilir' : 'can differ'} />
-          <Text style={styles.example}>{tr ? 'Rakamlar yalnız örnektir.' : 'Numbers are illustrative only.'}</Text>
-        </View>
-
-        <View style={styles.compareRow}>
-          <View style={[styles.compareCard, styles.stopCard]}>
-            <Text style={styles.compareTitle}>{tr ? 'STANDART STOP' : 'STANDARD STOP'}</Text>
-            <Text style={styles.flow}>STOP → {tr ? 'PİYASA EMRİ' : 'MARKET ORDER'}</Text>
-            <Text style={styles.good}>{tr ? 'Çıkış önceliği' : 'Execution priority'}</Text>
-            <Text style={styles.risk}>{tr ? 'Fiyat garanti değil' : 'Price not guaranteed'}</Text>
-          </View>
-          <View style={[styles.compareCard, styles.limitCard]}>
-            <Text style={styles.compareTitle}>STOP-LIMIT</Text>
-            <Text style={styles.flow}>STOP → {tr ? 'LİMİT EMRİ' : 'LIMIT ORDER'}</Text>
-            <Text style={styles.good}>{tr ? 'Fiyat sınırı' : 'Price boundary'}</Text>
-            <Text style={styles.risk}>{tr ? 'Gerçekleşmeme riski' : 'Non-fill risk'}</Text>
-          </View>
-        </View>
-
-        <View style={styles.traderNote}>
-          <Text style={styles.noteEyebrow}>{tr ? 'TRADER PRATİK' : 'TRADER PRACTICE'}</Text>
-          <Text style={styles.noteText}>
             {tr
-              ? 'Stopu sırf kayıp küçük görünsün diye rastgele yaklaştırma. Önce fikrinin geçersiz olduğu mantıklı seviyeyi düşün; normal fiyat gürültüsüyle kolay tetiklenen stop planı bozabilir.'
-              : 'Do not move a stop randomly closer just to make the planned loss look smaller. First identify a logical invalidation level; a stop easily triggered by normal price noise can undermine the plan.'}
+              ? 'Belirlenen seviyeye gelindiğinde çıkış süreci başlar.'
+              : 'When the chosen level is reached, the exit process begins.'}
           </Text>
         </View>
 
-        <View style={styles.boundary}>
-          <Text style={styles.boundaryMark}>!</Text>
-          <Text style={styles.boundaryText}>
-            {tr
-              ? 'Gap, hızlı hareket ve düşük likidite gerçek kaybı planlanandan büyütebilir.'
-              : 'Gaps, fast moves, and low liquidity can make the realized loss larger than planned.'}
-          </Text>
+        <View style={styles.flowCard}>
+          <FlowStep
+            styles={styles}
+            symbol="↕"
+            label={tr ? 'FİYAT HAREKETİ' : 'PRICE MOVE'}
+            note={tr ? 'Fiyat değişir' : 'Price moves'}
+          />
+          <Text style={styles.arrow}>→</Text>
+          <FlowStep
+            styles={styles}
+            symbol="•"
+            label={tr ? 'STOP SEVİYESİ' : 'STOP LEVEL'}
+            note={tr ? 'Önceden belirlenir' : 'Chosen in advance'}
+            tone="stop"
+          />
+          <Text style={styles.arrow}>→</Text>
+          <FlowStep
+            styles={styles}
+            symbol="↗"
+            label={tr ? 'ÇIKIŞ SÜRECİ' : 'EXIT PROCESS'}
+            note={tr ? 'İşlem çıkışa yönelir' : 'The trade moves toward exit'}
+          />
         </View>
-      </View>
-      <View style={styles.footer}>
-        <Text numberOfLines={2} style={styles.alt}>{alt}</Text>
+
+        <View style={styles.takeaway}>
+          <Text style={styles.takeawayMark}>!</Text>
+          <View style={styles.takeawayCopy}>
+            <Text style={styles.takeawayTitle}>
+              {tr ? 'Stop bir planlama aracıdır' : 'A stop is a planning tool'}
+            </Text>
+            <Text style={styles.takeawayText}>
+              {tr
+                ? 'Gerçek sonuç, o andaki piyasa koşullarından etkilenebilir.'
+                : 'The actual outcome can still be affected by market conditions at that moment.'}
+            </Text>
+          </View>
+        </View>
       </View>
     </View>
   );
 }
 
-function Step({
+function FlowStep({
   styles,
+  symbol,
   label,
-  value,
-  tone = 'plain',
   note,
+  tone = 'plain',
 }: {
   styles: ReturnType<typeof createStyles>;
+  symbol: string;
   label: string;
-  value: string;
-  tone?: 'plain' | 'trigger' | 'risk';
-  note?: string;
+  note: string;
+  tone?: 'plain' | 'stop';
 }) {
   return (
-    <View style={[styles.step, tone === 'trigger' && styles.stepTrigger, tone === 'risk' && styles.stepRisk]}>
+    <View style={[styles.step, tone === 'stop' && styles.stopStep]}>
+      <View style={[styles.symbolWrap, tone === 'stop' && styles.stopSymbolWrap]}>
+        <Text style={[styles.symbol, tone === 'stop' && styles.stopSymbol]}>{symbol}</Text>
+      </View>
       <Text style={styles.stepLabel}>{label}</Text>
-      <Text style={styles.stepValue}>{value}</Text>
-      {note ? <Text style={[styles.stepNote, tone === 'trigger' && styles.triggerText, tone === 'risk' && styles.riskText]}>{note}</Text> : null}
+      <Text style={styles.stepNote}>{note}</Text>
     </View>
   );
 }
@@ -101,43 +102,138 @@ function Step({
 const createStyles = (theme: LearningTheme) =>
   StyleSheet.create({
     shell: {
-      minHeight: 430,
+      minHeight: 300,
       overflow: 'hidden',
       borderRadius: theme.radius.large,
       backgroundColor: theme.colors.background,
       borderWidth: 1,
       borderColor: theme.colors.border,
     },
-    canvas: { padding: theme.spacing.md, gap: 12 },
-    header: { alignItems: 'center', gap: 4, paddingHorizontal: 4 },
-    title: { color: theme.colors.text, fontSize: 16, lineHeight: 22, fontWeight: '900', textAlign: 'center' },
-    subtitle: { color: theme.colors.textMuted, fontSize: 11, lineHeight: 16, fontWeight: '700', textAlign: 'center' },
-    sequenceCard: { alignItems: 'center', gap: 4, padding: 11, borderRadius: 12, borderWidth: 1, borderColor: theme.colors.border, backgroundColor: theme.colors.surfaceMuted },
-    step: { width: '100%', minHeight: 34, flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 9, borderRadius: 8, backgroundColor: 'rgba(159,176,195,0.07)' },
-    stepTrigger: { borderWidth: 1, borderColor: 'rgba(251,191,36,0.34)', backgroundColor: 'rgba(251,191,36,0.06)' },
-    stepRisk: { borderWidth: 1, borderColor: 'rgba(251,113,133,0.34)', backgroundColor: 'rgba(251,113,133,0.07)' },
-    stepLabel: { width: 78, color: theme.colors.textMuted, fontSize: 9, fontWeight: '900', letterSpacing: 0.45 },
-    stepValue: { color: theme.colors.text, fontSize: 14, fontWeight: '900' },
-    stepNote: { marginLeft: 'auto', color: theme.colors.textMuted, fontSize: 9, fontWeight: '800' },
-    triggerText: { color: theme.colors.warning },
-    riskText: { color: theme.colors.risk },
-    arrow: { color: theme.colors.textMuted, fontSize: 12, lineHeight: 12, fontWeight: '900' },
-    fastMove: { color: theme.colors.risk, fontSize: 9, fontWeight: '900', letterSpacing: 0.45 },
-    example: { color: theme.colors.textMuted, fontSize: 9 },
-    compareRow: { flexDirection: 'row', gap: 10 },
-    compareCard: { flex: 1, gap: 5, padding: 10, borderRadius: 12, borderWidth: 1, backgroundColor: theme.colors.surfaceMuted },
-    stopCard: { borderColor: 'rgba(45,212,191,0.28)' },
-    limitCard: { borderColor: 'rgba(251,191,36,0.30)' },
-    compareTitle: { color: theme.colors.text, fontSize: 9, fontWeight: '900', letterSpacing: 0.55 },
-    flow: { color: theme.colors.textMuted, fontSize: 9, lineHeight: 13, fontWeight: '800' },
-    good: { color: theme.colors.success, fontSize: 9, lineHeight: 13, fontWeight: '800' },
-    risk: { color: theme.colors.risk, fontSize: 9, lineHeight: 13, fontWeight: '800' },
-    traderNote: { gap: 4, padding: 11, borderRadius: 12, borderWidth: 1, borderColor: 'rgba(45,212,191,0.26)', backgroundColor: 'rgba(45,212,191,0.05)' },
-    noteEyebrow: { color: theme.colors.primary, fontSize: 9, fontWeight: '900', letterSpacing: 0.6 },
-    noteText: { color: theme.colors.text, fontSize: 10, lineHeight: 15, fontWeight: '700' },
-    boundary: { flexDirection: 'row', gap: 9, alignItems: 'flex-start', padding: 10, borderRadius: 11, backgroundColor: 'rgba(251,113,133,0.06)' },
-    boundaryMark: { width: 18, color: theme.colors.risk, fontSize: 15, fontWeight: '900' },
-    boundaryText: { flex: 1, color: theme.colors.textMuted, fontSize: 10, lineHeight: 15, fontWeight: '700' },
-    footer: { minHeight: 44, justifyContent: 'center', paddingHorizontal: theme.spacing.md, paddingVertical: theme.spacing.sm, borderTopWidth: 1, borderTopColor: theme.colors.border },
-    alt: { color: theme.colors.textMuted, fontSize: 11, lineHeight: 15 },
+    canvas: {
+      flex: 1,
+      justifyContent: 'center',
+      gap: 16,
+      padding: theme.spacing.md,
+    },
+    header: {
+      alignItems: 'center',
+      gap: 4,
+      paddingHorizontal: 8,
+    },
+    title: {
+      color: theme.colors.text,
+      fontSize: 16,
+      lineHeight: 22,
+      fontWeight: '900',
+      textAlign: 'center',
+    },
+    subtitle: {
+      color: theme.colors.textMuted,
+      fontSize: 12,
+      lineHeight: 17,
+      fontWeight: '700',
+      textAlign: 'center',
+    },
+    flowCard: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 7,
+      padding: 12,
+      borderRadius: 14,
+      borderWidth: 1,
+      borderColor: theme.colors.border,
+      backgroundColor: theme.colors.surfaceMuted,
+    },
+    step: {
+      flex: 1,
+      alignItems: 'center',
+      gap: 5,
+      paddingVertical: 8,
+      paddingHorizontal: 4,
+      borderRadius: 10,
+    },
+    stopStep: {
+      backgroundColor: 'rgba(251,191,36,0.05)',
+      borderWidth: 1,
+      borderColor: 'rgba(251,191,36,0.24)',
+    },
+    symbolWrap: {
+      width: 34,
+      height: 34,
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: 17,
+      backgroundColor: 'rgba(159,176,195,0.08)',
+      borderWidth: 1,
+      borderColor: theme.colors.border,
+    },
+    stopSymbolWrap: {
+      backgroundColor: 'rgba(251,191,36,0.08)',
+      borderColor: 'rgba(251,191,36,0.30)',
+    },
+    symbol: {
+      color: theme.colors.textMuted,
+      fontSize: 17,
+      lineHeight: 20,
+      fontWeight: '900',
+    },
+    stopSymbol: {
+      color: theme.colors.warning,
+    },
+    stepLabel: {
+      color: theme.colors.text,
+      fontSize: 9,
+      lineHeight: 12,
+      fontWeight: '900',
+      letterSpacing: 0.45,
+      textAlign: 'center',
+    },
+    stepNote: {
+      color: theme.colors.textMuted,
+      fontSize: 9,
+      lineHeight: 13,
+      fontWeight: '700',
+      textAlign: 'center',
+    },
+    arrow: {
+      color: theme.colors.textMuted,
+      fontSize: 14,
+      lineHeight: 18,
+      fontWeight: '900',
+    },
+    takeaway: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 10,
+      padding: 11,
+      borderRadius: 12,
+      borderWidth: 1,
+      borderColor: 'rgba(251,113,133,0.20)',
+      backgroundColor: 'rgba(251,113,133,0.04)',
+    },
+    takeawayMark: {
+      width: 24,
+      color: theme.colors.risk,
+      fontSize: 20,
+      lineHeight: 23,
+      fontWeight: '900',
+      textAlign: 'center',
+    },
+    takeawayCopy: {
+      flex: 1,
+      gap: 2,
+    },
+    takeawayTitle: {
+      color: theme.colors.text,
+      fontSize: 10,
+      lineHeight: 14,
+      fontWeight: '900',
+    },
+    takeawayText: {
+      color: theme.colors.textMuted,
+      fontSize: 10,
+      lineHeight: 15,
+      fontWeight: '700',
+    },
   });
