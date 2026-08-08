@@ -17,6 +17,7 @@ import { BidAskSpreadVisual } from './BidAskSpreadVisual';
 import { CandleAnatomyVisual } from './CandleAnatomyVisual';
 import { LearningVisual } from './LearningVisual';
 import { LiquidityImpactVisual } from './LiquidityImpactVisual';
+import { OrderTypesVisual } from './OrderTypesVisual';
 import { PriceFormationVisual } from './PriceFormationVisual';
 import { RiskBasicsVisual } from './RiskBasicsVisual';
 
@@ -64,6 +65,7 @@ export function LessonBlockRenderer({
     const isPriceFormationVisual = block.assetRef.includes('fiyat-piyasada-nasil-olusur');
     const isLiquidityImpactVisual = block.assetRef.includes('likidite-neden-onemlidir');
     const isBidAskSpreadVisual = block.assetRef.includes('bid-ask-spread-nedir');
+    const isOrderTypesVisual = block.assetRef.includes('piyasa-limit-stop-emirleri');
     const isRiskBasicsVisual = block.assetRef.includes('risk-belirsizlik-kayip');
     const isCandleAnatomyVisual =
       block.assetRef.includes('bir-mum') || block.assetRef.includes('candle-ohlc');
@@ -78,6 +80,8 @@ export function LessonBlockRenderer({
           <LiquidityImpactVisual alt={alt} language={language} theme={theme} />
         ) : isBidAskSpreadVisual ? (
           <BidAskSpreadVisual alt={alt} language={language} theme={theme} />
+        ) : isOrderTypesVisual ? (
+          <OrderTypesVisual alt={alt} language={language} theme={theme} />
         ) : isRiskBasicsVisual ? (
           <RiskBasicsVisual alt={alt} language={language} theme={theme} />
         ) : isCandleAnatomyVisual ? (
