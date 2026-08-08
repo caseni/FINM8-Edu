@@ -14,6 +14,7 @@ import { OrderTypesVisual } from './OrderTypesVisual';
 import { PositionSizingVisual } from './PositionSizingVisual';
 import { PriceFormationVisual } from './PriceFormationVisual';
 import { RiskBasicsVisual } from './RiskBasicsVisual';
+import { RiskRewardVisual } from './RiskRewardVisual';
 import { SlippageExecutionVisual } from './SlippageExecutionVisual';
 import { SupportResistanceZoneVisual } from './SupportResistanceZoneVisual';
 import { TrendStructureVisual } from './TrendStructureVisual';
@@ -70,6 +71,8 @@ export function QuizPlayer({
     false;
   const isPositionSizingVisual =
     question.visual?.assetRef.includes('pozisyon-buyuklugu-once-gelir') ?? false;
+  const isRiskRewardVisual =
+    question.visual?.assetRef.includes('risk-getiri-tek-basina-yetmez') ?? false;
   const isRiskBasicsVisual =
     question.visual?.assetRef.includes('risk-belirsizlik-kayip') ?? false;
   const isCandleAnatomyVisual =
@@ -88,6 +91,7 @@ export function QuizPlayer({
     isChangeOfCharacterVisual ||
     isVolatilityRangeVisual ||
     isPositionSizingVisual ||
+    isRiskRewardVisual ||
     isRiskBasicsVisual ||
     isCandleAnatomyVisual;
 
@@ -203,6 +207,12 @@ export function QuizPlayer({
             />
           ) : isPositionSizingVisual ? (
             <PositionSizingVisual
+              alt={selectLocalizedText(question.visual.alt, language)}
+              language={language}
+              theme={theme}
+            />
+          ) : isRiskRewardVisual ? (
+            <RiskRewardVisual
               alt={selectLocalizedText(question.visual.alt, language)}
               language={language}
               theme={theme}
