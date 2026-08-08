@@ -23,6 +23,7 @@ import { OrderTypesVisual } from './OrderTypesVisual';
 import { PositionSizingVisual } from './PositionSizingVisual';
 import { PriceFormationVisual } from './PriceFormationVisual';
 import { RiskBasicsVisual } from './RiskBasicsVisual';
+import { RiskRewardVisual } from './RiskRewardVisual';
 import { SlippageExecutionVisual } from './SlippageExecutionVisual';
 import { SupportResistanceZoneVisual } from './SupportResistanceZoneVisual';
 import { TrendStructureVisual } from './TrendStructureVisual';
@@ -80,6 +81,7 @@ export function LessonBlockRenderer({
     const isChangeOfCharacterVisual = block.assetRef.includes('choch');
     const isVolatilityRangeVisual = block.assetRef.includes('volatilite-once-risktir');
     const isPositionSizingVisual = block.assetRef.includes('pozisyon-buyuklugu-once-gelir');
+    const isRiskRewardVisual = block.assetRef.includes('risk-getiri-tek-basina-yetmez');
     const isRiskBasicsVisual = block.assetRef.includes('risk-belirsizlik-kayip');
     const isCandleAnatomyVisual =
       block.assetRef.includes('bir-mum') || block.assetRef.includes('candle-ohlc');
@@ -110,6 +112,8 @@ export function LessonBlockRenderer({
           <VolatilityRangeVisual alt={alt} language={language} theme={theme} />
         ) : isPositionSizingVisual ? (
           <PositionSizingVisual alt={alt} language={language} theme={theme} />
+        ) : isRiskRewardVisual ? (
+          <RiskRewardVisual alt={alt} language={language} theme={theme} />
         ) : isRiskBasicsVisual ? (
           <RiskBasicsVisual alt={alt} language={language} theme={theme} />
         ) : isCandleAnatomyVisual ? (
