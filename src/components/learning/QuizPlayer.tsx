@@ -5,6 +5,7 @@ import { scoreQuiz, type QuizResult, type QuizSubmission } from '../../domain/le
 import type { LocalizedText, Quiz } from '../../domain/learning/types';
 import { defaultLearningTheme, type LearningTheme } from '../../theme/learningTheme';
 import { BidAskSpreadVisual } from './BidAskSpreadVisual';
+import { BreakOfStructureVisual } from './BreakOfStructureVisual';
 import { CandleAnatomyVisual } from './CandleAnatomyVisual';
 import { LearningVisual } from './LearningVisual';
 import { LiquidityImpactVisual } from './LiquidityImpactVisual';
@@ -56,6 +57,8 @@ export function QuizPlayer({
     question.visual?.assetRef.includes('destek-direnc-bolgedir') ||
     question.visual?.assetRef.includes('support-resistance-zone') ||
     false;
+  const isBreakOfStructureVisual =
+    question.visual?.assetRef.includes('bos-starter') ?? false;
   const isRiskBasicsVisual =
     question.visual?.assetRef.includes('risk-belirsizlik-kayip') ?? false;
   const isCandleAnatomyVisual =
@@ -70,6 +73,7 @@ export function QuizPlayer({
     isSlippageExecutionVisual ||
     isTrendStructureVisual ||
     isSupportResistanceZoneVisual ||
+    isBreakOfStructureVisual ||
     isRiskBasicsVisual ||
     isCandleAnatomyVisual;
 
@@ -161,6 +165,12 @@ export function QuizPlayer({
             />
           ) : isSupportResistanceZoneVisual ? (
             <SupportResistanceZoneVisual
+              alt={selectLocalizedText(question.visual.alt, language)}
+              language={language}
+              theme={theme}
+            />
+          ) : isBreakOfStructureVisual ? (
+            <BreakOfStructureVisual
               alt={selectLocalizedText(question.visual.alt, language)}
               language={language}
               theme={theme}

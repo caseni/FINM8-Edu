@@ -17,7 +17,7 @@ const bosLessonDraft = {
     en: 'The learner can distinguish a break of structure from a simple price overshoot.',
   },
   estimatedMinutes: 3,
-  learningStage: 'foundation',
+  learningStage: 'intermediate',
   accessTier: 'free',
   marketScopes: ['general'],
   prerequisiteConceptKeys: ['market.structure.support_resistance'],
@@ -61,19 +61,32 @@ const bosLessonDraft = {
       kind: 'visual',
       assetRef: 'edu://charts/bos-starter-001',
       alt: {
-        tr: 'Önceki tepe ve teyit kapanışını gösteren sade BOS grafiği',
-        en: 'Simple BOS chart showing the previous high and confirming close',
+        tr: 'Fitil taşması ile anlamlı tepe üzerindeki teyit kapanışını karşılaştıran sade BOS görseli',
+        en: 'Simple BOS visual comparing a wick overshoot with a confirming close above a meaningful high',
       },
       caption: {
         normal: {
-          tr: 'Önemli olan yalnızca seviyenin aşılması değil, kırılımın bağlamıdır.',
-          en: 'What matters is not only crossing the level, but the context of the break.',
+          tr: 'Önemli olan yalnızca seviyenin aşılması değil, hangi seviyenin kırıldığı ve kapanışın nerede oluştuğudur.',
+          en: 'What matters is not only crossing a level, but which level broke and where the candle closed.',
+        },
+      },
+    },
+    {
+      id: 'bos.trader-tip',
+      order: 3,
+      audience: 'all',
+      kind: 'callout',
+      tone: 'evidence',
+      copy: {
+        normal: {
+          tr: 'TRADER PRATİK NOTU — BOS etiketi vermeden önce kırılan tepenin veya dibin gerçekten ana salınımda anlamlı olup olmadığına bak. Küçük iç yapı kırılımını ana yapı kırılımı sanmak grafiği gereksiz gürültülü hale getirir. Kapanış teyidi kanıtı güçlendirir; garanti oluşturmaz.',
+          en: 'TRADER PRACTICAL NOTE — Before labeling a BOS, check whether the broken high or low is actually meaningful in the main swing structure. Treating a minor internal break as a major structure break adds noise. A confirming close strengthens the evidence; it does not create a guarantee.',
         },
       },
     },
     {
       id: 'bos.misconception',
-      order: 3,
+      order: 4,
       audience: 'all',
       kind: 'misconception',
       copy: {
@@ -85,7 +98,7 @@ const bosLessonDraft = {
     },
     {
       id: 'bos.risk',
-      order: 4,
+      order: 5,
       audience: 'all',
       kind: 'callout',
       tone: 'risk',
@@ -129,8 +142,8 @@ const bosLessonDraft = {
         visual: {
           assetRef: 'edu://charts/bos-starter-001',
           alt: {
-            tr: 'Önceki tepeyi ve seviyenin üzerinde teyit kapanışını gösteren sade BOS grafiği',
-            en: 'Simple BOS chart showing the previous high and a confirming close above the level',
+            tr: 'Fitil taşması ile anlamlı tepe üzerindeki teyit kapanışını karşılaştıran sade BOS görseli',
+            en: 'Simple BOS visual comparing a wick overshoot with a confirming close above a meaningful high',
           },
         },
         options: [

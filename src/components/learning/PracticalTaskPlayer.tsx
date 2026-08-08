@@ -7,6 +7,7 @@ import {
 } from '../../domain/learning/presentation';
 import type { LocalizedText, PracticalTask, PresentationMode } from '../../domain/learning/types';
 import { defaultLearningTheme, type LearningTheme } from '../../theme/learningTheme';
+import { BreakOfStructureVisual } from './BreakOfStructureVisual';
 import { CandleAnatomyVisual } from './CandleAnatomyVisual';
 import { LearningVisual } from './LearningVisual';
 import { SupportResistanceZoneVisual } from './SupportResistanceZoneVisual';
@@ -47,6 +48,7 @@ export function PracticalTaskPlayer({
     task.assetRef?.includes('trend-structure') || task.assetRef?.includes('trend-yon-mu-yapi-mi');
   const isSupportResistanceZoneVisual =
     task.assetRef?.includes('support-resistance-zone') || task.assetRef?.includes('destek-direnc-bolgedir');
+  const isBreakOfStructureVisual = task.assetRef?.includes('bos-starter') ?? false;
 
   const toggle = (choiceId: string) => {
     if (checked) return;
@@ -117,6 +119,14 @@ export function PracticalTaskPlayer({
               alt={language === 'tr'
                 ? 'Birden fazla tepkinin aynı destek ve direnç alanlarında toplandığını gösteren eğitim görseli'
                 : 'Training visual showing multiple reactions clustering in support and resistance areas'}
+              language={language}
+              theme={theme}
+            />
+          ) : isBreakOfStructureVisual ? (
+            <BreakOfStructureVisual
+              alt={language === 'tr'
+                ? 'Fitil taşması ile anlamlı tepe üzerindeki teyit kapanışını karşılaştıran BOS eğitim görseli'
+                : 'BOS training visual comparing a wick overshoot with a confirming close above a meaningful high'}
               language={language}
               theme={theme}
             />

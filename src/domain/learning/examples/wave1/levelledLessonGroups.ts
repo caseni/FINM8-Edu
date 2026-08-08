@@ -1,4 +1,3 @@
-import { microLessonSchema } from '../../schemas';
 import type { MicroLesson } from '../../types';
 import { WAVE1_CHART_LITERACY_LESSONS } from './chartLiteracyLessons';
 
@@ -31,12 +30,7 @@ export const WAVE1_CHART_LITERACY_CORE_LESSONS: readonly MicroLesson[] =
   requireLessons(CORE_CHART_LESSON_IDS, WAVE1_CHART_LITERACY_LESSONS);
 
 export const WAVE1_MARKET_STRUCTURE_LESSONS: readonly MicroLesson[] =
-  requireLessons(MARKET_STRUCTURE_LESSON_IDS, WAVE1_CHART_LITERACY_LESSONS).map(
-    (lesson) =>
-      lesson.id === 'lesson.market-structure.bos.001'
-        ? microLessonSchema.parse({ ...lesson, learningStage: 'intermediate' })
-        : lesson
-  );
+  requireLessons(MARKET_STRUCTURE_LESSON_IDS, WAVE1_CHART_LITERACY_LESSONS);
 
 export const WAVE1_LEVELLED_STRUCTURE = {
   chartLiteracy: {
