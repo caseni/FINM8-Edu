@@ -11,6 +11,7 @@ import { BreakOfStructureVisual } from './BreakOfStructureVisual';
 import { CandleAnatomyVisual } from './CandleAnatomyVisual';
 import { ChangeOfCharacterVisual } from './ChangeOfCharacterVisual';
 import { ConfirmationBiasVisual } from './ConfirmationBiasVisual';
+import { DecisionJournalVisual } from './DecisionJournalVisual';
 import { DiversificationVisual } from './DiversificationVisual';
 import { FomoDecisionVisual } from './FomoDecisionVisual';
 import { LearningVisual } from './LearningVisual';
@@ -69,6 +70,7 @@ export function PracticalTaskPlayer({
   const isConfirmationBiasVisual = task.conceptKey === 'behavior.confirmation_bias';
   const isDataQualityVisual = task.conceptKey === 'evidence.data_quality';
   const isFreshnessVisual = task.conceptKey === 'evidence.freshness';
+  const isDecisionJournalVisual = task.conceptKey === 'behavior.decision_journal';
 
   const toggle = (choiceId: string) => {
     if (checked) return;
@@ -187,6 +189,14 @@ export function PracticalTaskPlayer({
           alt={language === 'tr'
             ? 'Daha önce doğru olan bir verinin yeni bir olaydan sonra yeniden kontrol edilmesi gerektiğini gösteren basit zaman çizelgesi'
             : 'Simple timeline showing that previously correct information may need to be checked again after a new event'}
+          language={language}
+          theme={theme}
+        />
+      ) : isDecisionJournalVisual ? (
+        <DecisionJournalVisual
+          alt={language === 'tr'
+            ? 'Gözlem, yorum, fikri değiştirecek koşul ve sonucu ayrı adımlarda gösteren sade karar günlüğü eğitim görseli'
+            : 'Simple decision-journal training visual separating observation, interpretation, what would change the view, and the later result'}
           language={language}
           theme={theme}
         />
