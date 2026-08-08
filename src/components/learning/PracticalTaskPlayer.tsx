@@ -10,6 +10,7 @@ import { defaultLearningTheme, type LearningTheme } from '../../theme/learningTh
 import { BreakOfStructureVisual } from './BreakOfStructureVisual';
 import { CandleAnatomyVisual } from './CandleAnatomyVisual';
 import { ChangeOfCharacterVisual } from './ChangeOfCharacterVisual';
+import { ConfirmationBiasVisual } from './ConfirmationBiasVisual';
 import { DiversificationVisual } from './DiversificationVisual';
 import { FomoDecisionVisual } from './FomoDecisionVisual';
 import { LearningVisual } from './LearningVisual';
@@ -65,6 +66,7 @@ export function PracticalTaskPlayer({
   const isDiversificationVisual = task.conceptKey === 'portfolio.diversification';
   const isFomoDecisionVisual = task.conceptKey === 'behavior.fomo';
   const isOvertradingDecisionVisual = task.conceptKey === 'behavior.overtrading';
+  const isConfirmationBiasVisual = task.conceptKey === 'behavior.confirmation_bias';
 
   const toggle = (choiceId: string) => {
     if (checked) return;
@@ -157,6 +159,14 @@ export function PracticalTaskPlayer({
           alt={language === 'tr'
             ? 'Kayıp sonrası acele tekrar giriş ve kriter değiştirme döngüsünü dur plan kanıt ve risk kontrolleriyle karşılaştıran aşırı işlem eğitim görseli'
             : 'Overtrading training visual comparing rushed re-entry and changing criteria after a loss with pause, plan, evidence, and risk checks'}
+          language={language}
+          theme={theme}
+        />
+      ) : isConfirmationBiasVisual ? (
+        <ConfirmationBiasVisual
+          alt={language === 'tr'
+            ? 'Yalnız destekleyen kanıtları toplamak ile görüşü çürütebilecek kanıtı da aramayı karşılaştıran onaylama yanlılığı eğitim görseli'
+            : 'Confirmation-bias training visual comparing one-sided supporting evidence with deliberately seeking evidence that could disprove the view'}
           language={language}
           theme={theme}
         />
