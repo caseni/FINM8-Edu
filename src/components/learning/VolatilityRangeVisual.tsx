@@ -22,118 +22,74 @@ export function VolatilityRangeVisual({
       <View style={styles.canvas}>
         <View style={styles.header}>
           <Text style={styles.title}>
-            {tr ? 'Volatilite = hareket genişliği' : 'Volatility = movement range'}
+            {tr ? 'Volatilite: fiyat ne kadar hareketli?' : 'Volatility: how much does price move?'}
           </Text>
           <Text style={styles.subtitle}>
             {tr
-              ? 'Aynı başlangıç noktası · aynı pozisyon büyüklüğü'
-              : 'Same starting point · same position size'}
+              ? 'Aynı sürede fiyat dar veya geniş bir aralıkta hareket edebilir.'
+              : 'Over the same period, price can move within a narrow or wide range.'}
           </Text>
         </View>
 
         <View style={styles.comparison}>
-          <RangeCard
+          <MovementCard
             styles={styles}
-            tone="low"
-            title={tr ? 'DAHA DÜŞÜK VOLATİLİTE' : 'LOWER VOLATILITY'}
-            range="98 — 102"
-            movement={tr ? 'Dar hareket aralığı' : 'Narrow movement range'}
-            bars={[32, 46, 39, 51, 43]}
+            tone="narrow"
+            title={tr ? 'DAR HAREKET' : 'NARROW MOVE'}
+            note={tr ? 'Fiyat daha küçük bir aralıkta kalıyor' : 'Price stays within a smaller range'}
           />
-          <RangeCard
+          <MovementCard
             styles={styles}
-            tone="high"
-            title={tr ? 'DAHA YÜKSEK VOLATİLİTE' : 'HIGHER VOLATILITY'}
-            range="92 — 108"
-            movement={tr ? 'Geniş hareket aralığı' : 'Wide movement range'}
-            bars={[18, 76, 31, 88, 24]}
+            tone="wide"
+            title={tr ? 'GENİŞ HAREKET' : 'WIDE MOVE'}
+            note={tr ? 'Fiyat daha büyük bir aralıkta dolaşıyor' : 'Price moves through a larger range'}
           />
         </View>
 
-        <View style={styles.startRow}>
-          <View style={styles.startDot} />
-          <Text style={styles.startText}>
-            {tr ? 'İkisi de 100’den başladı' : 'Both started at 100'}
+        <View style={styles.takeaway}>
+          <Text style={styles.takeawayMark}>↕</Text>
+          <Text style={styles.takeawayText}>
+            {tr
+              ? 'Volatilite hareketin büyüklüğünü anlatır; yönü söylemez.'
+              : 'Volatility describes the size of movement; it does not tell direction.'}
           </Text>
         </View>
-
-        <View style={styles.impactCard}>
-          <Text style={styles.impactEyebrow}>{tr ? 'AYNI POZİSYON' : 'SAME POSITION'}</Text>
-          <View style={styles.impactRow}>
-            <View style={styles.impactItem}>
-              <Text style={styles.impactSmall}>↕</Text>
-              <Text style={styles.impactText}>{tr ? 'Dar fiyat hareketi' : 'Narrow price movement'}</Text>
-            </View>
-            <Text style={styles.arrow}>→</Text>
-            <Text style={styles.impactResult}>{tr ? 'Daha küçük parasal dalgalanma' : 'Smaller cash fluctuation'}</Text>
-          </View>
-          <View style={styles.divider} />
-          <View style={styles.impactRow}>
-            <View style={styles.impactItem}>
-              <Text style={styles.impactLarge}>↕</Text>
-              <Text style={styles.impactText}>{tr ? 'Geniş fiyat hareketi' : 'Wide price movement'}</Text>
-            </View>
-            <Text style={styles.arrow}>→</Text>
-            <Text style={styles.impactResult}>{tr ? 'Daha büyük parasal dalgalanma' : 'Larger cash fluctuation'}</Text>
-          </View>
-        </View>
-
-        <View style={styles.directionCard}>
-          <Text style={styles.directionMark}>↕</Text>
-          <View style={styles.directionCopy}>
-            <Text style={styles.directionTitle}>{tr ? 'Yön söylemez' : 'It does not tell direction'}</Text>
-            <Text style={styles.directionText}>
-              {tr
-                ? 'Yüksek volatilite hem yukarı hem aşağı daha geniş hareket anlamına gelebilir.'
-                : 'High volatility can mean wider movement both upward and downward.'}
-            </Text>
-          </View>
-        </View>
-
-        <Text style={styles.exampleNote}>{tr ? 'Rakamlar yalnız örnektir.' : 'Numbers are illustrative only.'}</Text>
-      </View>
-      <View style={styles.footer}>
-        <Text numberOfLines={2} style={styles.alt}>{alt}</Text>
       </View>
     </View>
   );
 }
 
-function RangeCard({
+function MovementCard({
   styles,
   tone,
   title,
-  range,
-  movement,
-  bars,
+  note,
 }: {
   styles: ReturnType<typeof createStyles>;
-  tone: 'low' | 'high';
+  tone: 'narrow' | 'wide';
   title: string;
-  range: string;
-  movement: string;
-  bars: readonly number[];
+  note: string;
 }) {
-  const high = tone === 'high';
+  const wide = tone === 'wide';
+
   return (
-    <View style={[styles.rangeCard, high ? styles.highCard : styles.lowCard]}>
-      <Text style={[styles.rangeTitle, high ? styles.highText : styles.lowText]}>{title}</Text>
-      <Text style={styles.rangeNumber}>{range}</Text>
-      <View style={styles.rangeChart}>
-        <View style={styles.midLine} />
-        {bars.map((height, index) => (
-          <View key={`${tone}.${index}`} style={styles.barSlot}>
-            <View
-              style={[
-                styles.rangeBar,
-                high ? styles.highBar : styles.lowBar,
-                { height },
-              ]}
-            />
-          </View>
-        ))}
+    <View style={[styles.movementCard, wide ? styles.wideCard : styles.narrowCard]}>
+      <Text style={[styles.cardTitle, wide ? styles.wideText : styles.narrowText]}>{title}</Text>
+
+      <View style={styles.rangeFrame}>
+        <View style={styles.centerLine} />
+        <View
+          style={[
+            styles.rangeBand,
+            wide ? styles.wideBand : styles.narrowBand,
+            wide ? styles.wideRange : styles.narrowRange,
+          ]}
+        >
+          <View style={[styles.rangeDot, wide ? styles.wideDot : styles.narrowDot]} />
+        </View>
       </View>
-      <Text style={styles.rangeMovement}>{movement}</Text>
+
+      <Text style={styles.cardNote}>{note}</Text>
     </View>
   );
 }
@@ -141,51 +97,150 @@ function RangeCard({
 const createStyles = (theme: LearningTheme) =>
   StyleSheet.create({
     shell: {
-      minHeight: 420,
+      minHeight: 320,
       overflow: 'hidden',
       borderRadius: theme.radius.large,
       backgroundColor: theme.colors.background,
       borderWidth: 1,
       borderColor: theme.colors.border,
     },
-    canvas: { padding: theme.spacing.md, gap: 12 },
-    header: { gap: 4, alignItems: 'center', paddingHorizontal: 4 },
-    title: { color: theme.colors.text, fontSize: 16, lineHeight: 22, fontWeight: '900', textAlign: 'center' },
-    subtitle: { color: theme.colors.textMuted, fontSize: 11, lineHeight: 16, fontWeight: '700', textAlign: 'center' },
-    comparison: { flexDirection: 'row', gap: 10 },
-    rangeCard: { flex: 1, gap: 7, padding: 11, borderRadius: 12, borderWidth: 1, backgroundColor: theme.colors.surfaceMuted },
-    lowCard: { borderColor: 'rgba(45,212,191,0.28)' },
-    highCard: { borderColor: 'rgba(251,113,133,0.30)' },
-    rangeTitle: { fontSize: 9, lineHeight: 13, fontWeight: '900', letterSpacing: 0.35 },
-    lowText: { color: theme.colors.primary },
-    highText: { color: theme.colors.risk },
-    rangeNumber: { color: theme.colors.text, fontSize: 15, fontWeight: '900' },
-    rangeChart: { height: 96, flexDirection: 'row', alignItems: 'center', gap: 5, paddingHorizontal: 3, position: 'relative', overflow: 'hidden', borderRadius: 8, backgroundColor: theme.colors.background },
-    midLine: { position: 'absolute', left: 0, right: 0, top: 47, height: 1, backgroundColor: theme.colors.border },
-    barSlot: { flex: 1, height: '100%', alignItems: 'center', justifyContent: 'center' },
-    rangeBar: { width: 9, minHeight: 12, borderRadius: 5 },
-    lowBar: { backgroundColor: 'rgba(45,212,191,0.64)' },
-    highBar: { backgroundColor: 'rgba(251,113,133,0.62)' },
-    rangeMovement: { color: theme.colors.textMuted, fontSize: 10, lineHeight: 14, fontWeight: '700' },
-    startRow: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 7 },
-    startDot: { width: 7, height: 7, borderRadius: 4, backgroundColor: theme.colors.warning },
-    startText: { color: theme.colors.textMuted, fontSize: 10, fontWeight: '800' },
-    impactCard: { gap: 8, padding: 11, borderRadius: 12, borderWidth: 1, borderColor: theme.colors.border, backgroundColor: theme.colors.surfaceMuted },
-    impactEyebrow: { color: theme.colors.textMuted, fontSize: 9, fontWeight: '900', letterSpacing: 0.55 },
-    impactRow: { flexDirection: 'row', alignItems: 'center', gap: 7 },
-    impactItem: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 6 },
-    impactSmall: { width: 18, color: theme.colors.primary, fontSize: 15, fontWeight: '900' },
-    impactLarge: { width: 18, color: theme.colors.risk, fontSize: 22, fontWeight: '900' },
-    impactText: { flex: 1, color: theme.colors.text, fontSize: 10, lineHeight: 14, fontWeight: '800' },
-    arrow: { color: theme.colors.textMuted, fontSize: 14, fontWeight: '900' },
-    impactResult: { flex: 1.15, color: theme.colors.text, fontSize: 10, lineHeight: 14, fontWeight: '800' },
-    divider: { height: 1, backgroundColor: theme.colors.border },
-    directionCard: { flexDirection: 'row', gap: 10, padding: 11, borderRadius: 12, borderWidth: 1, borderColor: 'rgba(251,191,36,0.23)', backgroundColor: 'rgba(251,191,36,0.05)' },
-    directionMark: { width: 24, color: theme.colors.warning, fontSize: 22, lineHeight: 26, fontWeight: '900' },
-    directionCopy: { flex: 1, gap: 2 },
-    directionTitle: { color: theme.colors.text, fontSize: 11, lineHeight: 15, fontWeight: '900' },
-    directionText: { color: theme.colors.textMuted, fontSize: 10, lineHeight: 15, fontWeight: '700' },
-    exampleNote: { color: theme.colors.textMuted, fontSize: 9, textAlign: 'center' },
-    footer: { minHeight: 44, justifyContent: 'center', paddingHorizontal: theme.spacing.md, paddingVertical: theme.spacing.sm, borderTopWidth: 1, borderTopColor: theme.colors.border },
-    alt: { color: theme.colors.textMuted, fontSize: 11, lineHeight: 15 },
+    canvas: {
+      flex: 1,
+      justifyContent: 'center',
+      padding: theme.spacing.md,
+      gap: 14,
+    },
+    header: {
+      alignItems: 'center',
+      gap: 4,
+      paddingHorizontal: 8,
+    },
+    title: {
+      color: theme.colors.text,
+      fontSize: 16,
+      lineHeight: 22,
+      fontWeight: '900',
+      textAlign: 'center',
+    },
+    subtitle: {
+      color: theme.colors.textMuted,
+      fontSize: 12,
+      lineHeight: 17,
+      fontWeight: '700',
+      textAlign: 'center',
+    },
+    comparison: {
+      flexDirection: 'row',
+      gap: 10,
+    },
+    movementCard: {
+      flex: 1,
+      gap: 10,
+      padding: 12,
+      borderRadius: 13,
+      borderWidth: 1,
+      backgroundColor: theme.colors.surfaceMuted,
+    },
+    narrowCard: {
+      borderColor: 'rgba(45,212,191,0.24)',
+    },
+    wideCard: {
+      borderColor: 'rgba(251,191,36,0.24)',
+    },
+    cardTitle: {
+      fontSize: 10,
+      lineHeight: 14,
+      fontWeight: '900',
+      letterSpacing: 0.6,
+      textAlign: 'center',
+    },
+    narrowText: {
+      color: theme.colors.primary,
+    },
+    wideText: {
+      color: theme.colors.warning,
+    },
+    rangeFrame: {
+      height: 92,
+      position: 'relative',
+      alignItems: 'center',
+      justifyContent: 'center',
+      overflow: 'hidden',
+      borderRadius: 10,
+      backgroundColor: theme.colors.background,
+      borderWidth: 1,
+      borderColor: theme.colors.border,
+    },
+    centerLine: {
+      position: 'absolute',
+      left: 12,
+      right: 12,
+      top: '50%',
+      height: 1,
+      backgroundColor: theme.colors.border,
+    },
+    rangeBand: {
+      width: 34,
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: 17,
+      borderWidth: 1,
+    },
+    narrowRange: {
+      height: 34,
+    },
+    wideRange: {
+      height: 72,
+    },
+    narrowBand: {
+      backgroundColor: 'rgba(45,212,191,0.10)',
+      borderColor: 'rgba(45,212,191,0.28)',
+    },
+    wideBand: {
+      backgroundColor: 'rgba(251,191,36,0.09)',
+      borderColor: 'rgba(251,191,36,0.28)',
+    },
+    rangeDot: {
+      width: 8,
+      height: 8,
+      borderRadius: 4,
+    },
+    narrowDot: {
+      backgroundColor: theme.colors.primary,
+    },
+    wideDot: {
+      backgroundColor: theme.colors.warning,
+    },
+    cardNote: {
+      color: theme.colors.text,
+      fontSize: 11,
+      lineHeight: 16,
+      fontWeight: '800',
+      textAlign: 'center',
+    },
+    takeaway: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 10,
+      padding: 11,
+      borderRadius: 12,
+      borderWidth: 1,
+      borderColor: 'rgba(159,176,195,0.18)',
+      backgroundColor: 'rgba(159,176,195,0.04)',
+    },
+    takeawayMark: {
+      width: 24,
+      color: theme.colors.textMuted,
+      fontSize: 21,
+      lineHeight: 25,
+      fontWeight: '900',
+      textAlign: 'center',
+    },
+    takeawayText: {
+      flex: 1,
+      color: theme.colors.text,
+      fontSize: 11,
+      lineHeight: 16,
+      fontWeight: '800',
+    },
   });
