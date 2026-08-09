@@ -39,7 +39,7 @@ export function LearningPreferencesCard({
         style={({ pressed }) => [styles.summary, pressed && styles.pressed]}
       >
         <View style={styles.summaryCopy}>
-          <Text style={styles.eyebrow}>{language === 'tr' ? 'ÖĞRENME AYARLARIN' : 'LEARNING SETTINGS'}</Text>
+          <Text style={styles.eyebrow}>{language === 'tr' ? 'ÖĞRENME AYARLARI' : 'LEARNING SETTINGS'}</Text>
           <Text style={styles.title}>{stageLabel}</Text>
           <Text numberOfLines={1} style={styles.subtitle}>{primaryGoal}</Text>
         </View>
@@ -63,14 +63,14 @@ export function LearningPreferencesCard({
 
           <Text style={styles.note}>
             {language === 'tr'
-              ? 'Temel yol sırası sabit; rehberlik hedeflerine göre uyarlanır.'
-              : 'The foundation path order stays fixed; guidance adapts to your goals.'}
+              ? 'Ders sırası sabit kalır; öneriler hedeflerine göre değişir.'
+              : 'Lesson order stays the same; recommendations adapt to your goals.'}
           </Text>
 
           <View style={styles.modeHeader}>
             <View>
-              <Text style={styles.label}>{language === 'tr' ? 'ANLATIM' : 'PRESENTATION'}</Text>
-              <Text style={styles.hint}>{language === 'tr' ? 'Eğitim seviyesi değildir' : 'Not your learning level'}</Text>
+              <Text style={styles.label}>{language === 'tr' ? 'ANLATIM TARZI' : 'PRESENTATION STYLE'}</Text>
+              <Text style={styles.hint}>{language === 'tr' ? 'Ders seviyeni değiştirmez' : 'Does not change your lesson level'}</Text>
             </View>
             <View style={styles.segmented}>
               {(['normal', 'pro'] as const).map((mode) => (
