@@ -9,8 +9,8 @@ interface LearningFlowHeaderProps {
 }
 
 const STAGE_LABELS = {
-  2: { tr: 'Görev', en: 'Task' },
-  3: { tr: 'Quiz', en: 'Quiz' },
+  2: { tr: 'GÖREV', en: 'TASK' },
+  3: { tr: 'QUIZ', en: 'QUIZ' },
 } as const;
 
 export function LearningFlowHeader({ language, stage, onExit }: LearningFlowHeaderProps) {
@@ -35,7 +35,7 @@ export function LearningFlowHeader({ language, stage, onExit }: LearningFlowHead
         >
           <View style={[styles.progressFill, { width: `${(stage / 3) * 100}%` }]} />
         </View>
-        <Text style={styles.stageText}>{stage}/3 · {label}</Text>
+        <Text style={styles.stageText}>{label} · {stage}/3</Text>
       </View>
     </View>
   );
@@ -48,6 +48,6 @@ const styles = StyleSheet.create({
   progressGroup: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 12 },
   progressTrack: { flex: 1, height: 8, overflow: 'hidden', borderRadius: 8, backgroundColor: '#172F46' },
   progressFill: { height: 8, borderRadius: 8, backgroundColor: '#2DD4BF' },
-  stageText: { minWidth: 76, color: '#9FB0C3', fontSize: 12, fontWeight: '800', textAlign: 'right' },
+  stageText: { minWidth: 88, color: '#2DD4BF', fontSize: 11, fontWeight: '900', letterSpacing: 0.6, textAlign: 'right' },
   pressed: { opacity: 0.7 },
 });
