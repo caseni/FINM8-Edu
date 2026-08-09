@@ -4,8 +4,8 @@ import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { LearningModuleCard, LearningPreferencesCard } from '../../components/learning';
 import { MICRO_LESSON_CATALOG } from '../../domain/learning/catalog';
-import { getCurrentQuizLearningGainSummary, getCurrentQuizPreviewDimensions } from '../../domain/learning/currentQuizLearningGain';
-import { CURRENT_QUIZ_EVIDENCE_LABELS, CURRENT_QUIZ_TRACKS, getCurrentQuizReadiness } from '../../domain/learning/currentQuizReadiness';
+import { getCurrentQuizLearningGainSummary } from '../../domain/learning/currentQuizLearningGain';
+import { CURRENT_QUIZ_TRACKS, getCurrentQuizReadiness } from '../../domain/learning/currentQuizReadiness';
 import { getCurrentQuizReviewRecommendation } from '../../domain/learning/currentQuizReview';
 import { INITIAL_BADGES } from '../../domain/learning/examples/badges';
 import { BEHAVIOR_EVIDENCE_CHALLENGE, CHART_LITERACY_CHALLENGE, MARKET_FOUNDATIONS_CHALLENGE, MARKET_STRUCTURE_CHALLENGE, RISK_MANAGEMENT_CHALLENGE } from '../../domain/learning/examples/wave1/challenges';
@@ -137,15 +137,6 @@ export function LearnHomeScreen() {
     selectedStage: profile.selectedStage,
     presentationMode,
   });
-  const unlockedCurrentQuizTracks = CURRENT_QUIZ_TRACKS.filter((track) =>
-    currentQuizReadiness.unlockedTrackIds.includes(track.id)
-  );
-  const latestCurrentQuizTrack = unlockedCurrentQuizTracks.at(-1);
-  const currentQuizPreviewDimensions = getCurrentQuizPreviewDimensions(
-    currentQuizReadiness.unlockedTrackIds.length > 0
-      ? currentQuizReadiness.unlockedTrackIds
-      : ['daily_basics']
-  ).slice(0, 3);
   const currentQuizProgress =
     currentQuizReadiness.unlockedTrackIds.length === 0
       ? (currentQuizReadiness.completedDailyPrerequisites /
@@ -372,65 +363,31 @@ export function LearnHomeScreen() {
                 {currentQuizReadiness.unlockedTrackIds.length}/5
               </Text>
               <Text style={styles.currentQuizCountLabel}>
-                {language === 'tr' ? 'TÜR' : 'TYPES'}
+                {language === 'tr' ? 'HAZIR' : 'READY'}
               </Text>
             </View>
           </View>
 
           <Text style={styles.currentQuizBody}>
-            {latestCurrentQuizTrack
-              ? selectLocalizedText(latestCurrentQuizTrack.description, language)
-              : language === 'tr'
-                ? 'İlk temel derslerini tamamladıkça güncel olayları öğrendiğin kavramlarla yorumlayacaksın.'
-                : 'As you complete the first foundation lessons, you will interpret current events with concepts you have learned.'}
+            {language === 'tr'
+              ? 'Tamamladığın derslere göre güncel piyasa olaylarını kısa sorularla yorumlayacaksın.'
+              : 'You will use short questions to interpret current market events with concepts from completed lessons.'}
           </Text>
 
           <View style={styles.currentQuizProgressTrack}>
             <View
               style={[
                 styles.currentQuizProgressFill,
-                {
-                  width: `${currentQuizProgress}%`,
-                },
+                { width: `${currentQuizProgress}%` },
               ]}
             />
           </View>
 
+          <Text style={styles.currentQuizEyebrow}>
+            {language === 'tr' ? 'AÇILMASI İÇİN' : 'TO UNLOCK'}
+          </Text>
           <Text style={styles.currentQuizRequirement}>
             {selectLocalizedText(currentQuizReadiness.nextRequirement, language)}
-          </Text>
-          <View style={styles.currentQuizGainPanel}>
-            <Text style={styles.currentQuizGainLabel}>
-              {language === 'tr'
-                ? currentQuizReadiness.unlockedTrackIds.length > 0
-                  ? 'ÖLÇÜLECEK KAZANIMLAR'
-                  : 'İLK AÇILACAK KAZANIMLAR'
-                : currentQuizReadiness.unlockedTrackIds.length > 0
-                  ? 'LEARNING GAINS'
-                  : 'FIRST LEARNING GAINS'}
-            </Text>
-            <View style={styles.currentQuizGainRow}>
-              {currentQuizPreviewDimensions.map((dimension) => (
-                <View key={dimension} style={styles.currentQuizGainChip}>
-                  <Text style={styles.currentQuizGainChipText}>
-                    {selectLocalizedText(
-                      CURRENT_QUIZ_EVIDENCE_LABELS[dimension],
-                      language
-                    )}
-                  </Text>
-                </View>
-              ))}
-            </View>
-            <Text style={styles.currentQuizGainHint}>
-              {language === 'tr'
-                ? 'Tek cevapla etiketleme yok; özet için farklı soru ve günlerden tekrar eden kanıt gerekir.'
-                : 'No labels from one answer; summaries require repeated evidence across different questions and days.'}
-            </Text>
-          </View>
-          <Text style={styles.currentQuizSafety}>
-            {language === 'tr'
-              ? 'Sorular seviyene ve tamamladığın konulara uyarlanacak; yatırım önerisi üretmeyecek.'
-              : 'Questions will adapt to your level and completed topics without generating investment advice.'}
           </Text>
         </View>
 
