@@ -335,8 +335,8 @@ export function LearnHomeScreen() {
               </Text>
               <Text style={styles.currentQuizReviewMeta}>
                 {language === 'tr'
-                  ? `${currentQuizReview.estimatedMinutes} dk · ${currentQuizReview.acceptedAnswerCount} tekrarlı kanıt`
-                  : `${currentQuizReview.estimatedMinutes} min · ${currentQuizReview.acceptedAnswerCount} repeated evidence`}
+                  ? `${currentQuizReview.estimatedMinutes} dk`
+                  : `${currentQuizReview.estimatedMinutes} min`}
               </Text>
             </View>
             <Text style={styles.startText}>
