@@ -14,7 +14,18 @@ export function LearningVisual({ assetRef, alt, language, theme = defaultLearnin
   const [reduceMotion, setReduceMotion] = useState(false);
   const progress = useMemo(() => new Animated.Value(1), []);
   const styles = useMemo(() => createStyles(theme), [theme]);
-  const hideFooter = assetRef.includes('veri-ayni-kalitede');
+  const isDataQualityVisual = assetRef.includes('veri-ayni-kalitede');
+  const isFreshnessVisual = assetRef.includes('veri-ne-zaman-eskir');
+  const hideFooter = isDataQualityVisual || isFreshnessVisual;
+  const accessibilityLabel = isDataQualityVisual
+    ? language === 'tr'
+      ? 'Kesin görünen bir sayının tek başına doğruluk garantisi olmadığını anlatan sade eğitim görseli'
+      : 'Simple learning visual showing that a precise-looking number alone does not guarantee accuracy'
+    : isFreshnessVisual
+      ? language === 'tr'
+        ? 'Doğru bir bilginin zaman geçtikçe yeniden kontrol edilmesi gerekebileceğini anlatan sade eğitim görseli'
+        : 'Simple learning visual showing that correct information may need to be checked again as time passes'
+      : alt;
 
   useEffect(() => {
     AccessibilityInfo.isReduceMotionEnabled().then(setReduceMotion).catch(() => setReduceMotion(false));
@@ -37,7 +48,7 @@ export function LearningVisual({ assetRef, alt, language, theme = defaultLearnin
   };
 
   return (
-    <View style={styles.shell} accessibilityRole="image" accessibilityLabel={alt}>
+    <View style={styles.shell} accessibilityRole="image" accessibilityLabel={accessibilityLabel}>
       <Animated.View style={[styles.canvas, animatedStyle]}>
         <VisualScene assetRef={assetRef} styles={styles} progress={progress} language={language} />
       </Animated.View>
@@ -273,55 +284,33 @@ function FreshnessScene({ styles, language }: SceneProps) {
     <View style={styles.sceneColumn}>
       <SceneHeader
         styles={styles}
-        title={tr ? 'Aynı veri, bağlam değişince eskir' : 'Data becomes stale when context changes'}
-        detail={tr ? 'Doğru olduğu an ≠ hâlâ yeterli olduğu an' : 'Correct then ≠ sufficient now'}
+        title={tr ? 'Doğru veri de eskiyebilir' : 'Correct data can become stale'}
+        detail={tr ? 'Zaman geçtikçe aynı bilgi yeterli olmayabilir' : 'As time passes, the same information may no longer be enough'}
       />
       <View style={styles.freshnessStack}>
         <View style={[styles.freshnessCard, styles.freshnessCardStale]}>
           <View style={styles.freshnessCardHeader}>
-            <Text style={styles.freshnessTime}>09:00</Text>
-            <Text style={styles.freshnessStaleTag}>{tr ? 'ESKİ ANLIK GÖRÜNTÜ' : 'OLDER SNAPSHOT'}</Text>
+            <Text style={styles.freshnessTime}>{tr ? 'ÖNCE' : 'BEFORE'}</Text>
+            <Text style={styles.freshnessStaleTag}>{tr ? 'O AN DOĞRU' : 'CORRECT THEN'}</Text>
           </View>
-          <View style={styles.freshnessMetrics}>
-            <View style={styles.freshnessMetric}>
-              <Text style={styles.freshnessMetricLabel}>{tr ? 'FİYAT' : 'PRICE'}</Text>
-              <Text style={styles.freshnessMetricValue}>100</Text>
-            </View>
-            <View style={styles.freshnessMetric}>
-              <Text style={styles.freshnessMetricLabel}>{tr ? 'HACİM' : 'VOLUME'}</Text>
-              <Text style={styles.freshnessMetricValue}>{tr ? 'NORMAL' : 'NORMAL'}</Text>
-            </View>
-          </View>
+          <Text style={styles.sceneLabel}>{tr ? 'O anki koşulları anlatıyordu' : 'It described the conditions at that time'}</Text>
         </View>
         <View style={styles.freshnessEventRow}>
           <Text style={styles.freshnessArrow}>↓</Text>
           <View style={styles.freshnessEventCard}>
-            <Text style={styles.freshnessEventTime}>12:00</Text>
-            <Text style={styles.freshnessEventText}>{tr ? 'Yeni haber + hacim artışı' : 'New release + volume increase'}</Text>
+            <Text style={styles.freshnessEventTime}>{tr ? 'ZAMAN GEÇTİ' : 'TIME PASSED'}</Text>
+            <Text style={styles.freshnessEventText}>{tr ? 'Koşullar değişebilir' : 'Conditions can change'}</Text>
           </View>
         </View>
         <View style={[styles.freshnessCard, styles.freshnessCardCurrent]}>
           <View style={styles.freshnessCardHeader}>
             <Text style={styles.freshnessTime}>{tr ? 'ŞİMDİ' : 'NOW'}</Text>
-            <Text style={styles.freshnessCurrentTag}>{tr ? 'YENİDEN DOĞRULA' : 'VERIFY AGAIN'}</Text>
+            <Text style={styles.freshnessCurrentTag}>{tr ? 'TEKRAR KONTROL ET' : 'CHECK AGAIN'}</Text>
           </View>
-          <View style={styles.freshnessMetrics}>
-            <View style={styles.freshnessMetric}>
-              <Text style={styles.freshnessMetricLabel}>{tr ? 'FİYAT' : 'PRICE'}</Text>
-              <Text style={styles.freshnessMetricValue}>108</Text>
-            </View>
-            <View style={styles.freshnessMetric}>
-              <Text style={styles.freshnessMetricLabel}>{tr ? 'HACİM' : 'VOLUME'}</Text>
-              <Text style={styles.freshnessMetricValue}>{tr ? 'YÜKSEK' : 'HIGH'}</Text>
-            </View>
-          </View>
+          <Text style={styles.sceneLabel}>{tr ? 'Eski bilgi bugünkü karar için yeterli olmayabilir' : 'Older information may not be enough for a decision now'}</Text>
         </View>
       </View>
-      <Text style={styles.warning}>
-        {tr
-          ? 'Eski veri yanlış olmayabilir; güncel bağlam için yetersiz olabilir.'
-          : 'Older data may not be wrong; it may be insufficient for the current context.'}
-      </Text>
+      <Text style={styles.warning}>{tr ? 'Eski veri yanlış olmak zorunda değildir.' : 'Older data does not have to be wrong.'}</Text>
     </View>
   );
 }
