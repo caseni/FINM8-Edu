@@ -390,22 +390,6 @@ export function LearnHomeScreen() {
         </View>
 
         <Text style={styles.sectionTitle}>{language === 'tr' ? 'Öğrenme yolları' : 'Learning paths'}</Text>
-        <View style={styles.pathCard}>
-          <View style={styles.pathIcon}><Text style={styles.pathIconText}>01</Text></View>
-          <View style={styles.pathContent}>
-            <Text style={styles.pathTitle}>{language === 'tr' ? 'Piyasa Okuryazarlığı' : 'Market Literacy'}</Text>
-            <Text style={styles.pathBody}>
-              {language === 'tr'
-                ? 'Piyasa temelleri, grafik okuma, piyasa yapısı, risk ve davranış.'
-                : 'Market foundations, chart literacy, market structure, risk, and behavior.'}
-            </Text>
-            <Text style={styles.pathStatus}>{language === 'tr' ? '5 modül · Kademe kademe' : '5 modules · Step by step'}</Text>
-            <Text style={styles.pathProgress}>
-              {wave1CompletedCount}/{WAVE1_CONTENT_SUMMARY.lessonCount} {language === 'tr' ? 'ders •' : 'lessons •'} {WAVE1_CONTENT_SUMMARY.estimatedMinutes} dk
-            </Text>
-          </View>
-        </View>
-
         <View
           style={styles.pathNavigator}
           accessibilityRole="progressbar"
