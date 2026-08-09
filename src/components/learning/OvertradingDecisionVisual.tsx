@@ -10,15 +10,18 @@ export interface OvertradingDecisionVisualProps {
 }
 
 export function OvertradingDecisionVisual({
-  alt,
+  alt: _alt,
   language,
   theme = defaultLearningTheme,
 }: OvertradingDecisionVisualProps) {
   const styles = createStyles(theme);
   const tr = language === 'tr';
+  const visualDescription = tr
+    ? 'Kayıp veya aciliyet sonrası hemen tekrar giriş ve kriter değiştirme döngüsünü, durup aynı planı ve kanıtı kontrol eden daha kontrollü karar süreciyle karşılaştıran aşırı işlem eğitim görseli'
+    : 'Overtrading learning visual comparing immediate re-entry and changing criteria after loss or urgency with a more controlled process that pauses and checks the same plan and evidence';
 
   return (
-    <View style={styles.shell} accessibilityRole="image" accessibilityLabel={alt}>
+    <View style={styles.shell} accessibilityRole="image" accessibilityLabel={visualDescription}>
       <View style={styles.canvas}>
         <View style={styles.header}>
           <Text style={styles.title}>
@@ -82,7 +85,7 @@ export function OvertradingDecisionVisual({
         </View>
       </View>
       <View style={styles.footer}>
-        <Text numberOfLines={2} style={styles.alt}>{alt}</Text>
+        <Text numberOfLines={2} style={styles.alt}>{visualDescription}</Text>
       </View>
     </View>
   );
