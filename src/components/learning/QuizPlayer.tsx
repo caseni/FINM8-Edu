@@ -168,7 +168,7 @@ export function QuizPlayer({
         </Text>
       </View>
       <Text style={styles.question}>{selectLocalizedText(question.prompt, language)}</Text>
-      {question.visual ? (
+      {revealed && question.visual ? (
         <View style={styles.visualWrap}>
           <Text style={styles.visualEyebrow}>
             {isConceptVisual
