@@ -75,6 +75,14 @@ export function PracticalTaskPlayer({
   const isDataQualityVisual = task.conceptKey === 'evidence.data_quality';
   const isFreshnessVisual = task.conceptKey === 'evidence.freshness';
   const isDecisionJournalVisual = task.conceptKey === 'behavior.decision_journal';
+  const hidesAnswerRevealingTeachingVisual =
+    isMarketInstrumentsVisual ||
+    isTimeframeContextVisual ||
+    isTrendStructureVisual ||
+    isVolatilityRangeVisual ||
+    isFomoDecisionVisual ||
+    isOvertradingDecisionVisual ||
+    isConfirmationBiasVisual;
 
   const toggle = (choiceId: string) => {
     if (checked) return;
@@ -122,7 +130,25 @@ export function PracticalTaskPlayer({
       <Text style={styles.prompt}>
         {selectAudienceCopy(task.prompt, presentationMode, language)}
       </Text>
-      {isMarketInstrumentsVisual ? (
+      {hidesAnswerRevealingTeachingVisual ? (
+        <View
+          accessibilityRole="image"
+          accessibilityLabel={language === 'tr'
+            ? 'Öğretici cevap etiketleri gizlenmiş uygulama görevi paneli'
+            : 'Practical task panel with teaching answer labels hidden'}
+          style={styles.recallPanel}
+        >
+          <Text style={styles.recallMark}>?</Text>
+          <View style={styles.recallCopy}>
+            <Text style={styles.recallTitle}>{language === 'tr' ? 'KENDİN UYGULA' : 'APPLY IT YOURSELF'}</Text>
+            <Text style={styles.recallText}>
+              {language === 'tr'
+                ? 'Bu görevde ders görselindeki cevap etiketleri gösterilmez. Senaryoyu ve seçenekleri kendi yorumunla değerlendir.'
+                : 'Teaching answer labels are hidden in this task. Evaluate the scenario and choices using your own understanding.'}
+            </Text>
+          </View>
+        </View>
+      ) : isMarketInstrumentsVisual ? (
         <LearningVisual
           assetRef="edu://wave1/piyasa-araclari-ayni-degildir"
           alt={language === 'tr'
@@ -360,6 +386,11 @@ const createStyles = (theme: LearningTheme) =>
     scenarioPanel: { minHeight: 120, flexDirection: 'row', alignItems: 'center', gap: theme.spacing.md, padding: theme.spacing.lg, backgroundColor: theme.colors.background, borderRadius: theme.radius.medium, borderWidth: 1, borderColor: theme.colors.border },
     scenarioMark: { color: theme.colors.primary, fontSize: 38, fontWeight: '900' },
     scenarioText: { flex: 1, color: theme.colors.textMuted, fontSize: 15, lineHeight: 22 },
+    recallPanel: { minHeight: 118, flexDirection: 'row', alignItems: 'center', gap: theme.spacing.md, padding: theme.spacing.lg, backgroundColor: theme.colors.background, borderRadius: theme.radius.medium, borderWidth: 1, borderColor: theme.colors.primary },
+    recallMark: { width: 44, color: theme.colors.primary, fontSize: 38, lineHeight: 44, fontWeight: '900', textAlign: 'center' },
+    recallCopy: { flex: 1, gap: theme.spacing.xs },
+    recallTitle: { color: theme.colors.primary, fontSize: 11, lineHeight: 15, fontWeight: '900', letterSpacing: 0.6 },
+    recallText: { color: theme.colors.textMuted, fontSize: 14, lineHeight: 21, fontWeight: '700' },
     helper: { color: theme.colors.textMuted, fontSize: 13 },
     choices: { gap: theme.spacing.sm },
     choice: { minHeight: 52, padding: theme.spacing.md, borderRadius: theme.radius.medium, borderWidth: 1, borderColor: theme.colors.border, backgroundColor: theme.colors.surfaceMuted },
