@@ -10,17 +10,20 @@ interface RiskBasicsVisualProps {
 }
 
 export function RiskBasicsVisual({
-  alt,
+  alt: _alt,
   language,
   theme = defaultLearningTheme,
 }: RiskBasicsVisualProps) {
   const styles = createStyles(theme);
   const tr = language === 'tr';
+  const visualDescription = tr
+    ? 'Karar anında sonucun henüz bilinmediğini, olumlu veya olumsuz sonuç ihtimalleri bulunduğunu ve gerçekleşen olumsuz sonucun kayıp olduğunu gösteren sade risk görseli'
+    : 'Simple risk visual showing that the outcome is unknown at decision time, can be positive or negative, and becomes a loss only when an adverse outcome is realized';
 
   return (
     <View
       accessibilityRole="image"
-      accessibilityLabel={alt}
+      accessibilityLabel={visualDescription}
       style={styles.shell}
     >
       <View style={styles.canvas}>
