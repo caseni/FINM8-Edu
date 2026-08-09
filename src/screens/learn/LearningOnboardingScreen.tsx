@@ -13,8 +13,8 @@ type Goal = LearningProfile['goals'][number];
 
 const stages: { id: LearningStage; title: LocalizedText; body: LocalizedText }[] = [
   { id: 'foundation', title: { tr: 'Temelden başla', en: 'Start from the foundation' }, body: { tr: 'Kavramları sade dille ve görsellerle öğren.', en: 'Learn concepts through plain language and visuals.' } },
-  { id: 'intermediate', title: { tr: 'Piyasaları biliyorum', en: 'I know the markets' }, body: { tr: 'Teyitler, yanlış sinyaller ve uygulamaya odaklan.', en: 'Focus on confirmation, false signals, and practice.' } },
-  { id: 'advanced', title: { tr: 'İleri seviye çalışıyorum', en: 'I study at an advanced level' }, body: { tr: 'Kanıt, invalidasyon ve çoklu bağlamı derinleştir.', en: 'Deepen evidence, invalidation, and multi-context reasoning.' } },
+  { id: 'intermediate', title: { tr: 'Piyasaları biliyorum', en: 'I know the markets' }, body: { tr: 'Bir fikri doğrulayan işaretlere, yanlış sinyallere ve uygulamaya odaklan.', en: 'Focus on evidence that supports an idea, false signals, and practice.' } },
+  { id: 'advanced', title: { tr: 'İleri seviye çalışıyorum', en: 'I study at an advanced level' }, body: { tr: 'Bir fikrin ne zaman geçersiz sayıldığını ve farklı bağlamları birlikte değerlendirmeyi derinleştir.', en: 'Deepen how you judge when an idea is invalid and how different contexts fit together.' } },
 ];
 
 const goals = (Object.keys(LEARNING_GOAL_LABELS) as Goal[]).map((id) => ({
@@ -53,7 +53,7 @@ export function LearningOnboardingScreen({ navigation }: Props) {
       <ScrollView contentContainerStyle={styles.content}>
         <Text style={styles.eyebrow}>M8 LEARN</Text>
         <Text style={styles.title}>{language === 'tr' ? 'Öğrenme profilini oluştur' : 'Create your learning profile'}</Text>
-        <Text style={styles.body}>{language === 'tr' ? 'Bu seçim Normal/Pro anlatımından bağımsızdır. Temel yol sırasını değiştirmez; görev rehberliğini seviyene ve hedeflerine göre ayarlar.' : 'This is independent from Normal/Pro presentation. It does not change the foundation path order; it adapts mission guidance to your level and goals.'}</Text>
+        <Text style={styles.body}>{language === 'tr' ? 'Seviyeni ve hedeflerini seç. Ders sırası aynı kalır; öneriler sana göre uyarlanır. Normal/Pro yalnız anlatım tarzını değiştirir.' : 'Choose your level and goals. Lesson order stays the same, while recommendations adapt to you. Normal/Pro changes only the presentation style.'}</Text>
 
         <View style={styles.stepHeader} accessibilityRole="progressbar" accessibilityLabel={language === 'tr' ? 'Profil oluşturma adımları' : 'Profile setup steps'} accessibilityValue={{ min: 0, max: 2, now: 2 }}>
           <View style={styles.stepItem}>
