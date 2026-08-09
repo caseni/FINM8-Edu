@@ -168,12 +168,53 @@ export function QuizPlayer({
         </Text>
       </View>
       <Text style={styles.question}>{selectLocalizedText(question.prompt, language)}</Text>
+      <View style={styles.options}>
+        {question.options.map((option) => {
+          const selected = option.id === selectedOptionId;
+          const correct = revealed && option.id === question.correctOptionId;
+          const incorrect = revealed && selected && !correct;
+          return (
+            <Pressable
+              accessibilityRole="button"
+              accessibilityState={{ disabled: revealed, selected }}
+              disabled={revealed}
+              key={option.id}
+              onPress={() => setSelectedOptionId(option.id)}
+              style={[
+                styles.option,
+                selected && styles.selectedOption,
+                correct && styles.correctOption,
+                incorrect && styles.incorrectOption,
+              ]}
+            >
+              <View style={styles.optionContent}>
+                <Text style={[styles.optionMark, correct && styles.correctMark, incorrect && styles.incorrectMark]}>
+                  {correct ? '✓' : incorrect ? '×' : selected ? '●' : '○'}
+                </Text>
+                <Text style={styles.optionText}>{selectLocalizedText(option.label, language)}</Text>
+              </View>
+            </Pressable>
+          );
+        })}
+      </View>
+      {revealed ? (
+        <View style={[styles.explanation, selectedIsCorrect ? styles.explanationCorrect : styles.explanationIncorrect]}>
+          <Text style={[styles.feedbackTitle, selectedIsCorrect ? styles.feedbackCorrect : styles.feedbackIncorrect]}>
+            {selectedIsCorrect
+              ? language === 'tr' ? '✓ Doğru' : '✓ Correct'
+              : language === 'tr' ? '× Henüz değil' : '× Not yet'}
+          </Text>
+          <Text style={styles.explanationText}>
+            {selectLocalizedText(question.explanation, language)}
+          </Text>
+        </View>
+      ) : null}
       {revealed && question.visual ? (
         <View style={styles.visualWrap}>
           <Text style={styles.visualEyebrow}>
             {isConceptVisual
-              ? language === 'tr' ? 'GÖRSELİ İNCELE' : 'READ THE VISUAL'
-              : language === 'tr' ? 'GRAFİĞİ İNCELE' : 'READ THE CHART'}
+              ? language === 'tr' ? 'KAVRAMI GÖRSELLE PEKİŞTİR' : 'REINFORCE WITH THE VISUAL'
+              : language === 'tr' ? 'GRAFİKLE PEKİŞTİR' : 'REINFORCE WITH THE CHART'}
           </Text>
           {isPriceFormationVisual ? (
             <PriceFormationVisual
@@ -311,47 +352,6 @@ export function QuizPlayer({
           )}
         </View>
       ) : null}
-      <View style={styles.options}>
-        {question.options.map((option) => {
-          const selected = option.id === selectedOptionId;
-          const correct = revealed && option.id === question.correctOptionId;
-          const incorrect = revealed && selected && !correct;
-          return (
-            <Pressable
-              accessibilityRole="button"
-              accessibilityState={{ disabled: revealed, selected }}
-              disabled={revealed}
-              key={option.id}
-              onPress={() => setSelectedOptionId(option.id)}
-              style={[
-                styles.option,
-                selected && styles.selectedOption,
-                correct && styles.correctOption,
-                incorrect && styles.incorrectOption,
-              ]}
-            >
-              <View style={styles.optionContent}>
-                <Text style={[styles.optionMark, correct && styles.correctMark, incorrect && styles.incorrectMark]}>
-                  {correct ? '✓' : incorrect ? '×' : selected ? '●' : '○'}
-                </Text>
-                <Text style={styles.optionText}>{selectLocalizedText(option.label, language)}</Text>
-              </View>
-            </Pressable>
-          );
-        })}
-      </View>
-      {revealed ? (
-        <View style={[styles.explanation, selectedIsCorrect ? styles.explanationCorrect : styles.explanationIncorrect]}>
-          <Text style={[styles.feedbackTitle, selectedIsCorrect ? styles.feedbackCorrect : styles.feedbackIncorrect]}>
-            {selectedIsCorrect
-              ? language === 'tr' ? '✓ Doğru' : '✓ Correct'
-              : language === 'tr' ? '× Henüz değil' : '× Not yet'}
-          </Text>
-          <Text style={styles.explanationText}>
-            {selectLocalizedText(question.explanation, language)}
-          </Text>
-        </View>
-      ) : null}
         </View>
       </ScrollView>
       <View style={styles.footer}>
@@ -390,7 +390,7 @@ const createStyles = (theme: LearningTheme) =>
     progress: { color: theme.colors.textMuted, fontSize: 13 },
     question: { color: theme.colors.text, fontSize: 24, lineHeight: 32, fontWeight: '800' },
     visualWrap: { gap: theme.spacing.xs },
-    visualEyebrow: { color: theme.colors.primary, fontSize: 11, fontWeight: '900', letterSpacing: 0.7 },
+    visualEyebrow: { color: theme.colors.textMuted, fontSize: 10, fontWeight: '900', letterSpacing: 0.7 },
     options: { gap: theme.spacing.sm },
     option: {
       minHeight: 52,
