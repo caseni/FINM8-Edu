@@ -181,7 +181,7 @@ export function LearnHomeScreen() {
             </Text>
           </View>
           <View style={styles.levelBadge}>
-            <Text style={styles.levelLabel}>{language === 'tr' ? 'SEVİYE' : 'LEVEL'}</Text>
+            <Text style={styles.levelLabel}>{language === 'tr' ? 'XP SEVİYE' : 'XP LEVEL'}</Text>
             <Text style={styles.levelValue}>{level}</Text>
           </View>
         </View>
@@ -194,8 +194,8 @@ export function LearnHomeScreen() {
             </Text>
             <Text style={styles.cardBody}>
               {language === 'tr'
-                ? 'Normal/Pro anlatımından bağımsız seviyeni ve hedeflerini kaydet.'
-                : 'Save your level and goals independently from Normal/Pro presentation.'}
+                ? 'Seviyeni ve hedeflerini seç; ders sırası aynı kalır.'
+                : 'Choose your level and goals; the lesson order stays the same.'}
             </Text>
           </Pressable>
         ) : null}
@@ -244,8 +244,8 @@ export function LearnHomeScreen() {
 
         <View style={styles.statsRow}>
           <Stat value={`${totalXp}`} label="XP" />
-          <Stat value={`${streak.currentDays}`} label={language === 'tr' ? 'Gün seri' : 'Day streak'} />
-          <Stat value={`${badgeAwards.length}`} label={language === 'tr' ? 'Badge' : 'Badges'} />
+          <Stat value={language === 'tr' ? `${streak.currentDays} gün` : `${streak.currentDays}`} label={language === 'tr' ? 'Seri' : 'Day streak'} />
+          <Stat value={`${badgeAwards.length}`} label={language === 'tr' ? 'Rozet' : 'Badges'} />
         </View>
 
         <View style={styles.skillCard}>
@@ -519,7 +519,7 @@ export function LearnHomeScreen() {
           </Pressable>
         ) : null}
 
-        <Text style={styles.sectionTitle}>{language === 'tr' ? 'Badge koleksiyonu' : 'Badge collection'}</Text>
+        <Text style={styles.sectionTitle}>{language === 'tr' ? 'Rozet koleksiyonu' : 'Badge collection'}</Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.badgeRow}>
           {INITIAL_BADGES.map((badge) => {
             const earned = badgeAwards.some((award) => award.badgeId === badge.id);
