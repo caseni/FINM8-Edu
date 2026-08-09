@@ -10,12 +10,15 @@ export interface DecisionJournalVisualProps {
 }
 
 export function DecisionJournalVisual({
-  alt,
+  alt: _alt,
   language,
   theme = defaultLearningTheme,
 }: DecisionJournalVisualProps) {
   const styles = createStyles(theme);
   const tr = language === 'tr';
+  const visualDescription = tr
+    ? 'Gözlem, yorum, fikri değiştirecek koşul ve daha sonra gerçekleşen sonucu ayrı adımlarda kaydetmeyi gösteren sade karar günlüğü eğitim görseli'
+    : 'Simple decision-journal learning visual showing observation, interpretation, what would change the view, and the later result as separate steps';
   const steps = tr
     ? [
         ['1', 'GÖZLEM', 'Ne gördüm?'],
@@ -31,7 +34,7 @@ export function DecisionJournalVisual({
       ];
 
   return (
-    <View style={styles.shell} accessibilityRole="image" accessibilityLabel={alt}>
+    <View style={styles.shell} accessibilityRole="image" accessibilityLabel={visualDescription}>
       <View style={styles.canvas}>
         <View style={styles.header}>
           <Text style={styles.title}>{tr ? 'Sonucu değil, karar sürecini kaydet' : 'Record the decision process, not only the result'}</Text>
@@ -72,7 +75,7 @@ export function DecisionJournalVisual({
         </View>
       </View>
       <View style={styles.footer}>
-        <Text numberOfLines={2} style={styles.alt}>{alt}</Text>
+        <Text numberOfLines={2} style={styles.alt}>{visualDescription}</Text>
       </View>
     </View>
   );
