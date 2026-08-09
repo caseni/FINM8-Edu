@@ -10,15 +10,17 @@ export interface SlippageExecutionVisualProps {
 }
 
 export function SlippageExecutionVisual({
-  alt,
   language,
   theme = defaultLearningTheme,
 }: SlippageExecutionVisualProps) {
   const styles = createStyles(theme);
   const tr = language === 'tr';
+  const visualAlt = tr
+    ? 'Ekranda görülen 100 fiyatı ile 100,3 gerçekleşme fiyatı arasındaki 0,3 farkı fiyat kayması olarak gösteren sade eğitim görseli'
+    : 'Simple learning visual showing the 0.3 slippage between a displayed price of 100 and an execution price of 100.3';
 
   return (
-    <View style={styles.shell} accessibilityRole="image" accessibilityLabel={alt}>
+    <View style={styles.shell} accessibilityRole="image" accessibilityLabel={visualAlt}>
       <View style={styles.canvas}>
         <View style={styles.header}>
           <Text style={styles.title}>
@@ -61,7 +63,7 @@ export function SlippageExecutionVisual({
       </View>
 
       <View style={styles.footer}>
-        <Text numberOfLines={2} style={styles.alt}>{alt}</Text>
+        <Text numberOfLines={2} style={styles.alt}>{visualAlt}</Text>
       </View>
     </View>
   );
