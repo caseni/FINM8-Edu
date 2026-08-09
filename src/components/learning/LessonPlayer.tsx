@@ -128,7 +128,6 @@ export function LessonPlayer({
 
       <ScrollView ref={scrollRef} contentContainerStyle={styles.content}>
         <View style={styles.metaRow}>
-          <Text style={styles.stage}>{language === 'tr' ? 'DERS 1/3' : 'LESSON 1/3'}</Text>
           <Text style={styles.duration}>{selectLocalizedText(LEARNING_STAGE_LABELS[lesson.learningStage], language)}</Text>
           <Text style={styles.duration}>{lesson.estimatedMinutes} {language === 'tr' ? 'dk' : 'min'}</Text>
           {entryContext ? (
@@ -162,45 +161,48 @@ export function LessonPlayer({
       </ScrollView>
 
       <View style={styles.footer}>
-        <Pressable
-          accessibilityRole="button"
-          accessibilityState={{ disabled: stepIndex === 0 }}
-          disabled={stepIndex === 0}
-          onPress={back}
-          style={[styles.secondaryButton, stepIndex === 0 && styles.disabled]}
-        >
-          <Text style={styles.secondaryText}>
-            {language === 'tr' ? 'Geri' : 'Back'}
-          </Text>
-        </Pressable>
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel={
-            isTakeaway
-              ? assessmentLabel
-                ? selectLocalizedText(assessmentLabel, language)
+        <View style={styles.footerActions}>
+          {stepIndex > 0 ? (
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={language === 'tr' ? 'Önceki adıma dön' : 'Go back to the previous step'}
+              onPress={back}
+              style={styles.secondaryButton}
+            >
+              <Text style={styles.secondaryText}>
+                {language === 'tr' ? 'Geri' : 'Back'}
+              </Text>
+            </Pressable>
+          ) : null}
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={
+              isTakeaway
+                ? assessmentLabel
+                  ? selectLocalizedText(assessmentLabel, language)
+                  : language === 'tr'
+                    ? 'Göreve geç'
+                    : 'Start assessment'
                 : language === 'tr'
-                  ? 'Göreve geç'
-                  : 'Start assessment'
-              : language === 'tr'
-                ? 'Sonraki adıma geç'
-                : 'Continue to the next step'
-          }
-          onPress={next}
-          style={styles.primaryButton}
-        >
-          <Text style={styles.primaryText}>
-            {isTakeaway
-              ? assessmentLabel
-                ? selectLocalizedText(assessmentLabel, language)
+                  ? 'Sonraki adıma geç'
+                  : 'Continue to the next step'
+            }
+            onPress={next}
+            style={styles.primaryButton}
+          >
+            <Text style={styles.primaryText}>
+              {isTakeaway
+                ? assessmentLabel
+                  ? selectLocalizedText(assessmentLabel, language)
+                  : language === 'tr'
+                    ? 'Göreve geç'
+                    : 'Start assessment'
                 : language === 'tr'
-                  ? 'Göreve geç'
-                  : 'Start assessment'
-              : language === 'tr'
-                ? 'Devam'
-                : 'Continue'}
-          </Text>
-        </Pressable>
+                  ? 'Devam'
+                  : 'Continue'}
+            </Text>
+          </Pressable>
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -237,11 +239,12 @@ const createStyles = (theme: LearningTheme) =>
       width: '100%',
       maxWidth: 760,
       alignSelf: 'center',
-      padding: theme.spacing.lg,
+      paddingHorizontal: theme.spacing.md,
+      paddingTop: theme.spacing.md,
+      paddingBottom: theme.spacing.lg,
       gap: theme.spacing.md,
     },
     metaRow: { flexDirection: 'row', flexWrap: 'wrap', gap: theme.spacing.sm },
-    stage: { color: theme.colors.primary, fontSize: 12, fontWeight: '800' },
     duration: { color: theme.colors.textMuted, fontSize: 12 },
     contextLabel: { color: theme.colors.textMuted, fontSize: 12 },
     lessonTitle: { color: theme.colors.text, fontSize: 21, lineHeight: 28, fontWeight: '800' },
@@ -259,18 +262,22 @@ const createStyles = (theme: LearningTheme) =>
     takeawayEyebrow: { color: theme.colors.primary, fontSize: 12, fontWeight: '800' },
     takeawayText: { color: theme.colors.text, fontSize: 28, fontWeight: '800', lineHeight: 38 },
     footer: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      gap: theme.spacing.md,
       padding: theme.spacing.md,
       borderTopColor: theme.colors.border,
       borderTopWidth: 1,
       backgroundColor: theme.colors.background,
     },
+    footerActions: {
+      width: '100%',
+      maxWidth: 760,
+      alignSelf: 'center',
+      flexDirection: 'row',
+      gap: theme.spacing.md,
+    },
     primaryButton: {
       flex: 1,
-      maxWidth: 360,
       alignItems: 'center',
+      justifyContent: 'center',
       borderRadius: theme.radius.medium,
       backgroundColor: theme.colors.primary,
       padding: theme.spacing.md,
@@ -279,6 +286,7 @@ const createStyles = (theme: LearningTheme) =>
     primaryText: { color: theme.colors.primaryText, fontWeight: '800', fontSize: 16 },
     secondaryButton: {
       alignItems: 'center',
+      justifyContent: 'center',
       borderRadius: theme.radius.medium,
       borderColor: theme.colors.border,
       borderWidth: 1,
@@ -287,5 +295,4 @@ const createStyles = (theme: LearningTheme) =>
       minHeight: 52,
     },
     secondaryText: { color: theme.colors.text, fontWeight: '700' },
-    disabled: { opacity: 0.35 },
   });
