@@ -10,15 +10,18 @@ export interface TimeframeContextVisualProps {
 }
 
 export function TimeframeContextVisual({
-  alt,
+  alt: _alt,
   language,
   theme = defaultLearningTheme,
 }: TimeframeContextVisualProps) {
   const styles = createStyles(theme);
   const tr = language === 'tr';
+  const visualDescription = tr
+    ? '15 dakikalık kısa geri çekilme ile günlük daha geniş yükseliş yapısının aynı anda görülebileceğini anlatan sade zaman dilimi karşılaştırması'
+    : 'Simple timeframe comparison showing that a 15-minute pullback and a broader daily upward structure can exist at the same time';
 
   return (
-    <View style={styles.shell} accessibilityRole="image" accessibilityLabel={alt}>
+    <View style={styles.shell} accessibilityRole="image" accessibilityLabel={visualDescription}>
       <View style={styles.canvas}>
         <View style={styles.header}>
           <Text style={styles.title}>
@@ -68,7 +71,7 @@ export function TimeframeContextVisual({
       </View>
 
       <View style={styles.footer}>
-        <Text numberOfLines={2} style={styles.alt}>{alt}</Text>
+        <Text numberOfLines={2} style={styles.alt}>{visualDescription}</Text>
       </View>
     </View>
   );
