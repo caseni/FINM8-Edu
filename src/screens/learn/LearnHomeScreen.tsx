@@ -15,7 +15,7 @@ import { WAVE1_MARKET_FOUNDATION_LESSONS } from '../../domain/learning/examples/
 import { WAVE1_RISK_MANAGEMENT_LESSONS } from '../../domain/learning/examples/wave1/riskManagementLessons';
 import { WAVE1_CONTENT_SUMMARY } from '../../domain/learning/examples/wave1MarketLiteracyPath';
 import { selectLocalizedText, type LearningLanguage } from '../../domain/learning/presentation';
-import { getGoalReason, getProfileGuidance, LEARNING_GOAL_LABELS, LEARNING_STAGE_LABELS, selectGoalForSkill } from '../../domain/learning/personalization';
+import { getGoalReason, LEARNING_GOAL_LABELS, LEARNING_STAGE_LABELS, selectGoalForSkill } from '../../domain/learning/personalization';
 import { useLanguageStore } from '../../store/useLanguageStore';
 import { useLearningProgressStore } from '../../store/useLearningProgressStore';
 import { useLearningUiStore } from '../../store/useLearningUiStore';
@@ -125,7 +125,6 @@ export function LearnHomeScreen() {
       .sort((a, b) => (quizScores[a.quiz.id] ?? 0) - (quizScores[b.quiz.id] ?? 0))[0])
     .find((lesson) => lesson !== undefined);
   const missionCheckpoint = mission.kind === 'lesson' ? lessonCheckpoints[mission.lesson.id] : undefined;
-  const profileGuidance = selectLocalizedText(getProfileGuidance(profile.selectedStage), language);
   const missionGoal = selectGoalForSkill(
     profile.goals,
     mission.kind === 'lesson' ? mission.lesson.skillId : mission.challenge.skillIds[0]
@@ -227,7 +226,6 @@ export function LearnHomeScreen() {
             <View style={styles.guidancePanel}>
               <Text style={styles.guidanceLabel}>{selectLocalizedText(LEARNING_GOAL_LABELS[missionGoal], language)} · {language === 'tr' ? 'SENİN İÇİN' : 'FOR YOU'}</Text>
               <Text style={styles.guidanceText}>{goalReason}</Text>
-              <Text style={styles.guidanceHint}>{profileGuidance}</Text>
             </View>
           ) : null}
           <View style={styles.missionFooter}>
@@ -598,7 +596,6 @@ const styles = StyleSheet.create({
   guidancePanel: { padding: 14, borderRadius: 14, backgroundColor: '#0C1928', borderWidth: 1, borderColor: '#1F3449', gap: 5 },
   guidanceLabel: { color: '#2DD4BF', fontSize: 10, letterSpacing: 1, fontWeight: '900' },
   guidanceText: { color: '#F8FAFC', fontSize: 13, lineHeight: 19, fontWeight: '700' },
-  guidanceHint: { color: '#9FB0C3', fontSize: 12, lineHeight: 18 },
   missionFooter: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 4 },
   xpReward: { color: '#FBBF24', fontWeight: '800' },
   startText: { color: '#2DD4BF', fontWeight: '800' },
