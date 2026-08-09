@@ -89,6 +89,8 @@ export function LearnHomeScreen() {
     (chartChallengeCompleted ? masteryBySkill['skill.market-structure'] : undefined) ??
     (marketChallengeCompleted ? masteryBySkill['skill.chart-literacy'] : undefined) ??
     masteryBySkill['skill.market-foundations'];
+  const activeQuizAttempts = activeMastery?.quizAttempts ?? 0;
+  const activeQuizScore = Math.round(activeMastery?.score ?? 0);
   const wave1CompletedCount = completedLessonIds.filter((lessonId) =>
     WAVE1_LESSON_IDS.has(lessonId)
   ).length;
@@ -249,7 +251,7 @@ export function LearnHomeScreen() {
         <View style={styles.skillCard}>
           <View style={styles.skillTop}>
             <View>
-              <Text style={styles.sectionLabel}>{language === 'tr' ? 'BECERİ HARİTASI' : 'SKILL MAP'}</Text>
+              <Text style={styles.sectionLabel}>{language === 'tr' ? 'QUIZ PERFORMANSIN' : 'QUIZ PERFORMANCE'}</Text>
               <Text style={styles.skillTitle}>
                 {riskChallengeCompleted
                   ? language === 'tr' ? 'Davranış ve kanıt' : 'Behavior and evidence'
@@ -262,15 +264,22 @@ export function LearnHomeScreen() {
                         : language === 'tr' ? 'Piyasa temelleri' : 'Market foundations'}
               </Text>
             </View>
-            <Text style={styles.skillScore}>{Math.round(activeMastery?.score ?? 0)}%</Text>
+            <Text style={styles.skillScore}>{activeQuizAttempts > 0 ? `${activeQuizScore}%` : '—'}</Text>
           </View>
-          <View style={styles.skillTrack}>
-            <View style={[styles.skillFill, { width: `${activeMastery?.score ?? 0}%` }]} />
+          <View
+            style={styles.skillTrack}
+            accessibilityRole="progressbar"
+            accessibilityLabel={language === 'tr' ? 'Quiz performansı' : 'Quiz performance'}
+            accessibilityValue={{ min: 0, max: 100, now: activeQuizAttempts > 0 ? activeQuizScore : 0 }}
+          >
+            <View style={[styles.skillFill, { width: `${activeQuizAttempts > 0 ? activeQuizScore : 0}%` }]} />
           </View>
           <Text style={styles.skillMeta}>
-            {reviewDue > 0
-              ? language === 'tr' ? `${reviewDue} tekrar görevi hazır` : `${reviewDue} review task ready`
-              : language === 'tr' ? 'Yeni kanıtlarla gelişir' : 'Improves with new evidence'}
+            {activeQuizAttempts === 0
+              ? language === 'tr' ? 'İlk quizden sonra burada görünür.' : 'Appears here after your first quiz.'
+              : reviewDue > 0
+                ? language === 'tr' ? 'Quiz sonuçlarından hesaplanır · Kısa tekrar hazır.' : 'Calculated from quiz results · A short review is ready.'
+                : language === 'tr' ? 'Quiz sonuçlarından hesaplanır ve yeni quizlerle güncellenir.' : 'Calculated from quiz results and updated with new quizzes.'}
           </Text>
         </View>
 
