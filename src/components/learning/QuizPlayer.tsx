@@ -50,6 +50,8 @@ export function QuizPlayer({
   const styles = useMemo(() => createStyles(theme), [theme]);
   const question = quiz.questions[questionIndex];
   const selectedIsCorrect = selectedOptionId === question.correctOptionId;
+  const selectedOption = question.options.find((option) => option.id === selectedOptionId);
+  const correctOption = question.options.find((option) => option.id === question.correctOptionId);
   const isPriceFormationVisual =
     question.visual?.assetRef.includes('fiyat-piyasada-nasil-olusur') ?? false;
   const isLiquidityImpactVisual =
@@ -199,14 +201,36 @@ export function QuizPlayer({
       </View>
       {revealed ? (
         <View style={[styles.explanation, selectedIsCorrect ? styles.explanationCorrect : styles.explanationIncorrect]}>
-          <Text style={[styles.feedbackTitle, selectedIsCorrect ? styles.feedbackCorrect : styles.feedbackIncorrect]}>
-            {selectedIsCorrect
-              ? language === 'tr' ? '✓ Doğru' : '✓ Correct'
-              : language === 'tr' ? '× Henüz değil' : '× Not yet'}
-          </Text>
-          <Text style={styles.explanationText}>
-            {selectLocalizedText(question.explanation, language)}
-          </Text>
+          {selectedIsCorrect ? (
+            <>
+              <Text style={[styles.feedbackTitle, styles.feedbackCorrect]}>
+                {language === 'tr' ? '✓ Doğru' : '✓ Correct'}
+              </Text>
+              <Text style={styles.explanationText}>
+                {language === 'tr' ? 'Neden: ' : 'Why: '}
+                {selectLocalizedText(question.explanation, language)}
+              </Text>
+            </>
+          ) : (
+            <>
+              <Text style={[styles.feedbackLine, styles.feedbackIncorrect]}>
+                {language === 'tr' ? '× Senin seçimin: ' : '× Your answer: '}
+                <Text style={styles.feedbackValue}>
+                  {selectedOption ? selectLocalizedText(selectedOption.label, language) : '—'}
+                </Text>
+              </Text>
+              <Text style={styles.feedbackLine}>
+                {language === 'tr' ? '✓ Doğru cevap: ' : '✓ Correct answer: '}
+                <Text style={styles.feedbackValue}>
+                  {correctOption ? selectLocalizedText(correctOption.label, language) : '—'}
+                </Text>
+              </Text>
+              <Text style={styles.explanationText}>
+                {language === 'tr' ? 'Neden: ' : 'Why: '}
+                {selectLocalizedText(question.explanation, language)}
+              </Text>
+            </>
+          )}
         </View>
       ) : null}
       {revealed && question.visual ? (
@@ -419,6 +443,8 @@ const createStyles = (theme: LearningTheme) =>
     explanationCorrect: { borderLeftColor: theme.colors.success },
     explanationIncorrect: { borderLeftColor: theme.colors.warning },
     feedbackTitle: { fontSize: 14, fontWeight: '900' },
+    feedbackLine: { color: theme.colors.textMuted, fontSize: 14, lineHeight: 20, fontWeight: '700' },
+    feedbackValue: { color: theme.colors.text, fontWeight: '900' },
     feedbackCorrect: { color: theme.colors.success },
     feedbackIncorrect: { color: theme.colors.warning },
     explanationText: { color: theme.colors.text, fontSize: 15, lineHeight: 22 },
