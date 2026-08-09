@@ -10,15 +10,18 @@ export interface VolatilityRangeVisualProps {
 }
 
 export function VolatilityRangeVisual({
-  alt,
+  alt: _alt,
   language,
   theme = defaultLearningTheme,
 }: VolatilityRangeVisualProps) {
   const styles = createStyles(theme);
   const tr = language === 'tr';
+  const visualDescription = tr
+    ? 'Aynı süre içinde dar ve geniş fiyat hareket aralıklarını karşılaştıran ve volatilitenin yönü değil hareket büyüklüğünü anlattığını gösteren sade eğitim görseli'
+    : 'Simple learning visual comparing narrow and wide price movement ranges over the same period and showing that volatility describes movement size rather than direction';
 
   return (
-    <View style={styles.shell} accessibilityRole="image" accessibilityLabel={alt}>
+    <View style={styles.shell} accessibilityRole="image" accessibilityLabel={visualDescription}>
       <View style={styles.canvas}>
         <View style={styles.header}>
           <Text style={styles.title}>
