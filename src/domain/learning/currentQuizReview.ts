@@ -70,6 +70,13 @@ const DEFAULT_REVIEW_GUIDANCE: LocalizedText = {
   en: 'Recall the concept with a short micro-lesson.',
 };
 
+function contextualizeCurrentQuizGuidance(guidance: LocalizedText): LocalizedText {
+  return {
+    tr: `Güncel quizlerde zorlandığın kavram. ${guidance.tr}`,
+    en: `A concept you found difficult in current quizzes. ${guidance.en}`,
+  };
+}
+
 /**
  * Maps repeated weak concept evidence to one previously completed lesson.
  *
@@ -123,9 +130,10 @@ export function getCurrentQuizReviewRecommendation(
   );
   if (alreadyReviewed) return undefined;
 
-  const guidance =
+  const guidance = contextualizeCurrentQuizGuidance(
     CURRENT_QUIZ_REVIEW_GUIDANCE[priorityDimensionId] ??
-    DEFAULT_REVIEW_GUIDANCE;
+      DEFAULT_REVIEW_GUIDANCE
+  );
 
   return {
     conceptKey,
