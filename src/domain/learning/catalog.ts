@@ -1,4 +1,5 @@
 import { WAVE1_MARKET_FOUNDATION_LESSONS } from './examples/wave1/marketFoundationsLessons';
+import { normalizeMarketFoundationAssessmentQuality } from './examples/wave1/marketFoundationAssessmentQuality';
 import {
   WAVE1_CHART_LITERACY_CORE_LESSONS,
   WAVE1_MARKET_STRUCTURE_LESSONS,
@@ -9,7 +10,9 @@ import type { MicroLesson } from './types';
 import { validateLearningCatalog } from './catalogIntegrity';
 
 export const MICRO_LESSON_CATALOG: readonly MicroLesson[] = [
-  ...WAVE1_MARKET_FOUNDATION_LESSONS,
+  ...WAVE1_MARKET_FOUNDATION_LESSONS.map(
+    normalizeMarketFoundationAssessmentQuality
+  ),
   ...WAVE1_CHART_LITERACY_CORE_LESSONS,
   ...WAVE1_MARKET_STRUCTURE_LESSONS,
   ...WAVE1_RISK_MANAGEMENT_LESSONS,
