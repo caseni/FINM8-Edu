@@ -51,6 +51,53 @@ function withPlainLanguageStructureTitle(lesson: MicroLesson): MicroLesson {
   return lesson;
 }
 
+function normalizeCoreChartLesson(lesson: MicroLesson): MicroLesson {
+  if (
+    lesson.id !== 'lesson.chart.trend.001' &&
+    lesson.id !== 'lesson.chart.support-resistance.001'
+  ) {
+    return lesson;
+  }
+
+  const contentBlocks = lesson.contentBlocks.map((block) => {
+    if (
+      lesson.id === 'lesson.chart.trend.001' &&
+      block.id === 'lesson.chart.trend.001.trader-tip' &&
+      block.kind === 'callout'
+    ) {
+      return {
+        ...block,
+        copy: {
+          normal: {
+            tr: 'TRADER PRATİK NOTU · Ana yapıyı daha geniş zaman diliminde, kısa vadeli hareketi daha küçük zaman diliminde ayır. Fiyatın çok yükselmiş olması tek başına düşüş kanıtı değildir.',
+            en: 'TRADER PRACTICAL NOTE · Separate the main structure on a broader timeframe from short-term movement on a smaller one. Price having risen a lot is not, by itself, evidence of a decline.',
+          },
+        },
+      };
+    }
+
+    if (
+      lesson.id === 'lesson.chart.support-resistance.001' &&
+      block.id === 'lesson.chart.support-resistance.001.trader-tip' &&
+      block.kind === 'callout'
+    ) {
+      return {
+        ...block,
+        copy: {
+          normal: {
+            tr: 'TRADER PRATİK NOTU · Destek ve direnci tek çizgi yerine tepki alanı olarak düşün. Daha kısa zaman dilimi alanı netleştirebilir; çok test edilmesi tek başına daha güçlü olduğu anlamına gelmez.',
+            en: 'TRADER PRACTICAL NOTE · Treat support and resistance as reaction areas rather than one exact line. A shorter timeframe can refine the area; many tests alone do not make it stronger.',
+          },
+        },
+      };
+    }
+
+    return block;
+  });
+
+  return microLessonSchema.parse({ ...lesson, contentBlocks });
+}
+
 function normalizeMarketStructureLesson(lesson: MicroLesson): MicroLesson {
   const titledLesson = withPlainLanguageStructureTitle(lesson);
 
@@ -166,7 +213,9 @@ function normalizeMarketStructureLesson(lesson: MicroLesson): MicroLesson {
 }
 
 export const WAVE1_CHART_LITERACY_CORE_LESSONS: readonly MicroLesson[] =
-  requireLessons(CORE_CHART_LESSON_IDS, WAVE1_CHART_LITERACY_LESSONS);
+  requireLessons(CORE_CHART_LESSON_IDS, WAVE1_CHART_LITERACY_LESSONS).map(
+    normalizeCoreChartLesson
+  );
 
 export const WAVE1_MARKET_STRUCTURE_LESSONS: readonly MicroLesson[] =
   requireLessons(MARKET_STRUCTURE_LESSON_IDS, WAVE1_CHART_LITERACY_LESSONS).map(
