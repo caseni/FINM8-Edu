@@ -34,7 +34,7 @@ export function LearningChallengeScreen({ route, navigation }: Props) {
   }) : undefined, [challenge]);
 
   if (!challenge || !quiz) {
-    return <SafeAreaView style={styles.safeArea}><Text style={styles.error}>Challenge bulunamadı.</Text></SafeAreaView>;
+    return <SafeAreaView style={styles.safeArea}><Text style={styles.error}>{language === 'tr' ? 'Bölüm sonu uygulaması bulunamadı.' : 'Module wrap-up not found.'}</Text></SafeAreaView>;
   }
 
   const missingLessonCount = route.params.review ? 0 : challenge.prerequisiteLessonIds.filter(
@@ -72,9 +72,9 @@ export function LearningChallengeScreen({ route, navigation }: Props) {
             task={task}
             language={language}
             presentationMode={presentationMode}
-            eyebrow={{ tr: 'CHALLENGE UYGULAMASI', en: 'CHALLENGE TASK' }}
+            eyebrow={{ tr: 'BÖLÜM SONU UYGULAMASI', en: 'MODULE WRAP-UP' }}
             completionLabel={{
-              tr: isLastTask ? 'Final quizine geç' : 'Sonraki uygulamaya geç',
+              tr: isLastTask ? 'Kapanış quizine geç' : 'Sonraki uygulamaya geç',
               en: isLastTask ? 'Continue to final quiz' : 'Continue to next task',
             }}
             onComplete={(taskPassed) => {
@@ -97,7 +97,7 @@ export function LearningChallengeScreen({ route, navigation }: Props) {
           onExit={() => navigation.goBack()}
         />
         <ScrollView contentContainerStyle={styles.content}>
-          <Text style={styles.progress}>{language === 'tr' ? `FİNAL QUIZ · ${quiz.questions.length} SORU` : `FINAL QUIZ · ${quiz.questions.length} QUESTIONS`}</Text>
+          <Text style={styles.progress}>{language === 'tr' ? `KAPANIŞ QUIZİ · ${quiz.questions.length} SORU` : `FINAL QUIZ · ${quiz.questions.length} QUESTIONS`}</Text>
           <QuizPlayer quiz={quiz} language={language} onComplete={(result) => finishQuiz(result.score, result.passed)} />
         </ScrollView>
       </SafeAreaView>
@@ -110,7 +110,7 @@ export function LearningChallengeScreen({ route, navigation }: Props) {
         <ScrollView contentContainerStyle={styles.resultWrap}>
           <View style={styles.resultCard}>
           <Text style={styles.resultIcon}>{passed ? '◆' : '↻'}</Text>
-          <Text style={styles.title}>{passed ? (language === 'tr' ? 'Challenge tamamlandı' : 'Challenge completed') : (language === 'tr' ? 'Bir tekrar daha güçlendirecek' : 'One more review will strengthen it')}</Text>
+          <Text style={styles.title}>{passed ? (language === 'tr' ? 'Modül tamamlandı' : 'Module completed') : (language === 'tr' ? 'Bir tekrar daha güçlendirecek' : 'One more review will strengthen it')}</Text>
           <Text style={styles.score}>%{score}</Text>
           <Text style={styles.body}>{passed ? (language === 'tr' ? `+${challenge.xpReward} XP kazandın.` : `You earned +${challenge.xpReward} XP.`) : (language === 'tr' ? `Geçme eşiği %${challenge.passingScore}. Açıklamaları kullanıp tekrar dene.` : `Passing score is ${challenge.passingScore}%. Review the explanations and try again.`)}</Text>
           {newBadgeTitle ? <Text style={styles.badgeNotice}>◆ {newBadgeTitle}</Text> : null}
@@ -126,7 +126,7 @@ export function LearningChallengeScreen({ route, navigation }: Props) {
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.introContent}>
-        <Text style={styles.eyebrow}>{language === 'tr' ? 'MODÜL FİNAL CHALLENGE' : 'MODULE FINAL CHALLENGE'}</Text>
+        <Text style={styles.eyebrow}>{language === 'tr' ? 'MODÜLÜ TAMAMLA' : 'COMPLETE THE MODULE'}</Text>
         <Text style={styles.title}>{selectLocalizedText(challenge.title, language)}</Text>
         <Text style={styles.body}>{selectLocalizedText(challenge.description, language)}</Text>
         <View style={styles.summaryCard}>
@@ -136,17 +136,17 @@ export function LearningChallengeScreen({ route, navigation }: Props) {
         </View>
         {missingLessonCount > 0 ? (
           <View style={styles.lockedNotice}>
-            <Text style={styles.noticeTitle}>{language === 'tr' ? 'Challenge henüz kilitli' : 'Challenge is locked'}</Text>
-            <Text style={styles.noticeText}>{language === 'tr' ? `${missingLessonCount} ön koşul dersi daha tamamlanmalı.` : `${missingLessonCount} prerequisite lessons remain.`}</Text>
+            <Text style={styles.noticeTitle}>{language === 'tr' ? 'Bölüm sonu uygulaması henüz kilitli' : 'Module wrap-up is locked'}</Text>
+            <Text style={styles.noticeText}>{language === 'tr' ? `${missingLessonCount} ders daha tamamlanmalı.` : `${missingLessonCount} lessons remain.`}</Text>
           </View>
         ) : (
           <View style={styles.notice}>
-            <Text style={styles.noticeTitle}>{language === 'tr' ? 'Ezber değil, kanıt' : 'Evidence, not memorization'}</Text>
+            <Text style={styles.noticeTitle}>{language === 'tr' ? 'Ezber değil, uygula' : 'Apply, do not memorize'}</Text>
             <Text style={styles.noticeText}>{language === 'tr' ? 'Uygulama görevlerini çöz; ardından kavramları birlikte değerlendir.' : 'Solve the applied tasks, then evaluate the concepts together.'}</Text>
           </View>
         )}
         <Pressable disabled={missingLessonCount > 0} style={[styles.primaryButton, missingLessonCount > 0 && styles.disabled]} onPress={() => { setTaskIndex(0); setStage('task'); }}>
-          <Text style={styles.primaryButtonText}>{language === 'tr' ? 'Challenge’ı başlat' : 'Start challenge'}</Text>
+          <Text style={styles.primaryButtonText}>{language === 'tr' ? 'Uygulamayı başlat' : 'Start module wrap-up'}</Text>
         </Pressable>
         <Pressable style={styles.secondaryButton} onPress={() => navigation.goBack()}><Text style={styles.secondaryButtonText}>{language === 'tr' ? 'Modüle dön' : 'Return to module'}</Text></Pressable>
       </ScrollView>
