@@ -2,6 +2,7 @@ import { WAVE1_MARKET_FOUNDATION_LESSONS } from './examples/wave1/marketFoundati
 import { normalizeMarketFoundationAssessmentQuality } from './examples/wave1/marketFoundationAssessmentQuality';
 import { normalizeChartFoundationAssessmentQuality } from './examples/wave1/chartFoundationAssessmentQuality';
 import { normalizeRiskAssessmentQuality } from './examples/wave1/riskAssessmentQuality';
+import { normalizeBehaviorEvidenceAssessmentQuality } from './examples/wave1/behaviorEvidenceAssessmentQuality';
 import {
   WAVE1_CHART_LITERACY_CORE_LESSONS,
   WAVE1_MARKET_STRUCTURE_LESSONS,
@@ -20,7 +21,9 @@ export const MICRO_LESSON_CATALOG: readonly MicroLesson[] = [
   ),
   ...WAVE1_MARKET_STRUCTURE_LESSONS,
   ...WAVE1_RISK_MANAGEMENT_LESSONS.map(normalizeRiskAssessmentQuality),
-  ...WAVE1_BEHAVIOR_EVIDENCE_LESSONS,
+  ...WAVE1_BEHAVIOR_EVIDENCE_LESSONS.map(
+    normalizeBehaviorEvidenceAssessmentQuality
+  ),
 ];
 
 export function getMicroLessonById(lessonId: string): MicroLesson | undefined {
