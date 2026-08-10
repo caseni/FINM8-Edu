@@ -32,7 +32,6 @@ export function LearningModuleCard({
   completedLessonIds,
   challengeCompleted,
   unlocked,
-  unlockMessage,
   expanded,
   activeLessonId,
   language,
@@ -79,7 +78,13 @@ export function LearningModuleCard({
         </View>
       </Pressable>
 
-      {!unlocked ? <Text style={styles.unlockMessage}>{unlockMessage}</Text> : null}
+      {!unlocked ? (
+        <Text style={styles.unlockMessage}>
+          {language === 'tr'
+            ? 'Önceki modülün bölüm sonu uygulaması tamamlanınca açılır.'
+            : 'Unlocks after the previous module wrap-up is completed.'}
+        </Text>
+      ) : null}
 
       {unlocked && expanded ? (
         <View style={styles.details}>
