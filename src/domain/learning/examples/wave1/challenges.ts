@@ -15,7 +15,7 @@ const challengeQuestions = WAVE1_MARKET_FOUNDATION_LESSONS.map((lesson, index) =
 
 export const MARKET_FOUNDATIONS_CHALLENGE = learningChallengeSchema.parse({
   id: 'challenge.market-foundations.foundation',
-  title: { tr: 'Piyasa Mekaniği Challenge' },
+  title: { tr: 'Piyasa Mekaniği · Bölüm Sonu Uygulaması', en: 'Market Mechanics · Module Wrap-Up' },
   description: {
     tr: 'Fiyat oluşumu, likidite, spread, emir türleri ve gerçekleşme riskini birlikte değerlendir.',
   },
@@ -45,7 +45,7 @@ const chartQuestions = WAVE1_CHART_LITERACY_CORE_LESSONS.map((lesson, index) => 
 
 export const CHART_LITERACY_CHALLENGE = learningChallengeSchema.parse({
   id: 'challenge.chart-literacy.foundation',
-  title: { tr: 'Grafik Dedektifi Challenge' },
+  title: { tr: 'Grafik Dedektifi · Bölüm Sonu Uygulaması', en: 'Chart Detective · Module Wrap-Up' },
   description: {
     tr: 'Mum, zaman dilimi, trend ve destek/direnç bölgesini birlikte değerlendir.',
   },
@@ -75,7 +75,7 @@ const marketStructureQuestions = WAVE1_MARKET_STRUCTURE_LESSONS.map((lesson, ind
 
 export const MARKET_STRUCTURE_CHALLENGE = learningChallengeSchema.parse({
   id: 'challenge.market-structure.intermediate',
-  title: { tr: 'Piyasa Yapısı Challenge', en: 'Market Structure Challenge' },
+  title: { tr: 'Piyasa Yapısı · Bölüm Sonu Uygulaması', en: 'Market Structure · Module Wrap-Up' },
   description: {
     tr: 'BOS ve CHoCH kavramlarını anlamlı swing, kapanış ve bağlam üzerinden ayırt et.',
     en: 'Distinguish BOS and CHoCH through meaningful swings, closes, and context.',
@@ -106,7 +106,7 @@ const riskQuestions = WAVE1_RISK_MANAGEMENT_LESSONS.map((lesson, index) => ({
 
 export const RISK_MANAGEMENT_CHALLENGE = learningChallengeSchema.parse({
   id: 'challenge.risk.foundation',
-  title: { tr: 'Risk Koruyucusu Challenge' },
+  title: { tr: 'Risk Koruyucusu · Bölüm Sonu Uygulaması', en: 'Risk Guardian · Module Wrap-Up' },
   description: {
     tr: 'Belirsizlik, volatilite, pozisyon boyutu, stop sınırlamaları ve çeşitlendirmeyi tek risk planında değerlendir.',
   },
@@ -136,7 +136,7 @@ const behaviorEvidenceQuestions = WAVE1_BEHAVIOR_EVIDENCE_LESSONS.map((lesson, i
 
 export const BEHAVIOR_EVIDENCE_CHALLENGE = learningChallengeSchema.parse({
   id: 'challenge.behavior-evidence.foundation',
-  title: { tr: 'Kanıt Dedektifi Challenge' },
+  title: { tr: 'Kanıt Dedektifi · Bölüm Sonu Uygulaması', en: 'Evidence Detective · Module Wrap-Up' },
   description: {
     tr: 'FOMO, aşırı işlem, doğrulama yanlılığı, veri kalitesi, güncellik ve karar günlüğünü birlikte değerlendir.',
   },
