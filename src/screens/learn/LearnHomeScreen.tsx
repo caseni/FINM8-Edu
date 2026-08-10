@@ -507,7 +507,7 @@ export function LearnHomeScreen() {
             <View style={styles.reviewMark}><Text style={styles.reviewMarkText}>R</Text></View>
             <View style={styles.pathContent}>
               <Text style={styles.pathTitle}>{language === 'tr' ? 'Review Merkezi' : 'Review Center'}</Text>
-              <Text style={styles.pathBody}>{language === 'tr' ? 'Tüm slayt, görev, quiz ve challenge ekranlarını ilerlemeyi değiştirmeden incele.' : 'Inspect every slide, task, quiz, and challenge without changing progress.'}</Text>
+              <Text style={styles.pathBody}>{language === 'tr' ? 'Tüm slayt, görev, quiz ve bölüm sonu uygulaması ekranlarını ilerlemeyi değiştirmeden incele.' : 'Inspect every slide, task, quiz, and module wrap-up without changing progress.'}</Text>
             </View>
             <Text style={styles.archiveLink}>›</Text>
           </Pressable>
@@ -519,9 +519,20 @@ export function LearnHomeScreen() {
             const earned = badgeAwards.some((award) => award.badgeId === badge.id);
             return (
               <View key={badge.id} style={[styles.badgeCard, earned && styles.badgeCardEarned]}>
-                <Text style={styles.badgeIcon}>{earned ? '◆' : '◇'}</Text>
-                <Text style={styles.badgeTitle}>{selectLocalizedText(badge.title, language)}</Text>
-                <Text style={styles.badgeState}>{earned ? (language === 'tr' ? 'Kazanıldı' : 'Earned') : (language === 'tr' ? 'Kilitli' : 'Locked')}</Text>
+                <View style={styles.badgeTop}>
+                  <Text style={styles.badgeIcon}>{earned ? '◆' : '◇'}</Text>
+                  <Text style={[styles.badgeState, earned && styles.badgeStateEarned]}>
+                    {earned
+                      ? language === 'tr' ? 'KAZANILDI' : 'EARNED'
+                      : language === 'tr' ? 'KAZANMAK İÇİN' : 'TO EARN'}
+                  </Text>
+                </View>
+                <Text numberOfLines={2} style={styles.badgeTitle}>{selectLocalizedText(badge.title, language)}</Text>
+                {!earned ? (
+                  <Text numberOfLines={2} style={styles.badgeHowTo}>
+                    {selectLocalizedText(badge.description, language)}
+                  </Text>
+                ) : null}
               </View>
             );
           })}
@@ -622,11 +633,14 @@ const styles = StyleSheet.create({
   challengeIconText: { color: '#FBBF24', fontSize: 20, fontWeight: '900' },
   challengeTitle: { color: '#F8FAFC', fontSize: 15, fontWeight: '900' },
   badgeRow: { gap: 10, paddingRight: 20 },
-  badgeCard: { width: 150, minHeight: 130, padding: 16, borderRadius: 18, backgroundColor: '#0C1928', borderWidth: 1, borderColor: '#1F3449', gap: 8 },
+  badgeCard: { width: 176, minHeight: 118, padding: 14, borderRadius: 18, backgroundColor: '#0C1928', borderWidth: 1, borderColor: '#1F3449', gap: 6 },
   badgeCardEarned: { borderColor: '#2DD4BF', backgroundColor: '#123B42' },
-  badgeIcon: { color: '#FBBF24', fontSize: 27 },
-  badgeTitle: { color: '#F8FAFC', fontSize: 14, fontWeight: '800' },
-  badgeState: { color: '#8094A8', fontSize: 11 },
+  badgeTop: { minHeight: 24, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8 },
+  badgeIcon: { color: '#FBBF24', fontSize: 22 },
+  badgeTitle: { color: '#F8FAFC', fontSize: 14, lineHeight: 18, fontWeight: '800' },
+  badgeState: { color: '#8094A8', fontSize: 9, lineHeight: 12, fontWeight: '900', letterSpacing: 0.5 },
+  badgeStateEarned: { color: '#5EEAD4' },
+  badgeHowTo: { color: '#9FB0C3', fontSize: 11, lineHeight: 15 },
   archiveRow: { flexDirection: 'row', alignItems: 'center', gap: 12, padding: 18, borderRadius: 18, backgroundColor: '#0C1928' },
   archiveLink: { color: '#2DD4BF', fontWeight: '800' },
   reviewCard: { flexDirection: 'row', alignItems: 'center', gap: 14, padding: 18, borderRadius: 18, backgroundColor: '#101D2C', borderWidth: 1, borderColor: '#294057' },
