@@ -445,7 +445,6 @@ export function LearnHomeScreen() {
             challenge: MARKET_FOUNDATIONS_CHALLENGE,
             unlocked: true,
             completed: marketChallengeCompleted,
-            unlockMessage: '',
           },
           {
             number: 2,
@@ -455,7 +454,6 @@ export function LearnHomeScreen() {
             challenge: CHART_LITERACY_CHALLENGE,
             unlocked: chartLiteracyUnlocked,
             completed: chartChallengeCompleted,
-            unlockMessage: language === 'tr' ? 'Piyasa Mekaniği Challenge tamamlandığında açılır.' : 'Unlocks after the Market Mechanics Challenge.',
           },
           {
             number: 3,
@@ -465,7 +463,6 @@ export function LearnHomeScreen() {
             challenge: MARKET_STRUCTURE_CHALLENGE,
             unlocked: marketStructureUnlocked,
             completed: marketStructureChallengeCompleted,
-            unlockMessage: language === 'tr' ? 'Grafik Dedektifi Challenge tamamlandığında açılır.' : 'Unlocks after the Chart Detective Challenge.',
           },
           {
             number: 4,
@@ -475,7 +472,6 @@ export function LearnHomeScreen() {
             challenge: RISK_MANAGEMENT_CHALLENGE,
             unlocked: riskManagementUnlocked,
             completed: riskChallengeCompleted,
-            unlockMessage: language === 'tr' ? 'Piyasa Yapısı Challenge tamamlandığında açılır.' : 'Unlocks after the Market Structure Challenge.',
           },
           {
             number: 5,
@@ -485,7 +481,6 @@ export function LearnHomeScreen() {
             challenge: BEHAVIOR_EVIDENCE_CHALLENGE,
             unlocked: behaviorEvidenceUnlocked,
             completed: behaviorChallengeCompleted,
-            unlockMessage: language === 'tr' ? 'Risk Koruyucusu Challenge tamamlandığında açılır.' : 'Unlocks after the Risk Guardian Challenge.',
           },
         ].map((module) => (
           <LearningModuleCard
@@ -498,7 +493,6 @@ export function LearnHomeScreen() {
             completedLessonIds={completedLessonIds}
             challengeCompleted={module.completed}
             unlocked={module.unlocked}
-            unlockMessage={module.unlockMessage}
             expanded={expandedModule === module.number}
             activeLessonId={mission.kind === 'lesson' ? mission.lesson.id : undefined}
             language={language}
