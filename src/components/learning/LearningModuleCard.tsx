@@ -22,6 +22,28 @@ interface LearningModuleCardProps {
   theme?: LearningTheme;
 }
 
+function selectLessonListTitle(lesson: MicroLesson, language: LearningLanguage): string {
+  if (lesson.id === 'lesson.market.liquidity.001') {
+    return language === 'tr'
+      ? 'Likidite · Alıp satmak ne kadar kolay?'
+      : 'Liquidity · How easy is it to buy or sell?';
+  }
+
+  if (lesson.id === 'lesson.market.bid-ask.001') {
+    return language === 'tr'
+      ? 'Alış (bid), satış (ask) ve aradaki fark (spread)'
+      : 'Buy (bid), sell (ask), and the gap (spread)';
+  }
+
+  if (lesson.id === 'lesson.market.order-types.001') {
+    return language === 'tr'
+      ? 'Emir türleri · Piyasa, limit ve stop'
+      : 'Order types · Market, limit, and stop';
+  }
+
+  return selectLocalizedText(lesson.title, language);
+}
+
 export function LearningModuleCard({
   number,
   title,
@@ -101,7 +123,7 @@ export function LearningModuleCard({
                   <Text style={styles.lessonMarkerText}>{completed ? '✓' : index + 1}</Text>
                 </View>
                 <View style={styles.lessonCopy}>
-                  <Text style={styles.lessonTitle}>{selectLocalizedText(lesson.title, language)}</Text>
+                  <Text style={styles.lessonTitle}>{selectLessonListTitle(lesson, language)}</Text>
                   <Text style={styles.lessonMeta}>{lesson.estimatedMinutes} {language === 'tr' ? 'dk' : 'min'}</Text>
                 </View>
                 <Text style={styles.openText}>{active ? (language === 'tr' ? 'Devam' : 'Continue') : '›'}</Text>
