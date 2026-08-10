@@ -27,10 +27,35 @@ function requireLessons(
   });
 }
 
-function normalizeMarketStructureLesson(lesson: MicroLesson): MicroLesson {
-  if (lesson.id !== 'lesson.market-structure.choch.001') return lesson;
+function withPlainLanguageStructureTitle(lesson: MicroLesson): MicroLesson {
+  if (lesson.id === 'lesson.market-structure.bos.001') {
+    return microLessonSchema.parse({
+      ...lesson,
+      title: {
+        tr: 'BOS (Yapı Kırılımı): Ne zaman gerçekten kırılır?',
+        en: 'BOS (Break of Structure): When is structure truly broken?',
+      },
+    });
+  }
 
-  const contentBlocks = lesson.contentBlocks.map((block) => {
+  if (lesson.id === 'lesson.market-structure.choch.001') {
+    return microLessonSchema.parse({
+      ...lesson,
+      title: {
+        tr: 'CHoCH (Karakter Değişimi): Değişim ihtimali nasıl okunur?',
+        en: 'CHoCH (Change of Character): How do we read a possible change?',
+      },
+    });
+  }
+
+  return lesson;
+}
+
+function normalizeMarketStructureLesson(lesson: MicroLesson): MicroLesson {
+  const titledLesson = withPlainLanguageStructureTitle(lesson);
+  if (titledLesson.id !== 'lesson.market-structure.choch.001') return titledLesson;
+
+  const contentBlocks = titledLesson.contentBlocks.map((block) => {
     if (
       block.id === 'lesson.market-structure.choch.001.explanation' &&
       block.kind === 'explanation'
@@ -72,7 +97,7 @@ function normalizeMarketStructureLesson(lesson: MicroLesson): MicroLesson {
     },
   });
 
-  return microLessonSchema.parse({ ...lesson, contentBlocks });
+  return microLessonSchema.parse({ ...titledLesson, contentBlocks });
 }
 
 export const WAVE1_CHART_LITERACY_CORE_LESSONS: readonly MicroLesson[] =
