@@ -41,6 +41,18 @@ function selectLessonListTitle(lesson: MicroLesson, language: LearningLanguage):
       : 'Order types · Market, limit, and stop';
   }
 
+  if (lesson.id === 'lesson.risk.volatility.001') {
+    return language === 'tr'
+      ? 'Volatilite · Fiyat ne kadar sert dalgalanıyor?'
+      : 'Volatility · How widely is price moving?';
+  }
+
+  if (lesson.id === 'lesson.behavior.fomo.001') {
+    return language === 'tr'
+      ? 'FOMO · Fırsatı kaçırma korkusu kararını nasıl bozar?'
+      : 'FOMO · How can fear of missing out distort a decision?';
+  }
+
   return selectLocalizedText(lesson.title, language);
 }
 
