@@ -8,6 +8,7 @@ import {
   View,
 } from 'react-native';
 import {
+  selectAudienceCopy,
   selectLocalizedText,
   type LearningLanguage,
 } from '../../domain/learning/presentation';
@@ -26,6 +27,7 @@ import { LEARNING_STAGE_LABELS } from '../../domain/learning/personalization';
 import { LessonBlockRenderer } from './LessonBlockRenderer';
 
 type VisualBlock = Extract<ContentBlock, { kind: 'visual' }>;
+type RiskCalloutBlock = Extract<ContentBlock, { kind: 'callout' }>;
 
 export interface LessonPlayerProps {
   lesson: MicroLesson;
@@ -55,7 +57,7 @@ export function LessonPlayer({
   onStepChange,
 }: LessonPlayerProps) {
   const styles = createStyles(theme);
-  const blocks = useMemo(
+  const visibleBlocks = useMemo(
     () =>
       lesson.contentBlocks
         .filter(
@@ -64,6 +66,20 @@ export function LessonPlayer({
         )
         .sort((a, b) => a.order - b.order),
     [lesson.contentBlocks, presentationMode]
+  );
+  const safetyBlock = useMemo(
+    () =>
+      visibleBlocks.find(
+        (block): block is RiskCalloutBlock =>
+          block.kind === 'callout' &&
+          block.tone === 'risk' &&
+          block.id.endsWith('.safety')
+      ),
+    [visibleBlocks]
+  );
+  const blocks = useMemo(
+    () => visibleBlocks.filter((block) => block !== safetyBlock),
+    [safetyBlock, visibleBlocks]
   );
   const [stepIndex, setStepIndex] = useState(() =>
     Math.max(0, Math.min(initialStepIndex, blocks.length))
@@ -147,6 +163,19 @@ export function LessonPlayer({
               <Text style={styles.takeawayText}>
                 {selectLocalizedText(lesson.takeaway, language)}
               </Text>
+              {safetyBlock ? (
+                <View
+                  accessibilityLabel={language === 'tr' ? 'Güvenlik notu' : 'Safety note'}
+                  style={styles.compactSafety}
+                >
+                  <Text style={styles.compactSafetyLabel}>
+                    {language === 'tr' ? 'GÜVENLİK NOTU' : 'SAFETY NOTE'}
+                  </Text>
+                  <Text style={styles.compactSafetyText}>
+                    {selectAudienceCopy(safetyBlock.copy, presentationMode, language)}
+                  </Text>
+                </View>
+              ) : null}
             </View>
           ) : (
             <LessonBlockRenderer
@@ -258,9 +287,27 @@ const createStyles = (theme: LearningTheme) =>
       borderWidth: 1,
       borderRadius: theme.radius.large,
     },
-    takeaway: { gap: theme.spacing.sm },
+    takeaway: { gap: theme.spacing.md },
     takeawayEyebrow: { color: theme.colors.primary, fontSize: 12, fontWeight: '800' },
     takeawayText: { color: theme.colors.text, fontSize: 25, fontWeight: '800', lineHeight: 34 },
+    compactSafety: {
+      gap: theme.spacing.xs,
+      marginTop: theme.spacing.xs,
+      paddingTop: theme.spacing.sm,
+      borderTopColor: theme.colors.border,
+      borderTopWidth: 1,
+    },
+    compactSafetyLabel: {
+      color: theme.colors.risk,
+      fontSize: 10,
+      fontWeight: '800',
+      letterSpacing: 0.7,
+    },
+    compactSafetyText: {
+      color: theme.colors.textMuted,
+      fontSize: 13,
+      lineHeight: 19,
+    },
     footer: {
       padding: theme.spacing.md,
       borderTopColor: theme.colors.border,
