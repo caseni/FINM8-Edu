@@ -13,7 +13,6 @@ interface LearningModuleCardProps {
   completedLessonIds: readonly string[];
   challengeCompleted: boolean;
   unlocked: boolean;
-  unlockMessage: string;
   expanded: boolean;
   activeLessonId?: string;
   language: LearningLanguage;
