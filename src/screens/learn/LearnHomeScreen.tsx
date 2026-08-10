@@ -440,7 +440,7 @@ export function LearnHomeScreen() {
           {
             number: 1,
             title: language === 'tr' ? 'Piyasa Temelleri' : 'Market Foundations',
-            description: language === 'tr' ? 'Fiyat, likidite, spread ve emirlerin çalışma mantığı.' : 'How price, liquidity, spread, and orders work.',
+            description: language === 'tr' ? 'Fiyatın nasıl oluştuğunu, piyasadaki alım-satım yoğunluğunu ve emirlerin nasıl çalıştığını öğren.' : 'Learn how prices form, how buying and selling interact, and how orders work.',
             lessons: WAVE1_MARKET_FOUNDATION_LESSONS,
             challenge: MARKET_FOUNDATIONS_CHALLENGE,
             unlocked: true,
@@ -449,7 +449,7 @@ export function LearnHomeScreen() {
           {
             number: 2,
             title: language === 'tr' ? 'Grafik Okuryazarlığı' : 'Chart Literacy',
-            description: language === 'tr' ? 'Mum, zaman dilimi, trend ve destek/direnci sade kanıtlarla oku.' : 'Read candles, timeframes, trends, and support/resistance through clear evidence.',
+            description: language === 'tr' ? 'Mumları, zaman dilimlerini, trendi ve destek/direnci birlikte okumayı öğren.' : 'Learn to read candles, timeframes, trends, and support/resistance together.',
             lessons: WAVE1_CHART_LITERACY_CORE_LESSONS,
             challenge: CHART_LITERACY_CHALLENGE,
             unlocked: chartLiteracyUnlocked,
@@ -458,7 +458,7 @@ export function LearnHomeScreen() {
           {
             number: 3,
             title: language === 'tr' ? 'Piyasa Yapısı' : 'Market Structure',
-            description: language === 'tr' ? 'Anlamlı swing seviyelerini, BOS ve CHoCH’u fiyat taşmasından ayır.' : 'Separate meaningful swing levels, BOS, and CHoCH from simple price overshoots.',
+            description: language === 'tr' ? 'Önemli tepe ve dipleri tanı; fiyat hareketinin yapıyı gerçekten değiştirip değiştirmediğini ayır.' : 'Identify important highs and lows and judge whether price has truly changed structure.',
             lessons: WAVE1_MARKET_STRUCTURE_LESSONS,
             challenge: MARKET_STRUCTURE_CHALLENGE,
             unlocked: marketStructureUnlocked,
@@ -467,7 +467,7 @@ export function LearnHomeScreen() {
           {
             number: 4,
             title: language === 'tr' ? 'Risk Yönetimi' : 'Risk Management',
-            description: language === 'tr' ? 'Belirsizlik, volatilite ve boyutlandırmayı birlikte yönet.' : 'Manage uncertainty, volatility, and sizing together.',
+            description: language === 'tr' ? 'Fiyat hareketi değişirken ne kadar risk aldığını ve işlem büyüklüğünü yönet.' : 'Manage how much you risk and how large a position you take as price movement changes.',
             lessons: WAVE1_RISK_MANAGEMENT_LESSONS,
             challenge: RISK_MANAGEMENT_CHALLENGE,
             unlocked: riskManagementUnlocked,
