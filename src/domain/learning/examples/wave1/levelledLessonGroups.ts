@@ -53,9 +53,58 @@ function withPlainLanguageStructureTitle(lesson: MicroLesson): MicroLesson {
 
 function normalizeMarketStructureLesson(lesson: MicroLesson): MicroLesson {
   const titledLesson = withPlainLanguageStructureTitle(lesson);
+
+  if (titledLesson.id === 'lesson.market-structure.bos.001') {
+    const contentBlocks = titledLesson.contentBlocks.map((block) => {
+      if (block.id === 'bos.prompt' && block.kind === 'prompt') {
+        return {
+          ...block,
+          copy: {
+            normal: {
+              tr: 'Fiyat önemli bir tepenin veya dibin ötesine geçtiğinde yapı her zaman kırılmış olur mu?',
+              en: 'When price moves beyond an important high or low, is structure always broken?',
+            },
+          },
+        };
+      }
+
+      if (block.id === 'bos.explanation' && block.kind === 'explanation') {
+        return {
+          ...block,
+          copy: {
+            ...block.copy,
+            normal: {
+              tr: 'BOS (yapı kırılımı), fiyatın yapıyı belirleyen önemli bir tepe veya dip seviyesini gerçekten aşmasıdır. Rastgele küçük bir taşma ya da tek fitil tek başına yeterli değildir.',
+              en: 'A BOS (break of structure) is when price truly moves beyond an important high or low that defines the current structure. A small random overshoot or a single wick is not enough by itself.',
+            },
+          },
+        };
+      }
+
+      return block;
+    });
+
+    return microLessonSchema.parse({ ...titledLesson, contentBlocks });
+  }
+
   if (titledLesson.id !== 'lesson.market-structure.choch.001') return titledLesson;
 
   const contentBlocks = titledLesson.contentBlocks.map((block) => {
+    if (
+      block.id === 'lesson.market-structure.choch.001.prompt' &&
+      block.kind === 'prompt'
+    ) {
+      return {
+        ...block,
+        copy: {
+          normal: {
+            tr: 'Yükselişi taşıyan önemli bir dip ilk kez kırılırsa trend kesin dönmüş müdür?',
+            en: 'If an important low supporting an uptrend breaks for the first time, has the trend definitely reversed?',
+          },
+        },
+      };
+    }
+
     if (
       block.id === 'lesson.market-structure.choch.001.explanation' &&
       block.kind === 'explanation'
@@ -64,9 +113,13 @@ function normalizeMarketStructureLesson(lesson: MicroLesson): MicroLesson {
         ...block,
         copy: {
           ...block.copy,
+          normal: {
+            tr: 'CHoCH (karakter değişimi), mevcut fiyat yapısının değişmeye başlayabileceğini gösteren erken bir işarettir. Örneğin yükselişi koruyan önemli bir dip kaybedilirse yapı zayıflıyor olabilir. Bu, trendin kesin döndüğü anlamına gelmez.',
+            en: 'A CHoCH (change of character) is an early sign that the current price structure may be starting to change. For example, if an important low that had been supporting an uptrend is lost, the structure may be weakening. This does not mean the trend has definitely reversed.',
+          },
           pro: {
-            tr: 'CHoCH değerlendirmesinde karşı yönlü yapısal ihlal, swing seviyesinin önemi, kapanış teyidi ve zaman dilimi bağlamı birlikte incelenir. Yeni yönde devam kanıtı gelmeden kesin trend dönüşü olarak etiketlenmemelidir.',
-            en: 'CHoCH assessment combines a counter-direction structural violation, swing significance, close confirmation, and timeframe context. It should not be labelled a certain trend reversal before continuation evidence appears in the new direction.',
+            tr: 'CHoCH değerlendirmesinde kırılan seviyenin önemi, kapanış teyidi ve zaman dilimi bağlamı birlikte incelenir. Kullanılan yönteme göre eşik ve etiket değişebilir. Yeni yönde devam kanıtı gelmeden kesin trend dönüşü olarak etiketlenmemelidir.',
+            en: 'CHoCH assessment considers the importance of the broken level, close confirmation, and timeframe context together. Thresholds and labels can vary by methodology. It should not be labelled a certain trend reversal before continuation evidence appears in the new direction.',
           },
         },
       };
