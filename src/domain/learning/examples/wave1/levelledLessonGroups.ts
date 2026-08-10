@@ -81,6 +81,18 @@ function normalizeMarketStructureLesson(lesson: MicroLesson): MicroLesson {
         };
       }
 
+      if (block.id === 'bos.trader-tip' && block.kind === 'callout') {
+        return {
+          ...block,
+          copy: {
+            normal: {
+              tr: 'TRADER PRATİK NOTU · Her küçük tepe veya dip aşımını BOS sayma. Önce kırılan seviyenin ana yapıda gerçekten önemli olup olmadığına bak; aksi halde küçük hareketleri büyük yapı değişimi sanabilirsin.',
+              en: 'TRADER PRACTICAL NOTE · Do not label every small high or low break as a BOS. First check whether the broken level truly matters in the main structure; otherwise minor moves can look like major structural change.',
+            },
+          },
+        };
+      }
+
       return block;
     });
 
@@ -144,8 +156,8 @@ function normalizeMarketStructureLesson(lesson: MicroLesson): MicroLesson {
     tone: 'evidence',
     copy: {
       normal: {
-        tr: 'TRADER PRATİK NOTU · CHoCH gördüğünde ilk refleksin “trend döndü” demek olmasın. Önce kırılan seviyenin o zaman diliminde gerçekten korunan anlamlı swing olup olmadığını ve kapanışın seviyenin ötesinde kalıp kalmadığını kontrol et; ardından yeni yönde devam yapısı oluşup oluşmadığını izle. Küçük iç yapıdaki CHoCH, daha geniş yapının döndüğü anlamına gelmez.',
-        en: 'TRADER PRACTICAL NOTE · Do not treat the first CHoCH as proof that the trend has reversed. First check whether the broken level was truly a meaningful protected swing on that timeframe and whether the close remained beyond it; then watch for continuation structure in the new direction. A CHoCH in small internal structure does not mean the broader structure has reversed.',
+        tr: 'TRADER PRATİK NOTU · İlk CHoCH’u kesin trend dönüşü sayma. Küçük iç yapı değişebilirken daha geniş yapı korunabilir; yeni yönde devam kanıtı beklemek yorumu daha sağlam kılar.',
+        en: 'TRADER PRACTICAL NOTE · Do not treat the first CHoCH as a certain trend reversal. Smaller internal structure can change while the broader structure still holds, so waiting for continuation evidence makes the interpretation more robust.',
       },
     },
   });
