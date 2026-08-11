@@ -2,6 +2,10 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import type { LearningLanguage } from '../../domain/learning/presentation';
 import { defaultLearningTheme, type LearningTheme } from '../../theme/learningTheme';
+import {
+  ChartLessonSlideVisual,
+  isChartLessonSlideAsset,
+} from './ChartLessonSlideVisual';
 import { LearningVisual } from './LearningVisual';
 
 export type LessonSupportingVisualRole =
@@ -54,12 +58,22 @@ export function LessonSupportingVisual({
   return (
     <View style={styles.wrapper}>
       <Text style={[styles.eyebrow, labelStyle]}>{label}</Text>
-      <LearningVisual
-        assetRef={`${assetRef}#${role}`}
-        alt={alt}
-        language={language}
-        theme={theme}
-      />
+      {isChartLessonSlideAsset(assetRef) ? (
+        <ChartLessonSlideVisual
+          assetRef={assetRef}
+          alt={alt}
+          language={language}
+          role={role}
+          theme={theme}
+        />
+      ) : (
+        <LearningVisual
+          assetRef={`${assetRef}#${role}`}
+          alt={alt}
+          language={language}
+          theme={theme}
+        />
+      )}
     </View>
   );
 }
