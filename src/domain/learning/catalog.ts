@@ -1,5 +1,6 @@
 import { ALGO_QUANT_EXPANSION_LESSONS } from './examples/academy/algoQuantExpansionLessons';
 import { ALGO_QUANT_FOUNDATION_LESSONS } from './examples/academy/algoQuantFoundationLessons';
+import { normalizeAssetSchoolAssessmentQuality } from './examples/academy/assetSchoolAssessmentQuality';
 import { ASSET_SCHOOL_EXPANSION_LESSONS } from './examples/academy/assetSchoolExpansionLessons';
 import { ASSET_SCHOOL_FOUNDATION_LESSONS } from './examples/academy/assetSchoolFoundationLessons';
 import { ECONOMY_EXPANSION_LESSONS } from './examples/academy/economyExpansionLessons';
@@ -53,8 +54,8 @@ export const MICRO_LESSON_CATALOG: readonly MicroLesson[] = [
   ...ALGO_QUANT_EXPANSION_LESSONS,
   ...SMC_ICT_FOUNDATION_LESSONS,
   ...SMC_ICT_EXPANSION_LESSONS,
-  ...ASSET_SCHOOL_FOUNDATION_LESSONS,
-  ...ASSET_SCHOOL_EXPANSION_LESSONS,
+  ...ASSET_SCHOOL_FOUNDATION_LESSONS.map(normalizeAssetSchoolAssessmentQuality),
+  ...ASSET_SCHOOL_EXPANSION_LESSONS.map(normalizeAssetSchoolAssessmentQuality),
 ];
 
 export function getMicroLessonById(lessonId: string): MicroLesson | undefined {
