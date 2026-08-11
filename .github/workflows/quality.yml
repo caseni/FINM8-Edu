@@ -25,5 +25,8 @@ jobs:
       - name: Typecheck
         run: npm run typecheck
 
+      - name: Content quality audit
+        run: npm run quality:content
+
       - name: Build web bundle
         run: npm run build:web
