@@ -4,6 +4,7 @@ import type { LocalizedText, MicroLesson } from '../../types';
 type OptionCopyMap = Readonly<Record<string, LocalizedText>>;
 
 interface AssessmentCopyOverride {
+  readonly takeaway?: LocalizedText;
   readonly taskChoices?: OptionCopyMap;
   readonly questionOptions?: Readonly<Record<string, OptionCopyMap>>;
 }
@@ -186,6 +187,10 @@ const ASSET_SCHOOL_ASSESSMENT_OVERRIDES: Readonly<Record<string, AssessmentCopyO
     },
   },
   'lesson.asset.etf.leveraged-inverse.001': {
+    takeaway: copy(
+      'Kaldıraçlı ETF’de çarpanı değil önce hangi süre için hedeflendiğini oku.',
+      'For leveraged ETFs, read the target horizon before the multiple.',
+    ),
     questionOptions: {
       'question.kaldiracli-ve-ters-etf-gunluk-reset.1': {
         a: copy(
@@ -279,6 +284,310 @@ const ASSET_SCHOOL_ASSESSMENT_OVERRIDES: Readonly<Record<string, AssessmentCopyO
       },
     },
   },
+  'lesson.asset.fx.session-event.001': {
+    questionOptions: {
+      'question.fx-seans-ve-makro-olay-riski.1': {
+        a: copy(
+          'Evet; seans yoğunluğu, tatil ve haber akışı spreadi değiştirebilir',
+          'Yes; session activity, holidays, and news flow can change spreads',
+        ),
+        b: copy(
+          'Hayır; 24/5 işlem gören bir paritede spread gün boyunca sabittir',
+          'No; a pair trading 24/5 has a constant spread throughout the day',
+        ),
+        c: copy(
+          'Spread yalnız haftanın ilk işlem saatinde değişebilir',
+          'Spreads can change only during the first trading hour of the week',
+        ),
+      },
+      'question.fx-seans-ve-makro-olay-riski.2': {
+        a: copy(
+          'Evet; hızlı fiyatlama ve incelen likidite slippage riskini artırabilir',
+          'Yes; rapid repricing and thinner liquidity can increase slippage risk',
+        ),
+        b: copy(
+          'Hayır; makro veri yalnız yönü etkiler, execution kalitesini etkilemez',
+          'No; macro data affects only direction, not execution quality',
+        ),
+        c: copy(
+          'Makro veri slippage riskini yalnız egzotik paritelerde değiştirir',
+          'Macro releases change slippage risk only in exotic pairs',
+        ),
+      },
+      'question.fx-seans-ve-makro-olay-riski.3': {
+        a: copy(
+          'Hayır; ilgili finans merkezleri ve aktif katılımcılar pariteye göre değişir',
+          'No; relevant financial centers and active participants differ by currency pair',
+        ),
+        b: copy(
+          'Evet; tüm pariteler her seansı aynı yoğunlukta yaşar',
+          'Yes; every currency pair experiences every session with the same intensity',
+        ),
+        c: copy(
+          'Yalnız majör paritelerde seans etkisinin aynı olduğu varsayılabilir',
+          'Session effects can be assumed identical only for major pairs',
+        ),
+      },
+    },
+  },
+  'lesson.asset.commodity.spot-futures.001': {
+    taskChoices: {
+      color: copy(
+        'Vadeli fiyatın spot fiyatından yalnız grafik sağlayıcısı nedeniyle farklılaştığını varsaymak',
+        'Assuming futures differ from spot only because of the chart provider',
+      ),
+    },
+    questionOptions: {
+      'question.emtiada-spot-ve-vadeli-fiyat.1': {
+        a: copy(
+          'Evet; taşıma, depolama, stok ve vade koşulları fiyatları ayırabilir',
+          'Yes; carry, storage, inventories, and maturity conditions can separate prices',
+        ),
+        b: copy(
+          'Hayır; aynı emtianın spot ve vadeli fiyatı her an eşit olmalıdır',
+          'No; spot and futures for the same commodity must be identical at all times',
+        ),
+        c: copy(
+          'Yalnız değerli metallerde spot ve vadeli fiyat farklılaşabilir',
+          'Only precious metals can have different spot and futures prices',
+        ),
+      },
+      'question.emtiada-spot-ve-vadeli-fiyat.2': {
+        a: copy(
+          'Evet; her vade farklı taşıma ve arz-talep koşullarını fiyatlayabilir',
+          'Yes; each maturity can price different carry and supply-demand conditions',
+        ),
+        b: copy(
+          'Hayır; tüm vadeler aynı teslimat fiyatını paylaşmalıdır',
+          'No; all maturities must share the same delivery price',
+        ),
+        c: copy(
+          'Vadeler yalnız sözleşme adı değiştiği için farklı görünür, fiyat değişmez',
+          'Maturities only look different because the contract name changes; price does not',
+        ),
+      },
+      'question.emtiada-spot-ve-vadeli-fiyat.3': {
+        a: copy(
+          'Evet; depolama, teslimat, kalite ve stok koşulları fiyatlamaya girebilir',
+          'Yes; storage, delivery, grade, and inventory conditions can enter pricing',
+        ),
+        b: copy(
+          'Hayır; fiziksel özellikler finansal kontrat fiyatlamasından tamamen ayrıdır',
+          'No; physical characteristics are completely separate from financial contract pricing',
+        ),
+        c: copy(
+          'Fiziksel koşullar yalnız kontrat vadesi dolduktan sonra önem kazanır',
+          'Physical conditions matter only after a futures contract expires',
+        ),
+      },
+    },
+  },
+  'lesson.asset.commodity.term-structure.001': {
+    taskChoices: {
+      earnings: copy(
+        'Spot yönü sabitse vade eğrisi ve roll yönteminin sonucu değiştirmediğini varsaymak',
+        'Assuming the futures curve and roll method cannot affect returns when spot direction is unchanged',
+      ),
+    },
+    questionOptions: {
+      'question.contango-backwardation-ve-roll.1': {
+        b: copy(
+          'Yakın ve uzak vadelerin yaklaşık aynı fiyatlandığı düz eğriyi',
+          'A roughly flat curve where near and later maturities trade at similar levels',
+        ),
+        c: copy(
+          'Yakın vadelerin uzak vadelerden daha yüksek fiyatlandığı backwardation eğrisini',
+          'A backwardation curve where near maturities trade above later ones',
+        ),
+      },
+      'question.contango-backwardation-ve-roll.2': {
+        b: copy(
+          'Aynı kontratı vade sonundan sonra değişmeden taşımaya devam eder',
+          'Keeps holding the same expired contract unchanged after maturity',
+        ),
+        c: copy(
+          'Spot varlığı otomatik olarak vadeli kontrata dönüştürür',
+          'Automatically converts the spot asset into a futures contract',
+        ),
+      },
+      'question.contango-backwardation-ve-roll.3': {
+        a: copy(
+          'Evet; roll, collateral, ücret ve vade eğrisi spot getiriden ayrı etki yaratabilir',
+          'Yes; roll, collateral, fees, and the futures curve can create effects separate from spot return',
+        ),
+        b: copy(
+          'Hayır; futures tabanlı ürün spot getiriyi her koşulda birebir kopyalar',
+          'No; a futures-based product replicates spot return exactly in every condition',
+        ),
+        c: copy(
+          'Fark yalnız spot fiyat düşerse oluşur; yatay veya yükselen piyasada oluşmaz',
+          'A difference occurs only when spot falls, not when it is flat or rising',
+        ),
+      },
+    },
+  },
+  'lesson.asset.crypto.perpetual-funding.001': {
+    taskChoices: {
+      dividend: copy(
+        'Perpetual kontratta spot yönü dışında ek taşıma bileşeni olmadığını varsaymak',
+        'Assuming a perpetual has no carrying component beyond spot direction',
+      ),
+      split: copy(
+        'Mark price spota yakınsa funding ödemesinin sonucu etkileyemeyeceğini varsaymak',
+        'Assuming funding cannot affect P&L when mark price stays near spot',
+      ),
+    },
+    questionOptions: {
+      'question.kripto-perpetual-ve-funding.1': {
+        a: copy(
+          'Genellikle hayır; perpetual yapı sabit vade yerine devam eden türev exposure sunar',
+          'Generally no; a perpetual provides continuing derivative exposure rather than a fixed expiry',
+        ),
+        b: copy(
+          'Evet; tüm perpetual kontratlar standart üç aylık vadeyle sona erer',
+          'Yes; all perpetual contracts expire on a standard three-month schedule',
+        ),
+        c: copy(
+          'Venue’ye göre bir yıllık sabit vade seçilir ve sonra otomatik yenilenir',
+          'A fixed one-year expiry is selected by venue and then automatically renewed',
+        ),
+      },
+      'question.kripto-perpetual-ve-funding.2': {
+        a: copy(
+          'Evet; oran piyasa dengesi, formül ve venue koşullarına göre değişebilir',
+          'Yes; the rate can change with market balance, formula, and venue conditions',
+        ),
+        b: copy(
+          'Hayır; funding oranı kontrat açıldığında sabitlenir',
+          'No; the funding rate is fixed when the contract is opened',
+        ),
+        c: copy(
+          'Funding yalnız fiyat spotun altındayken değişebilir',
+          'Funding can change only when the perpetual trades below spot',
+        ),
+      },
+      'question.kripto-perpetual-ve-funding.3': {
+        a: copy(
+          'Hayır; fiyat, kaldıraç, liquidation ve venue riski devam eder',
+          'No; price, leverage, liquidation, and venue risks remain',
+        ),
+        b: copy(
+          'Evet; pozitif funding oranı yön ve liquidation riskini ortadan kaldırır',
+          'Yes; positive funding removes directional and liquidation risk',
+        ),
+        c: copy(
+          'Yalnız düşük kaldıraçta funding risk-free getiri sayılabilir',
+          'Funding can be treated as risk-free only at low leverage',
+        ),
+      },
+    },
+  },
+  'lesson.asset.crypto.venue-custody.001': {
+    takeaway: copy(
+      'Kriptoda neye sahip olduğun kadar nerede, nasıl ve hangi karşı tarafla tuttuğun da önemlidir.',
+      'In crypto, where, how, and with whom you hold exposure matters alongside what you hold.',
+    ),
+    taskChoices: {
+      candle: copy(
+        'Fiyat volatilitesinin artması; custody ve karşı taraf yapısının değişmemesi',
+        'Higher price volatility while custody and counterparty structure remain unchanged',
+      ),
+      trend: copy(
+        'Spot yön tahmininin yanlış çıkması; platform erişiminin normal çalışması',
+        'A wrong spot-direction thesis while platform access continues to work normally',
+      ),
+    },
+    questionOptions: {
+      'question.kripto-venue-custody-ve-karsi-taraf-riski.1': {
+        a: copy(
+          'Evet; erişim, karşı taraf veya operasyon sorunu fiyat yönünden bağımsız zarar yaratabilir',
+          'Yes; access, counterparty, or operational failures can create losses independent of price direction',
+        ),
+        b: copy(
+          'Hayır; fiyat yönü doğruysa venue ve custody riski ekonomik sonucu değiştiremez',
+          'No; if price direction is right, venue and custody risk cannot change the economic outcome',
+        ),
+        c: copy(
+          'Yalnız kaldıraç kullanıldığında venue riski fiyat yönünden bağımsız hale gelir',
+          'Venue risk becomes independent of price direction only when leverage is used',
+        ),
+      },
+      'question.kripto-venue-custody-ve-karsi-taraf-riski.2': {
+        a: copy(
+          'Evet; anahtar yönetimi, karşı taraf ve operasyon sorumluluğu yönteme göre değişir',
+          'Yes; key management, counterparty exposure, and operational responsibility differ by method',
+        ),
+        b: copy(
+          'Hayır; asset aynıysa tüm custody yöntemleri aynı risk profilini taşır',
+          'No; if the asset is the same, every custody method has the same risk profile',
+        ),
+        c: copy(
+          'Custody yöntemi yalnız işlem ücretini değiştirir, erişim veya karşı taraf riskini değiştirmez',
+          'Custody changes only fees, not access or counterparty risk',
+        ),
+      },
+      'question.kripto-venue-custody-ve-karsi-taraf-riski.3': {
+        a: copy(
+          'Hayır; rezerv görünümü tüm yükümlülük ve operasyon riskini tek başına kapsamaz',
+          'No; reserve visibility alone does not cover all liabilities and operational risks',
+        ),
+        b: copy(
+          'Evet; proof-of-reserves tüm bilanço ve saklama güvenliğini kanıtlar',
+          'Yes; proof-of-reserves proves the full balance sheet and custody safety',
+        ),
+        c: copy(
+          'Yalnız rezervler zincir üstünde görünüyorsa tüm yükümlülüklerin karşılandığı kabul edilir',
+          'All liabilities can be assumed covered whenever reserves are visible on-chain',
+        ),
+      },
+    },
+  },
+  'lesson.asset.crypto.onchain-limits.001': {
+    questionOptions: {
+      'question.onchain-veri-ne-soyler-ne-soylemez.1': {
+        a: copy(
+          'Hayır; transfer gözlenir ama ekonomik amaç ayrıca yorumlanır',
+          'No; the transfer is observable but its economic purpose must be inferred separately',
+        ),
+        b: copy(
+          'Evet; transfer yönü adres sahibinin sonraki alım-satım niyetini doğrudan gösterir',
+          'Yes; transfer direction directly reveals the address owner’s next trading intent',
+        ),
+        c: copy(
+          'Niyet yalnız borsa adresine giden transferlerde kesin olarak okunabilir',
+          'Intent can be read with certainty only for transfers going to exchange addresses',
+        ),
+      },
+      'question.onchain-veri-ne-soyler-ne-soylemez.2': {
+        a: copy(
+          'Hayır; merkezi borsa iç muhasebesi ve eşleşmeler off-chain gerçekleşebilir',
+          'No; centralized-exchange internal accounting and matching can occur off-chain',
+        ),
+        b: copy(
+          'Evet; merkezi borsadaki her emir ve eşleşme blockchain’e yazılır',
+          'Yes; every order and match on a centralized exchange is written to the blockchain',
+        ),
+        c: copy(
+          'Yalnız market emirleri chain üzerinde görünür, limit emirleri görünmez',
+          'Only market orders appear on-chain; limit orders do not',
+        ),
+      },
+      'question.onchain-veri-ne-soyler-ne-soylemez.3': {
+        a: copy(
+          'Evet; attribution çoğu zaman heuristics ve sağlayıcı verisine dayanır',
+          'Yes; attribution often depends on heuristics and provider data',
+        ),
+        b: copy(
+          'Hayır; bir kez etiketlenen adresin kimliği kalıcı ve kesin kabul edilir',
+          'No; once an address is labeled its identity is permanently certain',
+        ),
+        c: copy(
+          'Etiket doğruluğu yalnız zincirin işlem ücretine bağlıdır',
+          'Label accuracy depends only on the blockchain transaction fee',
+        ),
+      },
+    },
+  },
 };
 
 export function normalizeAssetSchoolAssessmentQuality(lesson: MicroLesson): MicroLesson {
@@ -311,6 +620,7 @@ export function normalizeAssetSchoolAssessmentQuality(lesson: MicroLesson): Micr
 
   return microLessonSchema.parse({
     ...lesson,
+    takeaway: override.takeaway ?? lesson.takeaway,
     practicalTask,
     quiz: {
       ...lesson.quiz,
