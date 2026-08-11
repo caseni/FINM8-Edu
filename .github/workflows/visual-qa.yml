@@ -45,8 +45,8 @@ jobs:
       - name: Capture Academy and lesson flow
         run: |
           mkdir -p visual-qa
-          node --input-type=commonjs <<'NODE'
-          const { chromium } = require('playwright');
+          node --input-type=module <<'NODE'
+          import { chromium } from 'playwright';
 
           const baseUrl = 'http://127.0.0.1:4173/';
           const firstLessonTitle = 'Enflasyon neden satın alma gücünü azaltır?';
