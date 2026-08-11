@@ -12,6 +12,10 @@ import {
 } from './ChartLessonSlideVisual';
 import { LearningVisual } from './LearningVisual';
 import {
+  isMarketFoundationSlideAsset,
+  MarketFoundationSlideVisual,
+} from './MarketFoundationSlideVisual';
+import {
   isRiskLessonSlideAsset,
   RiskLessonSlideVisual,
 } from './RiskLessonSlideVisual';
@@ -63,7 +67,15 @@ export function LessonSupportingVisual({
             ? styles.primaryLabel
             : undefined;
 
-  const visual = isChartLessonSlideAsset(assetRef) ? (
+  const visual = isMarketFoundationSlideAsset(assetRef) ? (
+    <MarketFoundationSlideVisual
+      assetRef={assetRef}
+      alt={alt}
+      language={language}
+      role={role}
+      theme={theme}
+    />
+  ) : isChartLessonSlideAsset(assetRef) ? (
     <ChartLessonSlideVisual
       assetRef={assetRef}
       alt={alt}
