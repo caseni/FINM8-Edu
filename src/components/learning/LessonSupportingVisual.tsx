@@ -18,6 +18,10 @@ import {
   EconomySlideVisual,
   isEconomySlideAsset,
 } from './EconomySlideVisual';
+import {
+  FinancialMarketsSlideVisual,
+  isFinancialMarketsSlideAsset,
+} from './FinancialMarketsSlideVisual';
 import { LearningVisual } from './LearningVisual';
 import {
   isMarketFoundationSlideAsset,
@@ -117,6 +121,14 @@ export function LessonSupportingVisual({
     />
   ) : isEconomyExpansionSlideAsset(assetRef) ? (
     <EconomyExpansionSlideVisual
+      assetRef={assetRef}
+      alt={alt}
+      language={language}
+      role={role}
+      theme={theme}
+    />
+  ) : isFinancialMarketsSlideAsset(assetRef) ? (
+    <FinancialMarketsSlideVisual
       assetRef={assetRef}
       alt={alt}
       language={language}
