@@ -20,6 +20,8 @@ export * from './examples/academy/economyFoundationsLessons';
 export * from './examples/academy/economySources';
 export * from './examples/academy/economyExpansionLessons';
 export * from './examples/academy/economyExpansionSources';
+export * from './examples/academy/financialMarketsFoundationLessons';
+export * from './examples/academy/financialMarketsSources';
 export * from './presentation';
 export * from './personalization';
 export * from './progressionEngine';
