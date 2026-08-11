@@ -116,9 +116,21 @@ function improveOption(
     : contextualWrongBinaryLabel(cleaned);
 }
 
+function improvePrompt(questionId: string, prompt: LocalizedText): LocalizedText {
+  if (questionId === 'question.coklu-zaman-dilimi-nasil-kullanilir.1') {
+    return {
+      tr: 'Üst zaman dilimi yükseliş yapısındayken alt zaman dilimi neden geçici düşüş yapısı gösterebilir?',
+      en: 'Why can a lower timeframe show a temporary bearish structure while the higher timeframe remains bullish?',
+    };
+  }
+
+  return prompt;
+}
+
 export function normalizeAssessmentSignalQuality(lesson: MicroLesson): MicroLesson {
   const questions = lesson.quiz.questions.map((question) => ({
     ...question,
+    prompt: improvePrompt(question.id, question.prompt),
     options: question.options.map((option) => ({
       ...option,
       label: improveOption(option, question.correctOptionId, question.explanation),
