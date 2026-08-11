@@ -10,6 +10,7 @@ import { MARKET_PSYCHOLOGY_EXPANSION_LESSONS } from './examples/academy/marketPs
 import { MARKET_PSYCHOLOGY_FOUNDATION_LESSONS } from './examples/academy/marketPsychologyFoundationLessons';
 import { RISK_PORTFOLIO_EXPANSION_LESSONS } from './examples/academy/riskPortfolioExpansionLessons';
 import { RISK_PORTFOLIO_FOUNDATION_LESSONS } from './examples/academy/riskPortfolioFoundationLessons';
+import { SMC_ICT_EXPANSION_LESSONS } from './examples/academy/smcIctExpansionLessons';
 import { SMC_ICT_FOUNDATION_LESSONS } from './examples/academy/smcIctFoundationLessons';
 import { STRATEGY_EXPANSION_LESSONS } from './examples/academy/strategyExpansionLessons';
 import { STRATEGY_FOUNDATION_LESSONS } from './examples/academy/strategyFoundationLessons';
@@ -49,6 +50,7 @@ export const MICRO_LESSON_CATALOG: readonly MicroLesson[] = [
   ...ALGO_QUANT_FOUNDATION_LESSONS,
   ...ALGO_QUANT_EXPANSION_LESSONS,
   ...SMC_ICT_FOUNDATION_LESSONS,
+  ...SMC_ICT_EXPANSION_LESSONS,
 ];
 
 export function getMicroLessonById(lessonId: string): MicroLesson | undefined {
