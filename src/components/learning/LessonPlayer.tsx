@@ -108,6 +108,8 @@ export function LessonPlayer({
   );
   const scrollRef = useRef<ScrollView>(null);
   const isTakeaway = stepIndex === blocks.length;
+  const currentBlock = isTakeaway ? undefined : blocks[stepIndex];
+  const isVisualOnlyStep = currentBlock?.kind === 'visual';
   const totalSteps = blocks.length + 1;
   const progress = (stepIndex + 1) / totalSteps;
 
@@ -176,7 +178,7 @@ export function LessonPlayer({
           {selectLocalizedText(lesson.title, language)}
         </Text>
 
-        <View style={styles.slide}>
+        <View style={[styles.slide, isVisualOnlyStep && styles.visualSlide]}>
           {isTakeaway ? (
             <View style={styles.takeaway}>
               <Text style={styles.takeawayEyebrow}>
@@ -208,16 +210,16 @@ export function LessonPlayer({
                 </View>
               ) : null}
             </View>
-          ) : (
+          ) : currentBlock ? (
             <LessonBlockRenderer
-              block={blocks[stepIndex]}
+              block={currentBlock}
               language={language}
               presentationMode={presentationMode}
               theme={theme}
               renderVisual={renderVisual}
               supportingVisual={lessonVisual}
             />
-          )}
+          ) : null}
         </View>
       </ScrollView>
 
@@ -318,6 +320,11 @@ const createStyles = (theme: LearningTheme) =>
       borderColor: theme.colors.border,
       borderWidth: 1,
       borderRadius: theme.radius.large,
+    },
+    visualSlide: {
+      flex: 0,
+      minHeight: 0,
+      justifyContent: 'flex-start',
     },
     takeaway: { gap: theme.spacing.md },
     takeawayEyebrow: { color: theme.colors.primary, fontSize: 12, fontWeight: '800' },
