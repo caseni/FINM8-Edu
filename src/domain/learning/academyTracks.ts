@@ -1,7 +1,9 @@
 import type { LocalizedText } from './types';
 import { ECONOMY_EXPANSION_LESSONS } from './examples/academy/economyExpansionLessons';
 import { ECONOMY_FOUNDATION_LESSONS } from './examples/academy/economyFoundationsLessons';
+import { FINANCIAL_MARKETS_EXPANSION_LESSONS } from './examples/academy/financialMarketsExpansionLessons';
 import { FINANCIAL_MARKETS_FOUNDATION_LESSONS } from './examples/academy/financialMarketsFoundationLessons';
+import { TECHNICAL_ANALYSIS_FOUNDATION_LESSONS } from './examples/academy/technicalAnalysisFoundationLessons';
 
 export const ACADEMY_TRACK_IDS = [
   'economy',
@@ -48,22 +50,25 @@ export const ACADEMY_TRACKS: Readonly<Record<AcademyTrackId, AcademyTrackDefinit
     order: 2,
     title: { tr: 'Finansal Piyasalar', en: 'Financial Markets' },
     description: {
-      tr: 'Borsa, endeks, ETF, tahvil, forex ve emtia altyapısını ürünlerin gerçekten nasıl çalıştığını anlayacak kadar derinleştir.',
-      en: 'Go deeper into exchanges, indices, ETFs, bonds, FX, and commodities so you understand how the products and venues actually work.',
+      tr: 'Borsa, endeks, ETF, tahvil, forex, emtia, kripto, seanslar, hacim, piyasa altyapısı ve türevleri ürünlerin gerçekten nasıl çalıştığını anlayacak kadar derinleştir.',
+      en: 'Go deeper into exchanges, indices, ETFs, bonds, FX, commodities, crypto, sessions, volume, market infrastructure, and derivatives so you understand how markets actually work.',
     },
     status: 'active',
-    lessonIds: FINANCIAL_MARKETS_FOUNDATION_LESSONS.map((lesson) => lesson.id),
+    lessonIds: [
+      ...FINANCIAL_MARKETS_FOUNDATION_LESSONS.map((lesson) => lesson.id),
+      ...FINANCIAL_MARKETS_EXPANSION_LESSONS.map((lesson) => lesson.id),
+    ],
   },
   technical_analysis: {
     id: 'technical_analysis',
     order: 3,
     title: { tr: 'Teknik Analiz', en: 'Technical Analysis' },
     description: {
-      tr: 'Core grafik bilgisini breakout, pullback, momentum, hacim, indikatörler ve çoklu zaman dilimi uygulamalarıyla genişlet.',
-      en: 'Extend core chart literacy with breakouts, pullbacks, momentum, volume, indicators, and multi-timeframe applications.',
+      tr: 'Core grafik bilgisini breakout, false breakout, pullback, range, momentum ve hareketli ortalama uygulamalarıyla genişlet.',
+      en: 'Extend Core chart literacy with breakouts, false breakouts, pullbacks, ranges, momentum, and moving-average applications.',
     },
-    status: 'planned',
-    lessonIds: [],
+    status: 'active',
+    lessonIds: TECHNICAL_ANALYSIS_FOUNDATION_LESSONS.map((lesson) => lesson.id),
   },
   fundamental_analysis: {
     id: 'fundamental_analysis',
@@ -82,7 +87,7 @@ export const ACADEMY_TRACKS: Readonly<Record<AcademyTrackId, AcademyTrackDefinit
     title: { tr: 'Risk ve Portföy', en: 'Risk and Portfolio' },
     description: {
       tr: 'Core risk bilgisini korelasyon, drawdown, kaldıraç, yoğunlaşma ve portföy oluşturma konularıyla derinleştir.',
-      en: 'Deepen core risk knowledge with correlation, drawdown, leverage, concentration, and portfolio construction.',
+      en: 'Deepen Core risk knowledge with correlation, drawdown, leverage, concentration, and portfolio construction.',
     },
     status: 'planned',
     lessonIds: [],
