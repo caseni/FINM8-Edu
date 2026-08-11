@@ -16,6 +16,7 @@ import { MARKET_PSYCHOLOGY_FOUNDATION_LESSONS } from './examples/academy/marketP
 import { normalizeRiskPortfolioAssessmentQuality } from './examples/academy/riskPortfolioAssessmentQuality';
 import { RISK_PORTFOLIO_EXPANSION_LESSONS } from './examples/academy/riskPortfolioExpansionLessons';
 import { RISK_PORTFOLIO_FOUNDATION_LESSONS } from './examples/academy/riskPortfolioFoundationLessons';
+import { normalizeSmcIctAssessmentQuality } from './examples/academy/smcIctAssessmentQuality';
 import { SMC_ICT_EXPANSION_LESSONS } from './examples/academy/smcIctExpansionLessons';
 import { SMC_ICT_FOUNDATION_LESSONS } from './examples/academy/smcIctFoundationLessons';
 import { normalizeStrategyAssessmentQuality } from './examples/academy/strategyAssessmentQuality';
@@ -56,8 +57,8 @@ export const MICRO_LESSON_CATALOG: readonly MicroLesson[] = [
   ...STRATEGY_EXPANSION_LESSONS.map(normalizeStrategyAssessmentQuality),
   ...ALGO_QUANT_FOUNDATION_LESSONS.map(normalizeAlgoQuantAssessmentQuality),
   ...ALGO_QUANT_EXPANSION_LESSONS.map(normalizeAlgoQuantAssessmentQuality),
-  ...SMC_ICT_FOUNDATION_LESSONS,
-  ...SMC_ICT_EXPANSION_LESSONS,
+  ...SMC_ICT_FOUNDATION_LESSONS.map(normalizeSmcIctAssessmentQuality),
+  ...SMC_ICT_EXPANSION_LESSONS.map(normalizeSmcIctAssessmentQuality),
   ...ASSET_SCHOOL_FOUNDATION_LESSONS.map(normalizeAssetSchoolAssessmentQuality),
   ...ASSET_SCHOOL_EXPANSION_LESSONS.map(normalizeAssetSchoolAssessmentQuality),
 ];
