@@ -11,6 +11,10 @@ import {
   isChartLessonSlideAsset,
 } from './ChartLessonSlideVisual';
 import {
+  EconomyExpansionSlideVisual,
+  isEconomyExpansionSlideAsset,
+} from './EconomyExpansionSlideVisual';
+import {
   EconomySlideVisual,
   isEconomySlideAsset,
 } from './EconomySlideVisual';
@@ -105,6 +109,14 @@ export function LessonSupportingVisual({
     />
   ) : isEconomySlideAsset(assetRef) ? (
     <EconomySlideVisual
+      assetRef={assetRef}
+      alt={alt}
+      language={language}
+      role={role}
+      theme={theme}
+    />
+  ) : isEconomyExpansionSlideAsset(assetRef) ? (
+    <EconomyExpansionSlideVisual
       assetRef={assetRef}
       alt={alt}
       language={language}
