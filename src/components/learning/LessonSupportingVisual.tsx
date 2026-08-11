@@ -10,6 +10,10 @@ import {
   ChartLessonSlideVisual,
   isChartLessonSlideAsset,
 } from './ChartLessonSlideVisual';
+import {
+  EconomySlideVisual,
+  isEconomySlideAsset,
+} from './EconomySlideVisual';
 import { LearningVisual } from './LearningVisual';
 import {
   isMarketFoundationSlideAsset,
@@ -93,6 +97,14 @@ export function LessonSupportingVisual({
     />
   ) : isBehaviorEvidenceSlideAsset(assetRef) ? (
     <BehaviorEvidenceSlideVisual
+      assetRef={assetRef}
+      alt={alt}
+      language={language}
+      role={role}
+      theme={theme}
+    />
+  ) : isEconomySlideAsset(assetRef) ? (
+    <EconomySlideVisual
       assetRef={assetRef}
       alt={alt}
       language={language}
