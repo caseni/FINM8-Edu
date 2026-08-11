@@ -28,6 +28,7 @@ export * from './examples/academy/technicalAnalysisFoundationLessons';
 export * from './examples/academy/technicalAnalysisExpansionLessons';
 export * from './examples/academy/technicalAnalysisSources';
 export * from './examples/academy/fundamentalAnalysisFoundationLessons';
+export * from './examples/academy/fundamentalAnalysisExpansionLessons';
 export * from './examples/academy/fundamentalAnalysisSources';
 export * from './presentation';
 export * from './personalization';
