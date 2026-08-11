@@ -103,6 +103,15 @@ const riskQuestions = WAVE1_RISK_MANAGEMENT_LESSONS.map((lesson, index) => ({
   ...lesson.quiz.questions[0],
   id: `question.challenge.risk-management.${index + 1}`,
 }));
+const riskPositionSizingLesson = WAVE1_RISK_MANAGEMENT_LESSONS.find(
+  (lesson) => lesson.id === 'lesson.risk.position-sizing.001'
+);
+const riskDiversificationLesson = WAVE1_RISK_MANAGEMENT_LESSONS.find(
+  (lesson) => lesson.id === 'lesson.portfolio.diversification.001'
+);
+if (!riskPositionSizingLesson || !riskDiversificationLesson) {
+  throw new Error('Risk management challenge source lessons are missing');
+}
 
 export const RISK_MANAGEMENT_CHALLENGE = learningChallengeSchema.parse({
   id: 'challenge.risk.foundation',
@@ -116,11 +125,11 @@ export const RISK_MANAGEMENT_CHALLENGE = learningChallengeSchema.parse({
   questions: riskQuestions,
   practicalTasks: [
     {
-      ...WAVE1_RISK_MANAGEMENT_LESSONS[2].practicalTask,
+      ...riskPositionSizingLesson.practicalTask,
       id: 'task.challenge.risk-management.position-size',
     },
     {
-      ...WAVE1_RISK_MANAGEMENT_LESSONS[5].practicalTask,
+      ...riskDiversificationLesson.practicalTask,
       id: 'task.challenge.risk-management.diversification',
     },
   ],

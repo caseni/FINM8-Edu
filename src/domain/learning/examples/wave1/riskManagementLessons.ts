@@ -129,5 +129,5 @@ const diversification = createFoundationLesson({
 });
 
 export const WAVE1_RISK_MANAGEMENT_LESSONS: readonly MicroLesson[] = [
-  uncertainty, volatility, positionSizing, riskReward, stopOrders, diversification,
+  uncertainty, volatility, positionSizing, diversification, riskReward, stopOrders,
 ];
