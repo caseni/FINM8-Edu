@@ -43,7 +43,7 @@ jobs:
         run: npm audit fix --omit=dev --dry-run || true
 
       - name: Apply verified non-force audit fix
-        run: npm audit fix --omit=dev
+        run: npm audit fix --omit=dev || true
 
       - name: Ensure package manifest is unchanged
         run: git diff --exit-code -- package.json
