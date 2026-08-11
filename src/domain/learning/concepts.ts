@@ -1,91 +1,31 @@
 export const LEARNING_CONCEPT_KEYS = [
-  'market.basics.price_formation',
-  'market.basics.instruments',
-  'market.microstructure.bid_ask',
-  'market.execution.order_types',
-  'market.execution.slippage',
-  'market.chart.timeframes',
-  'market.chart.candles',
-  'market.trend.basics',
-  'market.structure.bos',
-  'market.structure.choch',
-  'market.structure.support_resistance',
-  'market.structure.fvg',
-  'market.structure.order_block',
-  'market.structure.liquidity',
-  'market.timeframe.alignment',
-  'market.venues.exchanges',
-  'market.indices.basics',
-  'market.etf.basics',
-  'market.fixed_income.bonds',
-  'market.forex.basics',
-  'market.commodities.basics',
-  'market.crypto.basics',
-  'market.sessions.basics',
-  'market.volume.basics',
-  'market.liquidity_providers',
-  'market.primary_secondary',
-  'market.derivatives.basics',
-  'market.technical.breakout',
-  'market.technical.false_breakout',
-  'market.technical.pullback',
-  'market.technical.range',
-  'market.technical.momentum',
-  'market.technical.moving_average',
-  'market.technical.rsi',
-  'market.technical.macd',
-  'market.technical.multi_timeframe',
-  'market.technical.patterns',
-  'market.technical.confluence',
-  'market.technical.indicator_limits',
-  'risk.volatility',
-  'risk.basics',
-  'risk.position_sizing',
-  'risk.risk_reward',
-  'risk.stop_orders',
-  'portfolio.diversification',
-  'evidence.freshness',
-  'evidence.data_quality',
-  'economy.inflation',
-  'economy.interest_rates',
-  'economy.central_banks',
-  'economy.monetary_policy',
-  'economy.growth',
-  'economy.business_cycle',
-  'economy.labor_market',
-  'economy.fiscal_policy',
-  'economy.exchange_rates',
-  'economy.productivity',
-  'economy.indicators',
-  'economy.real_nominal',
-  'fundamental.basics',
-  'fundamental.financial_statements',
-  'fundamental.income_statement',
-  'fundamental.balance_sheet',
-  'fundamental.cash_flow',
-  'fundamental.profitability',
-  'fundamental.debt_liquidity',
-  'onchain.basics',
-  'behavior.fomo',
-  'behavior.confirmation_bias',
-  'behavior.decision_journal',
-  'behavior.overtrading',
+  'market.basics.price_formation', 'market.basics.instruments', 'market.microstructure.bid_ask',
+  'market.execution.order_types', 'market.execution.slippage', 'market.chart.timeframes', 'market.chart.candles',
+  'market.trend.basics', 'market.structure.bos', 'market.structure.choch', 'market.structure.support_resistance',
+  'market.structure.fvg', 'market.structure.order_block', 'market.structure.liquidity', 'market.timeframe.alignment',
+  'market.venues.exchanges', 'market.indices.basics', 'market.etf.basics', 'market.fixed_income.bonds',
+  'market.forex.basics', 'market.commodities.basics', 'market.crypto.basics', 'market.sessions.basics',
+  'market.volume.basics', 'market.liquidity_providers', 'market.primary_secondary', 'market.derivatives.basics',
+  'market.technical.breakout', 'market.technical.false_breakout', 'market.technical.pullback', 'market.technical.range',
+  'market.technical.momentum', 'market.technical.moving_average', 'market.technical.rsi', 'market.technical.macd',
+  'market.technical.multi_timeframe', 'market.technical.patterns', 'market.technical.confluence', 'market.technical.indicator_limits',
+  'risk.volatility', 'risk.basics', 'risk.position_sizing', 'risk.risk_reward', 'risk.stop_orders',
+  'portfolio.diversification', 'evidence.freshness', 'evidence.data_quality',
+  'economy.inflation', 'economy.interest_rates', 'economy.central_banks', 'economy.monetary_policy',
+  'economy.growth', 'economy.business_cycle', 'economy.labor_market', 'economy.fiscal_policy',
+  'economy.exchange_rates', 'economy.productivity', 'economy.indicators', 'economy.real_nominal',
+  'fundamental.basics', 'fundamental.financial_statements', 'fundamental.income_statement', 'fundamental.balance_sheet',
+  'fundamental.cash_flow', 'fundamental.profitability', 'fundamental.debt_liquidity', 'fundamental.growth_quality',
+  'fundamental.per_share', 'fundamental.valuation_multiples', 'fundamental.dcf', 'fundamental.peer_comparison',
+  'fundamental.analysis_limits', 'onchain.basics', 'behavior.fomo', 'behavior.confirmation_bias',
+  'behavior.decision_journal', 'behavior.overtrading',
 ] as const;
 
 export type LearningConceptKey = (typeof LEARNING_CONCEPT_KEYS)[number];
 
 export type LearningConceptCategory =
-  | 'market_foundations'
-  | 'market_execution'
-  | 'chart_literacy'
-  | 'market_structure'
-  | 'risk'
-  | 'portfolio'
-  | 'evidence'
-  | 'economy'
-  | 'fundamental'
-  | 'onchain'
-  | 'behavior';
+  | 'market_foundations' | 'market_execution' | 'chart_literacy' | 'market_structure' | 'risk'
+  | 'portfolio' | 'evidence' | 'economy' | 'fundamental' | 'onchain' | 'behavior';
 
 export interface LearningConceptDefinition {
   readonly key: LearningConceptKey;
@@ -94,7 +34,6 @@ export interface LearningConceptDefinition {
   readonly titleEn: string;
 }
 
-/** Stable concept identities shared by lessons and future FINM8 entry points. */
 export const LEARNING_CONCEPTS: Readonly<Record<LearningConceptKey, LearningConceptDefinition>> = {
   'market.basics.price_formation': { key: 'market.basics.price_formation', category: 'market_foundations', titleTr: 'Piyasada fiyatın oluşumu', titleEn: 'How market prices form' },
   'market.basics.instruments': { key: 'market.basics.instruments', category: 'market_foundations', titleTr: 'Piyasa ve araç türleri', titleEn: 'Market and instrument types' },
@@ -162,6 +101,12 @@ export const LEARNING_CONCEPTS: Readonly<Record<LearningConceptKey, LearningConc
   'fundamental.cash_flow': { key: 'fundamental.cash_flow', category: 'fundamental', titleTr: 'Nakit akış tablosu', titleEn: 'Cash-flow statement' },
   'fundamental.profitability': { key: 'fundamental.profitability', category: 'fundamental', titleTr: 'Kârlılık ve marjlar', titleEn: 'Profitability and margins' },
   'fundamental.debt_liquidity': { key: 'fundamental.debt_liquidity', category: 'fundamental', titleTr: 'Borç ve likidite', titleEn: 'Debt and liquidity' },
+  'fundamental.growth_quality': { key: 'fundamental.growth_quality', category: 'fundamental', titleTr: 'Büyüme kalitesi', titleEn: 'Growth quality' },
+  'fundamental.per_share': { key: 'fundamental.per_share', category: 'fundamental', titleTr: 'Hisse başına metrikler', titleEn: 'Per-share metrics' },
+  'fundamental.valuation_multiples': { key: 'fundamental.valuation_multiples', category: 'fundamental', titleTr: 'Değerleme çarpanları', titleEn: 'Valuation multiples' },
+  'fundamental.dcf': { key: 'fundamental.dcf', category: 'fundamental', titleTr: 'İndirgenmiş nakit akışı (DCF)', titleEn: 'Discounted cash flow (DCF)' },
+  'fundamental.peer_comparison': { key: 'fundamental.peer_comparison', category: 'fundamental', titleTr: 'Benzer şirket karşılaştırması', titleEn: 'Peer comparison' },
+  'fundamental.analysis_limits': { key: 'fundamental.analysis_limits', category: 'fundamental', titleTr: 'Temel analizin sınırları', titleEn: 'Limits of fundamental analysis' },
   'onchain.basics': { key: 'onchain.basics', category: 'onchain', titleTr: 'On-chain veri başlangıcı', titleEn: 'On-chain data basics' },
   'behavior.fomo': { key: 'behavior.fomo', category: 'behavior', titleTr: 'Fırsatı kaçırma korkusu (FOMO)', titleEn: 'Fear of missing out (FOMO)' },
   'behavior.confirmation_bias': { key: 'behavior.confirmation_bias', category: 'behavior', titleTr: 'Onaylama yanlılığı', titleEn: 'Confirmation bias' },
