@@ -13,6 +13,7 @@ import { FundamentalAnalysisSlideVisual, isFundamentalAnalysisSlideAsset } from 
 import { LearningVisual } from './LearningVisual';
 import { isMarketFoundationSlideAsset, MarketFoundationSlideVisual } from './MarketFoundationSlideVisual';
 import { isRiskLessonSlideAsset, RiskLessonSlideVisual } from './RiskLessonSlideVisual';
+import { isRiskPortfolioSlideAsset, RiskPortfolioSlideVisual } from './RiskPortfolioSlideVisual';
 import { isTechnicalAnalysisExpansionSlideAsset, TechnicalAnalysisExpansionSlideVisual } from './TechnicalAnalysisExpansionSlideVisual';
 import { isTechnicalAnalysisSlideAsset, TechnicalAnalysisSlideVisual } from './TechnicalAnalysisSlideVisual';
 
@@ -43,6 +44,7 @@ export function LessonSupportingVisual({ assetRef, alt, language, role, theme = 
     : isTechnicalAnalysisExpansionSlideAsset(assetRef) ? <TechnicalAnalysisExpansionSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
     : isFundamentalAnalysisSlideAsset(assetRef) ? <FundamentalAnalysisSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
     : isFundamentalAnalysisExpansionSlideAsset(assetRef) ? <FundamentalAnalysisExpansionSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
+    : isRiskPortfolioSlideAsset(assetRef) ? <RiskPortfolioSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
     : <LearningVisual assetRef={`${assetRef}#${role}`} alt={alt} language={language} theme={theme} />;
 
   return <View style={styles.wrapper}><Text style={[styles.eyebrow, labelStyle]}>{label}</Text>{visual}</View>;
