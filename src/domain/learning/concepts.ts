@@ -22,6 +22,12 @@ export const LEARNING_CONCEPT_KEYS = [
   'portfolio.diversification',
   'evidence.freshness',
   'evidence.data_quality',
+  'economy.inflation',
+  'economy.interest_rates',
+  'economy.central_banks',
+  'economy.monetary_policy',
+  'economy.growth',
+  'economy.business_cycle',
   'fundamental.basics',
   'onchain.basics',
   'behavior.fomo',
@@ -40,6 +46,7 @@ export type LearningConceptCategory =
   | 'risk'
   | 'portfolio'
   | 'evidence'
+  | 'economy'
   | 'fundamental'
   | 'onchain'
   | 'behavior';
@@ -195,6 +202,42 @@ export const LEARNING_CONCEPTS: Readonly<
     category: 'evidence',
     titleTr: 'Veri kalitesi',
     titleEn: 'Data quality',
+  },
+  'economy.inflation': {
+    key: 'economy.inflation',
+    category: 'economy',
+    titleTr: 'Enflasyon ve satın alma gücü',
+    titleEn: 'Inflation and purchasing power',
+  },
+  'economy.interest_rates': {
+    key: 'economy.interest_rates',
+    category: 'economy',
+    titleTr: 'Faiz oranlarının temel mantığı',
+    titleEn: 'Interest-rate foundations',
+  },
+  'economy.central_banks': {
+    key: 'economy.central_banks',
+    category: 'economy',
+    titleTr: 'Merkez bankalarının rolü',
+    titleEn: 'The role of central banks',
+  },
+  'economy.monetary_policy': {
+    key: 'economy.monetary_policy',
+    category: 'economy',
+    titleTr: 'Para politikası aktarım mekanizması',
+    titleEn: 'Monetary-policy transmission',
+  },
+  'economy.growth': {
+    key: 'economy.growth',
+    category: 'economy',
+    titleTr: 'Ekonomik büyüme ve GSYH',
+    titleEn: 'Economic growth and GDP',
+  },
+  'economy.business_cycle': {
+    key: 'economy.business_cycle',
+    category: 'economy',
+    titleTr: 'Ekonomik döngü ve resesyon',
+    titleEn: 'Business cycles and recession',
   },
   'fundamental.basics': {
     key: 'fundamental.basics',
