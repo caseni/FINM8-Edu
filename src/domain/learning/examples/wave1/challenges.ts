@@ -77,7 +77,7 @@ export const MARKET_STRUCTURE_CHALLENGE = learningChallengeSchema.parse({
   id: 'challenge.market-structure.intermediate',
   title: { tr: 'Piyasa Yapısı · Bölüm Sonu Uygulaması', en: 'Market Structure · Module Wrap-Up' },
   description: {
-    tr: 'BOS ve CHoCH kavramlarını anlamlı swing, kapanış ve bağlam üzerinden ayırt et.',
+    tr: 'BOS ve CHoCH kavramlarını anlamlı salınım seviyeleri, kapanış ve bağlam üzerinden ayırt et.',
     en: 'Distinguish BOS and CHoCH through meaningful swings, closes, and context.',
   },
   stage: 'intermediate',
