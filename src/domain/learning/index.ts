@@ -18,6 +18,8 @@ export * from './examples/wave1/behaviorEvidenceSources';
 export * from './examples/wave1/challenges';
 export * from './examples/academy/economyFoundationsLessons';
 export * from './examples/academy/economySources';
+export * from './examples/academy/economyExpansionLessons';
+export * from './examples/academy/economyExpansionSources';
 export * from './presentation';
 export * from './personalization';
 export * from './progressionEngine';
