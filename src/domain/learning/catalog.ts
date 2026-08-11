@@ -16,6 +16,7 @@ import { RISK_PORTFOLIO_EXPANSION_LESSONS } from './examples/academy/riskPortfol
 import { RISK_PORTFOLIO_FOUNDATION_LESSONS } from './examples/academy/riskPortfolioFoundationLessons';
 import { SMC_ICT_EXPANSION_LESSONS } from './examples/academy/smcIctExpansionLessons';
 import { SMC_ICT_FOUNDATION_LESSONS } from './examples/academy/smcIctFoundationLessons';
+import { normalizeStrategyAssessmentQuality } from './examples/academy/strategyAssessmentQuality';
 import { STRATEGY_EXPANSION_LESSONS } from './examples/academy/strategyExpansionLessons';
 import { STRATEGY_FOUNDATION_LESSONS } from './examples/academy/strategyFoundationLessons';
 import { TECHNICAL_ANALYSIS_EXPANSION_LESSONS } from './examples/academy/technicalAnalysisExpansionLessons';
@@ -49,8 +50,8 @@ export const MICRO_LESSON_CATALOG: readonly MicroLesson[] = [
   ...RISK_PORTFOLIO_EXPANSION_LESSONS,
   ...MARKET_PSYCHOLOGY_FOUNDATION_LESSONS,
   ...MARKET_PSYCHOLOGY_EXPANSION_LESSONS,
-  ...STRATEGY_FOUNDATION_LESSONS,
-  ...STRATEGY_EXPANSION_LESSONS,
+  ...STRATEGY_FOUNDATION_LESSONS.map(normalizeStrategyAssessmentQuality),
+  ...STRATEGY_EXPANSION_LESSONS.map(normalizeStrategyAssessmentQuality),
   ...ALGO_QUANT_FOUNDATION_LESSONS.map(normalizeAlgoQuantAssessmentQuality),
   ...ALGO_QUANT_EXPANSION_LESSONS.map(normalizeAlgoQuantAssessmentQuality),
   ...SMC_ICT_FOUNDATION_LESSONS,
