@@ -59,6 +59,12 @@ export const LEARNING_CONCEPT_KEYS = [
   'economy.indicators',
   'economy.real_nominal',
   'fundamental.basics',
+  'fundamental.financial_statements',
+  'fundamental.income_statement',
+  'fundamental.balance_sheet',
+  'fundamental.cash_flow',
+  'fundamental.profitability',
+  'fundamental.debt_liquidity',
   'onchain.basics',
   'behavior.fomo',
   'behavior.confirmation_bias',
@@ -88,13 +94,8 @@ export interface LearningConceptDefinition {
   readonly titleEn: string;
 }
 
-/**
- * Stable concept identities shared by lessons and future FINM8 entry points.
- * UI copy may change; these keys must not.
- */
-export const LEARNING_CONCEPTS: Readonly<
-  Record<LearningConceptKey, LearningConceptDefinition>
-> = {
+/** Stable concept identities shared by lessons and future FINM8 entry points. */
+export const LEARNING_CONCEPTS: Readonly<Record<LearningConceptKey, LearningConceptDefinition>> = {
   'market.basics.price_formation': { key: 'market.basics.price_formation', category: 'market_foundations', titleTr: 'Piyasada fiyatın oluşumu', titleEn: 'How market prices form' },
   'market.basics.instruments': { key: 'market.basics.instruments', category: 'market_foundations', titleTr: 'Piyasa ve araç türleri', titleEn: 'Market and instrument types' },
   'market.microstructure.bid_ask': { key: 'market.microstructure.bid_ask', category: 'market_execution', titleTr: 'Alış, satış ve spread', titleEn: 'Bid, ask, and spread' },
@@ -155,6 +156,12 @@ export const LEARNING_CONCEPTS: Readonly<
   'economy.indicators': { key: 'economy.indicators', category: 'economy', titleTr: 'Ekonomik veriyi doğru okuma', titleEn: 'Reading economic indicators' },
   'economy.real_nominal': { key: 'economy.real_nominal', category: 'economy', titleTr: 'Reel ve nominal değerler', titleEn: 'Real and nominal values' },
   'fundamental.basics': { key: 'fundamental.basics', category: 'fundamental', titleTr: 'Temel analiz başlangıcı', titleEn: 'Fundamental analysis basics' },
+  'fundamental.financial_statements': { key: 'fundamental.financial_statements', category: 'fundamental', titleTr: 'Finansal tabloları birlikte okuma', titleEn: 'Connecting financial statements' },
+  'fundamental.income_statement': { key: 'fundamental.income_statement', category: 'fundamental', titleTr: 'Gelir tablosu', titleEn: 'Income statement' },
+  'fundamental.balance_sheet': { key: 'fundamental.balance_sheet', category: 'fundamental', titleTr: 'Bilanço', titleEn: 'Balance sheet' },
+  'fundamental.cash_flow': { key: 'fundamental.cash_flow', category: 'fundamental', titleTr: 'Nakit akış tablosu', titleEn: 'Cash-flow statement' },
+  'fundamental.profitability': { key: 'fundamental.profitability', category: 'fundamental', titleTr: 'Kârlılık ve marjlar', titleEn: 'Profitability and margins' },
+  'fundamental.debt_liquidity': { key: 'fundamental.debt_liquidity', category: 'fundamental', titleTr: 'Borç ve likidite', titleEn: 'Debt and liquidity' },
   'onchain.basics': { key: 'onchain.basics', category: 'onchain', titleTr: 'On-chain veri başlangıcı', titleEn: 'On-chain data basics' },
   'behavior.fomo': { key: 'behavior.fomo', category: 'behavior', titleTr: 'Fırsatı kaçırma korkusu (FOMO)', titleEn: 'Fear of missing out (FOMO)' },
   'behavior.confirmation_bias': { key: 'behavior.confirmation_bias', category: 'behavior', titleTr: 'Onaylama yanlılığı', titleEn: 'Confirmation bias' },
