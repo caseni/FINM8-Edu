@@ -25,10 +25,16 @@ jobs:
       - name: Build web export
         run: npm run build:web
 
-      - name: Install ephemeral Playwright
+      - name: Install ephemeral Playwright core
         run: |
-          npm install --no-save --package-lock=false playwright@1.55.0
-          npx playwright install --with-deps chromium
+          npm install --no-save --package-lock=false playwright-core@1.55.0
+          CHROME_BIN="$(command -v google-chrome || command -v chromium || command -v chromium-browser || true)"
+          if [ -z "$CHROME_BIN" ]; then
+            echo "No system Chrome/Chromium found on runner."
+            exit 1
+          fi
+          echo "CHROME_BIN=$CHROME_BIN" >> "$GITHUB_ENV"
+          echo "Using system browser: $CHROME_BIN"
 
       - name: Serve web export
         run: |
@@ -46,7 +52,7 @@ jobs:
         run: |
           mkdir -p visual-qa
           node --input-type=module <<'NODE'
-          import { chromium } from 'playwright';
+          import { chromium } from 'playwright-core';
 
           const baseUrl = 'http://127.0.0.1:4173/';
           const firstLessonTitle = 'Enflasyon neden satın alma gücünü azaltır?';
@@ -62,16 +68,24 @@ jobs:
             }
           }
 
-          async function openAcademy(page) {
+          async function openAcademy(page, debugName) {
             await page.goto(baseUrl, { waitUntil: 'networkidle' });
-            await page.getByRole('tab', { name: /Academy/i }).click();
+            const academyTab = page.getByText('Academy', { exact: true }).first();
+            try {
+              await academyTab.waitFor({ state: 'visible', timeout: 15000 });
+            } catch (error) {
+              console.log(`${debugName} landing body:\n${await page.locator('body').innerText()}`);
+              await page.screenshot({ path: `visual-qa/${debugName}-landing-debug.png`, fullPage: true });
+              throw error;
+            }
+            await academyTab.click();
             await page.getByText('Finansı konu konu derinleştir.').waitFor();
           }
 
-          const browser = await chromium.launch();
+          const browser = await chromium.launch({ executablePath: process.env.CHROME_BIN, headless: true });
           try {
             const mobile = await browser.newPage({ viewport: { width: 390, height: 844 } });
-            await openAcademy(mobile);
+            await openAcademy(mobile, 'mobile');
             await assertNoHorizontalOverflow(mobile, 'academy-mobile-collapsed');
             await mobile.screenshot({ path: 'visual-qa/academy-mobile-collapsed.png', fullPage: true });
 
@@ -99,7 +113,7 @@ jobs:
             }
 
             const desktop = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
-            await openAcademy(desktop);
+            await openAcademy(desktop, 'desktop');
             await assertNoHorizontalOverflow(desktop, 'academy-desktop-collapsed');
             await desktop.screenshot({ path: 'visual-qa/academy-desktop-collapsed.png', fullPage: true });
             await desktop.getByRole('button', { name: /Temel Ekonomi derslerini aç/i }).click();
@@ -111,8 +125,9 @@ jobs:
           NODE
 
       - name: Upload visual QA screenshots
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: finm8-edu-visual-qa
           path: visual-qa/*.png
-          if-no-files-found: error
+          if-no-files-found: warn
