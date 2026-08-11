@@ -45,7 +45,7 @@ jobs:
       - name: Capture Academy and lesson flow
         run: |
           mkdir -p visual-qa
-          node <<'NODE'
+          node --input-type=commonjs <<'NODE'
           const { chromium } = require('playwright');
 
           const baseUrl = 'http://127.0.0.1:4173/';
