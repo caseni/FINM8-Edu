@@ -21,7 +21,6 @@ import { ConfirmationBiasVisual } from './ConfirmationBiasVisual';
 import { DecisionJournalVisual } from './DecisionJournalVisual';
 import { DiversificationVisual } from './DiversificationVisual';
 import { FomoDecisionVisual } from './FomoDecisionVisual';
-import { LearningVisual } from './LearningVisual';
 import {
   LessonSupportingVisual,
   type LessonSupportingVisualRole,
@@ -177,10 +176,11 @@ export function LessonBlockRenderer({
         ) : isCandleAnatomyVisual ? (
           <CandleAnatomyVisual alt={alt} language={language} theme={theme} />
         ) : (
-          <LearningVisual
+          <LessonSupportingVisual
             assetRef={block.assetRef}
             alt={alt}
             language={language}
+            role="practice"
             theme={theme}
           />
         )}
