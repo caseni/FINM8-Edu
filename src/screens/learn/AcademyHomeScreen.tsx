@@ -16,12 +16,26 @@ export function AcademyHomeScreen() {
   const rawLanguage = useLanguageStore((state) => state.language);
   const language: LearningLanguage = rawLanguage === 'en' ? 'en' : 'tr';
   const completedLessonIds = useLearningProgressStore((state) => state.completedLessonIds);
+  const lessonCheckpoints = useLearningProgressStore((state) => state.lessonCheckpoints);
   const [expandedTrackId, setExpandedTrackId] = useState<string | null>(null);
 
   const lessonsById = useMemo(
     () => new Map(MICRO_LESSON_CATALOG.map((lesson) => [lesson.id, lesson] as const)),
     []
   );
+
+  const openLesson = (lessonId: string) => {
+    const checkpoint = lessonCheckpoints[lessonId];
+    if (checkpoint?.stage === 'task') {
+      navigation.navigate('PracticalTask', { lessonId });
+      return;
+    }
+    if (checkpoint?.stage === 'quiz') {
+      navigation.navigate('LessonQuiz', { lessonId });
+      return;
+    }
+    navigation.navigate('MicroLesson', { lessonId });
+  };
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -136,12 +150,24 @@ export function AcademyHomeScreen() {
                 <View style={styles.lessonList}>
                   {lessons.map((lesson, index) => {
                     const completed = completedLessonIds.includes(lesson.id);
+                    const checkpoint = lessonCheckpoints[lesson.id];
+                    const resumeLabel = checkpoint?.stage === 'task'
+                      ? language === 'tr' ? 'Devam · Görev' : 'Resume · Task'
+                      : checkpoint?.stage === 'quiz'
+                        ? language === 'tr' ? 'Devam · Quiz' : 'Resume · Quiz'
+                        : checkpoint?.stage === 'lesson'
+                          ? language === 'tr' ? 'Devam · Ders' : 'Resume · Lesson'
+                          : undefined;
                     return (
                       <Pressable
                         key={lesson.id}
                         accessibilityRole="button"
-                        accessibilityLabel={selectLocalizedText(lesson.title, language)}
-                        onPress={() => navigation.navigate('MicroLesson', { lessonId: lesson.id })}
+                        accessibilityLabel={
+                          resumeLabel
+                            ? `${selectLocalizedText(lesson.title, language)} · ${resumeLabel}`
+                            : selectLocalizedText(lesson.title, language)
+                        }
+                        onPress={() => openLesson(lesson.id)}
                         style={({ pressed }) => [styles.lessonRow, pressed && styles.lessonRowPressed]}
                       >
                         <View style={[styles.lessonMarker, completed && styles.lessonMarkerComplete]}>
@@ -149,8 +175,8 @@ export function AcademyHomeScreen() {
                         </View>
                         <View style={styles.lessonCopy}>
                           <Text style={styles.lessonTitle}>{selectLocalizedText(lesson.title, language)}</Text>
-                          <Text style={styles.lessonMeta}>
-                            {lesson.estimatedMinutes} {language === 'tr' ? 'dk' : 'min'}
+                          <Text style={[styles.lessonMeta, resumeLabel && styles.lessonMetaResume]}>
+                            {resumeLabel ?? `${lesson.estimatedMinutes} ${language === 'tr' ? 'dk' : 'min'}`}
                           </Text>
                         </View>
                         <Text style={styles.openText}>›</Text>
@@ -223,6 +249,7 @@ const styles = StyleSheet.create({
   lessonCopy: { flex: 1, gap: 3 },
   lessonTitle: { color: '#F8FAFC', fontSize: 14, lineHeight: 19, fontWeight: '700' },
   lessonMeta: { color: '#8094A8', fontSize: 11 },
+  lessonMetaResume: { color: '#5EEAD4', fontWeight: '800' },
   openText: { color: '#2DD4BF', fontSize: 22, fontWeight: '500' },
   footerNote: { gap: 5, padding: 16, borderRadius: 16, backgroundColor: '#101D2C', borderWidth: 1, borderColor: '#1F3449' },
   footerTitle: { color: '#F8FAFC', fontSize: 14, fontWeight: '900' },
