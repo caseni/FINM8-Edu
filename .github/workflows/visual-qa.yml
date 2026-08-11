@@ -1,0 +1,118 @@
+name: Visual QA
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  academy-render:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install app dependencies
+        run: npm ci
+
+      - name: Build web export
+        run: npm run build:web
+
+      - name: Install ephemeral Playwright
+        run: |
+          npm install --no-save --package-lock=false playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Serve web export
+        run: |
+          python3 -m http.server 4173 --directory dist > /tmp/finm8-visual-qa-server.log 2>&1 &
+          for i in {1..30}; do
+            if curl -fsS http://127.0.0.1:4173/ > /dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/finm8-visual-qa-server.log
+          exit 1
+
+      - name: Capture Academy and lesson flow
+        run: |
+          mkdir -p visual-qa
+          node <<'NODE'
+          const { chromium } = require('playwright');
+
+          const baseUrl = 'http://127.0.0.1:4173/';
+          const firstLessonTitle = 'Enflasyon neden satın alma gücünü azaltır?';
+
+          async function assertNoHorizontalOverflow(page, label) {
+            const overflow = await page.evaluate(() => ({
+              viewport: document.documentElement.clientWidth,
+              page: document.documentElement.scrollWidth,
+            }));
+            console.log(`${label}: viewport=${overflow.viewport}px page=${overflow.page}px`);
+            if (overflow.page > overflow.viewport + 1) {
+              throw new Error(`${label} has horizontal overflow: ${overflow.page}px > ${overflow.viewport}px`);
+            }
+          }
+
+          async function openAcademy(page) {
+            await page.goto(baseUrl, { waitUntil: 'networkidle' });
+            await page.getByRole('tab', { name: /Academy/i }).click();
+            await page.getByText('Finansı konu konu derinleştir.').waitFor();
+          }
+
+          const browser = await chromium.launch();
+          try {
+            const mobile = await browser.newPage({ viewport: { width: 390, height: 844 } });
+            await openAcademy(mobile);
+            await assertNoHorizontalOverflow(mobile, 'academy-mobile-collapsed');
+            await mobile.screenshot({ path: 'visual-qa/academy-mobile-collapsed.png', fullPage: true });
+
+            await mobile.getByRole('button', { name: /Temel Ekonomi derslerini aç/i }).click();
+            await mobile.getByText(firstLessonTitle).waitFor();
+            await assertNoHorizontalOverflow(mobile, 'academy-mobile-expanded');
+            await mobile.screenshot({ path: 'visual-qa/academy-mobile-expanded.png', fullPage: true });
+
+            await mobile.getByRole('button', { name: firstLessonTitle }).click();
+            await mobile.getByText(/Adım 1\//).waitFor();
+            const stepMatch = (await mobile.getByText(/Adım 1\//).innerText()).match(/\/(\d+)/);
+            const totalSteps = Number(stepMatch?.[1] ?? 1);
+            console.log(`lesson visual QA steps=${totalSteps}`);
+
+            for (let step = 1; step <= totalSteps; step += 1) {
+              await assertNoHorizontalOverflow(mobile, `lesson-mobile-step-${step}`);
+              await mobile.screenshot({
+                path: `visual-qa/lesson-mobile-step-${String(step).padStart(2, '0')}.png`,
+                fullPage: true,
+              });
+              if (step < totalSteps) {
+                await mobile.getByRole('button', { name: /Sonraki adıma geç/i }).click();
+                await mobile.getByText(new RegExp(`Adım ${step + 1}\\/${totalSteps}`)).waitFor();
+              }
+            }
+
+            const desktop = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
+            await openAcademy(desktop);
+            await assertNoHorizontalOverflow(desktop, 'academy-desktop-collapsed');
+            await desktop.screenshot({ path: 'visual-qa/academy-desktop-collapsed.png', fullPage: true });
+            await desktop.getByRole('button', { name: /Temel Ekonomi derslerini aç/i }).click();
+            await assertNoHorizontalOverflow(desktop, 'academy-desktop-expanded');
+            await desktop.screenshot({ path: 'visual-qa/academy-desktop-expanded.png', fullPage: true });
+          } finally {
+            await browser.close();
+          }
+          NODE
+
+      - name: Upload visual QA screenshots
+        uses: actions/upload-artifact@v4
+        with:
+          name: finm8-edu-visual-qa
+          path: visual-qa/*.png
+          if-no-files-found: error
