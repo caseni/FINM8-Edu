@@ -24,6 +24,9 @@ export const LEARNING_CONCEPT_KEYS = [
   'strategy.horizon_objective', 'strategy.trend_following', 'strategy.mean_reversion', 'strategy.breakout',
   'strategy.momentum', 'strategy.swing_position', 'strategy.hypothesis', 'strategy.rules', 'strategy.regime_fit',
   'strategy.costs_turnover', 'strategy.diversification', 'strategy.review_discipline',
+  'quant.probability', 'quant.expectancy', 'quant.winrate_payoff', 'quant.backtest', 'quant.out_of_sample',
+  'quant.transaction_costs', 'quant.overfitting', 'quant.lookahead_bias', 'quant.survivorship_bias',
+  'quant.data_leakage', 'quant.robustness', 'quant.automation_limits',
   'onchain.basics',
   'behavior.fomo', 'behavior.confirmation_bias', 'behavior.decision_journal', 'behavior.overtrading',
   'behavior.loss_aversion', 'behavior.anchoring', 'behavior.recency_bias', 'behavior.overconfidence',
@@ -35,7 +38,7 @@ export type LearningConceptKey = (typeof LEARNING_CONCEPT_KEYS)[number];
 
 export type LearningConceptCategory =
   | 'market_foundations' | 'market_execution' | 'chart_literacy' | 'market_structure' | 'risk'
-  | 'portfolio' | 'evidence' | 'economy' | 'fundamental' | 'strategy' | 'onchain' | 'behavior';
+  | 'portfolio' | 'evidence' | 'economy' | 'fundamental' | 'strategy' | 'quant' | 'onchain' | 'behavior';
 
 export interface LearningConceptDefinition {
   readonly key: LearningConceptKey;
@@ -141,6 +144,18 @@ export const LEARNING_CONCEPTS: Readonly<Record<LearningConceptKey, LearningConc
   'strategy.costs_turnover': { key: 'strategy.costs_turnover', category: 'strategy', titleTr: 'İşlem maliyeti ve turnover', titleEn: 'Trading costs and turnover' },
   'strategy.diversification': { key: 'strategy.diversification', category: 'strategy', titleTr: 'Strateji çeşitlendirmesi', titleEn: 'Strategy diversification' },
   'strategy.review_discipline': { key: 'strategy.review_discipline', category: 'strategy', titleTr: 'Strateji review disiplini', titleEn: 'Strategy review discipline' },
+  'quant.probability': { key: 'quant.probability', category: 'quant', titleTr: 'Olasılıksal düşünme', titleEn: 'Probabilistic thinking' },
+  'quant.expectancy': { key: 'quant.expectancy', category: 'quant', titleTr: 'Beklenen değer (expectancy)', titleEn: 'Expectancy' },
+  'quant.winrate_payoff': { key: 'quant.winrate_payoff', category: 'quant', titleTr: 'Win rate ve payoff dengesi', titleEn: 'Win rate and payoff balance' },
+  'quant.backtest': { key: 'quant.backtest', category: 'quant', titleTr: 'Backtest mantığı', titleEn: 'Backtest logic' },
+  'quant.out_of_sample': { key: 'quant.out_of_sample', category: 'quant', titleTr: 'Örneklem ve out-of-sample', titleEn: 'Samples and out-of-sample testing' },
+  'quant.transaction_costs': { key: 'quant.transaction_costs', category: 'quant', titleTr: 'İşlem maliyetlerini modelleme', titleEn: 'Modeling transaction costs' },
+  'quant.overfitting': { key: 'quant.overfitting', category: 'quant', titleTr: 'Overfitting', titleEn: 'Overfitting' },
+  'quant.lookahead_bias': { key: 'quant.lookahead_bias', category: 'quant', titleTr: 'Look-ahead bias', titleEn: 'Look-ahead bias' },
+  'quant.survivorship_bias': { key: 'quant.survivorship_bias', category: 'quant', titleTr: 'Survivorship bias', titleEn: 'Survivorship bias' },
+  'quant.data_leakage': { key: 'quant.data_leakage', category: 'quant', titleTr: 'Veri sızıntısı', titleEn: 'Data leakage' },
+  'quant.robustness': { key: 'quant.robustness', category: 'quant', titleTr: 'Robustness ve duyarlılık', titleEn: 'Robustness and sensitivity' },
+  'quant.automation_limits': { key: 'quant.automation_limits', category: 'quant', titleTr: 'Otomasyonun sınırları', titleEn: 'Limits of automation' },
   'onchain.basics': { key: 'onchain.basics', category: 'onchain', titleTr: 'On-chain veri başlangıcı', titleEn: 'On-chain data basics' },
   'behavior.fomo': { key: 'behavior.fomo', category: 'behavior', titleTr: 'Fırsatı kaçırma korkusu (FOMO)', titleEn: 'Fear of missing out (FOMO)' },
   'behavior.confirmation_bias': { key: 'behavior.confirmation_bias', category: 'behavior', titleTr: 'Onaylama yanlılığı', titleEn: 'Confirmation bias' },
