@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import type { LearningLanguage } from '../../domain/learning/presentation';
 import { defaultLearningTheme, type LearningTheme } from '../../theme/learningTheme';
+import { AlgoQuantSlideVisual, isAlgoQuantSlideAsset } from './AlgoQuantSlideVisual';
 import { BehaviorEvidenceSlideVisual, isBehaviorEvidenceSlideAsset } from './BehaviorEvidenceSlideVisual';
 import { ChartLessonSlideVisual, isChartLessonSlideAsset } from './ChartLessonSlideVisual';
 import { EconomyExpansionSlideVisual, isEconomyExpansionSlideAsset } from './EconomyExpansionSlideVisual';
@@ -49,6 +50,7 @@ export function LessonSupportingVisual({ assetRef, alt, language, role, theme = 
     : isRiskPortfolioExpansionSlideAsset(assetRef) ? <RiskPortfolioExpansionSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
     : isMarketPsychologySlideAsset(assetRef) ? <MarketPsychologySlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
     : isStrategySlideAsset(assetRef) ? <StrategySlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
+    : isAlgoQuantSlideAsset(assetRef) ? <AlgoQuantSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
     : <LearningVisual assetRef={`${assetRef}#${role}`} alt={alt} language={language} theme={theme} />;
   return <View style={styles.wrapper}><Text style={[styles.eyebrow, labelStyle]}>{label}</Text>{visual}</View>;
 }
