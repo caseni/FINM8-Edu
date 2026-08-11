@@ -117,5 +117,5 @@ const decisionJournal = createFoundationLesson({
 });
 
 export const WAVE1_BEHAVIOR_EVIDENCE_LESSONS: readonly MicroLesson[] = [
-  fomo, overtrading, confirmationBias, dataQuality, freshness, decisionJournal,
+  fomo, overtrading, confirmationBias, dataQuality, decisionJournal, freshness,
 ];

@@ -142,6 +142,15 @@ const behaviorEvidenceQuestions = WAVE1_BEHAVIOR_EVIDENCE_LESSONS.map((lesson, i
   ...lesson.quiz.questions[0],
   id: `question.challenge.behavior-evidence.${index + 1}`,
 }));
+const behaviorConfirmationBiasLesson = WAVE1_BEHAVIOR_EVIDENCE_LESSONS.find(
+  (lesson) => lesson.id === 'lesson.behavior.confirmation-bias.001'
+);
+const behaviorDecisionJournalLesson = WAVE1_BEHAVIOR_EVIDENCE_LESSONS.find(
+  (lesson) => lesson.id === 'lesson.behavior.decision-journal.001'
+);
+if (!behaviorConfirmationBiasLesson || !behaviorDecisionJournalLesson) {
+  throw new Error('Behavior/evidence challenge source lessons are missing');
+}
 
 export const BEHAVIOR_EVIDENCE_CHALLENGE = learningChallengeSchema.parse({
   id: 'challenge.behavior-evidence.foundation',
@@ -155,11 +164,11 @@ export const BEHAVIOR_EVIDENCE_CHALLENGE = learningChallengeSchema.parse({
   questions: behaviorEvidenceQuestions,
   practicalTasks: [
     {
-      ...WAVE1_BEHAVIOR_EVIDENCE_LESSONS[2].practicalTask,
+      ...behaviorConfirmationBiasLesson.practicalTask,
       id: 'task.challenge.behavior-evidence.confirmation-bias',
     },
     {
-      ...WAVE1_BEHAVIOR_EVIDENCE_LESSONS[5].practicalTask,
+      ...behaviorDecisionJournalLesson.practicalTask,
       id: 'task.challenge.behavior-evidence.decision-journal',
     },
   ],
