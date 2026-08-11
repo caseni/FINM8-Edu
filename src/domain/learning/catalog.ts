@@ -13,6 +13,7 @@ import { FUNDAMENTAL_ANALYSIS_FOUNDATION_LESSONS } from './examples/academy/fund
 import { normalizeMarketPsychologyAssessmentQuality } from './examples/academy/marketPsychologyAssessmentQuality';
 import { MARKET_PSYCHOLOGY_EXPANSION_LESSONS } from './examples/academy/marketPsychologyExpansionLessons';
 import { MARKET_PSYCHOLOGY_FOUNDATION_LESSONS } from './examples/academy/marketPsychologyFoundationLessons';
+import { normalizeRiskPortfolioAssessmentQuality } from './examples/academy/riskPortfolioAssessmentQuality';
 import { RISK_PORTFOLIO_EXPANSION_LESSONS } from './examples/academy/riskPortfolioExpansionLessons';
 import { RISK_PORTFOLIO_FOUNDATION_LESSONS } from './examples/academy/riskPortfolioFoundationLessons';
 import { SMC_ICT_EXPANSION_LESSONS } from './examples/academy/smcIctExpansionLessons';
@@ -47,8 +48,8 @@ export const MICRO_LESSON_CATALOG: readonly MicroLesson[] = [
   ...TECHNICAL_ANALYSIS_EXPANSION_LESSONS,
   ...FUNDAMENTAL_ANALYSIS_FOUNDATION_LESSONS,
   ...FUNDAMENTAL_ANALYSIS_EXPANSION_LESSONS,
-  ...RISK_PORTFOLIO_FOUNDATION_LESSONS,
-  ...RISK_PORTFOLIO_EXPANSION_LESSONS,
+  ...RISK_PORTFOLIO_FOUNDATION_LESSONS.map(normalizeRiskPortfolioAssessmentQuality),
+  ...RISK_PORTFOLIO_EXPANSION_LESSONS.map(normalizeRiskPortfolioAssessmentQuality),
   ...MARKET_PSYCHOLOGY_FOUNDATION_LESSONS.map(normalizeMarketPsychologyAssessmentQuality),
   ...MARKET_PSYCHOLOGY_EXPANSION_LESSONS.map(normalizeMarketPsychologyAssessmentQuality),
   ...STRATEGY_FOUNDATION_LESSONS.map(normalizeStrategyAssessmentQuality),
