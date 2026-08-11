@@ -6,12 +6,17 @@ on:
     branches:
       - main
 
+permissions:
+  contents: write
+
 jobs:
   typecheck:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -37,8 +42,14 @@ jobs:
       - name: Safe audit-fix plan (dry-run only)
         run: npm audit fix --omit=dev --dry-run || true
 
-      - name: Apply safe audit-fix candidate in runner only
-        run: npm audit fix --omit=dev || true
+      - name: Apply verified non-force audit fix
+        run: npm audit fix --omit=dev
+
+      - name: Ensure package manifest is unchanged
+        run: git diff --exit-code -- package.json
+
+      - name: Runtime critical vulnerability gate after fix
+        run: npm audit --omit=dev --audit-level=critical
 
       - name: Post-fix runtime dependency audit
         run: npm audit --omit=dev --json > runtime-audit-after-fix.json || true
@@ -52,15 +63,6 @@ jobs:
       - name: Candidate dependency diff
         run: git diff -- package.json package-lock.json
 
-      - name: Upload safe dependency-fix candidate
-        uses: actions/upload-artifact@v4
-        with:
-          name: safe-dependency-fix-candidate
-          path: |
-            package.json
-            package-lock.json
-          if-no-files-found: error
-
       - name: Typecheck
         run: npm run typecheck
 
@@ -69,3 +71,16 @@ jobs:
 
       - name: Build web bundle
         run: npm run build:web
+
+      - name: Commit verified lockfile to PR branch
+        if: github.event_name == 'pull_request' && github.event.pull_request.number == 17 && github.head_ref == 'agent/edu-visual-learning-current-quiz'
+        run: |
+          git add package-lock.json
+          if git diff --cached --quiet; then
+            echo "No lockfile changes to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "chore(security): apply safe transitive dependency fixes"
+          git push origin HEAD:${{ github.head_ref }}
