@@ -1,0 +1,64 @@
+name: Bundle Runtime Diagnostic
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  import-meta:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build web export
+        run: npm run build:web
+
+      - name: Locate import.meta in classic web bundle
+        run: |
+          node --input-type=commonjs <<'NODE'
+          const fs = require('fs');
+          const path = require('path');
+
+          const files = [];
+          function walk(dir) {
+            for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+              const full = path.join(dir, entry.name);
+              if (entry.isDirectory()) walk(full);
+              else if (entry.isFile() && /\.js$/.test(entry.name)) files.push(full);
+            }
+          }
+          walk('dist');
+
+          let found = 0;
+          for (const file of files) {
+            const source = fs.readFileSync(file, 'utf8');
+            let cursor = 0;
+            while (true) {
+              const index = source.indexOf('import.meta', cursor);
+              if (index < 0) break;
+              found += 1;
+              const start = Math.max(0, index - 500);
+              const end = Math.min(source.length, index + 900);
+              console.log(`\n--- import.meta occurrence ${found} in ${file} @ ${index} ---`);
+              console.log(source.slice(start, end));
+              cursor = index + 'import.meta'.length;
+              if (found >= 20) break;
+            }
+            if (found >= 20) break;
+          }
+
+          console.log(`\nTotal import.meta occurrences shown: ${found}`);
+          if (found > 0) process.exit(1);
+          NODE
