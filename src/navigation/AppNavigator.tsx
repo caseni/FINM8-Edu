@@ -5,7 +5,7 @@ import { RootStackParamList } from '../types/navigation';
 import { HomeScreen } from '../screens/home/HomeScreen';
 import { CourseDetailScreen } from '../screens/course/CourseDetailScreen';
 import { AcademyHomeScreen } from '../screens/learn/AcademyHomeScreen';
-import { LearnHomeScreen } from '../screens/learn/LearnHomeScreen';
+import { LearnLandingScreen } from '../screens/learn/LearnLandingScreen';
 import { LearningOnboardingScreen } from '../screens/learn/LearningOnboardingScreen';
 import { MicroLessonScreen } from '../screens/learn/MicroLessonScreen';
 import { LessonQuizScreen } from '../screens/learn/LessonQuizScreen';
@@ -32,7 +32,7 @@ export const AppNavigator: React.FC = () => {
       >
         <Stack.Screen
           name="Home"
-          component={LearnHomeScreen}
+          component={LearnLandingScreen}
           options={{
             headerShown: false,
           }}
