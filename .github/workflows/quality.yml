@@ -7,7 +7,7 @@ on:
       - main
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   typecheck:
@@ -15,8 +15,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          ref: ${{ github.head_ref || github.ref_name }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -27,41 +25,17 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Runtime dependency audit (read-only)
+      - name: Runtime dependency audit snapshot (read-only)
         run: npm audit --omit=dev --json > runtime-audit.json || true
 
-      - name: Full dependency audit (read-only)
+      - name: Full dependency audit snapshot (read-only)
         run: npm audit --json > full-audit.json || true
 
       - name: Dependency audit summary
         run: node scripts/dependencyAuditSummary.cjs runtime-audit.json full-audit.json
 
-      - name: Critical advisory parent chains (read-only)
-        run: npm ls shell-quote tar --all || true
-
-      - name: Safe audit-fix plan (dry-run only)
-        run: npm audit fix --omit=dev --dry-run || true
-
-      - name: Apply verified non-force audit fix
-        run: npm audit fix --omit=dev || true
-
-      - name: Ensure package manifest is unchanged
-        run: git diff --exit-code -- package.json
-
-      - name: Runtime critical vulnerability gate after fix
+      - name: Runtime critical vulnerability gate
         run: npm audit --omit=dev --audit-level=critical
-
-      - name: Post-fix runtime dependency audit
-        run: npm audit --omit=dev --json > runtime-audit-after-fix.json || true
-
-      - name: Post-fix full dependency audit
-        run: npm audit --json > full-audit-after-fix.json || true
-
-      - name: Post-fix dependency audit summary
-        run: node scripts/dependencyAuditSummary.cjs runtime-audit-after-fix.json full-audit-after-fix.json
-
-      - name: Candidate dependency diff
-        run: git diff -- package.json package-lock.json
 
       - name: Typecheck
         run: npm run typecheck
@@ -71,16 +45,3 @@ jobs:
 
       - name: Build web bundle
         run: npm run build:web
-
-      - name: Commit verified lockfile to PR branch
-        if: github.event_name == 'pull_request' && github.event.pull_request.number == 17 && github.head_ref == 'agent/edu-visual-learning-current-quiz'
-        run: |
-          git add package-lock.json
-          if git diff --cached --quiet; then
-            echo "No lockfile changes to commit."
-            exit 0
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit -m "chore(security): apply safe transitive dependency fixes"
-          git push origin HEAD:${{ github.head_ref }}
