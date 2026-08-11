@@ -29,6 +29,14 @@ export function LessonQuizScreen({ route, navigation }: Props) {
     if (lesson && !route.params.review && !isSpacedReview) saveLessonCheckpoint(lesson.id, 'quiz');
   }, [isSpacedReview, lesson, route.params.review, saveLessonCheckpoint]);
 
+  const returnToEntry = () => {
+    if (navigation.canGoBack()) {
+      navigation.goBack();
+      return;
+    }
+    navigation.navigate('Home');
+  };
+
   if (!lesson) return <SafeAreaView style={styles.safeArea}><Text style={styles.title}>Ders bulunamadı.</Text></SafeAreaView>;
 
   if (result) {
@@ -37,7 +45,7 @@ export function LessonQuizScreen({ route, navigation }: Props) {
         <LearningFlowHeader
           language={language}
           stage={3}
-          onExit={() => route.params.review ? navigation.goBack() : navigation.popToTop()}
+          onExit={returnToEntry}
         />
         <ScrollView contentContainerStyle={styles.resultWrap}>
           <View style={styles.resultCard}>
@@ -70,27 +78,27 @@ export function LessonQuizScreen({ route, navigation }: Props) {
             accessibilityLabel={result.passed
               ? route.params.review
                 ? language === 'tr' ? 'Review merkezine dön' : 'Return to review center'
-                : language === 'tr' ? 'M8 Learn’e dön' : 'Return to M8 Learn'
+                : language === 'tr' ? 'Öğrenme alanına dön' : 'Return to learning'
               : isSpacedReview
                 ? language === 'tr' ? 'Tekrarı yeniden dene' : 'Retry the review'
                 : language === 'tr' ? 'Quiz’i tekrar dene' : 'Retry the quiz'}
             style={styles.button}
             onPress={() => result.passed
-              ? (route.params.review ? navigation.goBack() : navigation.popToTop())
+              ? returnToEntry()
               : setResult(undefined)}
           >
             <Text style={styles.buttonText}>
               {result.passed
                 ? route.params.review
                   ? language === 'tr' ? 'Review merkezine dön' : 'Return to review center'
-                  : language === 'tr' ? 'M8 Learn’e dön' : 'Return to M8 Learn'
+                  : language === 'tr' ? 'Öğrenme alanına dön' : 'Return to learning'
                 : isSpacedReview
                   ? language === 'tr' ? 'Tekrarı yeniden dene' : 'Retry the review'
                   : language === 'tr' ? 'Quiz’i tekrar dene' : 'Retry the quiz'}
             </Text>
           </Pressable>
           {!result.passed ? (
-            <Pressable accessibilityRole="button" style={styles.secondaryButton} onPress={() => route.params.review ? navigation.goBack() : navigation.popToTop()}>
+            <Pressable accessibilityRole="button" style={styles.secondaryButton} onPress={returnToEntry}>
               <Text style={styles.secondaryButtonText}>{route.params.review ? (language === 'tr' ? 'Review merkezine dön' : 'Return to review center') : (language === 'tr' ? 'Öğrenme yoluna dön' : 'Return to learning path')}</Text>
             </Pressable>
           ) : null}
@@ -104,7 +112,7 @@ export function LessonQuizScreen({ route, navigation }: Props) {
       <LearningFlowHeader
         language={language}
         stage={3}
-        onExit={() => route.params.review ? navigation.goBack() : navigation.popToTop()}
+        onExit={returnToEntry}
       />
       <QuizPlayer
         quiz={lesson.quiz}
