@@ -1,4 +1,5 @@
 import type { LocalizedText } from './types';
+import { ECONOMY_EXPANSION_LESSONS } from './examples/academy/economyExpansionLessons';
 import { ECONOMY_FOUNDATION_LESSONS } from './examples/academy/economyFoundationsLessons';
 
 export const ACADEMY_TRACK_IDS = [
@@ -32,11 +33,14 @@ export const ACADEMY_TRACKS: Readonly<Record<AcademyTrackId, AcademyTrackDefinit
     order: 1,
     title: { tr: 'Temel Ekonomi', en: 'Economics Foundations' },
     description: {
-      tr: 'Enflasyon, faiz, merkez bankaları, para politikası, büyüme ve ekonomik döngüyü piyasa kararlarının arka planını anlayacak kadar sade öğren.',
-      en: 'Learn inflation, rates, central banks, monetary policy, growth, and business cycles in a simple market-relevant progression.',
+      tr: 'Enflasyon, faiz, merkez bankaları, büyüme, işgücü, maliye politikası, döviz kuru, verimlilik ve ekonomik verileri piyasa bağlamıyla sade öğren.',
+      en: 'Learn inflation, rates, central banks, growth, labor markets, fiscal policy, exchange rates, productivity, and economic data in a simple market-relevant progression.',
     },
     status: 'active',
-    lessonIds: ECONOMY_FOUNDATION_LESSONS.map((lesson) => lesson.id),
+    lessonIds: [
+      ...ECONOMY_FOUNDATION_LESSONS.map((lesson) => lesson.id),
+      ...ECONOMY_EXPANSION_LESSONS.map((lesson) => lesson.id),
+    ],
   },
   financial_markets: {
     id: 'financial_markets',
