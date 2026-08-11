@@ -23,6 +23,14 @@ export function PracticalTaskScreen({ route, navigation }: Props) {
     if (lesson && !route.params.review) saveLessonCheckpoint(lesson.id, 'task');
   }, [lesson, route.params.review, saveLessonCheckpoint]);
 
+  const returnToEntry = () => {
+    if (navigation.canGoBack()) {
+      navigation.goBack();
+      return;
+    }
+    navigation.navigate('Home');
+  };
+
   if (!lesson) return <SafeAreaView style={styles.safeArea}><Text style={styles.error}>Ders bulunamadı.</Text></SafeAreaView>;
 
   return (
@@ -30,7 +38,7 @@ export function PracticalTaskScreen({ route, navigation }: Props) {
       <LearningFlowHeader
         language={language}
         stage={2}
-        onExit={() => route.params.review ? navigation.goBack() : navigation.popToTop()}
+        onExit={returnToEntry}
       />
       <PracticalTaskPlayer
         task={lesson.practicalTask}
@@ -40,7 +48,7 @@ export function PracticalTaskScreen({ route, navigation }: Props) {
         onComplete={(passed) => {
           if (!passed) return;
           if (route.params.review) {
-            navigation.goBack();
+            returnToEntry();
             return;
           }
           passPracticalTask(lesson, new Date().toISOString());
