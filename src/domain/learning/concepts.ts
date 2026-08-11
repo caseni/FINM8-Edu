@@ -20,8 +20,11 @@ export const LEARNING_CONCEPT_KEYS = [
   'fundamental.basics', 'fundamental.financial_statements', 'fundamental.income_statement', 'fundamental.balance_sheet',
   'fundamental.cash_flow', 'fundamental.profitability', 'fundamental.debt_liquidity', 'fundamental.growth_quality',
   'fundamental.per_share', 'fundamental.valuation_multiples', 'fundamental.dcf', 'fundamental.peer_comparison',
-  'fundamental.analysis_limits', 'onchain.basics', 'behavior.fomo', 'behavior.confirmation_bias',
-  'behavior.decision_journal', 'behavior.overtrading',
+  'fundamental.analysis_limits', 'onchain.basics',
+  'behavior.fomo', 'behavior.confirmation_bias', 'behavior.decision_journal', 'behavior.overtrading',
+  'behavior.loss_aversion', 'behavior.anchoring', 'behavior.recency_bias', 'behavior.overconfidence',
+  'behavior.revenge_trading', 'behavior.outcome_bias', 'behavior.disposition_effect', 'behavior.herd_behavior',
+  'behavior.sunk_cost', 'behavior.availability_bias', 'behavior.action_bias', 'behavior.precommitment',
 ] as const;
 
 export type LearningConceptKey = (typeof LEARNING_CONCEPT_KEYS)[number];
@@ -127,4 +130,16 @@ export const LEARNING_CONCEPTS: Readonly<Record<LearningConceptKey, LearningConc
   'behavior.confirmation_bias': { key: 'behavior.confirmation_bias', category: 'behavior', titleTr: 'Onaylama yanlılığı', titleEn: 'Confirmation bias' },
   'behavior.decision_journal': { key: 'behavior.decision_journal', category: 'behavior', titleTr: 'Karar günlüğü', titleEn: 'Decision journal' },
   'behavior.overtrading': { key: 'behavior.overtrading', category: 'behavior', titleTr: 'Aşırı işlem', titleEn: 'Overtrading' },
+  'behavior.loss_aversion': { key: 'behavior.loss_aversion', category: 'behavior', titleTr: 'Kayıptan kaçınma', titleEn: 'Loss aversion' },
+  'behavior.anchoring': { key: 'behavior.anchoring', category: 'behavior', titleTr: 'Çapalama yanlılığı', titleEn: 'Anchoring bias' },
+  'behavior.recency_bias': { key: 'behavior.recency_bias', category: 'behavior', titleTr: 'Yakın geçmiş yanlılığı', titleEn: 'Recency bias' },
+  'behavior.overconfidence': { key: 'behavior.overconfidence', category: 'behavior', titleTr: 'Aşırı güven', titleEn: 'Overconfidence' },
+  'behavior.revenge_trading': { key: 'behavior.revenge_trading', category: 'behavior', titleTr: 'Revenge trading', titleEn: 'Revenge trading' },
+  'behavior.outcome_bias': { key: 'behavior.outcome_bias', category: 'behavior', titleTr: 'Sonuç yanlılığı', titleEn: 'Outcome bias' },
+  'behavior.disposition_effect': { key: 'behavior.disposition_effect', category: 'behavior', titleTr: 'Disposition effect', titleEn: 'Disposition effect' },
+  'behavior.herd_behavior': { key: 'behavior.herd_behavior', category: 'behavior', titleTr: 'Sürü davranışı', titleEn: 'Herd behavior' },
+  'behavior.sunk_cost': { key: 'behavior.sunk_cost', category: 'behavior', titleTr: 'Batık maliyet yanılgısı', titleEn: 'Sunk-cost fallacy' },
+  'behavior.availability_bias': { key: 'behavior.availability_bias', category: 'behavior', titleTr: 'Erişilebilirlik yanlılığı', titleEn: 'Availability bias' },
+  'behavior.action_bias': { key: 'behavior.action_bias', category: 'behavior', titleTr: 'Eylem yanlılığı', titleEn: 'Action bias' },
+  'behavior.precommitment': { key: 'behavior.precommitment', category: 'behavior', titleTr: 'Önceden karar kuralı', titleEn: 'Pre-commitment rules' },
 };
