@@ -1,6 +1,7 @@
 import type { LocalizedText } from './types';
 import { ECONOMY_EXPANSION_LESSONS } from './examples/academy/economyExpansionLessons';
 import { ECONOMY_FOUNDATION_LESSONS } from './examples/academy/economyFoundationsLessons';
+import { FINANCIAL_MARKETS_FOUNDATION_LESSONS } from './examples/academy/financialMarketsFoundationLessons';
 
 export const ACADEMY_TRACK_IDS = [
   'economy',
@@ -47,11 +48,11 @@ export const ACADEMY_TRACKS: Readonly<Record<AcademyTrackId, AcademyTrackDefinit
     order: 2,
     title: { tr: 'Finansal Piyasalar', en: 'Financial Markets' },
     description: {
-      tr: 'Borsa, endeks, ETF, tahvil, forex, emtia, kripto ve piyasa altyapısını ayrı ürün mantıklarıyla öğren.',
-      en: 'Learn exchanges, indices, ETFs, bonds, FX, commodities, crypto, and market infrastructure by product type.',
+      tr: 'Borsa, endeks, ETF, tahvil, forex ve emtia altyapısını ürünlerin gerçekten nasıl çalıştığını anlayacak kadar derinleştir.',
+      en: 'Go deeper into exchanges, indices, ETFs, bonds, FX, and commodities so you understand how the products and venues actually work.',
     },
-    status: 'planned',
-    lessonIds: [],
+    status: 'active',
+    lessonIds: FINANCIAL_MARKETS_FOUNDATION_LESSONS.map((lesson) => lesson.id),
   },
   technical_analysis: {
     id: 'technical_analysis',
