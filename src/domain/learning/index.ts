@@ -31,6 +31,7 @@ export * from './examples/academy/fundamentalAnalysisFoundationLessons';
 export * from './examples/academy/fundamentalAnalysisExpansionLessons';
 export * from './examples/academy/fundamentalAnalysisSources';
 export * from './examples/academy/riskPortfolioFoundationLessons';
+export * from './examples/academy/riskPortfolioExpansionLessons';
 export * from './examples/academy/riskPortfolioSources';
 export * from './presentation';
 export * from './personalization';
