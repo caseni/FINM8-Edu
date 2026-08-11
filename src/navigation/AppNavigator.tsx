@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/navigation';
 import { HomeScreen } from '../screens/home/HomeScreen';
 import { CourseDetailScreen } from '../screens/course/CourseDetailScreen';
+import { AcademyHomeScreen } from '../screens/learn/AcademyHomeScreen';
 import { LearnHomeScreen } from '../screens/learn/LearnHomeScreen';
 import { LearningOnboardingScreen } from '../screens/learn/LearningOnboardingScreen';
 import { MicroLessonScreen } from '../screens/learn/MicroLessonScreen';
@@ -36,6 +37,7 @@ export const AppNavigator: React.FC = () => {
             headerShown: false,
           }}
         />
+        <Stack.Screen name="Academy" component={AcademyHomeScreen} options={{ headerShown: false }} />
         <Stack.Screen name="LearningOnboarding" component={LearningOnboardingScreen} options={{ headerShown: false }} />
         <Stack.Screen name="MicroLesson" component={MicroLessonScreen} options={{ headerShown: false }} />
         <Stack.Screen name="PracticalTask" component={PracticalTaskScreen} options={{ headerShown: false, gestureEnabled: false }} />
