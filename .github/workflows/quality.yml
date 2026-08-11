@@ -22,6 +22,15 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Runtime dependency audit (read-only)
+        run: npm audit --omit=dev --json > runtime-audit.json || true
+
+      - name: Full dependency audit (read-only)
+        run: npm audit --json > full-audit.json || true
+
+      - name: Dependency audit summary
+        run: node scripts/dependencyAuditSummary.cjs runtime-audit.json full-audit.json
+
       - name: Typecheck
         run: npm run typecheck
 
