@@ -1,5 +1,6 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { LEARNING_STAGE_LABELS } from '../../domain/learning/personalization';
 import { selectLocalizedText, type LearningLanguage } from '../../domain/learning/presentation';
 import type { LearningChallenge, MicroLesson } from '../../domain/learning/types';
 import { defaultLearningTheme, type LearningTheme } from '../../theme/learningTheme';
@@ -77,6 +78,13 @@ export function LearningModuleCard({
   const completedCount = lessons.filter((lesson) => completedLessonIds.includes(lesson.id)).length;
   const lessonsCompleted = completedCount === lessons.length;
   const progress = lessons.length === 0 ? 0 : completedCount / lessons.length;
+  const moduleStage = lessons[0]?.learningStage;
+  const hasSingleStage = Boolean(
+    moduleStage && lessons.every((lesson) => lesson.learningStage === moduleStage)
+  );
+  const stageLabel = hasSingleStage && moduleStage
+    ? selectLocalizedText(LEARNING_STAGE_LABELS[moduleStage], language)
+    : undefined;
   const status = challengeCompleted
     ? language === 'tr' ? 'Tamamlandı' : 'Completed'
     : unlocked
@@ -103,7 +111,10 @@ export function LearningModuleCard({
           {!expanded ? <Text style={styles.description}>{description}</Text> : null}
           <View style={styles.progressMeta}>
             <Text style={styles.progressText}>{completedCount}/{lessons.length} {language === 'tr' ? 'ders' : 'lessons'}</Text>
-            <Text style={[styles.statusText, challengeCompleted && styles.statusCompleteText]}>{status}</Text>
+            <View style={styles.statusGroup}>
+              {stageLabel ? <Text style={styles.stageText}>{stageLabel}</Text> : null}
+              <Text style={[styles.statusText, challengeCompleted && styles.statusCompleteText]}>{status}</Text>
+            </View>
           </View>
           <View style={styles.progressTrack}>
             <View style={[styles.progressFill, { width: `${progress * 100}%` }]} />
@@ -124,6 +135,9 @@ export function LearningModuleCard({
           {lessons.map((lesson, index) => {
             const completed = completedLessonIds.includes(lesson.id);
             const active = lesson.id === activeLessonId;
+            const lessonStageLabel = hasSingleStage
+              ? undefined
+              : selectLocalizedText(LEARNING_STAGE_LABELS[lesson.learningStage], language);
             return (
               <Pressable
                 accessibilityRole="button"
@@ -136,7 +150,9 @@ export function LearningModuleCard({
                 </View>
                 <View style={styles.lessonCopy}>
                   <Text style={styles.lessonTitle}>{selectLessonListTitle(lesson, language)}</Text>
-                  <Text style={styles.lessonMeta}>{lesson.estimatedMinutes} {language === 'tr' ? 'dk' : 'min'}</Text>
+                  <Text style={styles.lessonMeta}>
+                    {lessonStageLabel ? `${lessonStageLabel} · ` : ''}{lesson.estimatedMinutes} {language === 'tr' ? 'dk' : 'min'}
+                  </Text>
                 </View>
                 <Text style={styles.openText}>{active ? (language === 'tr' ? 'Devam' : 'Continue') : '›'}</Text>
               </Pressable>
@@ -182,6 +198,8 @@ const createStyles = (theme: LearningTheme) => StyleSheet.create({
   description: { color: theme.colors.textMuted, fontSize: 13, lineHeight: 18 },
   progressMeta: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: theme.spacing.sm },
   progressText: { color: theme.colors.textMuted, fontSize: 11, fontWeight: '700' },
+  statusGroup: { flexDirection: 'row', alignItems: 'center', gap: 7 },
+  stageText: { color: theme.colors.textMuted, fontSize: 10, fontWeight: '800' },
   statusText: { color: theme.colors.primary, fontSize: 10, fontWeight: '900' },
   statusCompleteText: { color: theme.colors.success },
   expandText: { color: theme.colors.primary, fontSize: 20, lineHeight: 20, fontWeight: '500' },
