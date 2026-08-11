@@ -1,3 +1,4 @@
+import { ALGO_QUANT_FOUNDATION_LESSONS } from './examples/academy/algoQuantFoundationLessons';
 import { ECONOMY_EXPANSION_LESSONS } from './examples/academy/economyExpansionLessons';
 import { ECONOMY_FOUNDATION_LESSONS } from './examples/academy/economyFoundationsLessons';
 import { FINANCIAL_MARKETS_EXPANSION_LESSONS } from './examples/academy/financialMarketsExpansionLessons';
@@ -43,6 +44,7 @@ export const MICRO_LESSON_CATALOG: readonly MicroLesson[] = [
   ...MARKET_PSYCHOLOGY_EXPANSION_LESSONS,
   ...STRATEGY_FOUNDATION_LESSONS,
   ...STRATEGY_EXPANSION_LESSONS,
+  ...ALGO_QUANT_FOUNDATION_LESSONS,
 ];
 
 export function getMicroLessonById(lessonId: string): MicroLesson | undefined {
