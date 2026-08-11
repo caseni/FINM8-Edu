@@ -7,6 +7,10 @@ import {
   isChartLessonSlideAsset,
 } from './ChartLessonSlideVisual';
 import { LearningVisual } from './LearningVisual';
+import {
+  isRiskLessonSlideAsset,
+  RiskLessonSlideVisual,
+} from './RiskLessonSlideVisual';
 
 export type LessonSupportingVisualRole =
   | 'hook'
@@ -55,25 +59,35 @@ export function LessonSupportingVisual({
             ? styles.primaryLabel
             : undefined;
 
+  const visual = isChartLessonSlideAsset(assetRef) ? (
+    <ChartLessonSlideVisual
+      assetRef={assetRef}
+      alt={alt}
+      language={language}
+      role={role}
+      theme={theme}
+    />
+  ) : isRiskLessonSlideAsset(assetRef) ? (
+    <RiskLessonSlideVisual
+      assetRef={assetRef}
+      alt={alt}
+      language={language}
+      role={role}
+      theme={theme}
+    />
+  ) : (
+    <LearningVisual
+      assetRef={`${assetRef}#${role}`}
+      alt={alt}
+      language={language}
+      theme={theme}
+    />
+  );
+
   return (
     <View style={styles.wrapper}>
       <Text style={[styles.eyebrow, labelStyle]}>{label}</Text>
-      {isChartLessonSlideAsset(assetRef) ? (
-        <ChartLessonSlideVisual
-          assetRef={assetRef}
-          alt={alt}
-          language={language}
-          role={role}
-          theme={theme}
-        />
-      ) : (
-        <LearningVisual
-          assetRef={`${assetRef}#${role}`}
-          alt={alt}
-          language={language}
-          theme={theme}
-        />
-      )}
+      {visual}
     </View>
   );
 }
