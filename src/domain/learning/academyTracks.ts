@@ -3,6 +3,7 @@ import { ECONOMY_EXPANSION_LESSONS } from './examples/academy/economyExpansionLe
 import { ECONOMY_FOUNDATION_LESSONS } from './examples/academy/economyFoundationsLessons';
 import { FINANCIAL_MARKETS_EXPANSION_LESSONS } from './examples/academy/financialMarketsExpansionLessons';
 import { FINANCIAL_MARKETS_FOUNDATION_LESSONS } from './examples/academy/financialMarketsFoundationLessons';
+import { FUNDAMENTAL_ANALYSIS_EXPANSION_LESSONS } from './examples/academy/fundamentalAnalysisExpansionLessons';
 import { FUNDAMENTAL_ANALYSIS_FOUNDATION_LESSONS } from './examples/academy/fundamentalAnalysisFoundationLessons';
 import { TECHNICAL_ANALYSIS_EXPANSION_LESSONS } from './examples/academy/technicalAnalysisExpansionLessons';
 import { TECHNICAL_ANALYSIS_FOUNDATION_LESSONS } from './examples/academy/technicalAnalysisFoundationLessons';
@@ -42,8 +43,8 @@ export const ACADEMY_TRACKS: Readonly<Record<AcademyTrackId, AcademyTrackDefinit
   },
   fundamental_analysis: {
     id: 'fundamental_analysis', order: 4, title: { tr: 'Temel Analiz', en: 'Fundamental Analysis' },
-    description: { tr: 'Finansal tabloları birlikte oku; gelir tablosu, bilanço, nakit akışı, marjlar ile borç ve likiditeyi şirketin finansal dayanıklılığını anlayacak kadar sade öğren.', en: 'Connect financial statements and learn income statements, balance sheets, cash flow, margins, debt, and liquidity well enough to assess financial resilience.' },
-    status: 'active', lessonIds: FUNDAMENTAL_ANALYSIS_FOUNDATION_LESSONS.map((lesson) => lesson.id),
+    description: { tr: 'Finansal tablolar, nakit, marj, borç, büyüme kalitesi, hisse başına metrikler, çarpanlar, DCF, peer karşılaştırması ve temel analizin sınırlarını birlikte öğren.', en: 'Learn financial statements, cash, margins, debt, growth quality, per-share metrics, multiples, DCF, peer comparison, and the limits of fundamental analysis together.' },
+    status: 'active', lessonIds: [...FUNDAMENTAL_ANALYSIS_FOUNDATION_LESSONS.map((lesson) => lesson.id), ...FUNDAMENTAL_ANALYSIS_EXPANSION_LESSONS.map((lesson) => lesson.id)],
   },
   risk_portfolio: { id: 'risk_portfolio', order: 5, title: { tr: 'Risk ve Portföy', en: 'Risk and Portfolio' }, description: { tr: 'Core risk bilgisini korelasyon, drawdown, kaldıraç, yoğunlaşma ve portföy oluşturma konularıyla derinleştir.', en: 'Deepen Core risk knowledge with correlation, drawdown, leverage, concentration, and portfolio construction.' }, status: 'planned', lessonIds: [] },
   market_psychology: { id: 'market_psychology', order: 6, title: { tr: 'Piyasa Psikolojisi', en: 'Market Psychology' }, description: { tr: 'FOMO ve aşırı işlemin ötesinde loss aversion, anchoring, recency, aşırı güven ve sonuç yanlılığını öğren.', en: 'Go beyond FOMO and overtrading into loss aversion, anchoring, recency, overconfidence, and outcome bias.' }, status: 'planned', lessonIds: [] },
