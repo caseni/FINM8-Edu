@@ -1,0 +1,83 @@
+import React from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import type { LearningLanguage } from '../../domain/learning/presentation';
+import { defaultLearningTheme, type LearningTheme } from '../../theme/learningTheme';
+import { LearningVisual } from './LearningVisual';
+
+export type LessonSupportingVisualRole =
+  | 'hook'
+  | 'concept'
+  | 'practice'
+  | 'misconception'
+  | 'risk'
+  | 'summary';
+
+export interface LessonSupportingVisualProps {
+  assetRef: string;
+  alt: string;
+  language: LearningLanguage;
+  role: LessonSupportingVisualRole;
+  theme?: LearningTheme;
+}
+
+const ROLE_LABELS: Readonly<
+  Record<LessonSupportingVisualRole, { tr: string; en: string }>
+> = {
+  hook: { tr: 'GÖRSEL İPUCU', en: 'VISUAL CUE' },
+  concept: { tr: 'KAVRAM GÖRSELİ', en: 'CONCEPT VISUAL' },
+  practice: { tr: 'PRATİK BAĞLAM', en: 'PRACTICAL CONTEXT' },
+  misconception: { tr: 'YAYGIN HATA', en: 'COMMON MISTAKE' },
+  risk: { tr: 'RİSK BAĞLAMI', en: 'RISK CONTEXT' },
+  summary: { tr: 'DERS ÖZETİ', en: 'LESSON SUMMARY' },
+};
+
+export function LessonSupportingVisual({
+  assetRef,
+  alt,
+  language,
+  role,
+  theme = defaultLearningTheme,
+}: LessonSupportingVisualProps) {
+  const styles = createStyles(theme);
+  const label = ROLE_LABELS[role][language];
+  const labelStyle =
+    role === 'misconception'
+      ? styles.warningLabel
+      : role === 'risk'
+        ? styles.riskLabel
+        : role === 'practice'
+          ? styles.successLabel
+          : role === 'hook' || role === 'summary'
+            ? styles.primaryLabel
+            : undefined;
+
+  return (
+    <View style={styles.wrapper}>
+      <Text style={[styles.eyebrow, labelStyle]}>{label}</Text>
+      <LearningVisual
+        assetRef={`${assetRef}#${role}`}
+        alt={alt}
+        language={language}
+        theme={theme}
+      />
+    </View>
+  );
+}
+
+const createStyles = (theme: LearningTheme) =>
+  StyleSheet.create({
+    wrapper: {
+      gap: theme.spacing.sm,
+      marginTop: theme.spacing.xs,
+    },
+    eyebrow: {
+      color: theme.colors.textMuted,
+      fontSize: 10,
+      fontWeight: '900',
+      letterSpacing: 0.8,
+    },
+    primaryLabel: { color: theme.colors.primary },
+    successLabel: { color: theme.colors.success },
+    warningLabel: { color: theme.colors.warning },
+    riskLabel: { color: theme.colors.risk },
+  });

@@ -22,6 +22,10 @@ import { DecisionJournalVisual } from './DecisionJournalVisual';
 import { DiversificationVisual } from './DiversificationVisual';
 import { FomoDecisionVisual } from './FomoDecisionVisual';
 import { LearningVisual } from './LearningVisual';
+import {
+  LessonSupportingVisual,
+  type LessonSupportingVisualRole,
+} from './LessonSupportingVisual';
 import { LiquidityImpactVisual } from './LiquidityImpactVisual';
 import { OrderTypesVisual } from './OrderTypesVisual';
 import { OvertradingDecisionVisual } from './OvertradingDecisionVisual';
@@ -38,12 +42,28 @@ import { VolatilityRangeVisual } from './VolatilityRangeVisual';
 
 type VisualBlock = Extract<ContentBlock, { kind: 'visual' }>;
 
+interface SupportingVisual {
+  readonly assetRef: string;
+  readonly alt: string;
+}
+
 export interface LessonBlockRendererProps {
   block: ContentBlock;
   language: LearningLanguage;
   presentationMode: PresentationMode;
   theme?: LearningTheme;
   renderVisual?: (block: VisualBlock) => React.ReactNode;
+  supportingVisual?: SupportingVisual;
+}
+
+function roleForBlock(block: Exclude<ContentBlock, VisualBlock>): LessonSupportingVisualRole {
+  if (block.kind === 'prompt') return 'hook';
+  if (block.kind === 'misconception') return 'misconception';
+  if (block.kind === 'callout') {
+    if (block.tone === 'risk') return 'risk';
+    if (block.tone === 'evidence') return 'practice';
+  }
+  return 'concept';
 }
 
 export function LessonBlockRenderer({
@@ -52,6 +72,7 @@ export function LessonBlockRenderer({
   presentationMode,
   theme = defaultLearningTheme,
   renderVisual,
+  supportingVisual,
 }: LessonBlockRendererProps) {
   const styles = createStyles(theme);
 
@@ -71,6 +92,15 @@ export function LessonBlockRenderer({
             </Text>
           </View>
         ))}
+        {supportingVisual ? (
+          <LessonSupportingVisual
+            assetRef={supportingVisual.assetRef}
+            alt={supportingVisual.alt}
+            language={language}
+            role={roleForBlock(block)}
+            theme={theme}
+          />
+        ) : null}
       </View>
     );
   }
@@ -182,6 +212,15 @@ export function LessonBlockRenderer({
       ) : (
         <Text style={styles.body}>{copy}</Text>
       )}
+      {supportingVisual ? (
+        <LessonSupportingVisual
+          assetRef={supportingVisual.assetRef}
+          alt={supportingVisual.alt}
+          language={language}
+          role={roleForBlock(block)}
+          theme={theme}
+        />
+      ) : null}
     </View>
   );
 }

@@ -25,6 +25,7 @@ import {
 } from '../../theme/learningTheme';
 import { LEARNING_STAGE_LABELS } from '../../domain/learning/personalization';
 import { LessonBlockRenderer } from './LessonBlockRenderer';
+import { LessonSupportingVisual } from './LessonSupportingVisual';
 
 type VisualBlock = Extract<ContentBlock, { kind: 'visual' }>;
 type RiskCalloutBlock = Extract<ContentBlock, { kind: 'callout' }>;
@@ -77,6 +78,27 @@ export function LessonPlayer({
       ),
     [visibleBlocks]
   );
+  const lessonVisual = useMemo(() => {
+    const contentVisual = lesson.contentBlocks.find(
+      (block): block is VisualBlock => block.kind === 'visual'
+    );
+    if (contentVisual) {
+      return {
+        assetRef: contentVisual.assetRef,
+        alt: selectLocalizedText(contentVisual.alt, language),
+      };
+    }
+
+    const questionVisual = lesson.quiz.questions.find(
+      (question) => question.visual
+    )?.visual;
+    if (!questionVisual) return undefined;
+
+    return {
+      assetRef: questionVisual.assetRef,
+      alt: selectLocalizedText(questionVisual.alt, language),
+    };
+  }, [language, lesson.contentBlocks, lesson.quiz.questions]);
   const blocks = useMemo(
     () => visibleBlocks.filter((block) => block !== safetyBlock),
     [safetyBlock, visibleBlocks]
@@ -163,6 +185,15 @@ export function LessonPlayer({
               <Text style={styles.takeawayText}>
                 {selectLocalizedText(lesson.takeaway, language)}
               </Text>
+              {lessonVisual ? (
+                <LessonSupportingVisual
+                  assetRef={lessonVisual.assetRef}
+                  alt={lessonVisual.alt}
+                  language={language}
+                  role="summary"
+                  theme={theme}
+                />
+              ) : null}
               {safetyBlock ? (
                 <View
                   accessibilityLabel={language === 'tr' ? 'Güvenlik notu' : 'Safety note'}
@@ -184,6 +215,7 @@ export function LessonPlayer({
               presentationMode={presentationMode}
               theme={theme}
               renderVisual={renderVisual}
+              supportingVisual={lessonVisual}
             />
           )}
         </View>
