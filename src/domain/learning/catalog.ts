@@ -1,3 +1,4 @@
+import { ECONOMY_EXPANSION_LESSONS } from './examples/academy/economyExpansionLessons';
 import { ECONOMY_FOUNDATION_LESSONS } from './examples/academy/economyFoundationsLessons';
 import { WAVE1_MARKET_FOUNDATION_LESSONS } from './examples/wave1/marketFoundationsLessons';
 import { normalizeMarketFoundationAssessmentQuality } from './examples/wave1/marketFoundationAssessmentQuality';
@@ -26,6 +27,7 @@ export const MICRO_LESSON_CATALOG: readonly MicroLesson[] = [
     normalizeBehaviorEvidenceAssessmentQuality
   ),
   ...ECONOMY_FOUNDATION_LESSONS,
+  ...ECONOMY_EXPANSION_LESSONS,
 ];
 
 export function getMicroLessonById(lessonId: string): MicroLesson | undefined {
