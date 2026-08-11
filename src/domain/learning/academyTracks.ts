@@ -5,6 +5,7 @@ import { FINANCIAL_MARKETS_EXPANSION_LESSONS } from './examples/academy/financia
 import { FINANCIAL_MARKETS_FOUNDATION_LESSONS } from './examples/academy/financialMarketsFoundationLessons';
 import { FUNDAMENTAL_ANALYSIS_EXPANSION_LESSONS } from './examples/academy/fundamentalAnalysisExpansionLessons';
 import { FUNDAMENTAL_ANALYSIS_FOUNDATION_LESSONS } from './examples/academy/fundamentalAnalysisFoundationLessons';
+import { RISK_PORTFOLIO_FOUNDATION_LESSONS } from './examples/academy/riskPortfolioFoundationLessons';
 import { TECHNICAL_ANALYSIS_EXPANSION_LESSONS } from './examples/academy/technicalAnalysisExpansionLessons';
 import { TECHNICAL_ANALYSIS_FOUNDATION_LESSONS } from './examples/academy/technicalAnalysisFoundationLessons';
 
@@ -46,7 +47,11 @@ export const ACADEMY_TRACKS: Readonly<Record<AcademyTrackId, AcademyTrackDefinit
     description: { tr: 'Finansal tablolar, nakit, marj, borç, büyüme kalitesi, hisse başına metrikler, çarpanlar, DCF, peer karşılaştırması ve temel analizin sınırlarını birlikte öğren.', en: 'Learn financial statements, cash, margins, debt, growth quality, per-share metrics, multiples, DCF, peer comparison, and the limits of fundamental analysis together.' },
     status: 'active', lessonIds: [...FUNDAMENTAL_ANALYSIS_FOUNDATION_LESSONS.map((lesson) => lesson.id), ...FUNDAMENTAL_ANALYSIS_EXPANSION_LESSONS.map((lesson) => lesson.id)],
   },
-  risk_portfolio: { id: 'risk_portfolio', order: 5, title: { tr: 'Risk ve Portföy', en: 'Risk and Portfolio' }, description: { tr: 'Core risk bilgisini korelasyon, drawdown, kaldıraç, yoğunlaşma ve portföy oluşturma konularıyla derinleştir.', en: 'Deepen Core risk knowledge with correlation, drawdown, leverage, concentration, and portfolio construction.' }, status: 'planned', lessonIds: [] },
+  risk_portfolio: {
+    id: 'risk_portfolio', order: 5, title: { tr: 'Risk ve Portföy', en: 'Risk and Portfolio' },
+    description: { tr: 'Core risk bilgisini korelasyon, drawdown, kaldıraç, yoğunlaşma, risk bütçesi ve portföy oluşturma mantığıyla derinleştir.', en: 'Deepen Core risk knowledge with correlation, drawdown, leverage, concentration, risk budgeting, and portfolio construction.' },
+    status: 'active', lessonIds: RISK_PORTFOLIO_FOUNDATION_LESSONS.map((lesson) => lesson.id),
+  },
   market_psychology: { id: 'market_psychology', order: 6, title: { tr: 'Piyasa Psikolojisi', en: 'Market Psychology' }, description: { tr: 'FOMO ve aşırı işlemin ötesinde loss aversion, anchoring, recency, aşırı güven ve sonuç yanlılığını öğren.', en: 'Go beyond FOMO and overtrading into loss aversion, anchoring, recency, overconfidence, and outcome bias.' }, status: 'planned', lessonIds: [] },
   strategies: { id: 'strategies', order: 7, title: { tr: 'Stratejiler', en: 'Strategies' }, description: { tr: 'Trend following, mean reversion, breakout, swing ve benzeri yaklaşımları sinyal değil, yöntem ve trade-off olarak öğren.', en: 'Learn trend following, mean reversion, breakouts, swing approaches, and their trade-offs rather than treating them as signals.' }, status: 'planned', lessonIds: [] },
   algo_quant: { id: 'algo_quant', order: 8, title: { tr: 'Algoritmik Trade ve Quant', en: 'Algorithmic Trading and Quant' }, description: { tr: 'Kural tabanlı strateji, expectancy, backtest, overfitting, veri sızıntısı, maliyet ve dayanıklılık kavramlarını öğren.', en: 'Learn rules-based strategies, expectancy, backtesting, overfitting, leakage, costs, and robustness.' }, status: 'planned', lessonIds: [] },
