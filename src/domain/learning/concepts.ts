@@ -20,7 +20,11 @@ export const LEARNING_CONCEPT_KEYS = [
   'fundamental.basics', 'fundamental.financial_statements', 'fundamental.income_statement', 'fundamental.balance_sheet',
   'fundamental.cash_flow', 'fundamental.profitability', 'fundamental.debt_liquidity', 'fundamental.growth_quality',
   'fundamental.per_share', 'fundamental.valuation_multiples', 'fundamental.dcf', 'fundamental.peer_comparison',
-  'fundamental.analysis_limits', 'onchain.basics',
+  'fundamental.analysis_limits',
+  'strategy.horizon_objective', 'strategy.trend_following', 'strategy.mean_reversion', 'strategy.breakout',
+  'strategy.momentum', 'strategy.swing_position', 'strategy.hypothesis', 'strategy.rules', 'strategy.regime_fit',
+  'strategy.costs_turnover', 'strategy.diversification', 'strategy.review_discipline',
+  'onchain.basics',
   'behavior.fomo', 'behavior.confirmation_bias', 'behavior.decision_journal', 'behavior.overtrading',
   'behavior.loss_aversion', 'behavior.anchoring', 'behavior.recency_bias', 'behavior.overconfidence',
   'behavior.revenge_trading', 'behavior.outcome_bias', 'behavior.disposition_effect', 'behavior.herd_behavior',
@@ -31,7 +35,7 @@ export type LearningConceptKey = (typeof LEARNING_CONCEPT_KEYS)[number];
 
 export type LearningConceptCategory =
   | 'market_foundations' | 'market_execution' | 'chart_literacy' | 'market_structure' | 'risk'
-  | 'portfolio' | 'evidence' | 'economy' | 'fundamental' | 'onchain' | 'behavior';
+  | 'portfolio' | 'evidence' | 'economy' | 'fundamental' | 'strategy' | 'onchain' | 'behavior';
 
 export interface LearningConceptDefinition {
   readonly key: LearningConceptKey;
@@ -125,6 +129,18 @@ export const LEARNING_CONCEPTS: Readonly<Record<LearningConceptKey, LearningConc
   'fundamental.dcf': { key: 'fundamental.dcf', category: 'fundamental', titleTr: 'İndirgenmiş nakit akışı (DCF)', titleEn: 'Discounted cash flow (DCF)' },
   'fundamental.peer_comparison': { key: 'fundamental.peer_comparison', category: 'fundamental', titleTr: 'Benzer şirket karşılaştırması', titleEn: 'Peer comparison' },
   'fundamental.analysis_limits': { key: 'fundamental.analysis_limits', category: 'fundamental', titleTr: 'Temel analizin sınırları', titleEn: 'Limits of fundamental analysis' },
+  'strategy.horizon_objective': { key: 'strategy.horizon_objective', category: 'strategy', titleTr: 'Strateji hedefi ve zaman ufku', titleEn: 'Strategy objective and horizon' },
+  'strategy.trend_following': { key: 'strategy.trend_following', category: 'strategy', titleTr: 'Trend takip yaklaşımı', titleEn: 'Trend-following approach' },
+  'strategy.mean_reversion': { key: 'strategy.mean_reversion', category: 'strategy', titleTr: 'Ortalamaya dönüş yaklaşımı', titleEn: 'Mean-reversion approach' },
+  'strategy.breakout': { key: 'strategy.breakout', category: 'strategy', titleTr: 'Breakout strateji mantığı', titleEn: 'Breakout strategy logic' },
+  'strategy.momentum': { key: 'strategy.momentum', category: 'strategy', titleTr: 'Momentum strateji mantığı', titleEn: 'Momentum strategy logic' },
+  'strategy.swing_position': { key: 'strategy.swing_position', category: 'strategy', titleTr: 'Swing ve position yaklaşımı', titleEn: 'Swing and position approaches' },
+  'strategy.hypothesis': { key: 'strategy.hypothesis', category: 'strategy', titleTr: 'Strateji hipotezi', titleEn: 'Strategy hypothesis' },
+  'strategy.rules': { key: 'strategy.rules', category: 'strategy', titleTr: 'Giriş, çıkış ve geçersizlik kuralları', titleEn: 'Entry, exit, and invalidation rules' },
+  'strategy.regime_fit': { key: 'strategy.regime_fit', category: 'strategy', titleTr: 'Piyasa rejimi uyumu', titleEn: 'Market-regime fit' },
+  'strategy.costs_turnover': { key: 'strategy.costs_turnover', category: 'strategy', titleTr: 'İşlem maliyeti ve turnover', titleEn: 'Trading costs and turnover' },
+  'strategy.diversification': { key: 'strategy.diversification', category: 'strategy', titleTr: 'Strateji çeşitlendirmesi', titleEn: 'Strategy diversification' },
+  'strategy.review_discipline': { key: 'strategy.review_discipline', category: 'strategy', titleTr: 'Strateji review disiplini', titleEn: 'Strategy review discipline' },
   'onchain.basics': { key: 'onchain.basics', category: 'onchain', titleTr: 'On-chain veri başlangıcı', titleEn: 'On-chain data basics' },
   'behavior.fomo': { key: 'behavior.fomo', category: 'behavior', titleTr: 'Fırsatı kaçırma korkusu (FOMO)', titleEn: 'Fear of missing out (FOMO)' },
   'behavior.confirmation_bias': { key: 'behavior.confirmation_bias', category: 'behavior', titleTr: 'Onaylama yanlılığı', titleEn: 'Confirmation bias' },
