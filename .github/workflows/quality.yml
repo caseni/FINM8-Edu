@@ -37,6 +37,30 @@ jobs:
       - name: Safe audit-fix plan (dry-run only)
         run: npm audit fix --omit=dev --dry-run || true
 
+      - name: Apply safe audit-fix candidate in runner only
+        run: npm audit fix --omit=dev || true
+
+      - name: Post-fix runtime dependency audit
+        run: npm audit --omit=dev --json > runtime-audit-after-fix.json || true
+
+      - name: Post-fix full dependency audit
+        run: npm audit --json > full-audit-after-fix.json || true
+
+      - name: Post-fix dependency audit summary
+        run: node scripts/dependencyAuditSummary.cjs runtime-audit-after-fix.json full-audit-after-fix.json
+
+      - name: Candidate dependency diff
+        run: git diff -- package.json package-lock.json
+
+      - name: Upload safe dependency-fix candidate
+        uses: actions/upload-artifact@v4
+        with:
+          name: safe-dependency-fix-candidate
+          path: |
+            package.json
+            package-lock.json
+          if-no-files-found: error
+
       - name: Typecheck
         run: npm run typecheck
 
