@@ -25,7 +25,7 @@ export function LearnLandingScreen() {
             accessibilityState={{ selected: false }}
             accessibilityLabel={language === 'tr' ? 'FINM8 Academy eğitim okullarını aç' : 'Open FINM8 Academy learning schools'}
             onPress={() => navigation.navigate('Academy')}
-            style={styles.tab}
+            style={({ pressed }) => [styles.tab, pressed && styles.tabPressed]}
           >
             <Text style={styles.tabText}>Academy</Text>
             <View style={styles.newBadge}>
@@ -50,8 +50,9 @@ const styles = StyleSheet.create({
   safeArea: { flex: 1, backgroundColor: '#07111F' },
   switcherWrap: { width: '100%', maxWidth: 900, alignSelf: 'center', gap: 5, paddingHorizontal: 20, paddingTop: 8, paddingBottom: 6 },
   switcher: { flexDirection: 'row', gap: 6, alignSelf: 'flex-start', padding: 4, borderRadius: 14, backgroundColor: '#0C1928', borderWidth: 1, borderColor: '#1F3449' },
-  tab: { minHeight: 36, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, paddingHorizontal: 14, borderRadius: 10 },
+  tab: { minHeight: 44, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, paddingHorizontal: 14, borderRadius: 10 },
   tabActive: { backgroundColor: '#123B42', borderWidth: 1, borderColor: '#2F766F' },
+  tabPressed: { backgroundColor: '#102033' },
   tabText: { color: '#8094A8', fontSize: 12, fontWeight: '900' },
   tabTextActive: { color: '#5EEAD4' },
   newBadge: { paddingHorizontal: 5, paddingVertical: 2, borderRadius: 999, backgroundColor: '#2DD4BF' },
