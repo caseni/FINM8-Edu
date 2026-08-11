@@ -2,6 +2,7 @@ import { ECONOMY_EXPANSION_LESSONS } from './examples/academy/economyExpansionLe
 import { ECONOMY_FOUNDATION_LESSONS } from './examples/academy/economyFoundationsLessons';
 import { FINANCIAL_MARKETS_EXPANSION_LESSONS } from './examples/academy/financialMarketsExpansionLessons';
 import { FINANCIAL_MARKETS_FOUNDATION_LESSONS } from './examples/academy/financialMarketsFoundationLessons';
+import { TECHNICAL_ANALYSIS_EXPANSION_LESSONS } from './examples/academy/technicalAnalysisExpansionLessons';
 import { TECHNICAL_ANALYSIS_FOUNDATION_LESSONS } from './examples/academy/technicalAnalysisFoundationLessons';
 import { WAVE1_MARKET_FOUNDATION_LESSONS } from './examples/wave1/marketFoundationsLessons';
 import { normalizeMarketFoundationAssessmentQuality } from './examples/wave1/marketFoundationAssessmentQuality';
@@ -34,6 +35,7 @@ export const MICRO_LESSON_CATALOG: readonly MicroLesson[] = [
   ...FINANCIAL_MARKETS_FOUNDATION_LESSONS,
   ...FINANCIAL_MARKETS_EXPANSION_LESSONS,
   ...TECHNICAL_ANALYSIS_FOUNDATION_LESSONS,
+  ...TECHNICAL_ANALYSIS_EXPANSION_LESSONS,
 ];
 
 export function getMicroLessonById(lessonId: string): MicroLesson | undefined {
