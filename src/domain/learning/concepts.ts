@@ -27,6 +27,8 @@ export const LEARNING_CONCEPT_KEYS = [
   'quant.probability', 'quant.expectancy', 'quant.winrate_payoff', 'quant.backtest', 'quant.out_of_sample',
   'quant.transaction_costs', 'quant.overfitting', 'quant.lookahead_bias', 'quant.survivorship_bias',
   'quant.data_leakage', 'quant.robustness', 'quant.automation_limits',
+  'smc.methodology', 'smc.liquidity_sweep', 'smc.liquidity_grab', 'smc.inducement', 'smc.displacement',
+  'smc.mitigation', 'smc.premium_discount', 'smc.market_structure_shift', 'smc.dealing_range', 'smc.confluence_limits',
   'onchain.basics',
   'behavior.fomo', 'behavior.confirmation_bias', 'behavior.decision_journal', 'behavior.overtrading',
   'behavior.loss_aversion', 'behavior.anchoring', 'behavior.recency_bias', 'behavior.overconfidence',
@@ -38,7 +40,7 @@ export type LearningConceptKey = (typeof LEARNING_CONCEPT_KEYS)[number];
 
 export type LearningConceptCategory =
   | 'market_foundations' | 'market_execution' | 'chart_literacy' | 'market_structure' | 'risk'
-  | 'portfolio' | 'evidence' | 'economy' | 'fundamental' | 'strategy' | 'quant' | 'onchain' | 'behavior';
+  | 'portfolio' | 'evidence' | 'economy' | 'fundamental' | 'strategy' | 'quant' | 'smc_ict' | 'onchain' | 'behavior';
 
 export interface LearningConceptDefinition {
   readonly key: LearningConceptKey;
@@ -156,6 +158,16 @@ export const LEARNING_CONCEPTS: Readonly<Record<LearningConceptKey, LearningConc
   'quant.data_leakage': { key: 'quant.data_leakage', category: 'quant', titleTr: 'Veri sızıntısı', titleEn: 'Data leakage' },
   'quant.robustness': { key: 'quant.robustness', category: 'quant', titleTr: 'Robustness ve duyarlılık', titleEn: 'Robustness and sensitivity' },
   'quant.automation_limits': { key: 'quant.automation_limits', category: 'quant', titleTr: 'Otomasyonun sınırları', titleEn: 'Limits of automation' },
+  'smc.methodology': { key: 'smc.methodology', category: 'smc_ict', titleTr: 'SMC / ICT metodoloji sınırları', titleEn: 'SMC / ICT methodology boundaries' },
+  'smc.liquidity_sweep': { key: 'smc.liquidity_sweep', category: 'smc_ict', titleTr: 'Liquidity sweep', titleEn: 'Liquidity sweep' },
+  'smc.liquidity_grab': { key: 'smc.liquidity_grab', category: 'smc_ict', titleTr: 'Liquidity grab', titleEn: 'Liquidity grab' },
+  'smc.inducement': { key: 'smc.inducement', category: 'smc_ict', titleTr: 'Inducement', titleEn: 'Inducement' },
+  'smc.displacement': { key: 'smc.displacement', category: 'smc_ict', titleTr: 'Displacement', titleEn: 'Displacement' },
+  'smc.mitigation': { key: 'smc.mitigation', category: 'smc_ict', titleTr: 'Mitigation', titleEn: 'Mitigation' },
+  'smc.premium_discount': { key: 'smc.premium_discount', category: 'smc_ict', titleTr: 'Premium ve discount', titleEn: 'Premium and discount' },
+  'smc.market_structure_shift': { key: 'smc.market_structure_shift', category: 'smc_ict', titleTr: 'Market Structure Shift (MSS)', titleEn: 'Market Structure Shift (MSS)' },
+  'smc.dealing_range': { key: 'smc.dealing_range', category: 'smc_ict', titleTr: 'Dealing range ve equilibrium', titleEn: 'Dealing range and equilibrium' },
+  'smc.confluence_limits': { key: 'smc.confluence_limits', category: 'smc_ict', titleTr: 'SMC confluence ve sınırlar', titleEn: 'SMC confluence and limits' },
   'onchain.basics': { key: 'onchain.basics', category: 'onchain', titleTr: 'On-chain veri başlangıcı', titleEn: 'On-chain data basics' },
   'behavior.fomo': { key: 'behavior.fomo', category: 'behavior', titleTr: 'Fırsatı kaçırma korkusu (FOMO)', titleEn: 'Fear of missing out (FOMO)' },
   'behavior.confirmation_bias': { key: 'behavior.confirmation_bias', category: 'behavior', titleTr: 'Onaylama yanlılığı', titleEn: 'Confirmation bias' },
