@@ -31,6 +31,12 @@ jobs:
       - name: Dependency audit summary
         run: node scripts/dependencyAuditSummary.cjs runtime-audit.json full-audit.json
 
+      - name: Critical advisory parent chains (read-only)
+        run: npm ls shell-quote tar --all || true
+
+      - name: Safe audit-fix plan (dry-run only)
+        run: npm audit fix --omit=dev --dry-run || true
+
       - name: Typecheck
         run: npm run typecheck
 
