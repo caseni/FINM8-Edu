@@ -25,6 +25,7 @@ export * from './examples/academy/financialMarketsSources';
 export * from './examples/academy/financialMarketsExpansionLessons';
 export * from './examples/academy/financialMarketsExpansionSources';
 export * from './examples/academy/technicalAnalysisFoundationLessons';
+export * from './examples/academy/technicalAnalysisExpansionLessons';
 export * from './examples/academy/technicalAnalysisSources';
 export * from './presentation';
 export * from './personalization';
