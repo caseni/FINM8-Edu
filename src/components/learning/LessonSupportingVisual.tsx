@@ -19,6 +19,10 @@ import {
   isEconomySlideAsset,
 } from './EconomySlideVisual';
 import {
+  FinancialMarketsExpansionSlideVisual,
+  isFinancialMarketsExpansionSlideAsset,
+} from './FinancialMarketsExpansionSlideVisual';
+import {
   FinancialMarketsSlideVisual,
   isFinancialMarketsSlideAsset,
 } from './FinancialMarketsSlideVisual';
@@ -31,6 +35,10 @@ import {
   isRiskLessonSlideAsset,
   RiskLessonSlideVisual,
 } from './RiskLessonSlideVisual';
+import {
+  isTechnicalAnalysisSlideAsset,
+  TechnicalAnalysisSlideVisual,
+} from './TechnicalAnalysisSlideVisual';
 
 export type LessonSupportingVisualRole =
   | 'hook'
@@ -129,6 +137,22 @@ export function LessonSupportingVisual({
     />
   ) : isFinancialMarketsSlideAsset(assetRef) ? (
     <FinancialMarketsSlideVisual
+      assetRef={assetRef}
+      alt={alt}
+      language={language}
+      role={role}
+      theme={theme}
+    />
+  ) : isFinancialMarketsExpansionSlideAsset(assetRef) ? (
+    <FinancialMarketsExpansionSlideVisual
+      assetRef={assetRef}
+      alt={alt}
+      language={language}
+      role={role}
+      theme={theme}
+    />
+  ) : isTechnicalAnalysisSlideAsset(assetRef) ? (
+    <TechnicalAnalysisSlideVisual
       assetRef={assetRef}
       alt={alt}
       language={language}
