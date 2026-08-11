@@ -3,6 +3,10 @@ import { StyleSheet, Text, View } from 'react-native';
 import type { LearningLanguage } from '../../domain/learning/presentation';
 import { defaultLearningTheme, type LearningTheme } from '../../theme/learningTheme';
 import {
+  BehaviorEvidenceSlideVisual,
+  isBehaviorEvidenceSlideAsset,
+} from './BehaviorEvidenceSlideVisual';
+import {
   ChartLessonSlideVisual,
   isChartLessonSlideAsset,
 } from './ChartLessonSlideVisual';
@@ -69,6 +73,14 @@ export function LessonSupportingVisual({
     />
   ) : isRiskLessonSlideAsset(assetRef) ? (
     <RiskLessonSlideVisual
+      assetRef={assetRef}
+      alt={alt}
+      language={language}
+      role={role}
+      theme={theme}
+    />
+  ) : isBehaviorEvidenceSlideAsset(assetRef) ? (
+    <BehaviorEvidenceSlideVisual
       assetRef={assetRef}
       alt={alt}
       language={language}
