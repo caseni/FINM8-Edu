@@ -13,12 +13,12 @@ import { FundamentalAnalysisSlideVisual, isFundamentalAnalysisSlideAsset } from 
 import { LearningVisual } from './LearningVisual';
 import { isMarketFoundationSlideAsset, MarketFoundationSlideVisual } from './MarketFoundationSlideVisual';
 import { isRiskLessonSlideAsset, RiskLessonSlideVisual } from './RiskLessonSlideVisual';
+import { isRiskPortfolioExpansionSlideAsset, RiskPortfolioExpansionSlideVisual } from './RiskPortfolioExpansionSlideVisual';
 import { isRiskPortfolioSlideAsset, RiskPortfolioSlideVisual } from './RiskPortfolioSlideVisual';
 import { isTechnicalAnalysisExpansionSlideAsset, TechnicalAnalysisExpansionSlideVisual } from './TechnicalAnalysisExpansionSlideVisual';
 import { isTechnicalAnalysisSlideAsset, TechnicalAnalysisSlideVisual } from './TechnicalAnalysisSlideVisual';
 
 export type LessonSupportingVisualRole = 'hook' | 'concept' | 'practice' | 'misconception' | 'risk' | 'summary';
-
 export interface LessonSupportingVisualProps { assetRef: string; alt: string; language: LearningLanguage; role: LessonSupportingVisualRole; theme?: LearningTheme; }
 
 const ROLE_LABELS: Readonly<Record<LessonSupportingVisualRole, { tr: string; en: string }>> = {
@@ -31,7 +31,6 @@ export function LessonSupportingVisual({ assetRef, alt, language, role, theme = 
   const styles = createStyles(theme);
   const label = ROLE_LABELS[role][language];
   const labelStyle = role === 'misconception' ? styles.warningLabel : role === 'risk' ? styles.riskLabel : role === 'practice' ? styles.successLabel : role === 'hook' || role === 'summary' ? styles.primaryLabel : undefined;
-
   const visual = isMarketFoundationSlideAsset(assetRef) ? <MarketFoundationSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
     : isChartLessonSlideAsset(assetRef) ? <ChartLessonSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
     : isRiskLessonSlideAsset(assetRef) ? <RiskLessonSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
@@ -45,8 +44,8 @@ export function LessonSupportingVisual({ assetRef, alt, language, role, theme = 
     : isFundamentalAnalysisSlideAsset(assetRef) ? <FundamentalAnalysisSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
     : isFundamentalAnalysisExpansionSlideAsset(assetRef) ? <FundamentalAnalysisExpansionSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
     : isRiskPortfolioSlideAsset(assetRef) ? <RiskPortfolioSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
+    : isRiskPortfolioExpansionSlideAsset(assetRef) ? <RiskPortfolioExpansionSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
     : <LearningVisual assetRef={`${assetRef}#${role}`} alt={alt} language={language} theme={theme} />;
-
   return <View style={styles.wrapper}><Text style={[styles.eyebrow, labelStyle]}>{label}</Text>{visual}</View>;
 }
 
