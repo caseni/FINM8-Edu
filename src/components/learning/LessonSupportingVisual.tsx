@@ -36,6 +36,10 @@ import {
   RiskLessonSlideVisual,
 } from './RiskLessonSlideVisual';
 import {
+  isTechnicalAnalysisExpansionSlideAsset,
+  TechnicalAnalysisExpansionSlideVisual,
+} from './TechnicalAnalysisExpansionSlideVisual';
+import {
   isTechnicalAnalysisSlideAsset,
   TechnicalAnalysisSlideVisual,
 } from './TechnicalAnalysisSlideVisual';
@@ -88,84 +92,27 @@ export function LessonSupportingVisual({
             : undefined;
 
   const visual = isMarketFoundationSlideAsset(assetRef) ? (
-    <MarketFoundationSlideVisual
-      assetRef={assetRef}
-      alt={alt}
-      language={language}
-      role={role}
-      theme={theme}
-    />
+    <MarketFoundationSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
   ) : isChartLessonSlideAsset(assetRef) ? (
-    <ChartLessonSlideVisual
-      assetRef={assetRef}
-      alt={alt}
-      language={language}
-      role={role}
-      theme={theme}
-    />
+    <ChartLessonSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
   ) : isRiskLessonSlideAsset(assetRef) ? (
-    <RiskLessonSlideVisual
-      assetRef={assetRef}
-      alt={alt}
-      language={language}
-      role={role}
-      theme={theme}
-    />
+    <RiskLessonSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
   ) : isBehaviorEvidenceSlideAsset(assetRef) ? (
-    <BehaviorEvidenceSlideVisual
-      assetRef={assetRef}
-      alt={alt}
-      language={language}
-      role={role}
-      theme={theme}
-    />
+    <BehaviorEvidenceSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
   ) : isEconomySlideAsset(assetRef) ? (
-    <EconomySlideVisual
-      assetRef={assetRef}
-      alt={alt}
-      language={language}
-      role={role}
-      theme={theme}
-    />
+    <EconomySlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
   ) : isEconomyExpansionSlideAsset(assetRef) ? (
-    <EconomyExpansionSlideVisual
-      assetRef={assetRef}
-      alt={alt}
-      language={language}
-      role={role}
-      theme={theme}
-    />
+    <EconomyExpansionSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
   ) : isFinancialMarketsSlideAsset(assetRef) ? (
-    <FinancialMarketsSlideVisual
-      assetRef={assetRef}
-      alt={alt}
-      language={language}
-      role={role}
-      theme={theme}
-    />
+    <FinancialMarketsSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
   ) : isFinancialMarketsExpansionSlideAsset(assetRef) ? (
-    <FinancialMarketsExpansionSlideVisual
-      assetRef={assetRef}
-      alt={alt}
-      language={language}
-      role={role}
-      theme={theme}
-    />
+    <FinancialMarketsExpansionSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
   ) : isTechnicalAnalysisSlideAsset(assetRef) ? (
-    <TechnicalAnalysisSlideVisual
-      assetRef={assetRef}
-      alt={alt}
-      language={language}
-      role={role}
-      theme={theme}
-    />
+    <TechnicalAnalysisSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
+  ) : isTechnicalAnalysisExpansionSlideAsset(assetRef) ? (
+    <TechnicalAnalysisExpansionSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
   ) : (
-    <LearningVisual
-      assetRef={`${assetRef}#${role}`}
-      alt={alt}
-      language={language}
-      theme={theme}
-    />
+    <LearningVisual assetRef={`${assetRef}#${role}`} alt={alt} language={language} theme={theme} />
   );
 
   return (
@@ -178,16 +125,8 @@ export function LessonSupportingVisual({
 
 const createStyles = (theme: LearningTheme) =>
   StyleSheet.create({
-    wrapper: {
-      gap: theme.spacing.sm,
-      marginTop: theme.spacing.xs,
-    },
-    eyebrow: {
-      color: theme.colors.textMuted,
-      fontSize: 10,
-      fontWeight: '900',
-      letterSpacing: 0.8,
-    },
+    wrapper: { gap: theme.spacing.sm, marginTop: theme.spacing.xs },
+    eyebrow: { color: theme.colors.textMuted, fontSize: 10, fontWeight: '900', letterSpacing: 0.8 },
     primaryLabel: { color: theme.colors.primary },
     successLabel: { color: theme.colors.success },
     warningLabel: { color: theme.colors.warning },
