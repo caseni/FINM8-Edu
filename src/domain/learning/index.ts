@@ -35,6 +35,8 @@ export * from './examples/academy/riskPortfolioExpansionLessons';
 export * from './examples/academy/riskPortfolioSources';
 export * from './examples/academy/marketPsychologyFoundationLessons';
 export * from './examples/academy/marketPsychologyExpansionLessons';
+export * from './examples/academy/strategyFoundationLessons';
+export * from './examples/academy/strategySources';
 export * from './presentation';
 export * from './personalization';
 export * from './progressionEngine';
