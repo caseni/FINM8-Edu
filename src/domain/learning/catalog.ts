@@ -1,3 +1,4 @@
+import { normalizeAssessmentSignalQuality } from './assessmentSignalQuality';
 import { normalizeAlgoQuantAssessmentQuality } from './examples/academy/algoQuantAssessmentQuality';
 import { ALGO_QUANT_EXPANSION_LESSONS } from './examples/academy/algoQuantExpansionLessons';
 import { ALGO_QUANT_FOUNDATION_LESSONS } from './examples/academy/algoQuantFoundationLessons';
@@ -35,7 +36,7 @@ import { WAVE1_BEHAVIOR_EVIDENCE_LESSONS } from './examples/wave1/behaviorEviden
 import type { MicroLesson } from './types';
 import { validateLearningCatalog } from './catalogIntegrity';
 
-export const MICRO_LESSON_CATALOG: readonly MicroLesson[] = [
+const MICRO_LESSON_CANDIDATES: readonly MicroLesson[] = [
   ...WAVE1_MARKET_FOUNDATION_LESSONS.map(normalizeMarketFoundationAssessmentQuality),
   ...WAVE1_CHART_LITERACY_CORE_LESSONS.map(normalizeChartFoundationAssessmentQuality),
   ...WAVE1_MARKET_STRUCTURE_LESSONS,
@@ -62,6 +63,9 @@ export const MICRO_LESSON_CATALOG: readonly MicroLesson[] = [
   ...ASSET_SCHOOL_FOUNDATION_LESSONS.map(normalizeAssetSchoolAssessmentQuality),
   ...ASSET_SCHOOL_EXPANSION_LESSONS.map(normalizeAssetSchoolAssessmentQuality),
 ];
+
+export const MICRO_LESSON_CATALOG: readonly MicroLesson[] =
+  MICRO_LESSON_CANDIDATES.map(normalizeAssessmentSignalQuality);
 
 export function getMicroLessonById(lessonId: string): MicroLesson | undefined {
   return MICRO_LESSON_CATALOG.find((lesson) => lesson.id === lessonId);
