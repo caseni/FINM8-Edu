@@ -29,6 +29,10 @@ export const LEARNING_CONCEPT_KEYS = [
   'quant.data_leakage', 'quant.robustness', 'quant.automation_limits',
   'smc.methodology', 'smc.liquidity_sweep', 'smc.liquidity_grab', 'smc.inducement', 'smc.displacement',
   'smc.mitigation', 'smc.premium_discount', 'smc.market_structure_shift', 'smc.dealing_range', 'smc.confluence_limits',
+  'asset.cross_market.plumbing', 'asset.equity.corporate_actions', 'asset.equity.earnings_gaps',
+  'asset.etf.nav_tracking', 'asset.etf.leveraged_inverse', 'asset.fx.carry_rollover',
+  'asset.fx.session_event', 'asset.commodity.spot_futures', 'asset.commodity.term_structure',
+  'asset.crypto.perpetual_funding', 'asset.crypto.venue_custody', 'asset.crypto.onchain_limits',
   'onchain.basics',
   'behavior.fomo', 'behavior.confirmation_bias', 'behavior.decision_journal', 'behavior.overtrading',
   'behavior.loss_aversion', 'behavior.anchoring', 'behavior.recency_bias', 'behavior.overconfidence',
@@ -40,7 +44,8 @@ export type LearningConceptKey = (typeof LEARNING_CONCEPT_KEYS)[number];
 
 export type LearningConceptCategory =
   | 'market_foundations' | 'market_execution' | 'chart_literacy' | 'market_structure' | 'risk'
-  | 'portfolio' | 'evidence' | 'economy' | 'fundamental' | 'strategy' | 'quant' | 'smc_ict' | 'onchain' | 'behavior';
+  | 'portfolio' | 'evidence' | 'economy' | 'fundamental' | 'strategy' | 'quant' | 'smc_ict'
+  | 'asset_specific' | 'onchain' | 'behavior';
 
 export interface LearningConceptDefinition {
   readonly key: LearningConceptKey;
@@ -168,6 +173,18 @@ export const LEARNING_CONCEPTS: Readonly<Record<LearningConceptKey, LearningConc
   'smc.market_structure_shift': { key: 'smc.market_structure_shift', category: 'smc_ict', titleTr: 'Market Structure Shift (MSS)', titleEn: 'Market Structure Shift (MSS)' },
   'smc.dealing_range': { key: 'smc.dealing_range', category: 'smc_ict', titleTr: 'Dealing range ve equilibrium', titleEn: 'Dealing range and equilibrium' },
   'smc.confluence_limits': { key: 'smc.confluence_limits', category: 'smc_ict', titleTr: 'SMC confluence ve sınırlar', titleEn: 'SMC confluence and limits' },
+  'asset.cross_market.plumbing': { key: 'asset.cross_market.plumbing', category: 'asset_specific', titleTr: 'Varlık sınıflarında piyasa işleyişi farkları', titleEn: 'Cross-asset market plumbing differences' },
+  'asset.equity.corporate_actions': { key: 'asset.equity.corporate_actions', category: 'asset_specific', titleTr: 'Hisselerde corporate actions', titleEn: 'Corporate actions in equities' },
+  'asset.equity.earnings_gaps': { key: 'asset.equity.earnings_gaps', category: 'asset_specific', titleTr: 'Hisselerde bilanço ve gap riski', titleEn: 'Earnings and gap risk in equities' },
+  'asset.etf.nav_tracking': { key: 'asset.etf.nav_tracking', category: 'asset_specific', titleTr: 'ETF NAV ve tracking farkı', titleEn: 'ETF NAV and tracking differences' },
+  'asset.etf.leveraged_inverse': { key: 'asset.etf.leveraged_inverse', category: 'asset_specific', titleTr: 'Kaldıraçlı ve ters ETF yapısı', titleEn: 'Leveraged and inverse ETF structure' },
+  'asset.fx.carry_rollover': { key: 'asset.fx.carry_rollover', category: 'asset_specific', titleTr: 'FX carry ve rollover', titleEn: 'FX carry and rollover' },
+  'asset.fx.session_event': { key: 'asset.fx.session_event', category: 'asset_specific', titleTr: 'FX seans ve makro olay riski', titleEn: 'FX session and macro-event risk' },
+  'asset.commodity.spot_futures': { key: 'asset.commodity.spot_futures', category: 'asset_specific', titleTr: 'Emtiada spot ve vadeli fiyat', titleEn: 'Commodity spot and futures pricing' },
+  'asset.commodity.term_structure': { key: 'asset.commodity.term_structure', category: 'asset_specific', titleTr: 'Contango, backwardation ve roll', titleEn: 'Contango, backwardation, and roll' },
+  'asset.crypto.perpetual_funding': { key: 'asset.crypto.perpetual_funding', category: 'asset_specific', titleTr: 'Kriptoda perpetual ve funding', titleEn: 'Crypto perpetuals and funding' },
+  'asset.crypto.venue_custody': { key: 'asset.crypto.venue_custody', category: 'asset_specific', titleTr: 'Kripto venue, custody ve karşı taraf riski', titleEn: 'Crypto venue, custody, and counterparty risk' },
+  'asset.crypto.onchain_limits': { key: 'asset.crypto.onchain_limits', category: 'asset_specific', titleTr: 'On-chain verinin sınırları', titleEn: 'Limits of on-chain data' },
   'onchain.basics': { key: 'onchain.basics', category: 'onchain', titleTr: 'On-chain veri başlangıcı', titleEn: 'On-chain data basics' },
   'behavior.fomo': { key: 'behavior.fomo', category: 'behavior', titleTr: 'Fırsatı kaçırma korkusu (FOMO)', titleEn: 'Fear of missing out (FOMO)' },
   'behavior.confirmation_bias': { key: 'behavior.confirmation_bias', category: 'behavior', titleTr: 'Onaylama yanlılığı', titleEn: 'Confirmation bias' },
