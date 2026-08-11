@@ -12,6 +12,7 @@ import { FundamentalAnalysisExpansionSlideVisual, isFundamentalAnalysisExpansion
 import { FundamentalAnalysisSlideVisual, isFundamentalAnalysisSlideAsset } from './FundamentalAnalysisSlideVisual';
 import { LearningVisual } from './LearningVisual';
 import { isMarketFoundationSlideAsset, MarketFoundationSlideVisual } from './MarketFoundationSlideVisual';
+import { isMarketPsychologySlideAsset, MarketPsychologySlideVisual } from './MarketPsychologySlideVisual';
 import { isRiskLessonSlideAsset, RiskLessonSlideVisual } from './RiskLessonSlideVisual';
 import { isRiskPortfolioExpansionSlideAsset, RiskPortfolioExpansionSlideVisual } from './RiskPortfolioExpansionSlideVisual';
 import { isRiskPortfolioSlideAsset, RiskPortfolioSlideVisual } from './RiskPortfolioSlideVisual';
@@ -45,6 +46,7 @@ export function LessonSupportingVisual({ assetRef, alt, language, role, theme = 
     : isFundamentalAnalysisExpansionSlideAsset(assetRef) ? <FundamentalAnalysisExpansionSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
     : isRiskPortfolioSlideAsset(assetRef) ? <RiskPortfolioSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
     : isRiskPortfolioExpansionSlideAsset(assetRef) ? <RiskPortfolioExpansionSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
+    : isMarketPsychologySlideAsset(assetRef) ? <MarketPsychologySlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
     : <LearningVisual assetRef={`${assetRef}#${role}`} alt={alt} language={language} theme={theme} />;
   return <View style={styles.wrapper}><Text style={[styles.eyebrow, labelStyle]}>{label}</Text>{visual}</View>;
 }
