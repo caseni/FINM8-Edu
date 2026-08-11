@@ -2,6 +2,7 @@ import { ECONOMY_EXPANSION_LESSONS } from './examples/academy/economyExpansionLe
 import { ECONOMY_FOUNDATION_LESSONS } from './examples/academy/economyFoundationsLessons';
 import { FINANCIAL_MARKETS_EXPANSION_LESSONS } from './examples/academy/financialMarketsExpansionLessons';
 import { FINANCIAL_MARKETS_FOUNDATION_LESSONS } from './examples/academy/financialMarketsFoundationLessons';
+import { FUNDAMENTAL_ANALYSIS_FOUNDATION_LESSONS } from './examples/academy/fundamentalAnalysisFoundationLessons';
 import { TECHNICAL_ANALYSIS_EXPANSION_LESSONS } from './examples/academy/technicalAnalysisExpansionLessons';
 import { TECHNICAL_ANALYSIS_FOUNDATION_LESSONS } from './examples/academy/technicalAnalysisFoundationLessons';
 import { WAVE1_MARKET_FOUNDATION_LESSONS } from './examples/wave1/marketFoundationsLessons';
@@ -19,28 +20,22 @@ import type { MicroLesson } from './types';
 import { validateLearningCatalog } from './catalogIntegrity';
 
 export const MICRO_LESSON_CATALOG: readonly MicroLesson[] = [
-  ...WAVE1_MARKET_FOUNDATION_LESSONS.map(
-    normalizeMarketFoundationAssessmentQuality
-  ),
-  ...WAVE1_CHART_LITERACY_CORE_LESSONS.map(
-    normalizeChartFoundationAssessmentQuality
-  ),
+  ...WAVE1_MARKET_FOUNDATION_LESSONS.map(normalizeMarketFoundationAssessmentQuality),
+  ...WAVE1_CHART_LITERACY_CORE_LESSONS.map(normalizeChartFoundationAssessmentQuality),
   ...WAVE1_MARKET_STRUCTURE_LESSONS,
   ...WAVE1_RISK_MANAGEMENT_LESSONS.map(normalizeRiskAssessmentQuality),
-  ...WAVE1_BEHAVIOR_EVIDENCE_LESSONS.map(
-    normalizeBehaviorEvidenceAssessmentQuality
-  ),
+  ...WAVE1_BEHAVIOR_EVIDENCE_LESSONS.map(normalizeBehaviorEvidenceAssessmentQuality),
   ...ECONOMY_FOUNDATION_LESSONS,
   ...ECONOMY_EXPANSION_LESSONS,
   ...FINANCIAL_MARKETS_FOUNDATION_LESSONS,
   ...FINANCIAL_MARKETS_EXPANSION_LESSONS,
   ...TECHNICAL_ANALYSIS_FOUNDATION_LESSONS,
   ...TECHNICAL_ANALYSIS_EXPANSION_LESSONS,
+  ...FUNDAMENTAL_ANALYSIS_FOUNDATION_LESSONS,
 ];
 
 export function getMicroLessonById(lessonId: string): MicroLesson | undefined {
   return MICRO_LESSON_CATALOG.find((lesson) => lesson.id === lessonId);
 }
 
-export const MICRO_LESSON_CATALOG_INTEGRITY =
-  validateLearningCatalog(MICRO_LESSON_CATALOG);
+export const MICRO_LESSON_CATALOG_INTEGRITY = validateLearningCatalog(MICRO_LESSON_CATALOG);
