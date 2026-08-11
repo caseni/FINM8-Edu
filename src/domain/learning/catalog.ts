@@ -2,6 +2,7 @@ import { ECONOMY_EXPANSION_LESSONS } from './examples/academy/economyExpansionLe
 import { ECONOMY_FOUNDATION_LESSONS } from './examples/academy/economyFoundationsLessons';
 import { FINANCIAL_MARKETS_EXPANSION_LESSONS } from './examples/academy/financialMarketsExpansionLessons';
 import { FINANCIAL_MARKETS_FOUNDATION_LESSONS } from './examples/academy/financialMarketsFoundationLessons';
+import { FUNDAMENTAL_ANALYSIS_EXPANSION_LESSONS } from './examples/academy/fundamentalAnalysisExpansionLessons';
 import { FUNDAMENTAL_ANALYSIS_FOUNDATION_LESSONS } from './examples/academy/fundamentalAnalysisFoundationLessons';
 import { TECHNICAL_ANALYSIS_EXPANSION_LESSONS } from './examples/academy/technicalAnalysisExpansionLessons';
 import { TECHNICAL_ANALYSIS_FOUNDATION_LESSONS } from './examples/academy/technicalAnalysisFoundationLessons';
@@ -10,10 +11,7 @@ import { normalizeMarketFoundationAssessmentQuality } from './examples/wave1/mar
 import { normalizeChartFoundationAssessmentQuality } from './examples/wave1/chartFoundationAssessmentQuality';
 import { normalizeRiskAssessmentQuality } from './examples/wave1/riskAssessmentQuality';
 import { normalizeBehaviorEvidenceAssessmentQuality } from './examples/wave1/behaviorEvidenceAssessmentQuality';
-import {
-  WAVE1_CHART_LITERACY_CORE_LESSONS,
-  WAVE1_MARKET_STRUCTURE_LESSONS,
-} from './examples/wave1/levelledLessonGroups';
+import { WAVE1_CHART_LITERACY_CORE_LESSONS, WAVE1_MARKET_STRUCTURE_LESSONS } from './examples/wave1/levelledLessonGroups';
 import { WAVE1_RISK_MANAGEMENT_LESSONS } from './examples/wave1/riskManagementLessons';
 import { WAVE1_BEHAVIOR_EVIDENCE_LESSONS } from './examples/wave1/behaviorEvidenceLessons';
 import type { MicroLesson } from './types';
@@ -32,6 +30,7 @@ export const MICRO_LESSON_CATALOG: readonly MicroLesson[] = [
   ...TECHNICAL_ANALYSIS_FOUNDATION_LESSONS,
   ...TECHNICAL_ANALYSIS_EXPANSION_LESSONS,
   ...FUNDAMENTAL_ANALYSIS_FOUNDATION_LESSONS,
+  ...FUNDAMENTAL_ANALYSIS_EXPANSION_LESSONS,
 ];
 
 export function getMicroLessonById(lessonId: string): MicroLesson | undefined {
