@@ -1,4 +1,5 @@
 import { normalizeAssessmentSignalQuality } from './assessmentSignalQuality';
+import { normalizeCoreEnglishEditorial } from './coreEnglishEditorial';
 import { normalizeAlgoQuantAssessmentQuality } from './examples/academy/algoQuantAssessmentQuality';
 import { ALGO_QUANT_EXPANSION_LESSONS } from './examples/academy/algoQuantExpansionLessons';
 import { ALGO_QUANT_FOUNDATION_LESSONS } from './examples/academy/algoQuantFoundationLessons';
@@ -64,8 +65,9 @@ const MICRO_LESSON_CANDIDATES: readonly MicroLesson[] = [
   ...ASSET_SCHOOL_EXPANSION_LESSONS.map(normalizeAssetSchoolAssessmentQuality),
 ];
 
-export const MICRO_LESSON_CATALOG: readonly MicroLesson[] =
-  MICRO_LESSON_CANDIDATES.map(normalizeAssessmentSignalQuality);
+export const MICRO_LESSON_CATALOG: readonly MicroLesson[] = MICRO_LESSON_CANDIDATES
+  .map(normalizeCoreEnglishEditorial)
+  .map(normalizeAssessmentSignalQuality);
 
 export function getMicroLessonById(lessonId: string): MicroLesson | undefined {
   return MICRO_LESSON_CATALOG.find((lesson) => lesson.id === lessonId);
