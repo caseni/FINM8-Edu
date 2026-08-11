@@ -1,3 +1,4 @@
+import { normalizeAlgoQuantAssessmentQuality } from './examples/academy/algoQuantAssessmentQuality';
 import { ALGO_QUANT_EXPANSION_LESSONS } from './examples/academy/algoQuantExpansionLessons';
 import { ALGO_QUANT_FOUNDATION_LESSONS } from './examples/academy/algoQuantFoundationLessons';
 import { normalizeAssetSchoolAssessmentQuality } from './examples/academy/assetSchoolAssessmentQuality';
@@ -50,8 +51,8 @@ export const MICRO_LESSON_CATALOG: readonly MicroLesson[] = [
   ...MARKET_PSYCHOLOGY_EXPANSION_LESSONS,
   ...STRATEGY_FOUNDATION_LESSONS,
   ...STRATEGY_EXPANSION_LESSONS,
-  ...ALGO_QUANT_FOUNDATION_LESSONS,
-  ...ALGO_QUANT_EXPANSION_LESSONS,
+  ...ALGO_QUANT_FOUNDATION_LESSONS.map(normalizeAlgoQuantAssessmentQuality),
+  ...ALGO_QUANT_EXPANSION_LESSONS.map(normalizeAlgoQuantAssessmentQuality),
   ...SMC_ICT_FOUNDATION_LESSONS,
   ...SMC_ICT_EXPANSION_LESSONS,
   ...ASSET_SCHOOL_FOUNDATION_LESSONS.map(normalizeAssetSchoolAssessmentQuality),
