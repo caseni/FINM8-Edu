@@ -322,9 +322,9 @@ const createStyles = (theme: LearningTheme) =>
       borderRadius: theme.radius.large,
     },
     visualSlide: {
-      flex: 0,
-      minHeight: 0,
-      justifyContent: 'flex-start',
+      flex: 1,
+      minHeight: 340,
+      justifyContent: 'center',
     },
     takeaway: { gap: theme.spacing.md },
     takeawayEyebrow: { color: theme.colors.primary, fontSize: 12, fontWeight: '800' },
