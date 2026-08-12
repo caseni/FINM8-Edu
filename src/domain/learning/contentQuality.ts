@@ -62,11 +62,37 @@ export interface VisualCoverageReport {
   }[];
 }
 
+export interface EditorialDepthReport {
+  readonly totalLessons: number;
+  readonly lessonsWithoutExplanation: readonly string[];
+  readonly lessonsWithoutMisconception: readonly string[];
+  readonly thinTeachingLessons: readonly {
+    readonly lessonId: string;
+    readonly title: string;
+    readonly teachingWordCount: number;
+  }[];
+  readonly terseQuizExplanations: readonly {
+    readonly lessonId: string;
+    readonly questionId: string;
+    readonly explanation: string;
+    readonly wordCount: number;
+  }[];
+  readonly duplicateTaskPromptGroups: readonly {
+    readonly prompt: string;
+    readonly lessonIds: readonly string[];
+  }[];
+  readonly duplicateQuizExplanationGroups: readonly {
+    readonly explanation: string;
+    readonly questionIds: readonly string[];
+  }[];
+}
+
 export interface ContentQualitySnapshot {
   readonly english: EnglishCoverageReport;
   readonly assessment: AssessmentQualityReport;
   readonly curriculumOverlap: CurriculumOverlapReport;
   readonly visualCoverage: VisualCoverageReport;
+  readonly editorialDepth: EditorialDepthReport;
 }
 
 const GENERIC_BINARY_LABELS = new Set([
@@ -91,12 +117,20 @@ const OVERLAP_STOP_WORDS = new Set([
   'olan', 'olarak', 'olabilir', 'olur', 'tek', 've', 'veya', 'ya', 'yalnız', 'yerine',
 ]);
 
+const MIN_TEACHING_WORDS = 55;
+const MIN_QUIZ_EXPLANATION_WORDS = 8;
+
 function normalizeText(value: string): string {
   return value
     .trim()
     .toLocaleLowerCase('tr-TR')
     .replace(/[“”\"'’`´.,!?;:()]/g, '')
     .replace(/\s+/g, ' ');
+}
+
+function wordCount(value: string): number {
+  const normalized = value.trim().replace(/\s+/g, ' ');
+  return normalized ? normalized.split(' ').length : 0;
 }
 
 function hasEnglishText(value: LocalizedText | undefined): boolean {
@@ -209,6 +243,33 @@ function tokenSet(value: string): Set<string> {
 
 function overlapFingerprint(lesson: MicroLesson): string {
   return [lesson.title.tr, lesson.learningObjective.tr, lesson.takeaway.tr].join(' ');
+}
+
+function teachingText(lesson: MicroLesson): string {
+  const chunks: string[] = [lesson.learningObjective.tr, lesson.takeaway.tr];
+
+  for (const block of lesson.contentBlocks) {
+    if ('copy' in block) {
+      chunks.push(block.copy.normal.tr);
+      if (block.copy.pro?.tr) chunks.push(block.copy.pro.tr);
+    }
+    if ('title' in block && block.title) {
+      chunks.push(block.title.normal.tr);
+      if (block.title.pro?.tr) chunks.push(block.title.pro.tr);
+    }
+    if ('items' in block) {
+      for (const item of block.items) {
+        chunks.push(item.normal.tr);
+        if (item.pro?.tr) chunks.push(item.pro.tr);
+      }
+    }
+    if ('caption' in block && block.caption) {
+      chunks.push(block.caption.normal.tr);
+      if (block.caption.pro?.tr) chunks.push(block.caption.pro.tr);
+    }
+  }
+
+  return chunks.join(' ');
 }
 
 function jaccardSimilarity(left: Set<string>, right: Set<string>): number {
@@ -379,11 +440,75 @@ export function getVisualCoverageReport(): VisualCoverageReport {
   };
 }
 
+export function getEditorialDepthReport(): EditorialDepthReport {
+  const lessonsWithoutExplanation: string[] = [];
+  const lessonsWithoutMisconception: string[] = [];
+  const thinTeachingLessons: EditorialDepthReport['thinTeachingLessons'][number][] = [];
+  const terseQuizExplanations: EditorialDepthReport['terseQuizExplanations'][number][] = [];
+  const taskPromptGroups = new Map<string, { prompt: string; lessonIds: string[] }>();
+  const quizExplanationGroups = new Map<string, { explanation: string; questionIds: string[] }>();
+
+  for (const lesson of MICRO_LESSON_CATALOG) {
+    if (!lesson.contentBlocks.some((block) => block.kind === 'explanation')) {
+      lessonsWithoutExplanation.push(lesson.id);
+    }
+    if (!lesson.contentBlocks.some((block) => block.kind === 'misconception')) {
+      lessonsWithoutMisconception.push(lesson.id);
+    }
+
+    const teachingWordCount = wordCount(teachingText(lesson));
+    if (teachingWordCount < MIN_TEACHING_WORDS) {
+      thinTeachingLessons.push({ lessonId: lesson.id, title: lesson.title.tr, teachingWordCount });
+    }
+
+    const taskPrompt = lesson.practicalTask.prompt.normal.tr;
+    const normalizedTaskPrompt = normalizeText(taskPrompt);
+    const taskGroup = taskPromptGroups.get(normalizedTaskPrompt);
+    if (taskGroup) taskGroup.lessonIds.push(lesson.id);
+    else taskPromptGroups.set(normalizedTaskPrompt, { prompt: taskPrompt, lessonIds: [lesson.id] });
+
+    for (const question of lesson.quiz.questions) {
+      const explanationWords = wordCount(question.explanation.tr);
+      if (explanationWords < MIN_QUIZ_EXPLANATION_WORDS) {
+        terseQuizExplanations.push({
+          lessonId: lesson.id,
+          questionId: question.id,
+          explanation: question.explanation.tr,
+          wordCount: explanationWords,
+        });
+      }
+
+      const normalizedExplanation = normalizeText(question.explanation.tr);
+      const explanationGroup = quizExplanationGroups.get(normalizedExplanation);
+      if (explanationGroup) explanationGroup.questionIds.push(question.id);
+      else quizExplanationGroups.set(normalizedExplanation, {
+        explanation: question.explanation.tr,
+        questionIds: [question.id],
+      });
+    }
+  }
+
+  return {
+    totalLessons: MICRO_LESSON_CATALOG.length,
+    lessonsWithoutExplanation,
+    lessonsWithoutMisconception,
+    thinTeachingLessons: thinTeachingLessons.sort((a, b) => a.teachingWordCount - b.teachingWordCount),
+    terseQuizExplanations: terseQuizExplanations.sort((a, b) => a.wordCount - b.wordCount),
+    duplicateTaskPromptGroups: Array.from(taskPromptGroups.values())
+      .filter((group) => group.lessonIds.length > 1)
+      .sort((a, b) => b.lessonIds.length - a.lessonIds.length),
+    duplicateQuizExplanationGroups: Array.from(quizExplanationGroups.values())
+      .filter((group) => group.questionIds.length > 1)
+      .sort((a, b) => b.questionIds.length - a.questionIds.length),
+  };
+}
+
 export function getContentQualitySnapshot(): ContentQualitySnapshot {
   return {
     english: getEnglishCoverageReport(),
     assessment: getAssessmentQualityReport(),
     curriculumOverlap: getCurriculumOverlapReport(),
     visualCoverage: getVisualCoverageReport(),
+    editorialDepth: getEditorialDepthReport(),
   };
 }
