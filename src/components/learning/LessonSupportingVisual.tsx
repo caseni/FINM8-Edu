@@ -6,6 +6,7 @@ import { AlgoQuantSlideVisual, isAlgoQuantSlideAsset } from './AlgoQuantSlideVis
 import { AssetSchoolSlideVisual, isAssetSchoolSlideAsset } from './AssetSchoolSlideVisual';
 import { BehaviorEvidenceSlideVisual, isBehaviorEvidenceSlideAsset } from './BehaviorEvidenceSlideVisual';
 import { BeginnerChartStoryVisual, isBeginnerChartStoryAsset } from './BeginnerChartStoryVisual';
+import { BeginnerEconomyStoryVisual, isBeginnerEconomyStoryAsset } from './BeginnerEconomyStoryVisual';
 import { BeginnerMarketStoryVisual, isBeginnerMarketStoryAsset } from './BeginnerMarketStoryVisual';
 import { BeginnerRiskStoryVisual, isBeginnerRiskStoryAsset } from './BeginnerRiskStoryVisual';
 import { ChartLessonSlideVisual, isChartLessonSlideAsset } from './ChartLessonSlideVisual';
@@ -39,19 +40,21 @@ export function LessonSupportingVisual({ assetRef, alt, language, role, theme = 
   const styles = createStyles(theme);
   const label = ROLE_LABELS[role][language];
   const labelStyle = role === 'misconception' ? styles.warningLabel : role === 'risk' ? styles.riskLabel : role === 'practice' ? styles.successLabel : role === 'hook' || role === 'summary' ? styles.primaryLabel : undefined;
+  const isBeginnerEconomy = isBeginnerEconomyStoryAsset(assetRef);
   const isBeginnerRisk = isBeginnerRiskStoryAsset(assetRef);
   const isBeginnerChart = isBeginnerChartStoryAsset(assetRef);
   const isBeginnerMarket = isBeginnerMarketStoryAsset(assetRef);
-  const isBeginnerEconomy = isEconomySlideAsset(assetRef);
-  const hideEditorialLabel = isBeginnerRisk || isBeginnerChart || isBeginnerMarket || isBeginnerEconomy;
-  const visual = isBeginnerRisk ? <BeginnerRiskStoryVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
+  const isEconomy = isEconomySlideAsset(assetRef);
+  const hideEditorialLabel = isBeginnerEconomy || isBeginnerRisk || isBeginnerChart || isBeginnerMarket || isEconomy;
+  const visual = isBeginnerEconomy ? <BeginnerEconomyStoryVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
+    : isBeginnerRisk ? <BeginnerRiskStoryVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
     : isBeginnerChart ? <BeginnerChartStoryVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
     : isBeginnerMarket ? <BeginnerMarketStoryVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
     : isMarketFoundationSlideAsset(assetRef) ? <MarketFoundationSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
     : isChartLessonSlideAsset(assetRef) ? <ChartLessonSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
     : isRiskLessonSlideAsset(assetRef) ? <RiskLessonSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
     : isBehaviorEvidenceSlideAsset(assetRef) ? <BehaviorEvidenceSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
-    : isBeginnerEconomy ? <EconomySlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
+    : isEconomy ? <EconomySlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
     : isEconomyExpansionSlideAsset(assetRef) ? <EconomyExpansionSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
     : isFinancialMarketsSlideAsset(assetRef) ? <FinancialMarketsSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
     : isFinancialMarketsExpansionSlideAsset(assetRef) ? <FinancialMarketsExpansionSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
