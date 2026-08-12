@@ -65,6 +65,26 @@ async function openHome(page) {
   await page.getByText('Öğrenmeye Başla', { exact: true }).waitFor({ timeout: 10000 });
 }
 
+async function walkBeginnerLesson(page, lessonName, filePrefix) {
+  await page.getByRole('button', { name: new RegExp(lessonName, 'i') }).click();
+  await page.getByText(/Adım 1\//).waitFor();
+  const stepMatch = (await page.getByText(/Adım 1\//).innerText()).match(/\/(\d+)/);
+  const totalSteps = Number(stepMatch?.[1] ?? 1);
+  if (!Number.isFinite(totalSteps) || totalSteps < 1) throw new Error(`Invalid beginner lesson step count for ${lessonName}.`);
+
+  for (let step = 1; step <= totalSteps; step += 1) {
+    await assertNoHorizontalOverflow(page, `${filePrefix}-step-${step}`);
+    await page.screenshot({
+      path: `visual-qa/${filePrefix}-step-${String(step).padStart(2, '0')}.png`,
+      fullPage: true,
+    });
+    if (step < totalSteps) {
+      await page.getByRole('button', { name: /Sonraki adıma geç/i }).click();
+      await page.getByText(new RegExp(`Adım ${step + 1}\\/${totalSteps}`)).waitFor();
+    }
+  }
+}
+
 async function captureBeginnerFlow(page) {
   await openHome(page);
   await assertNoHorizontalOverflow(page, 'beginner-mobile-home');
@@ -74,24 +94,14 @@ async function captureBeginnerFlow(page) {
   await page.getByText('Önce günlük hayatta ne olduğunu anla.', { exact: true }).waitFor();
   await assertNoHorizontalOverflow(page, 'beginner-mobile-money-economy');
   await page.screenshot({ path: 'visual-qa/beginner-mobile-money-economy.png', fullPage: true });
+  await walkBeginnerLesson(page, 'Aynı para neden zamanla daha az şey alır', 'beginner-money-mobile');
 
-  await page.getByRole('button', { name: /Aynı para neden zamanla daha az şey alır/i }).click();
-  await page.getByText(/Adım 1\//).waitFor();
-  const stepMatch = (await page.getByText(/Adım 1\//).innerText()).match(/\/(\d+)/);
-  const totalSteps = Number(stepMatch?.[1] ?? 1);
-  if (!Number.isFinite(totalSteps) || totalSteps < 1) throw new Error('Invalid beginner lesson step count.');
-
-  for (let step = 1; step <= totalSteps; step += 1) {
-    await assertNoHorizontalOverflow(page, `beginner-money-mobile-step-${step}`);
-    await page.screenshot({
-      path: `visual-qa/beginner-money-mobile-step-${String(step).padStart(2, '0')}.png`,
-      fullPage: true,
-    });
-    if (step < totalSteps) {
-      await page.getByRole('button', { name: /Sonraki adıma geç/i }).click();
-      await page.getByText(new RegExp(`Adım ${step + 1}\\/${totalSteps}`)).waitFor();
-    }
-  }
+  await openHome(page);
+  await page.getByRole('button', { name: /Piyasalar Nasıl Çalışır/i }).first().click();
+  await page.getByText('Önce günlük hayatta ne olduğunu anla.', { exact: true }).waitFor();
+  await assertNoHorizontalOverflow(page, 'beginner-mobile-markets');
+  await page.screenshot({ path: 'visual-qa/beginner-mobile-markets.png', fullPage: true });
+  await walkBeginnerLesson(page, 'Bir fiyat nasıl ortaya çıkar', 'beginner-markets-mobile');
 }
 
 async function openAcademy(page) {
@@ -169,10 +179,17 @@ try {
   await openHome(desktop);
   await assertNoHorizontalOverflow(desktop, 'beginner-desktop-home');
   await desktop.screenshot({ path: 'visual-qa/beginner-desktop-home.png', fullPage: true });
+
   await desktop.getByRole('button', { name: /Para ve Ekonomi/i }).first().click();
   await desktop.getByText('Önce günlük hayatta ne olduğunu anla.', { exact: true }).waitFor();
   await assertNoHorizontalOverflow(desktop, 'beginner-desktop-money-economy');
   await desktop.screenshot({ path: 'visual-qa/beginner-desktop-money-economy.png', fullPage: true });
+
+  await openHome(desktop);
+  await desktop.getByRole('button', { name: /Piyasalar Nasıl Çalışır/i }).first().click();
+  await desktop.getByText('Önce günlük hayatta ne olduğunu anla.', { exact: true }).waitFor();
+  await assertNoHorizontalOverflow(desktop, 'beginner-desktop-markets');
+  await desktop.screenshot({ path: 'visual-qa/beginner-desktop-markets.png', fullPage: true });
 
   await openAcademy(desktop);
   await assertNoHorizontalOverflow(desktop, 'academy-desktop-collapsed');
