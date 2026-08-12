@@ -2,6 +2,7 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { LessonPlayer } from '../../components/learning';
+import { BeginnerChartStoryVisual } from '../../components/learning/BeginnerChartStoryVisual';
 import { BeginnerMarketStoryVisual } from '../../components/learning/BeginnerMarketStoryVisual';
 import { getMicroLessonById } from '../../domain/learning/catalog';
 import { selectLocalizedText, type LearningLanguage } from '../../domain/learning/presentation';
@@ -21,6 +22,15 @@ const BEGINNER_MARKET_LESSON_IDS = new Set([
   'lesson.market.slippage.001',
 ]);
 
+const BEGINNER_CHART_LESSON_IDS = new Set([
+  'lesson.chart.candles.001',
+  'lesson.chart.timeframes.001',
+  'lesson.chart.trend.001',
+  'lesson.chart.support-resistance.001',
+  'lesson.technical.momentum.001',
+  'lesson.technical.moving-average.001',
+]);
+
 export function MicroLessonScreen({ route, navigation }: Props) {
   const lesson = getMicroLessonById(route.params.lessonId);
   const rawLanguage = useLanguageStore((state) => state.language);
@@ -37,6 +47,7 @@ export function MicroLessonScreen({ route, navigation }: Props) {
   if (!lesson) return <View><Text>Ders bulunamadı.</Text></View>;
 
   const useBeginnerMarketVisual = BEGINNER_MARKET_LESSON_IDS.has(lesson.id);
+  const useBeginnerChartVisual = BEGINNER_CHART_LESSON_IDS.has(lesson.id);
 
   return (
     <LessonPlayer
@@ -44,16 +55,25 @@ export function MicroLessonScreen({ route, navigation }: Props) {
       language={language}
       presentationMode={presentationMode}
       renderVisual={
-        useBeginnerMarketVisual
+        useBeginnerChartVisual
           ? (block) => (
-              <BeginnerMarketStoryVisual
+              <BeginnerChartStoryVisual
                 assetRef={block.assetRef}
                 alt={selectLocalizedText(block.alt, language)}
                 language={language}
                 role="practice"
               />
             )
-          : undefined
+          : useBeginnerMarketVisual
+            ? (block) => (
+                <BeginnerMarketStoryVisual
+                  assetRef={block.assetRef}
+                  alt={selectLocalizedText(block.alt, language)}
+                  language={language}
+                  role="practice"
+                />
+              )
+            : undefined
       }
       initialStepIndex={isReadOnlyReview ? 0 : checkpoint?.stepIndex ?? 0}
       onStepChange={(stepIndex) => {
