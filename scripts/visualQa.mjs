@@ -83,7 +83,7 @@ const beginnerEndToEndCases = [
     quizAnswers: [
       'Gelecekteki kesin fiyatı',
       'Başlangıç ile bitiş fiyatı arasını',
-      'Hayır',
+      'Hayır; Mum geçmişte oluşmuş bir kayıttır; sonraki fiyatı kesin olarak bilmez.',
     ],
   },
   {
