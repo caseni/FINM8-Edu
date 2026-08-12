@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { LearningFlowHeader, QuizPlayer } from '../../components/learning';
+import { BeginnerQuizPlayer } from '../../components/learning/BeginnerQuizPlayer';
+import { BEGINNER_SECTIONS } from '../../domain/learning/beginnerJourney';
 import { getMicroLessonById } from '../../domain/learning/catalog';
 import { INITIAL_BADGES } from '../../domain/learning/examples/badges';
 import { selectLocalizedText, type LearningLanguage } from '../../domain/learning/presentation';
@@ -11,6 +13,10 @@ import { useLearningProgressStore } from '../../store/useLearningProgressStore';
 import type { RootStackParamList } from '../../types/navigation';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'LessonQuiz'>;
+
+const BEGINNER_LESSON_IDS = new Set(
+  Object.values(BEGINNER_SECTIONS).flatMap((section) => [...section.lessonIds])
+);
 
 export function LessonQuizScreen({ route, navigation }: Props) {
   const lesson = getMicroLessonById(route.params.lessonId);
@@ -38,6 +44,30 @@ export function LessonQuizScreen({ route, navigation }: Props) {
   };
 
   if (!lesson) return <SafeAreaView style={styles.safeArea}><Text style={styles.title}>Ders bulunamadı.</Text></SafeAreaView>;
+
+  const beginner = BEGINNER_LESSON_IDS.has(lesson.id);
+  const reinforcementBlock = lesson.contentBlocks.find((block) => block.kind === 'visual');
+
+  const handleComplete = (_previewResult: QuizResult, submissions: readonly { questionId: string; selectedOptionId: string }[]) => {
+    if (route.params.review) {
+      setResult(_previewResult);
+      return;
+    }
+    const now = new Date().toISOString();
+    const storedResult = isSpacedReview
+      ? submitReview(lesson, submissions, now)
+      : submitQuiz(lesson, submissions, now);
+    if (storedResult.passed && !isSpacedReview) {
+      completeLesson(lesson, now);
+    }
+    if (storedResult.passed) {
+      const awarded = INITIAL_BADGES.filter((badge) => tryAwardBadge(badge, now));
+      if (awarded.length > 0) {
+        setNewBadgeTitle(awarded.map((badge) => selectLocalizedText(badge.title, language)).join(' · '));
+      }
+    }
+    setResult(storedResult);
+  };
 
   if (result) {
     return (
@@ -83,9 +113,7 @@ export function LessonQuizScreen({ route, navigation }: Props) {
                 ? language === 'tr' ? 'Tekrarı yeniden dene' : 'Retry the review'
                 : language === 'tr' ? 'Quiz’i tekrar dene' : 'Retry the quiz'}
             style={styles.button}
-            onPress={() => result.passed
-              ? returnToEntry()
-              : setResult(undefined)}
+            onPress={() => result.passed ? returnToEntry() : setResult(undefined)}
           >
             <Text style={styles.buttonText}>
               {result.passed
@@ -107,6 +135,8 @@ export function LessonQuizScreen({ route, navigation }: Props) {
     );
   }
 
+  const eyebrow = isSpacedReview ? { tr: 'AKTİF TEKRAR', en: 'ACTIVE REVIEW' } as const : undefined;
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <LearningFlowHeader
@@ -114,33 +144,24 @@ export function LessonQuizScreen({ route, navigation }: Props) {
         stage={3}
         onExit={returnToEntry}
       />
-      <QuizPlayer
-        quiz={lesson.quiz}
-        language={language}
-        eyebrow={isSpacedReview ? { tr: 'AKTİF TEKRAR', en: 'ACTIVE REVIEW' } : undefined}
-        onComplete={(_previewResult, submissions) => {
-          if (route.params.review) {
-            setResult(_previewResult);
-            return;
-          }
-          const now = new Date().toISOString();
-          const storedResult = isSpacedReview
-            ? submitReview(lesson, submissions, now)
-            : submitQuiz(lesson, submissions, now);
-          if (storedResult.passed && !isSpacedReview) {
-            completeLesson(lesson, now);
-          }
-          if (storedResult.passed) {
-            const awarded = INITIAL_BADGES.filter((badge) =>
-              tryAwardBadge(badge, now)
-            );
-            if (awarded.length > 0) {
-              setNewBadgeTitle(awarded.map((badge) => selectLocalizedText(badge.title, language)).join(' · '));
-            }
-          }
-          setResult(storedResult);
-        }}
-      />
+      {beginner ? (
+        <BeginnerQuizPlayer
+          quiz={lesson.quiz}
+          language={language}
+          eyebrow={eyebrow}
+          reinforcementVisual={reinforcementBlock && reinforcementBlock.kind === 'visual'
+            ? { assetRef: reinforcementBlock.assetRef, alt: reinforcementBlock.alt }
+            : undefined}
+          onComplete={handleComplete}
+        />
+      ) : (
+        <QuizPlayer
+          quiz={lesson.quiz}
+          language={language}
+          eyebrow={eyebrow}
+          onComplete={handleComplete}
+        />
+      )}
     </SafeAreaView>
   );
 }
