@@ -14,6 +14,14 @@ const allTracks = [
   'Varlık Okulları',
 ];
 const representativeTracks = ['Teknik Analiz', 'Algoritmik Trade ve Quant', 'SMC / ICT · İleri'];
+const beginnerEconomyLessons = [
+  'Aynı para neden zamanla daha az şey alır',
+  'Faiz neyi etkiler',
+  'Merkez bankası neden önemlidir',
+  'Faiz değişince ekonomi nasıl etkilenir',
+  'Ekonomi büyüyor demek ne demek',
+  'Ekonomi neden bazen yavaşlar',
+];
 const beginnerMarketLessons = [
   'Bir fiyat nasıl ortaya çıkar',
   'Piyasada aldığın şey aslında nedir',
@@ -123,7 +131,10 @@ async function captureBeginnerFlow(page) {
   await openBeginnerSection(page, 'Para ve Ekonomi');
   await assertNoHorizontalOverflow(page, 'beginner-mobile-money-economy');
   await page.screenshot({ path: 'visual-qa/beginner-mobile-money-economy.png', fullPage: true });
-  await walkBeginnerLesson(page, 'Aynı para neden zamanla daha az şey alır', 'beginner-money-mobile');
+  for (const lessonName of beginnerEconomyLessons) {
+    await openBeginnerSection(page, 'Para ve Ekonomi');
+    await walkBeginnerLesson(page, lessonName, `beginner-economy-${slug(lessonName)}-mobile`);
+  }
 
   await openBeginnerSection(page, 'Piyasalar Nasıl Çalışır');
   await assertNoHorizontalOverflow(page, 'beginner-mobile-markets');
