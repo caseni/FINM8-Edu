@@ -53,7 +53,7 @@ const beginnerEndToEndCases = [
     lesson: 'Aynı para neden zamanla daha az şey alır',
     taskWrong: 'Paranın satın alma gücü artmıştır',
     taskCorrect: ['Paranın satın alma gücü azalmıştır'],
-    quizAnswers: ['Paranın kâğıt üzerindeki boyutunu', 'Aynı parayla daha az ürün alabilirsin', 'Hayır; daha geniş bir ürün grubuna bakmak gerekir'],
+    quizOptionIndexes: [1, 0, 0],
   },
   {
     key: 'markets',
@@ -61,7 +61,7 @@ const beginnerEndToEndCases = [
     lesson: 'Bir fiyat nasıl ortaya çıkar',
     taskWrong: 'Şirketin her dakika yeni fiyat seçmesi',
     taskCorrect: ['Alıcı ve satıcının aynı fiyatta buluşması'],
-    quizAnswers: ['Şirket yeni fiyat yazdığında', 'Gerçekleşmiş son işlemin fiyatını', 'Fiyat değişebilir'],
+    quizOptionIndexes: [1, 1, 0],
   },
   {
     key: 'charts',
@@ -69,7 +69,7 @@ const beginnerEndToEndCases = [
     lesson: 'Grafikte gördüğün şey aslında nedir',
     taskWrong: 'Henüz oluşmamış sonraki fiyatı',
     taskCorrect: ['O zaman aralığında ulaşılan en yüksek fiyatı', 'O zaman aralığında ulaşılan en düşük fiyatı'],
-    quizAnswers: ['Gelecekteki kesin fiyatı', 'Başlangıç ile bitiş fiyatı arasını', 'Hayır'],
+    quizOptionIndexes: [1, 0, 0],
   },
   {
     key: 'risk',
@@ -77,7 +77,7 @@ const beginnerEndToEndCases = [
     lesson: 'Kaybetmeden önce risk var mıdır',
     taskWrong: 'Hesaba geçmiş 1.000 TL zarar',
     taskCorrect: ['Değerin düşebilme ihtimali'],
-    quizAnswers: ['Yalnız gerçekleşmiş zarar', 'Kayıp gerçekleşmiştir, risk ise olasılıktır', 'Kötü bir sonucun etkisini sınırlamak'],
+    quizOptionIndexes: [1, 0, 0],
   },
 ];
 const diagnostics = [];
@@ -228,8 +228,7 @@ async function captureBeginnerEndToEnd(page, testCase) {
   await page.getByText('MİNİ QUIZ', { exact: true }).waitFor();
   await page.screenshot({ path: `visual-qa/${prefix}-quiz-start.png`, fullPage: true });
   for (let index = 0; index < testCase.quizAnswers.length; index += 1) {
-    const answer = testCase.quizAnswers[index];
-    await page.getByText(answer, { exact: true }).click();
+    await page.getByRole('button').nth(testCase.quizOptionIndexes[index] + 1).click();
     await page.getByRole('button', { name: 'Cevabı kontrol et' }).click();
     if (index === 0) {
       await page.getByText(/Senin seçimin:/).waitFor();
