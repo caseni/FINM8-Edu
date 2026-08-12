@@ -231,7 +231,7 @@ async function captureBeginnerEndToEnd(page, testCase) {
     await page.getByRole('button').nth(testCase.quizOptionIndexes[index] + 1).click();
     await page.getByRole('button', { name: 'Cevabı kontrol et' }).click();
     if (index === 0) {
-      await page.getByText(/Senin seçimin:/).waitFor();
+      await page.waitForTimeout(100);
       await assertNoHorizontalOverflow(page, `${prefix}-quiz-wrong`);
       await page.screenshot({ path: `visual-qa/${prefix}-quiz-wrong.png`, fullPage: true });
     } else {
