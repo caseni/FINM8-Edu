@@ -1,7 +1,7 @@
 import { getContentQualitySnapshot } from '../src/domain/learning/contentQuality';
 
 const snapshot = getContentQualitySnapshot();
-const { assessment, curriculumOverlap, english, visualCoverage } = snapshot;
+const { assessment, curriculumOverlap, editorialDepth, english, visualCoverage } = snapshot;
 
 console.log('FINM8 EDU content quality audit');
 console.log(`lessons: ${curriculumOverlap.lessonCount}`);
@@ -12,6 +12,12 @@ console.log(`concept reuse groups: ${curriculumOverlap.conceptReuseGroups.length
 console.log(`exact duplicate lesson surfaces: ${curriculumOverlap.exactSurfaceGroups.length}`);
 console.log(`near-duplicate lesson pairs: ${curriculumOverlap.nearDuplicatePairs.length}`);
 console.log(`visual anchors: ${visualCoverage.lessonsWithAnyVisualAnchor}/${visualCoverage.totalLessons}`);
+console.log(`editorial missing explanation blocks: ${editorialDepth.lessonsWithoutExplanation.length}`);
+console.log(`editorial missing misconception blocks: ${editorialDepth.lessonsWithoutMisconception.length}`);
+console.log(`editorial thin teaching lessons: ${editorialDepth.thinTeachingLessons.length}`);
+console.log(`editorial terse quiz explanations: ${editorialDepth.terseQuizExplanations.length}`);
+console.log(`duplicate practical-task prompt groups: ${editorialDepth.duplicateTaskPromptGroups.length}`);
+console.log(`duplicate quiz-explanation groups: ${editorialDepth.duplicateQuizExplanationGroups.length}`);
 
 if (assessment.lowSignalIssues.length > 0) {
   const issueCountsByLesson = new Map<string, { total: number; binary: number; trivial: number }>();
@@ -53,6 +59,42 @@ if (english.incompleteLessons.length > 0) {
   console.log('English editorial pending lessons:');
   for (const lesson of english.incompleteLessons) {
     console.log(`- ${lesson.lessonId}: ${lesson.missingFields.length} missing fields`);
+  }
+}
+
+if (editorialDepth.lessonsWithoutExplanation.length > 0) {
+  console.log(`Lessons without an explanation block: ${editorialDepth.lessonsWithoutExplanation.join(', ')}`);
+}
+
+if (editorialDepth.lessonsWithoutMisconception.length > 0) {
+  console.log(`Lessons without a misconception block: ${editorialDepth.lessonsWithoutMisconception.join(', ')}`);
+}
+
+if (editorialDepth.thinTeachingLessons.length > 0) {
+  console.log('Thinnest teaching lessons:');
+  for (const lesson of editorialDepth.thinTeachingLessons.slice(0, 20)) {
+    console.log(`- ${lesson.lessonId}: ${lesson.teachingWordCount} words -> ${lesson.title}`);
+  }
+}
+
+if (editorialDepth.terseQuizExplanations.length > 0) {
+  console.log('Terse quiz explanations:');
+  for (const item of editorialDepth.terseQuizExplanations.slice(0, 30)) {
+    console.log(`- ${item.lessonId}/${item.questionId}: ${item.wordCount} words -> ${item.explanation}`);
+  }
+}
+
+if (editorialDepth.duplicateTaskPromptGroups.length > 0) {
+  console.log('Duplicate practical-task prompt groups:');
+  for (const group of editorialDepth.duplicateTaskPromptGroups.slice(0, 15)) {
+    console.log(`- ${group.lessonIds.join(', ')} -> ${group.prompt}`);
+  }
+}
+
+if (editorialDepth.duplicateQuizExplanationGroups.length > 0) {
+  console.log('Duplicate quiz-explanation groups:');
+  for (const group of editorialDepth.duplicateQuizExplanationGroups.slice(0, 15)) {
+    console.log(`- ${group.questionIds.join(', ')} -> ${group.explanation}`);
   }
 }
 
