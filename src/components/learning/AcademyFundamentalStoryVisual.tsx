@@ -1,10 +1,12 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
 import type { LearningLanguage } from '../../domain/learning/presentation';
 import { defaultLearningTheme, type LearningTheme } from '../../theme/learningTheme';
 import type { LessonSupportingVisualRole } from './LessonSupportingVisual';
 
 type Topic = 'statements' | 'income' | 'balance' | 'cashFlow' | 'profitability' | 'debt';
+
+const statementsProfitCashHookImage = require('../../../assets/learning/academy/fundamental/fundamental-statements-profit-cash-hook.webp');
 
 export interface AcademyFundamentalStoryVisualProps {
   assetRef: string;
@@ -33,6 +35,15 @@ export function AcademyFundamentalStoryVisual({ assetRef, alt, language, role, t
   if (!topic) return null;
   const styles = createStyles(theme);
   const tr = language === 'tr';
+
+  if (topic === 'statements' && role === 'hook') {
+    return (
+      <View style={styles.photoShell} accessibilityRole="image" accessibilityLabel={alt}>
+        <Image source={statementsProfitCashHookImage} resizeMode="cover" style={styles.photo} />
+      </View>
+    );
+  }
+
   return (
     <View style={styles.shell} accessibilityRole="image" accessibilityLabel={alt}>
       {topic === 'statements' ? <Statements role={role} tr={tr} styles={styles} /> : null}
@@ -195,6 +206,8 @@ function Debt({ role, tr, styles }: SceneProps) {
 }
 
 const createStyles = (theme: LearningTheme) => StyleSheet.create({
+  photoShell: { width: '100%', aspectRatio: 0.8, overflow: 'hidden', borderRadius: 20, borderWidth: 1, borderColor: '#24465C', backgroundColor: '#06111B' },
+  photo: { width: '100%', height: '100%' },
   shell: { width: '100%', minHeight: 240, justifyContent: 'center', borderRadius: 20, borderWidth: 1, borderColor: '#24465C', backgroundColor: '#081725', padding: 16 },
   story: { gap: 18 },
   head: { gap: 5 },
