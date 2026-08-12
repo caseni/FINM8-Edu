@@ -38,16 +38,66 @@ export interface AcademyTrackDefinition {
 }
 
 export const ACADEMY_TRACKS: Readonly<Record<AcademyTrackId, AcademyTrackDefinition>> = {
-  economy: { id: 'economy', order: 1, title: { tr: 'Temel Ekonomi', en: 'Economics Foundations' }, description: { tr: 'Enflasyon, faiz, merkez bankaları, büyüme, işgücü, maliye politikası, döviz kuru, verimlilik ve ekonomik verileri piyasa bağlamıyla sade öğren.', en: 'Learn inflation, rates, central banks, growth, labor markets, fiscal policy, exchange rates, productivity, and economic data in a simple market-relevant progression.' }, status: 'active', lessonIds: [...ECONOMY_FOUNDATION_LESSONS.map((lesson) => lesson.id), ...ECONOMY_EXPANSION_LESSONS.map((lesson) => lesson.id)] },
-  financial_markets: { id: 'financial_markets', order: 2, title: { tr: 'Finansal Piyasalar', en: 'Financial Markets' }, description: { tr: 'Borsa, endeks, ETF, tahvil, forex, emtia, kripto, seanslar, hacim, piyasa altyapısı ve türevleri ürünlerin gerçekten nasıl çalıştığını anlayacak kadar derinleştir.', en: 'Go deeper into exchanges, indices, ETFs, bonds, FX, commodities, crypto, sessions, volume, market infrastructure, and derivatives so you understand how markets actually work.' }, status: 'active', lessonIds: [...FINANCIAL_MARKETS_FOUNDATION_LESSONS.map((lesson) => lesson.id), ...FINANCIAL_MARKETS_EXPANSION_LESSONS.map((lesson) => lesson.id)] },
-  technical_analysis: { id: 'technical_analysis', order: 3, title: { tr: 'Teknik Analiz', en: 'Technical Analysis' }, description: { tr: 'Core grafik bilgisini breakout, pullback, range, momentum, hareketli ortalama, RSI, MACD, çoklu zaman dilimi, formasyon, confluence ve indikatör sınırlarıyla genişlet.', en: 'Extend Core chart literacy with breakouts, pullbacks, ranges, momentum, moving averages, RSI, MACD, multi-timeframe analysis, patterns, confluence, and indicator limits.' }, status: 'active', lessonIds: [...TECHNICAL_ANALYSIS_FOUNDATION_LESSONS.map((lesson) => lesson.id), ...TECHNICAL_ANALYSIS_EXPANSION_LESSONS.map((lesson) => lesson.id)] },
-  fundamental_analysis: { id: 'fundamental_analysis', order: 4, title: { tr: 'Temel Analiz', en: 'Fundamental Analysis' }, description: { tr: 'Finansal tablolar, nakit, marj, borç, büyüme kalitesi, hisse başına metrikler, çarpanlar, DCF, peer karşılaştırması ve temel analizin sınırlarını birlikte öğren.', en: 'Learn financial statements, cash, margins, debt, growth quality, per-share metrics, multiples, DCF, peer comparison, and the limits of fundamental analysis together.' }, status: 'active', lessonIds: [...FUNDAMENTAL_ANALYSIS_FOUNDATION_LESSONS.map((lesson) => lesson.id), ...FUNDAMENTAL_ANALYSIS_EXPANSION_LESSONS.map((lesson) => lesson.id)] },
-  risk_portfolio: { id: 'risk_portfolio', order: 5, title: { tr: 'Risk ve Portföy', en: 'Risk and Portfolio' }, description: { tr: 'Core risk bilgisini korelasyon, drawdown, kaldıraç, yoğunlaşma, risk bütçesi, risk faktörleri, yeniden dengeleme, likidite, tail risk, stres testleri ve toparlanma matematiğiyle derinleştir.', en: 'Deepen Core risk knowledge with correlation, drawdown, leverage, concentration, risk budgets, risk factors, rebalancing, liquidity, tail risk, stress testing, and recovery math.' }, status: 'active', lessonIds: [...RISK_PORTFOLIO_FOUNDATION_LESSONS.map((lesson) => lesson.id), ...RISK_PORTFOLIO_EXPANSION_LESSONS.map((lesson) => lesson.id)] },
-  market_psychology: { id: 'market_psychology', order: 6, title: { tr: 'Piyasa Psikolojisi', en: 'Market Psychology' }, description: { tr: 'Core’daki FOMO, aşırı işlem, confirmation bias ve karar günlüğünün üzerine; kayıptan kaçınma, çapalama, recency, aşırı güven, revenge trading, sonuç yanlılığı, disposition effect, sürü davranışı, batık maliyet, availability bias, action bias ve pre-commitment öğren.', en: 'Build on Core FOMO, overtrading, confirmation bias, and decision journaling with loss aversion, anchoring, recency, overconfidence, revenge trading, outcome bias, the disposition effect, herd behavior, sunk costs, availability bias, action bias, and pre-commitment.' }, status: 'active', lessonIds: [...MARKET_PSYCHOLOGY_FOUNDATION_LESSONS.map((lesson) => lesson.id), ...MARKET_PSYCHOLOGY_EXPANSION_LESSONS.map((lesson) => lesson.id)] },
-  strategies: { id: 'strategies', order: 7, title: { tr: 'Stratejiler', en: 'Strategies' }, description: { tr: 'Amaç ve zaman ufkundan başlayarak trend following, mean reversion, breakout, momentum, swing/position, hipotez, kurallar, rejim uyumu, maliyet, strateji çeşitlendirmesi ve review disiplinini sinyal değil yöntem olarak öğren.', en: 'Learn strategy as a method rather than a signal: objective and horizon, trend following, mean reversion, breakout, momentum, swing/position, hypotheses, rules, regime fit, costs, diversification, and review discipline.' }, status: 'active', lessonIds: [...STRATEGY_FOUNDATION_LESSONS.map((lesson) => lesson.id), ...STRATEGY_EXPANSION_LESSONS.map((lesson) => lesson.id)] },
-  algo_quant: { id: 'algo_quant', order: 8, title: { tr: 'Algoritmik Trade ve Quant', en: 'Algorithmic Trading and Quant' }, description: { tr: 'Olasılık ve expectancy’den başlayarak backtest, out-of-sample, maliyet, overfitting, look-ahead, survivorship, data leakage, robustness ve otomasyon kontrollerini sistematik araştırma disiplini olarak öğren.', en: 'Learn systematic research from probability and expectancy through backtesting, out-of-sample validation, costs, overfitting, look-ahead, survivorship, data leakage, robustness, and automation controls.' }, status: 'active', lessonIds: [...ALGO_QUANT_FOUNDATION_LESSONS.map((lesson) => lesson.id), ...ALGO_QUANT_EXPANSION_LESSONS.map((lesson) => lesson.id)] },
-  smc_ict: { id: 'smc_ict', order: 9, title: { tr: 'SMC / ICT · İleri', en: 'SMC / ICT · Advanced' }, description: { tr: 'Metodoloji sınırı, liquidity sweep/grab, inducement, displacement, FVG, Order Block, mitigation, dealing range, premium/discount, MSS ve confluence sınırlarını evrensel gerçek veya sinyal gibi sunmadan öğren.', en: 'Learn methodology boundaries, liquidity sweep/grab, inducement, displacement, FVG, Order Blocks, mitigation, dealing ranges, premium/discount, MSS, and confluence limits without treating them as universal truths or signals.' }, status: 'active', lessonIds: [...SMC_ICT_FOUNDATION_LESSONS.map((lesson) => lesson.id), ...SMC_ICT_EXPANSION_LESSONS.map((lesson) => lesson.id)] },
-  asset_schools: { id: 'asset_schools', order: 10, title: { tr: 'Varlık Okulları', en: 'Asset Schools' }, description: { tr: 'Ortak piyasa bilgisinin üzerine varlığa özgü ikinci katmanı ekle: cross-market plumbing, hisselerde corporate actions ve earnings gap riski, ETF NAV/tracking ve günlük reset, FX carry/seans, emtia spot-vadeli ve roll yapısı, kripto perpetual/funding, venue-custody ve on-chain veri sınırları.', en: 'Add the asset-specific second layer on top of shared market knowledge: cross-market plumbing, corporate actions and earnings-gap risk in equities, ETF NAV/tracking and daily reset, FX carry and sessions, commodity spot-futures and roll structure, plus crypto perpetual/funding, venue-custody, and on-chain data limits.' }, status: 'active', lessonIds: [...ASSET_SCHOOL_FOUNDATION_LESSONS.map((lesson) => lesson.id), ...ASSET_SCHOOL_EXPANSION_LESSONS.map((lesson) => lesson.id)] },
+  economy: {
+    id: 'economy', order: 1,
+    title: { tr: 'Ekonomiyi Anla', en: 'Understand the Economy' },
+    description: { tr: 'Para, faiz ve ekonomik değişimlerin günlük hayatı ve piyasaları nasıl etkilediğini adım adım derinleştir.', en: 'Go deeper into how money, interest rates, and economic changes affect everyday life and markets.' },
+    status: 'active', lessonIds: [...ECONOMY_FOUNDATION_LESSONS.map((lesson) => lesson.id), ...ECONOMY_EXPANSION_LESSONS.map((lesson) => lesson.id)],
+  },
+  financial_markets: {
+    id: 'financial_markets', order: 2,
+    title: { tr: 'Piyasaları Anla', en: 'Understand Markets' },
+    description: { tr: 'Borsa, fon, tahvil, döviz, emtia ve kripto gibi piyasaların nasıl çalıştığını ürün ürün öğren.', en: 'Learn how exchanges, funds, bonds, currencies, commodities, and crypto markets work, one product at a time.' },
+    status: 'active', lessonIds: [...FINANCIAL_MARKETS_FOUNDATION_LESSONS.map((lesson) => lesson.id), ...FINANCIAL_MARKETS_EXPANSION_LESSONS.map((lesson) => lesson.id)],
+  },
+  technical_analysis: {
+    id: 'technical_analysis', order: 3,
+    title: { tr: 'Grafikleri Derinleştir', en: 'Go Deeper Into Charts' },
+    description: { tr: 'Seviyelerin, geri çekilmelerin, göstergelerin ve farklı zaman ölçeklerinin grafikte ne anlattığını adım adım derinleştir.', en: 'Go deeper into what levels, pullbacks, indicators, and different time scales can tell you on a chart.' },
+    status: 'active', lessonIds: [...TECHNICAL_ANALYSIS_FOUNDATION_LESSONS.map((lesson) => lesson.id), ...TECHNICAL_ANALYSIS_EXPANSION_LESSONS.map((lesson) => lesson.id)],
+  },
+  fundamental_analysis: {
+    id: 'fundamental_analysis', order: 4,
+    title: { tr: 'Şirketleri Anla', en: 'Understand Companies' },
+    description: { tr: 'Bir şirketin satışını, kârını, borcunu, nakdini ve değerini nasıl okuyacağını adım adım öğren.', en: 'Learn step by step how to read a company’s sales, profit, debt, cash, and value.' },
+    status: 'active', lessonIds: [...FUNDAMENTAL_ANALYSIS_FOUNDATION_LESSONS.map((lesson) => lesson.id), ...FUNDAMENTAL_ANALYSIS_EXPANSION_LESSONS.map((lesson) => lesson.id)],
+  },
+  risk_portfolio: {
+    id: 'risk_portfolio', order: 5,
+    title: { tr: 'Risk ve Portföy', en: 'Risk and Portfolio' },
+    description: { tr: 'Yatırımların birlikte nasıl risk taşıdığını, kayıpları sınırlamayı ve portföyü daha dayanıklı kurmayı öğren.', en: 'Learn how investments carry risk together, how to limit losses, and how to build a more resilient portfolio.' },
+    status: 'active', lessonIds: [...RISK_PORTFOLIO_FOUNDATION_LESSONS.map((lesson) => lesson.id), ...RISK_PORTFOLIO_EXPANSION_LESSONS.map((lesson) => lesson.id)],
+  },
+  market_psychology: {
+    id: 'market_psychology', order: 6,
+    title: { tr: 'Karar Psikolojisi', en: 'Decision Psychology' },
+    description: { tr: 'Korku, acele, aşırı güven ve geçmiş kararlara takılmanın finansal kararlarını nasıl etkileyebileceğini fark et.', en: 'Notice how fear, urgency, overconfidence, and attachment to past decisions can affect financial choices.' },
+    status: 'active', lessonIds: [...MARKET_PSYCHOLOGY_FOUNDATION_LESSONS.map((lesson) => lesson.id), ...MARKET_PSYCHOLOGY_EXPANSION_LESSONS.map((lesson) => lesson.id)],
+  },
+  strategies: {
+    id: 'strategies', order: 7,
+    title: { tr: 'Yöntemler ve Planlar', en: 'Methods and Plans' },
+    description: { tr: 'Farklı yatırım yöntemlerinin hangi koşulda neyi amaçladığını, nasıl kurallara bağlandığını ve nerede zorlandığını öğren.', en: 'Learn what different investment methods try to do, how they use rules, and where they can struggle.' },
+    status: 'active', lessonIds: [...STRATEGY_FOUNDATION_LESSONS.map((lesson) => lesson.id), ...STRATEGY_EXPANSION_LESSONS.map((lesson) => lesson.id)],
+  },
+  algo_quant: {
+    id: 'algo_quant', order: 8,
+    title: { tr: 'Sistematik ve Sayısal Yaklaşımlar', en: 'Systematic and Quantitative Methods' },
+    description: { tr: 'Kurallı fikirleri geçmiş veride test etmeyi, sonuçların ne kadar güvenilir olduğunu ve otomasyonun sınırlarını öğren.', en: 'Learn how rule-based ideas are tested on historical data, how reliable results may be, and where automation has limits.' },
+    status: 'active', lessonIds: [...ALGO_QUANT_FOUNDATION_LESSONS.map((lesson) => lesson.id), ...ALGO_QUANT_EXPANSION_LESSONS.map((lesson) => lesson.id)],
+  },
+  smc_ict: {
+    id: 'smc_ict', order: 9,
+    title: { tr: 'İleri Grafik Yaklaşımları', en: 'Advanced Chart Approaches' },
+    description: { tr: 'SMC / ICT gibi ileri grafik yaklaşımlarındaki kavramları kesin gerçek veya sinyal gibi görmeden, yöntem ve sınırlarıyla birlikte incele.', en: 'Explore concepts used in advanced chart approaches such as SMC / ICT without treating them as certain truths or signals.' },
+    status: 'active', lessonIds: [...SMC_ICT_FOUNDATION_LESSONS.map((lesson) => lesson.id), ...SMC_ICT_EXPANSION_LESSONS.map((lesson) => lesson.id)],
+  },
+  asset_schools: {
+    id: 'asset_schools', order: 10,
+    title: { tr: 'Varlık Türlerini Anla', en: 'Understand Asset Types' },
+    description: { tr: 'Hisse, ETF, döviz, emtia ve kriptonun kendine özgü çalışma ve risk farklarını karşılaştırarak öğren.', en: 'Compare the unique mechanics and risks of stocks, ETFs, currencies, commodities, and crypto.' },
+    status: 'active', lessonIds: [...ASSET_SCHOOL_FOUNDATION_LESSONS.map((lesson) => lesson.id), ...ASSET_SCHOOL_EXPANSION_LESSONS.map((lesson) => lesson.id)],
+  },
 };
 
 export const ACTIVE_ACADEMY_TRACKS = ACADEMY_TRACK_IDS.map((id) => ACADEMY_TRACKS[id]).filter((track) => track.status === 'active');
