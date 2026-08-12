@@ -5,6 +5,7 @@ import { defaultLearningTheme, type LearningTheme } from '../../theme/learningTh
 import { AlgoQuantSlideVisual, isAlgoQuantSlideAsset } from './AlgoQuantSlideVisual';
 import { AssetSchoolSlideVisual, isAssetSchoolSlideAsset } from './AssetSchoolSlideVisual';
 import { BehaviorEvidenceSlideVisual, isBehaviorEvidenceSlideAsset } from './BehaviorEvidenceSlideVisual';
+import { BeginnerMarketSlideVisual, isBeginnerMarketSlideAsset } from './BeginnerMarketSlideVisual';
 import { ChartLessonSlideVisual, isChartLessonSlideAsset } from './ChartLessonSlideVisual';
 import { EconomyExpansionSlideVisual, isEconomyExpansionSlideAsset } from './EconomyExpansionSlideVisual';
 import { EconomySlideVisual, isEconomySlideAsset } from './EconomySlideVisual';
@@ -36,7 +37,8 @@ export function LessonSupportingVisual({ assetRef, alt, language, role, theme = 
   const styles = createStyles(theme);
   const label = ROLE_LABELS[role][language];
   const labelStyle = role === 'misconception' ? styles.warningLabel : role === 'risk' ? styles.riskLabel : role === 'practice' ? styles.successLabel : role === 'hook' || role === 'summary' ? styles.primaryLabel : undefined;
-  const visual = isMarketFoundationSlideAsset(assetRef) ? <MarketFoundationSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
+  const visual = isBeginnerMarketSlideAsset(assetRef) ? <BeginnerMarketSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
+    : isMarketFoundationSlideAsset(assetRef) ? <MarketFoundationSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
     : isChartLessonSlideAsset(assetRef) ? <ChartLessonSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
     : isRiskLessonSlideAsset(assetRef) ? <RiskLessonSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
     : isBehaviorEvidenceSlideAsset(assetRef) ? <BehaviorEvidenceSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
