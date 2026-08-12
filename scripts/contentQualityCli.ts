@@ -19,6 +19,18 @@ console.log(`editorial terse quiz explanations: ${editorialDepth.terseQuizExplan
 console.log(`duplicate practical-task prompt groups: ${editorialDepth.duplicateTaskPromptGroups.length}`);
 console.log(`duplicate quiz-explanation groups: ${editorialDepth.duplicateQuizExplanationGroups.length}`);
 
+const topThinLessons = editorialDepth.thinTeachingLessons
+  .slice(0, 5)
+  .map((lesson) => `${lesson.lessonId}(${lesson.teachingWordCount})`)
+  .join(', ') || 'none';
+const topTerseQuiz = editorialDepth.terseQuizExplanations
+  .slice(0, 5)
+  .map((item) => `${item.questionId}(${item.wordCount})`)
+  .join(', ') || 'none';
+console.log(
+  `::notice title=Editorial depth summary::missing explanation=${editorialDepth.lessonsWithoutExplanation.length}; missing misconception=${editorialDepth.lessonsWithoutMisconception.length}; thin teaching=${editorialDepth.thinTeachingLessons.length}; terse quiz explanations=${editorialDepth.terseQuizExplanations.length}; duplicate task prompts=${editorialDepth.duplicateTaskPromptGroups.length}; duplicate quiz explanations=${editorialDepth.duplicateQuizExplanationGroups.length}; thinnest=${topThinLessons}; tersest=${topTerseQuiz}`,
+);
+
 if (assessment.lowSignalIssues.length > 0) {
   const issueCountsByLesson = new Map<string, { total: number; binary: number; trivial: number }>();
   for (const issue of assessment.lowSignalIssues) {
