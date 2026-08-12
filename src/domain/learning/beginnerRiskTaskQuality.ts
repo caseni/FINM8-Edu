@@ -5,16 +5,6 @@ type CopyPair = { tr: string; en: string };
 type TaskCopy = { correct: readonly CopyPair[]; incorrect: readonly CopyPair[] };
 
 const COPY: Readonly<Record<string, TaskCopy>> = {
-  'lesson.risk.uncertainty.001': {
-    correct: [
-      { tr: 'Risk, sonuç gerçekleşmeden önce de vardır', en: 'Risk exists before the outcome is realized' },
-      { tr: 'Kayıp, gerçekleşmiş olumsuz bir sonuçtur', en: 'A loss is an adverse outcome that has already happened' },
-    ],
-    incorrect: [
-      { tr: 'Risk yönetimi sonucu kesin olarak kontrol eder', en: 'Risk management controls the outcome with certainty' },
-      { tr: 'Kayıp yoksa hiçbir risk de yoktur', en: 'If there is no loss, there is no risk at all' },
-    ],
-  },
   'lesson.risk.volatility.001': {
     correct: [
       { tr: 'Geniş fiyat hareketi aynı miktarın parasal etkisini büyütebilir', en: 'Wide price movement can increase the cash impact of the same amount' },
@@ -72,6 +62,11 @@ function localized(value: CopyPair): LocalizedText {
 }
 
 export function normalizeBeginnerRiskTaskQuality(lesson: MicroLesson): MicroLesson {
+  // The first risk lesson intentionally keeps its concrete possibility-vs-realized-loss
+  // choices. That contrast is clearer for a true beginner than replacing the choices
+  // with abstract rule statements.
+  if (lesson.id === 'lesson.risk.uncertainty.001') return lesson;
+
   const copy = COPY[lesson.id];
   if (!copy || !lesson.practicalTask.choices?.length) return lesson;
 
