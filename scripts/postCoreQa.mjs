@@ -65,6 +65,18 @@ const academyFoundationPaths = [
       'Şirketin borcu ne zaman tehlikeli hale gelir?',
     ],
   },
+  {
+    key: 'risk',
+    starterLabel: /Risk ve portföyü güçlendir/i,
+    lessons: [
+      'İki yatırım hep birlikte hareket ediyorsa gerçekten farklı mı?',
+      'Portföy yol boyunca ne kadar düşmüş olabilir?',
+      'Aynı fiyat hareketi kaldıraçla neden daha sert hissedilir?',
+      'Çok yatırım yapmak neden her zaman riski dağıtmaz?',
+      'Parayı eşit bölmek riski de eşit böler mi?',
+      'Portföy kurarken ilk soru ne olmalı?',
+    ],
+  },
 ];
 
 async function seedCompletedBeginnerPath(page) {
