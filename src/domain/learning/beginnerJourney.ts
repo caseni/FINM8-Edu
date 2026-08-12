@@ -60,11 +60,18 @@ export const BEGINNER_SECTIONS: Readonly<Record<BeginnerSectionId, BeginnerSecti
     order: 3,
     title: { tr: 'Grafikleri Korkmadan Oku', en: 'Read Charts Without Fear' },
     description: {
-      tr: 'Grafikte gördüğün hareketlerin ne anlattığını sade örneklerle öğren.',
-      en: 'Learn what chart movements mean through simple examples.',
+      tr: 'Grafiğin neyi kaydettiğini, farklı zaman ölçeklerini, genel yönü, tepki bölgelerini ve yardımcı çizgilerin sınırını sade örneklerle öğren.',
+      en: 'Learn with simple examples what a chart records, time scales, broader direction, reaction areas, and the limits of helper lines.',
     },
-    status: 'next',
-    lessonIds: [],
+    status: 'active',
+    lessonIds: [
+      'lesson.chart.candles.001',
+      'lesson.chart.timeframes.001',
+      'lesson.chart.trend.001',
+      'lesson.chart.support-resistance.001',
+      'lesson.technical.momentum.001',
+      'lesson.technical.moving-average.001',
+    ],
   },
   risk: {
     id: 'risk',
