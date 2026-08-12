@@ -46,6 +46,59 @@ const beginnerRiskLessons = [
   'Çıkış fiyatı neden garanti değildir',
   'Parayı farklı şeylere bölmek riski nasıl değiştirir',
 ];
+const beginnerEndToEndCases = [
+  {
+    key: 'economy',
+    section: 'Para ve Ekonomi',
+    lesson: 'Aynı para neden zamanla daha az şey alır',
+    taskWrong: 'Paranın satın alma gücü artmıştır',
+    taskCorrect: ['Paranın satın alma gücü azalmıştır'],
+    quizAnswers: [
+      'Paranın kâğıt üzerindeki boyutunu',
+      'Aynı parayla daha az ürün alabilirsin',
+      'Hayır; daha geniş bir ürün grubuna bakmak gerekir',
+    ],
+  },
+  {
+    key: 'markets',
+    section: 'Piyasalar Nasıl Çalışır',
+    lesson: 'Bir fiyat nasıl ortaya çıkar',
+    taskWrong: 'Şirketin her dakika yeni fiyat seçmesi',
+    taskCorrect: ['Alıcı ve satıcının aynı fiyatta buluşması'],
+    quizAnswers: [
+      'Şirket yeni fiyat yazdığında',
+      'Gerçekleşmiş son işlemin fiyatını',
+      'Fiyat değişebilir',
+    ],
+  },
+  {
+    key: 'charts',
+    section: 'Grafikleri Korkmadan Oku',
+    lesson: 'Grafikte gördüğün şey aslında nedir',
+    taskWrong: 'Yalnız mumun rengini',
+    taskCorrect: [
+      'O zaman aralığında ulaşılan en yüksek fiyatı',
+      'O zaman aralığında ulaşılan en düşük fiyatı',
+    ],
+    quizAnswers: [
+      'Gelecekteki kesin fiyatı',
+      'Başlangıç ile bitiş fiyatı arasını',
+      'Hayır',
+    ],
+  },
+  {
+    key: 'risk',
+    section: 'Riskten Korun',
+    lesson: 'Kaybetmeden önce risk var mıdır',
+    taskWrong: 'Hesaba geçmiş 1.000 TL zarar',
+    taskCorrect: ['Değerin düşebilme ihtimali'],
+    quizAnswers: [
+      'Yalnız gerçekleşmiş zarar',
+      'Kayıp gerçekleşmiştir, risk ise olasılıktır',
+      'Kötü bir sonucun etkisini sınırlamak',
+    ],
+  },
+];
 const diagnostics = [];
 
 const slug = (value) => value
@@ -161,6 +214,61 @@ async function captureBeginnerFlow(page) {
   }
 }
 
+async function captureBeginnerEndToEnd(page, testCase) {
+  const prefix = `beginner-e2e-${testCase.key}`;
+  await openBeginnerSection(page, testCase.section);
+  await page.getByRole('button', { name: new RegExp(testCase.lesson, 'i') }).click();
+  await page.getByText(/Adım 1\//).waitFor();
+  const stepMatch = (await page.getByText(/Adım 1\//).innerText()).match(/\/(\d+)/);
+  const totalSteps = Number(stepMatch?.[1] ?? 1);
+  for (let step = 1; step < totalSteps; step += 1) {
+    await page.getByRole('button', { name: /Sonraki adıma geç/i }).click();
+    await page.getByText(new RegExp(`Adım ${step + 1}\\/${totalSteps}`)).waitFor();
+  }
+  await page.screenshot({ path: `visual-qa/${prefix}-lesson-handoff.png`, fullPage: true });
+  await page.getByRole('button', { name: /Göreve geç/i }).click();
+
+  await page.getByText(testCase.taskWrong, { exact: true }).waitFor();
+  await page.getByText(testCase.taskWrong, { exact: true }).click();
+  await page.getByRole('button', { name: 'Kontrol et' }).click();
+  await page.getByText('Henüz değil. Senaryodaki ipuçlarını birlikte değerlendir.', { exact: true }).waitFor();
+  await assertNoHorizontalOverflow(page, `${prefix}-task-wrong`);
+  await page.screenshot({ path: `visual-qa/${prefix}-task-wrong.png`, fullPage: true });
+
+  await page.getByRole('button', { name: 'Tekrar dene' }).click();
+  for (const correctChoice of testCase.taskCorrect) {
+    await page.getByText(correctChoice, { exact: true }).click();
+  }
+  await page.getByRole('button', { name: 'Kontrol et' }).click();
+  await page.getByText('Doğru. Seçimin senaryodaki kanıtlarla uyumlu.', { exact: true }).waitFor();
+  await assertNoHorizontalOverflow(page, `${prefix}-task-correct`);
+  await page.screenshot({ path: `visual-qa/${prefix}-task-correct.png`, fullPage: true });
+  await page.getByRole('button', { name: /Quiz’e geç/i }).click();
+
+  await page.getByText('MİNİ QUIZ', { exact: true }).waitFor();
+  for (let index = 0; index < testCase.quizAnswers.length; index += 1) {
+    const answer = testCase.quizAnswers[index];
+    await page.getByText(answer, { exact: true }).click();
+    await page.getByRole('button', { name: 'Cevabı kontrol et' }).click();
+    if (index === 0) {
+      await page.getByText(/Senin seçimin:/).waitFor();
+      await assertNoHorizontalOverflow(page, `${prefix}-quiz-wrong`);
+      await page.screenshot({ path: `visual-qa/${prefix}-quiz-wrong.png`, fullPage: true });
+    } else {
+      await page.getByText('✓ Doğru', { exact: true }).waitFor();
+    }
+    if (index < testCase.quizAnswers.length - 1) {
+      await page.getByRole('button', { name: 'Sonraki soru' }).click();
+    }
+  }
+
+  await page.getByRole('button', { name: 'Sonucu gör' }).click();
+  await page.getByText('Quiz tamamlandı', { exact: true }).waitFor();
+  await page.getByText('%67', { exact: true }).waitFor();
+  await assertNoHorizontalOverflow(page, `${prefix}-result`);
+  await page.screenshot({ path: `visual-qa/${prefix}-result.png`, fullPage: true });
+}
+
 async function openAcademy(page) {
   await openHome(page);
   await page.getByRole('button', { name: /İleri konular/i }).click();
@@ -214,6 +322,12 @@ try {
   const mobile = await browser.newPage({ viewport: { width: 390, height: 844 } });
   attachDiagnostics(mobile, 'mobile');
   await captureBeginnerFlow(mobile);
+
+  const e2e = await browser.newPage({ viewport: { width: 390, height: 844 } });
+  attachDiagnostics(e2e, 'beginner-e2e');
+  for (const testCase of beginnerEndToEndCases) {
+    await captureBeginnerEndToEnd(e2e, testCase);
+  }
 
   await openAcademy(mobile);
   await assertNoHorizontalOverflow(mobile, 'academy-mobile-collapsed');
