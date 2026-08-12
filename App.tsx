@@ -86,41 +86,55 @@ export default function App() {
         </View>
       )}
       {bootReady && saveStatus !== 'idle' ? (
-        <View
-          accessibilityLiveRegion="polite"
-          style={[
-            styles.saveNotice,
-            saveStatus === 'error' && styles.saveNoticeError,
-          ]}
-        >
-          <Text style={styles.saveNoticeText}>
-            {saveStatus === 'saving'
-              ? language === 'en'
-                ? 'Saving on this device…'
-                : 'Bu cihaza kaydediliyor…'
-              : saveStatus === 'saved'
-                ? language === 'en'
-                  ? 'Saved on this device'
-                  : 'Bu cihazda kaydedildi'
-                : language === 'en'
+        saveStatus === 'error' ? (
+          <View
+            accessibilityLiveRegion="assertive"
+            style={styles.saveErrorLayer}
+          >
+            <View style={styles.saveNoticeError}>
+              <Text style={styles.saveNoticeText}>
+                {language === 'en'
                   ? 'Could not save on this device. Try again before closing the app.'
                   : 'Bu cihaza kaydedilemedi. Uygulamayı kapatmadan yeniden dene.'}
-          </Text>
-          {saveStatus === 'error' ? (
-            <Pressable
-              accessibilityRole="button"
-              onPress={retryLatestProgressSave}
-              style={({ pressed }) => [
-                styles.saveRetryButton,
-                pressed && styles.buttonPressed,
-              ]}
-            >
-              <Text style={styles.saveRetryText}>
-                {language === 'en' ? 'Try again' : 'Yeniden dene'}
               </Text>
-            </Pressable>
-          ) : null}
-        </View>
+              <Pressable
+                accessibilityRole="button"
+                onPress={retryLatestProgressSave}
+                style={({ pressed }) => [
+                  styles.saveRetryButton,
+                  pressed && styles.buttonPressed,
+                ]}
+              >
+                <Text style={styles.saveRetryText}>
+                  {language === 'en' ? 'Try again' : 'Yeniden dene'}
+                </Text>
+              </Pressable>
+            </View>
+          </View>
+        ) : (
+          <View
+            accessibilityLiveRegion="polite"
+            pointerEvents="none"
+            style={styles.saveStatusLayer}
+          >
+            <View style={styles.saveNoticeCompact}>
+              <View
+                accessibilityElementsHidden
+                importantForAccessibility="no-hide-descendants"
+                style={styles.saveStatusDot}
+              />
+              <Text style={styles.saveNoticeCompactText}>
+                {saveStatus === 'saving'
+                  ? language === 'en'
+                    ? 'Saving on this device…'
+                    : 'Bu cihaza kaydediliyor…'
+                  : language === 'en'
+                    ? 'Saved on this device'
+                    : 'Bu cihazda kaydedildi'}
+              </Text>
+            </View>
+          </View>
+        )
       ) : null}
       <StatusBar style="light" />
     </GestureHandlerRootView>
@@ -176,13 +190,56 @@ const styles = StyleSheet.create({
   buttonPressed: {
     opacity: 0.7,
   },
-  saveNotice: {
+  saveStatusLayer: {
     position: 'absolute',
-    left: 12,
-    right: 12,
-    bottom: 12,
+    left: 0,
+    right: 0,
+    bottom: 76,
     zIndex: 20,
-    minHeight: 44,
+    alignItems: 'center',
+    paddingHorizontal: 12,
+  },
+  saveNoticeCompact: {
+    minHeight: 34,
+    maxWidth: 260,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 7,
+    paddingHorizontal: 12,
+    paddingVertical: 7,
+    borderRadius: 999,
+    borderWidth: 1,
+    borderColor: '#245750',
+    backgroundColor: '#0A2827',
+  },
+  saveStatusDot: {
+    width: 7,
+    height: 7,
+    borderRadius: 999,
+    backgroundColor: '#2DD4BF',
+  },
+  saveNoticeCompactText: {
+    flexShrink: 1,
+    color: '#C5EDE8',
+    fontSize: 12,
+    lineHeight: 16,
+    fontWeight: '700',
+    textAlign: 'center',
+  },
+  saveErrorLayer: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 12,
+    zIndex: 30,
+    alignItems: 'center',
+    paddingHorizontal: 12,
+  },
+  saveNoticeError: {
+    width: '100%',
+    maxWidth: 680,
+    minHeight: 52,
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignItems: 'center',
@@ -192,16 +249,12 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 14,
     borderWidth: 1,
-    borderColor: '#2A665F',
-    backgroundColor: '#0D302F',
-  },
-  saveNoticeError: {
     borderColor: '#F59E0B',
     backgroundColor: '#3A2710',
   },
   saveNoticeText: {
     flexShrink: 1,
-    color: '#D5F5F0',
+    color: '#FDE7BC',
     fontSize: 13,
     lineHeight: 18,
     fontWeight: '700',
