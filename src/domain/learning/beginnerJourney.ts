@@ -42,11 +42,18 @@ export const BEGINNER_SECTIONS: Readonly<Record<BeginnerSectionId, BeginnerSecti
     order: 2,
     title: { tr: 'Piyasalar Nasıl Çalışır?', en: 'How Do Markets Work?' },
     description: {
-      tr: 'Hisse, döviz ve emtia gibi piyasaların temel mantığını korkutmadan öğren.',
-      en: 'Learn the basic logic of stocks, currencies, and commodities without the jargon overload.',
+      tr: 'Fiyatın nasıl oluştuğunu, ne aldığını ve neden bazen işlem fiyatının değişebildiğini sade örneklerle öğren.',
+      en: 'Learn with simple examples how prices form, what you are buying, and why the price you trade at can sometimes differ.',
     },
-    status: 'next',
-    lessonIds: [],
+    status: 'active',
+    lessonIds: [
+      'lesson.market.price-formation.001',
+      'lesson.market.instruments.001',
+      'lesson.market.liquidity.001',
+      'lesson.market.bid-ask.001',
+      'lesson.market.order-types.001',
+      'lesson.market.slippage.001',
+    ],
   },
   charts: {
     id: 'charts',
