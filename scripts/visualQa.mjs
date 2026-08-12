@@ -2,18 +2,18 @@ import { chromium } from 'playwright-core';
 
 const baseUrl = 'http://127.0.0.1:4173/';
 const allTracks = [
-  'Temel Ekonomi',
-  'Finansal Piyasalar',
-  'Teknik Analiz',
-  'Temel Analiz',
+  'Ekonomiyi Anla',
+  'Piyasaları Anla',
+  'Grafikleri Derinleştir',
+  'Şirketleri Anla',
   'Risk ve Portföy',
-  'Piyasa Psikolojisi',
-  'Stratejiler',
-  'Algoritmik Trade ve Quant',
-  'SMC / ICT · İleri',
-  'Varlık Okulları',
+  'Karar Psikolojisi',
+  'Yöntemler ve Planlar',
+  'Sistematik ve Sayısal Yaklaşımlar',
+  'İleri Grafik Yaklaşımları',
+  'Varlık Türlerini Anla',
 ];
-const representativeTracks = ['Teknik Analiz', 'Algoritmik Trade ve Quant', 'SMC / ICT · İleri'];
+const representativeTracks = ['Grafikleri Derinleştir', 'Sistematik ve Sayısal Yaklaşımlar', 'İleri Grafik Yaklaşımları'];
 const beginnerEconomyLessons = [
   'Aynı para neden zamanla daha az şey alır',
   'Faiz neyi etkiler',
@@ -51,52 +51,33 @@ const beginnerEndToEndCases = [
     key: 'economy',
     section: 'Para ve Ekonomi',
     lesson: 'Aynı para neden zamanla daha az şey alır',
-    taskWrong: 'Paranın satın alma gücü artmıştır',
-    taskCorrect: ['Paranın satın alma gücü azalmıştır'],
-    quizAnswers: [
-      'Paranın kâğıt üzerindeki boyutunu',
-      'Aynı parayla daha az ürün alabilirsin',
-      'Hayır; daha geniş bir ürün grubuna bakmak gerekir',
-    ],
+    taskWrong: 'Tek bir ürün pahalandı',
+    taskCorrect: ['Pek çok temel ürün pahalandı', 'Aynı 100 TL ile daha az ürün alınabiliyor'],
+    quizAnswers: ['Hayır', 'Birçok ürünün genel fiyatı', 'Tek ürün ile genel fiyat düzeyi aynı şey değildir'],
   },
   {
     key: 'markets',
     section: 'Piyasalar Nasıl Çalışır',
     lesson: 'Bir fiyat nasıl ortaya çıkar',
-    taskWrong: 'Şirketin her dakika yeni fiyat seçmesi',
-    taskCorrect: ['Alıcı ve satıcının aynı fiyatta buluşması'],
-    quizAnswers: [
-      'Şirket yeni fiyat yazdığında',
-      'Gerçekleşmiş son işlemin fiyatını',
-      'Fiyat değişebilir',
-    ],
+    taskWrong: 'Şirket tek başına belirlediği için',
+    taskCorrect: ['Alıcı ve satıcı emirleri eşleştiği için'],
+    quizAnswers: ['Şirket belirler', 'Alıcı ve satıcı emirleri eşleştiğinde', 'Alıcı ve satıcıların emirleriyle'],
   },
   {
     key: 'charts',
     section: 'Grafikleri Korkmadan Oku',
     lesson: 'Grafikte gördüğün şey aslında nedir',
-    taskWrong: 'Yalnız mumun rengini',
-    taskCorrect: [
-      'O zaman aralığında ulaşılan en yüksek fiyatı',
-      'O zaman aralığında ulaşılan en düşük fiyatı',
-    ],
-    quizAnswers: [
-      'Gelecekteki kesin fiyatı',
-      'Başlangıç ile bitiş fiyatı arasını',
-      'Hayır; Mum geçmişte oluşmuş bir kayıttır; sonraki fiyatı kesin olarak bilmez.',
-    ],
+    taskWrong: 'Bir sonraki hareketi kesin gösterir',
+    taskCorrect: ['Geçmiş fiyat hareketini gösterir'],
+    quizAnswers: ['Gelecekteki kesin fiyatı', 'Geçmiş fiyat hareketini', 'Açılış, en yüksek, en düşük ve kapanış'],
   },
   {
     key: 'risk',
     section: 'Riskten Korun',
     lesson: 'Kaybetmeden önce risk var mıdır',
-    taskWrong: 'Hesaba geçmiş 1.000 TL zarar',
-    taskCorrect: ['Değerin düşebilme ihtimali'],
-    quizAnswers: [
-      'Yalnız gerçekleşmiş zarar',
-      'Kayıp gerçekleşmiştir, risk ise olasılıktır',
-      'Kötü bir sonucun etkisini sınırlamak',
-    ],
+    taskWrong: 'Kayıp yoksa hiçbir risk de yoktur',
+    taskCorrect: ['Risk, sonuç gerçekleşmeden önce de vardır'],
+    quizAnswers: ['Yalnız gerçekleşmiş zarar', 'Olumsuz bir sonucun gerçekleşebilme ihtimali', 'Kötü bir sonucun etkisini sınırlamak'],
   },
 ];
 const diagnostics = [];
