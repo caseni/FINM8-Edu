@@ -53,7 +53,7 @@ const beginnerEndToEndCases = [
     lesson: 'Aynı para neden zamanla daha az şey alır',
     taskWrong: 'Paranın satın alma gücü artmıştır',
     taskCorrect: ['Paranın satın alma gücü azalmıştır'],
-    quizAnswers: ['Paranla ne kadar ürün ve hizmet alabildiğini', 'Aynı parayla daha az ürün alabilirsin', 'Hayır; daha geniş bir ürün grubuna bakmak gerekir'],
+    quizAnswers: ['Paranın kâğıt üzerindeki boyutunu', 'Aynı parayla daha az ürün alabilirsin', 'Hayır; daha geniş bir ürün grubuna bakmak gerekir'],
   },
   {
     key: 'markets',
@@ -61,7 +61,7 @@ const beginnerEndToEndCases = [
     lesson: 'Bir fiyat nasıl ortaya çıkar',
     taskWrong: 'Şirketin her dakika yeni fiyat seçmesi',
     taskCorrect: ['Alıcı ve satıcının aynı fiyatta buluşması'],
-    quizAnswers: ['Alıcı ve satıcı aynı fiyatta buluştuğunda', 'Gerçekleşmiş son işlemin fiyatını', 'Fiyat değişebilir'],
+    quizAnswers: ['Şirket yeni fiyat yazdığında', 'Gerçekleşmiş son işlemin fiyatını', 'Fiyat değişebilir'],
   },
   {
     key: 'charts',
@@ -69,7 +69,7 @@ const beginnerEndToEndCases = [
     lesson: 'Grafikte gördüğün şey aslında nedir',
     taskWrong: 'Henüz oluşmamış sonraki fiyatı',
     taskCorrect: ['O zaman aralığında ulaşılan en yüksek fiyatı'],
-    quizAnswers: ['Fiyatın zaman içinde nasıl değiştiğini', 'Başlangıç ile bitiş fiyatı arasını', 'Hayır'],
+    quizAnswers: ['Gelecekteki kesin fiyatı', 'Başlangıç ile bitiş fiyatı arasını', 'Hayır'],
   },
   {
     key: 'risk',
@@ -77,7 +77,7 @@ const beginnerEndToEndCases = [
     lesson: 'Kaybetmeden önce risk var mıdır',
     taskWrong: 'Hesaba geçmiş 1.000 TL zarar',
     taskCorrect: ['Değerin düşebilme ihtimali'],
-    quizAnswers: ['Olumsuz bir sonucun gerçekleşebilme ihtimali', 'Kayıp gerçekleşmiştir, risk ise olasılıktır', 'Kötü bir sonucun etkisini sınırlamak'],
+    quizAnswers: ['Yalnız gerçekleşmiş zarar', 'Kayıp gerçekleşmiştir, risk ise olasılıktır', 'Kötü bir sonucun etkisini sınırlamak'],
   },
 ];
 const diagnostics = [];
