@@ -22,6 +22,14 @@ const beginnerMarketLessons = [
   'Emir verirken aslında ne seçiyorsun',
   'Ekrandaki fiyat neden işlem fiyatın olmayabilir',
 ];
+const beginnerChartLessons = [
+  'Grafikte gördüğün şey aslında nedir',
+  'Aynı grafik neden yakınlaştırınca değişir',
+  'Fiyat genel olarak hangi yöne gidiyor',
+  'Fiyat neden bazı bölgelerde tekrar durur',
+  'Hareket neden bazen hızlanır, bazen yavaşlar',
+  'Grafikteki yardımcı çizgi geleceği bilir mi',
+];
 const diagnostics = [];
 
 const slug = (value) => value
@@ -76,7 +84,7 @@ async function openHome(page) {
 async function openBeginnerSection(page, sectionName) {
   await openHome(page);
   await page.getByRole('button', { name: new RegExp(sectionName, 'i') }).first().click();
-  await page.getByText('Önce günlük hayatta ne olduğunu anla.', { exact: true }).waitFor();
+  await page.getByText('BAŞLANGIÇ · 6 KISA DERS', { exact: true }).waitFor();
 }
 
 async function walkBeginnerLesson(page, lessonName, filePrefix) {
@@ -112,10 +120,17 @@ async function captureBeginnerFlow(page) {
   await openBeginnerSection(page, 'Piyasalar Nasıl Çalışır');
   await assertNoHorizontalOverflow(page, 'beginner-mobile-markets');
   await page.screenshot({ path: 'visual-qa/beginner-mobile-markets.png', fullPage: true });
-
   for (const lessonName of beginnerMarketLessons) {
     await openBeginnerSection(page, 'Piyasalar Nasıl Çalışır');
     await walkBeginnerLesson(page, lessonName, `beginner-markets-${slug(lessonName)}-mobile`);
+  }
+
+  await openBeginnerSection(page, 'Grafikleri Korkmadan Oku');
+  await assertNoHorizontalOverflow(page, 'beginner-mobile-charts');
+  await page.screenshot({ path: 'visual-qa/beginner-mobile-charts.png', fullPage: true });
+  for (const lessonName of beginnerChartLessons) {
+    await openBeginnerSection(page, 'Grafikleri Korkmadan Oku');
+    await walkBeginnerLesson(page, lessonName, `beginner-charts-${slug(lessonName)}-mobile`);
   }
 }
 
@@ -195,13 +210,12 @@ try {
   await assertNoHorizontalOverflow(desktop, 'beginner-desktop-home');
   await desktop.screenshot({ path: 'visual-qa/beginner-desktop-home.png', fullPage: true });
 
-  await openBeginnerSection(desktop, 'Para ve Ekonomi');
-  await assertNoHorizontalOverflow(desktop, 'beginner-desktop-money-economy');
-  await desktop.screenshot({ path: 'visual-qa/beginner-desktop-money-economy.png', fullPage: true });
-
-  await openBeginnerSection(desktop, 'Piyasalar Nasıl Çalışır');
-  await assertNoHorizontalOverflow(desktop, 'beginner-desktop-markets');
-  await desktop.screenshot({ path: 'visual-qa/beginner-desktop-markets.png', fullPage: true });
+  for (const sectionName of ['Para ve Ekonomi', 'Piyasalar Nasıl Çalışır', 'Grafikleri Korkmadan Oku']) {
+    await openBeginnerSection(desktop, sectionName);
+    const sectionSlug = slug(sectionName);
+    await assertNoHorizontalOverflow(desktop, `beginner-desktop-${sectionSlug}`);
+    await desktop.screenshot({ path: `visual-qa/beginner-desktop-${sectionSlug}.png`, fullPage: true });
+  }
 
   await openAcademy(desktop);
   await assertNoHorizontalOverflow(desktop, 'academy-desktop-collapsed');
