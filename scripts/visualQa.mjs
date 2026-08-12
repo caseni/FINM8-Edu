@@ -30,6 +30,14 @@ const beginnerChartLessons = [
   'Hareket neden bazen hızlanır, bazen yavaşlar',
   'Grafikteki yardımcı çizgi geleceği bilir mi',
 ];
+const beginnerRiskLessons = [
+  'Kaybetmeden önce risk var mıdır',
+  'Fiyat çok oynuyorsa neden daha dikkatli olmalısın',
+  'Ne kadar aldığın neden önemlidir',
+  'Büyük hedef iyi karar demek midir',
+  'Çıkış fiyatı neden garanti değildir',
+  'Parayı farklı şeylere bölmek riski nasıl değiştirir',
+];
 const diagnostics = [];
 
 const slug = (value) => value
@@ -132,6 +140,14 @@ async function captureBeginnerFlow(page) {
     await openBeginnerSection(page, 'Grafikleri Korkmadan Oku');
     await walkBeginnerLesson(page, lessonName, `beginner-charts-${slug(lessonName)}-mobile`);
   }
+
+  await openBeginnerSection(page, 'Riskten Korun');
+  await assertNoHorizontalOverflow(page, 'beginner-mobile-risk');
+  await page.screenshot({ path: 'visual-qa/beginner-mobile-risk.png', fullPage: true });
+  for (const lessonName of beginnerRiskLessons) {
+    await openBeginnerSection(page, 'Riskten Korun');
+    await walkBeginnerLesson(page, lessonName, `beginner-risk-${slug(lessonName)}-mobile`);
+  }
 }
 
 async function openAcademy(page) {
@@ -210,7 +226,7 @@ try {
   await assertNoHorizontalOverflow(desktop, 'beginner-desktop-home');
   await desktop.screenshot({ path: 'visual-qa/beginner-desktop-home.png', fullPage: true });
 
-  for (const sectionName of ['Para ve Ekonomi', 'Piyasalar Nasıl Çalışır', 'Grafikleri Korkmadan Oku']) {
+  for (const sectionName of ['Para ve Ekonomi', 'Piyasalar Nasıl Çalışır', 'Grafikleri Korkmadan Oku', 'Riskten Korun']) {
     await openBeginnerSection(desktop, sectionName);
     const sectionSlug = slug(sectionName);
     await assertNoHorizontalOverflow(desktop, `beginner-desktop-${sectionSlug}`);
