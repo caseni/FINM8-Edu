@@ -77,4 +77,8 @@ export function getMicroLessonById(lessonId: string): MicroLesson | undefined {
   return MICRO_LESSON_CATALOG.find((lesson) => lesson.id === lessonId);
 }
 
+export function getMicroLessonBySlug(slug: string): MicroLesson | undefined {
+  return MICRO_LESSON_CATALOG.find((lesson) => lesson.slug === slug);
+}
+
 export const MICRO_LESSON_CATALOG_INTEGRITY = validateLearningCatalog(MICRO_LESSON_CATALOG);
