@@ -12,12 +12,33 @@ import { LessonQuizScreen } from '../screens/learn/LessonQuizScreen';
 import { PracticalTaskScreen } from '../screens/learn/PracticalTaskScreen';
 import { LearningChallengeScreen } from '../screens/learn/LearningChallengeScreen';
 import { LearningReviewScreen } from '../screens/learn/LearningReviewScreen';
+import { PublicLearnArticleScreen } from '../screens/learn/PublicLearnArticleScreen';
+import { PublicLearnIndexScreen } from '../screens/learn/PublicLearnIndexScreen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
+const linking = {
+  config: {
+    screens: {
+      Home: '',
+      Academy: 'academy',
+      PublicLearnIndex: 'learn',
+      PublicLearn: 'learn/:slug',
+      LearningOnboarding: 'onboarding',
+      MicroLesson: 'lesson/:lessonId',
+      PracticalTask: 'lesson/:lessonId/task',
+      LessonQuiz: 'lesson/:lessonId/quiz',
+      LearningChallenge: 'challenge/:challengeId',
+      LearningReview: 'review',
+      LegacyCatalog: 'legacy',
+      CourseDetail: 'course/:courseId',
+    },
+  },
+};
+
 export const AppNavigator: React.FC = () => {
   return (
-    <NavigationContainer>
+    <NavigationContainer linking={linking}>
       <Stack.Navigator
         initialRouteName="Home"
         screenOptions={{
@@ -38,6 +59,8 @@ export const AppNavigator: React.FC = () => {
           }}
         />
         <Stack.Screen name="Academy" component={AcademyHomeScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="PublicLearnIndex" component={PublicLearnIndexScreen} options={{ headerShown: false, title: 'FINM8 Learn' }} />
+        <Stack.Screen name="PublicLearn" component={PublicLearnArticleScreen} options={{ headerShown: false, title: 'FINM8 Learn' }} />
         <Stack.Screen name="LearningOnboarding" component={LearningOnboardingScreen} options={{ headerShown: false }} />
         <Stack.Screen name="MicroLesson" component={MicroLessonScreen} options={{ headerShown: false }} />
         <Stack.Screen name="PracticalTask" component={PracticalTaskScreen} options={{ headerShown: false, gestureEnabled: false }} />
