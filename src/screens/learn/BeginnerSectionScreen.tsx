@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
   lessonNumberComplete: { borderColor: '#31D1BF', backgroundColor: '#113D3A' },
   lessonNumberText: { color: '#5EEAD4', fontSize: 12, fontWeight: '900' },
   lessonCopy: { flex: 1, gap: 4 },
-  lessonTitle: { color: '#F8FAFC', fontSize: 16, lineHeight: 21, fontWeight: '850' },
+  lessonTitle: { color: '#F8FAFC', fontSize: 16, lineHeight: 21, fontWeight: '800' },
   lessonMeta: { color: '#8297AA', fontSize: 11, lineHeight: 15 },
   openText: { color: '#31D1BF', fontSize: 24 },
   footerNote: { gap: 5, padding: 17, borderRadius: 17, borderWidth: 1, borderColor: '#1E4550', backgroundColor: '#0A2228' },
