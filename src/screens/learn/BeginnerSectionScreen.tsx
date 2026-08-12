@@ -12,6 +12,37 @@ import type { RootStackParamList } from '../../types/navigation';
 type Navigation = NativeStackNavigationProp<RootStackParamList, 'BeginnerSection'>;
 type ScreenRoute = RouteProp<RootStackParamList, 'BeginnerSection'>;
 
+function sectionHero(sectionId: keyof typeof BEGINNER_SECTIONS, language: LearningLanguage): string {
+  if (sectionId === 'charts') {
+    return language === 'tr' ? 'Önce grafikte ne gördüğünü anla.' : 'Understand what you are seeing on the chart first.';
+  }
+  if (sectionId === 'risk') {
+    return language === 'tr' ? 'Önce neyi korumaya çalıştığını anla.' : 'Understand what you are trying to protect first.';
+  }
+  return language === 'tr' ? 'Önce günlük hayatta ne olduğunu anla.' : 'Understand what it means in everyday life first.';
+}
+
+function sectionOutcome(sectionId: keyof typeof BEGINNER_SECTIONS, language: LearningLanguage): string {
+  if (sectionId === 'money_economy') {
+    return language === 'tr'
+      ? 'Bu bölümün sonunda satın alma gücü, faiz ve ekonomik yavaşlama gibi temel fikirleri günlük örneklerle ayırt edebilmen yeterli.'
+      : 'By the end, it is enough to recognize ideas such as purchasing power, interest, and economic slowdowns through everyday examples.';
+  }
+  if (sectionId === 'markets') {
+    return language === 'tr'
+      ? 'Bu bölümün sonunda fiyatın nasıl oluştuğunu, ne aldığını, alış-satış farkını ve işlem fiyatının neden değişebildiğini ayırt edebilmen yeterli.'
+      : 'By the end, it is enough to recognize how price forms, what you are buying, the buy-sell gap, and why execution price can differ.';
+  }
+  if (sectionId === 'charts') {
+    return language === 'tr'
+      ? 'Bu bölümün sonunda grafiğin geçmiş fiyat kaydı olduğunu; zaman ölçeği, genel yön, tepki bölgesi ve yardımcı çizgilerin ne anlattığını temel düzeyde okuyabilmen yeterli.'
+      : 'By the end, it is enough to read a chart as a record of past prices and recognize time scale, broader direction, reaction areas, and helper lines at a basic level.';
+  }
+  return language === 'tr'
+    ? 'Bu bölümün sonunda riski kayıptan önce düşünmeyi ve daha kontrollü karar vermenin temelini ayırt edebilmen yeterli.'
+    : 'By the end, it is enough to recognize the basics of thinking about risk before loss and making more controlled decisions.';
+}
+
 export function BeginnerSectionScreen() {
   const navigation = useNavigation<Navigation>();
   const route = useRoute<ScreenRoute>();
@@ -64,11 +95,7 @@ export function BeginnerSectionScreen() {
 
         <View style={styles.hero}>
           <Text style={styles.heroEyebrow}>{language === 'tr' ? 'BAŞLANGIÇ · 6 KISA DERS' : 'BEGINNER · 6 SHORT LESSONS'}</Text>
-          <Text style={styles.heroTitle}>
-            {language === 'tr'
-              ? 'Önce günlük hayatta ne olduğunu anla.'
-              : 'Understand what it means in everyday life first.'}
-          </Text>
+          <Text style={styles.heroTitle}>{sectionHero(section.id, language)}</Text>
           <Text style={styles.heroBody}>{selectLocalizedText(section.description, language)}</Text>
           <View style={styles.progressMeta}>
             <Text style={styles.progressText}>{completedCount}/{lessons.length} {language === 'tr' ? 'ders tamamlandı' : 'lessons completed'}</Text>
@@ -117,11 +144,7 @@ export function BeginnerSectionScreen() {
 
         <View style={styles.footerNote}>
           <Text style={styles.footerTitle}>{language === 'tr' ? 'Ezber yok.' : 'No memorization.'}</Text>
-          <Text style={styles.footerBody}>
-            {language === 'tr'
-              ? 'Bu bölümün sonunda paranın alım gücü, faiz ve ekonomik yavaşlama gibi temel fikirleri günlük örneklerle ayırt edebilmen yeterli.'
-              : 'By the end, it is enough to recognize ideas such as purchasing power, interest, and economic slowdowns through everyday examples.'}
-          </Text>
+          <Text style={styles.footerBody}>{sectionOutcome(section.id, language)}</Text>
         </View>
       </ScrollView>
     </SafeAreaView>
