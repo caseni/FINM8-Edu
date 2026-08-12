@@ -15,6 +15,9 @@ export function LearnLandingScreen() {
   const rawLanguage = useLanguageStore((state) => state.language);
   const language: LearningLanguage = rawLanguage === 'en' ? 'en' : 'tr';
   const completedLessonIds = useLearningProgressStore((state) => state.completedLessonIds);
+  const beginnerLessonIds = BEGINNER_SECTION_IDS.flatMap((sectionId) => BEGINNER_SECTIONS[sectionId].lessonIds);
+  const completedBeginnerCount = beginnerLessonIds.filter((lessonId) => completedLessonIds.includes(lessonId)).length;
+  const beginnerComplete = beginnerLessonIds.length > 0 && completedBeginnerCount === beginnerLessonIds.length;
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -47,12 +50,38 @@ export function LearnLandingScreen() {
           </Text>
         </View>
 
+        {beginnerComplete ? (
+          <View style={styles.completionCard}>
+            <Text style={styles.completionEyebrow}>{language === 'tr' ? '24 / 24 TAMAMLANDI' : '24 / 24 COMPLETE'}</Text>
+            <Text style={styles.completionTitle}>{language === 'tr' ? 'Temel okuryazarlık yolun tamamlandı.' : 'Your foundation path is complete.'}</Text>
+            <Text style={styles.completionBody}>
+              {language === 'tr'
+                ? 'Artık para, piyasa, grafik ve riskin temelini biliyorsun. Bundan sonra yalnız ilgini çeken alanda derinleşebilirsin.'
+                : 'You now understand the foundations of money, markets, charts, and risk. From here, go deeper only where you are interested.'}
+            </Text>
+            <Pressable
+              accessibilityRole="button"
+              onPress={() => navigation.navigate('Academy')}
+              style={({ pressed }) => [styles.completionButton, pressed && styles.completionButtonPressed]}
+            >
+              <Text style={styles.completionButtonText}>{language === 'tr' ? 'İleri yola geç' : 'Choose a deeper path'}</Text>
+            </Pressable>
+          </View>
+        ) : null}
+
         <View style={styles.sectionList}>
           {BEGINNER_SECTION_IDS.map((sectionId) => {
             const section = BEGINNER_SECTIONS[sectionId];
             const active = section.status === 'active';
             const completedCount = section.lessonIds.filter((lessonId) => completedLessonIds.includes(lessonId)).length;
             const progress = section.lessonIds.length ? completedCount / section.lessonIds.length : 0;
+            const completed = section.lessonIds.length > 0 && completedCount === section.lessonIds.length;
+            const started = completedCount > 0;
+            const status = completed
+              ? language === 'tr' ? 'TAMAMLANDI' : 'COMPLETE'
+              : started
+                ? language === 'tr' ? 'DEVAM' : 'CONTINUE'
+                : language === 'tr' ? 'BAŞLA' : 'START';
 
             return (
               <Pressable
@@ -64,21 +93,18 @@ export function LearnLandingScreen() {
                 style={({ pressed }) => [
                   styles.sectionCard,
                   active && styles.sectionCardActive,
+                  completed && styles.sectionCardComplete,
                   !active && styles.sectionCardNext,
                   pressed && active && styles.sectionCardPressed,
                 ]}
               >
-                <View style={[styles.sectionNumber, active && styles.sectionNumberActive]}>
-                  <Text style={styles.sectionNumberText}>{String(section.order).padStart(2, '0')}</Text>
+                <View style={[styles.sectionNumber, active && styles.sectionNumberActive, completed && styles.sectionNumberComplete]}>
+                  <Text style={styles.sectionNumberText}>{completed ? '✓' : String(section.order).padStart(2, '0')}</Text>
                 </View>
                 <View style={styles.sectionCopy}>
                   <View style={styles.sectionTitleRow}>
                     <Text style={styles.cardTitle}>{selectLocalizedText(section.title, language)}</Text>
-                    <Text style={[styles.status, active ? styles.statusActive : styles.statusNext]}>
-                      {active
-                        ? language === 'tr' ? 'BAŞLA' : 'START'
-                        : language === 'tr' ? 'SIRADA' : 'NEXT'}
-                    </Text>
+                    <Text style={[styles.status, active ? styles.statusActive : styles.statusNext]}>{status}</Text>
                   </View>
                   <Text style={styles.cardDescription}>{selectLocalizedText(section.description, language)}</Text>
                   {active ? (
@@ -97,23 +123,25 @@ export function LearnLandingScreen() {
           })}
         </View>
 
-        <View style={styles.bottomCard}>
-          <View style={styles.bottomCopy}>
-            <Text style={styles.bottomTitle}>{language === 'tr' ? 'Zaten temelin varsa' : 'If you already know the basics'}</Text>
-            <Text style={styles.bottomBody}>
-              {language === 'tr'
-                ? 'İleri konu kütüphanesi duruyor; fakat yeni başlayanların önüne artık koymuyoruz.'
-                : 'The advanced topic library remains available, but it is no longer placed in front of beginners.'}
-            </Text>
+        {!beginnerComplete ? (
+          <View style={styles.bottomCard}>
+            <View style={styles.bottomCopy}>
+              <Text style={styles.bottomTitle}>{language === 'tr' ? 'Zaten temelin varsa' : 'If you already know the basics'}</Text>
+              <Text style={styles.bottomBody}>
+                {language === 'tr'
+                  ? 'İleri konu kütüphanesi duruyor; fakat yeni başlayanların önüne artık koymuyoruz.'
+                  : 'The advanced topic library remains available, but it is no longer placed in front of beginners.'}
+              </Text>
+            </View>
+            <Pressable
+              accessibilityRole="button"
+              onPress={() => navigation.navigate('Academy')}
+              style={({ pressed }) => [styles.advancedButton, pressed && styles.advancedButtonPressed]}
+            >
+              <Text style={styles.advancedButtonText}>{language === 'tr' ? 'İleri konular' : 'Advanced topics'}</Text>
+            </Pressable>
           </View>
-          <Pressable
-            accessibilityRole="button"
-            onPress={() => navigation.navigate('Academy')}
-            style={({ pressed }) => [styles.advancedButton, pressed && styles.advancedButtonPressed]}
-          >
-            <Text style={styles.advancedButtonText}>{language === 'tr' ? 'İleri konular' : 'Advanced topics'}</Text>
-          </Pressable>
-        </View>
+        ) : null}
       </ScrollView>
     </SafeAreaView>
   );
@@ -132,13 +160,22 @@ const styles = StyleSheet.create({
   sectionHeading: { gap: 5, marginTop: 2 },
   sectionTitle: { color: '#F8FAFC', fontSize: 21, lineHeight: 27, fontWeight: '900' },
   sectionBody: { color: '#8094A8', fontSize: 13, lineHeight: 19 },
+  completionCard: { gap: 8, padding: 18, borderRadius: 20, backgroundColor: '#0B2B2E', borderWidth: 1, borderColor: '#2E766E' },
+  completionEyebrow: { color: '#5EEAD4', fontSize: 10, fontWeight: '900', letterSpacing: 0.8 },
+  completionTitle: { color: '#F8FAFC', fontSize: 19, lineHeight: 25, fontWeight: '900' },
+  completionBody: { color: '#B6C9CF', fontSize: 13, lineHeight: 19 },
+  completionButton: { alignSelf: 'flex-start', minHeight: 44, justifyContent: 'center', paddingHorizontal: 16, borderRadius: 13, backgroundColor: '#31D1BF' },
+  completionButtonPressed: { opacity: 0.78 },
+  completionButtonText: { color: '#05211F', fontSize: 12, fontWeight: '900' },
   sectionList: { gap: 12 },
   sectionCard: { minHeight: 134, flexDirection: 'row', alignItems: 'flex-start', gap: 13, padding: 16, borderRadius: 20, borderWidth: 1, borderColor: '#243C52', backgroundColor: '#0A1928' },
   sectionCardActive: { borderColor: '#2E706D', backgroundColor: '#0B202B' },
+  sectionCardComplete: { borderColor: '#36776F', backgroundColor: '#0B252A' },
   sectionCardNext: { opacity: 0.6 },
   sectionCardPressed: { backgroundColor: '#102B35' },
   sectionNumber: { width: 44, height: 44, alignItems: 'center', justifyContent: 'center', borderRadius: 14, borderWidth: 1, borderColor: '#2A465C', backgroundColor: '#102133' },
   sectionNumberActive: { borderColor: '#2E8177', backgroundColor: '#103C3E' },
+  sectionNumberComplete: { borderColor: '#48A899', backgroundColor: '#10453F' },
   sectionNumberText: { color: '#67E9D7', fontSize: 11, fontWeight: '900' },
   sectionCopy: { flex: 1, gap: 8 },
   sectionTitleRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
