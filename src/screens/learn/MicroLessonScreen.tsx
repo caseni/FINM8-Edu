@@ -2,14 +2,24 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { LessonPlayer } from '../../components/learning';
+import { BeginnerMarketSlideVisual } from '../../components/learning/BeginnerMarketSlideVisual';
 import { getMicroLessonById } from '../../domain/learning/catalog';
-import type { LearningLanguage } from '../../domain/learning/presentation';
+import { selectLocalizedText, type LearningLanguage } from '../../domain/learning/presentation';
 import { useLanguageStore } from '../../store/useLanguageStore';
 import { useLearningUiStore } from '../../store/useLearningUiStore';
 import { useLearningProgressStore } from '../../store/useLearningProgressStore';
 import type { RootStackParamList } from '../../types/navigation';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'MicroLesson'>;
+
+const BEGINNER_MARKET_LESSON_IDS = new Set([
+  'lesson.market.price-formation.001',
+  'lesson.market.instruments.001',
+  'lesson.market.liquidity.001',
+  'lesson.market.bid-ask.001',
+  'lesson.market.order-types.001',
+  'lesson.market.slippage.001',
+]);
 
 export function MicroLessonScreen({ route, navigation }: Props) {
   const lesson = getMicroLessonById(route.params.lessonId);
@@ -26,11 +36,25 @@ export function MicroLessonScreen({ route, navigation }: Props) {
 
   if (!lesson) return <View><Text>Ders bulunamadı.</Text></View>;
 
+  const useBeginnerMarketVisual = BEGINNER_MARKET_LESSON_IDS.has(lesson.id);
+
   return (
     <LessonPlayer
       lesson={lesson}
       language={language}
       presentationMode={presentationMode}
+      renderVisual={
+        useBeginnerMarketVisual
+          ? (block) => (
+              <BeginnerMarketSlideVisual
+                assetRef={block.assetRef}
+                alt={selectLocalizedText(block.alt, language)}
+                language={language}
+                role="practice"
+              />
+            )
+          : undefined
+      }
       initialStepIndex={isReadOnlyReview ? 0 : checkpoint?.stepIndex ?? 0}
       onStepChange={(stepIndex) => {
         if (!isReadOnlyReview) saveLessonCheckpoint(lesson.id, 'lesson', stepIndex);
