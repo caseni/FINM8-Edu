@@ -153,7 +153,7 @@ export function normalizeBeginnerMarketEditorial(lesson: MicroLesson): MicroLess
   const practicalTask = {
     ...lesson.practicalTask,
     prompt: audience(copy.taskPrompt),
-    choices: lesson.practicalTask.choices.map((choice, index) => ({
+    choices: (lesson.practicalTask.choices ?? []).map((choice, index) => ({
       ...choice,
       label: localized(copy.taskChoices[index] ?? copy.taskChoices[copy.taskChoices.length - 1]),
     })),
