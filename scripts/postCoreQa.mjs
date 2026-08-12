@@ -73,7 +73,7 @@ try {
   await page.getByText('Bu bölümü tamamladın.', { exact: true }).waitFor();
   await page.getByText(/Sıradaki bölüm: Piyasalar Nasıl Çalışır/).waitFor();
   await page.getByRole('button', { name: 'Sıradaki bölüme geç' }).click();
-  await page.getByText('Piyasalar Nasıl Çalışır?', { exact: true }).waitFor();
+  await page.getByText('Piyasalar Nasıl Çalışır?', { exact: true }).first().waitFor();
   await page.getByText('Bu bölümü tamamladın.', { exact: true }).waitFor();
 
   await page.goto(baseUrl, { waitUntil: 'networkidle' });
