@@ -5,7 +5,7 @@ import { defaultLearningTheme, type LearningTheme } from '../../theme/learningTh
 import { AlgoQuantSlideVisual, isAlgoQuantSlideAsset } from './AlgoQuantSlideVisual';
 import { AssetSchoolSlideVisual, isAssetSchoolSlideAsset } from './AssetSchoolSlideVisual';
 import { BehaviorEvidenceSlideVisual, isBehaviorEvidenceSlideAsset } from './BehaviorEvidenceSlideVisual';
-import { BeginnerMarketSlideVisual, isBeginnerMarketSlideAsset } from './BeginnerMarketSlideVisual';
+import { BeginnerMarketStoryVisual, isBeginnerMarketStoryAsset } from './BeginnerMarketStoryVisual';
 import { ChartLessonSlideVisual, isChartLessonSlideAsset } from './ChartLessonSlideVisual';
 import { EconomyExpansionSlideVisual, isEconomyExpansionSlideAsset } from './EconomyExpansionSlideVisual';
 import { EconomySlideVisual, isEconomySlideAsset } from './EconomySlideVisual';
@@ -37,12 +37,15 @@ export function LessonSupportingVisual({ assetRef, alt, language, role, theme = 
   const styles = createStyles(theme);
   const label = ROLE_LABELS[role][language];
   const labelStyle = role === 'misconception' ? styles.warningLabel : role === 'risk' ? styles.riskLabel : role === 'practice' ? styles.successLabel : role === 'hook' || role === 'summary' ? styles.primaryLabel : undefined;
-  const visual = isBeginnerMarketSlideAsset(assetRef) ? <BeginnerMarketSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
+  const isBeginnerMarket = isBeginnerMarketStoryAsset(assetRef);
+  const isBeginnerEconomy = isEconomySlideAsset(assetRef);
+  const hideEditorialLabel = isBeginnerMarket || isBeginnerEconomy;
+  const visual = isBeginnerMarket ? <BeginnerMarketStoryVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
     : isMarketFoundationSlideAsset(assetRef) ? <MarketFoundationSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
     : isChartLessonSlideAsset(assetRef) ? <ChartLessonSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
     : isRiskLessonSlideAsset(assetRef) ? <RiskLessonSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
     : isBehaviorEvidenceSlideAsset(assetRef) ? <BehaviorEvidenceSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
-    : isEconomySlideAsset(assetRef) ? <EconomySlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
+    : isBeginnerEconomy ? <EconomySlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
     : isEconomyExpansionSlideAsset(assetRef) ? <EconomyExpansionSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
     : isFinancialMarketsSlideAsset(assetRef) ? <FinancialMarketsSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
     : isFinancialMarketsExpansionSlideAsset(assetRef) ? <FinancialMarketsExpansionSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
@@ -58,7 +61,7 @@ export function LessonSupportingVisual({ assetRef, alt, language, role, theme = 
     : isSmcIctSlideAsset(assetRef) ? <SmcIctSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
     : isAssetSchoolSlideAsset(assetRef) ? <AssetSchoolSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
     : <LearningVisual assetRef={`${assetRef}#${role}`} alt={alt} language={language} theme={theme} />;
-  return <View style={styles.wrapper}><Text style={[styles.eyebrow, labelStyle]}>{label}</Text>{visual}</View>;
+  return <View style={styles.wrapper}>{hideEditorialLabel ? null : <Text style={[styles.eyebrow, labelStyle]}>{label}</Text>}{visual}</View>;
 }
 
 const createStyles = (theme: LearningTheme) => StyleSheet.create({
