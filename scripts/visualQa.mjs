@@ -94,7 +94,6 @@ function attachDiagnostics(page, label) {
   page.on('console', (message) => {
     const text = `[${label} console:${message.type()}] ${message.text()}`;
     console.log(text);
-    if (message.type() === 'error') diagnostics.push(text);
   });
   page.on('pageerror', (error) => {
     const text = `[${label} pageerror] ${error.stack || error.message}`;
