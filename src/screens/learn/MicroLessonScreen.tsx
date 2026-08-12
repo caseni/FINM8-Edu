@@ -3,6 +3,7 @@ import { Text, View } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { LessonPlayer } from '../../components/learning';
 import { BeginnerChartStoryVisual } from '../../components/learning/BeginnerChartStoryVisual';
+import { BeginnerEconomyStoryVisual } from '../../components/learning/BeginnerEconomyStoryVisual';
 import { BeginnerMarketStoryVisual } from '../../components/learning/BeginnerMarketStoryVisual';
 import { BeginnerRiskStoryVisual } from '../../components/learning/BeginnerRiskStoryVisual';
 import { getMicroLessonById } from '../../domain/learning/catalog';
@@ -13,6 +14,15 @@ import { useLearningProgressStore } from '../../store/useLearningProgressStore';
 import type { RootStackParamList } from '../../types/navigation';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'MicroLesson'>;
+
+const BEGINNER_ECONOMY_LESSON_IDS = new Set([
+  'lesson.economy.inflation.001',
+  'lesson.economy.interest-rates.001',
+  'lesson.economy.central-banks.001',
+  'lesson.economy.monetary-policy.001',
+  'lesson.economy.growth.001',
+  'lesson.economy.business-cycle.001',
+]);
 
 const BEGINNER_MARKET_LESSON_IDS = new Set([
   'lesson.market.price-formation.001',
@@ -56,6 +66,7 @@ export function MicroLessonScreen({ route, navigation }: Props) {
 
   if (!lesson) return <View><Text>Ders bulunamadı.</Text></View>;
 
+  const useBeginnerEconomyVisual = BEGINNER_ECONOMY_LESSON_IDS.has(lesson.id);
   const useBeginnerMarketVisual = BEGINNER_MARKET_LESSON_IDS.has(lesson.id);
   const useBeginnerChartVisual = BEGINNER_CHART_LESSON_IDS.has(lesson.id);
   const useBeginnerRiskVisual = BEGINNER_RISK_LESSON_IDS.has(lesson.id);
@@ -66,34 +77,43 @@ export function MicroLessonScreen({ route, navigation }: Props) {
       language={language}
       presentationMode={presentationMode}
       renderVisual={
-        useBeginnerRiskVisual
+        useBeginnerEconomyVisual
           ? (block) => (
-              <BeginnerRiskStoryVisual
+              <BeginnerEconomyStoryVisual
                 assetRef={block.assetRef}
                 alt={selectLocalizedText(block.alt, language)}
                 language={language}
                 role="practice"
               />
             )
-          : useBeginnerChartVisual
+          : useBeginnerRiskVisual
             ? (block) => (
-                <BeginnerChartStoryVisual
+                <BeginnerRiskStoryVisual
                   assetRef={block.assetRef}
                   alt={selectLocalizedText(block.alt, language)}
                   language={language}
                   role="practice"
                 />
               )
-            : useBeginnerMarketVisual
+            : useBeginnerChartVisual
               ? (block) => (
-                  <BeginnerMarketStoryVisual
+                  <BeginnerChartStoryVisual
                     assetRef={block.assetRef}
                     alt={selectLocalizedText(block.alt, language)}
                     language={language}
                     role="practice"
                   />
                 )
-              : undefined
+              : useBeginnerMarketVisual
+                ? (block) => (
+                    <BeginnerMarketStoryVisual
+                      assetRef={block.assetRef}
+                      alt={selectLocalizedText(block.alt, language)}
+                      language={language}
+                      role="practice"
+                    />
+                  )
+                : undefined
       }
       initialStepIndex={isReadOnlyReview ? 0 : checkpoint?.stepIndex ?? 0}
       onStepChange={(stepIndex) => {
