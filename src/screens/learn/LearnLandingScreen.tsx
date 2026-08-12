@@ -42,8 +42,8 @@ export function LearnLandingScreen() {
           <Text style={styles.sectionTitle}>{language === 'tr' ? 'Dört adımda temel okuryazarlık' : 'Four steps to basic financial literacy'}</Text>
           <Text style={styles.sectionBody}>
             {language === 'tr'
-              ? 'İlk üç bölüm hazır. Risk bölümünü de aynı sade standartla yeniliyoruz.'
-              : 'The first three sections are ready. Risk is being rebuilt to the same simple standard.'}
+              ? 'Dört temel bölüm hazır. Para, piyasalar, grafikler ve riski aynı sade öğrenme diliyle ilerletebilirsin.'
+              : 'All four foundation sections are ready. Learn money, markets, charts, and risk through the same simple teaching language.'}
           </Text>
         </View>
 
