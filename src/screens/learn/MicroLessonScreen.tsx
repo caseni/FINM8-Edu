@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { LessonPlayer } from '../../components/learning';
-import { BeginnerMarketSlideVisual } from '../../components/learning/BeginnerMarketSlideVisual';
+import { BeginnerMarketStoryVisual } from '../../components/learning/BeginnerMarketStoryVisual';
 import { getMicroLessonById } from '../../domain/learning/catalog';
 import { selectLocalizedText, type LearningLanguage } from '../../domain/learning/presentation';
 import { useLanguageStore } from '../../store/useLanguageStore';
@@ -46,7 +46,7 @@ export function MicroLessonScreen({ route, navigation }: Props) {
       renderVisual={
         useBeginnerMarketVisual
           ? (block) => (
-              <BeginnerMarketSlideVisual
+              <BeginnerMarketStoryVisual
                 assetRef={block.assetRef}
                 alt={selectLocalizedText(block.alt, language)}
                 language={language}
