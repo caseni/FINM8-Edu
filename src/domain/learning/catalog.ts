@@ -35,6 +35,7 @@ import { normalizeBehaviorEvidenceAssessmentQuality } from './examples/wave1/beh
 import { WAVE1_CHART_LITERACY_CORE_LESSONS, WAVE1_MARKET_STRUCTURE_LESSONS } from './examples/wave1/levelledLessonGroups';
 import { WAVE1_RISK_MANAGEMENT_LESSONS } from './examples/wave1/riskManagementLessons';
 import { WAVE1_BEHAVIOR_EVIDENCE_LESSONS } from './examples/wave1/behaviorEvidenceLessons';
+import { normalizeQuizExplanationQuality } from './quizExplanationQuality';
 import type { MicroLesson } from './types';
 import { validateLearningCatalog } from './catalogIntegrity';
 
@@ -69,7 +70,8 @@ const MICRO_LESSON_CANDIDATES: readonly MicroLesson[] = [
 export const MICRO_LESSON_CATALOG: readonly MicroLesson[] = MICRO_LESSON_CANDIDATES
   .map(normalizeCoreEnglishEditorial)
   .map(normalizeBehaviorEvidenceEnglishEditorial)
-  .map(normalizeAssessmentSignalQuality);
+  .map(normalizeAssessmentSignalQuality)
+  .map(normalizeQuizExplanationQuality);
 
 export function getMicroLessonById(lessonId: string): MicroLesson | undefined {
   return MICRO_LESSON_CATALOG.find((lesson) => lesson.id === lessonId);
