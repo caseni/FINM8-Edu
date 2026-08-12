@@ -78,10 +78,17 @@ export const BEGINNER_SECTIONS: Readonly<Record<BeginnerSectionId, BeginnerSecti
     order: 4,
     title: { tr: 'Riskten Korun', en: 'Protect Yourself From Risk' },
     description: {
-      tr: 'Kaybetme riskini erken fark etmeyi ve daha kontrollü karar vermeyi öğren.',
-      en: 'Learn to recognize loss risk early and make more controlled decisions.',
+      tr: 'Kaybetmeden önce riski fark etmeyi, miktarın etkisini, çıkış planının sınırlarını ve farklı risklere yayılmayı sade örneklerle öğren.',
+      en: 'Learn with simple examples how to recognize risk before loss, understand the impact of size, the limits of exit plans, and spreading across different risks.',
     },
-    status: 'next',
-    lessonIds: [],
+    status: 'active',
+    lessonIds: [
+      'lesson.risk.uncertainty.001',
+      'lesson.risk.volatility.001',
+      'lesson.risk.position-sizing.001',
+      'lesson.risk.reward.001',
+      'lesson.risk.stop-orders.001',
+      'lesson.portfolio.diversification.001',
+    ],
   },
 };
