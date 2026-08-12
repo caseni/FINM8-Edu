@@ -3,6 +3,8 @@ import { normalizeBeginnerChartEditorial } from './beginnerChartEditorial';
 import { normalizeBeginnerChartExplanationQuality } from './beginnerChartExplanationQuality';
 import { normalizeBeginnerMarketEditorial } from './beginnerMarketEditorial';
 import { ensureBeginnerMarketVisualStep } from './beginnerMarketVisualStep';
+import { normalizeBeginnerRiskEditorial } from './beginnerRiskEditorial';
+import { normalizeBeginnerRiskTaskQuality } from './beginnerRiskTaskQuality';
 import { normalizeBehaviorEvidenceEnglishEditorial } from './behaviorEvidenceEnglishEditorial';
 import { normalizeCoreEnglishEditorial } from './coreEnglishEditorial';
 import { normalizeAlgoQuantAssessmentQuality } from './examples/academy/algoQuantAssessmentQuality';
@@ -77,6 +79,8 @@ export const MICRO_LESSON_CATALOG: readonly MicroLesson[] = MICRO_LESSON_CANDIDA
   .map(ensureBeginnerMarketVisualStep)
   .map(normalizeBeginnerChartEditorial)
   .map(normalizeBeginnerChartExplanationQuality)
+  .map(normalizeBeginnerRiskEditorial)
+  .map(normalizeBeginnerRiskTaskQuality)
   .map(normalizeBehaviorEvidenceEnglishEditorial)
   .map(normalizeAssessmentSignalQuality)
   .map(normalizeQuizExplanationQuality);
