@@ -28,13 +28,31 @@ const beginnerLessonIds = [
   'lesson.risk.stop-orders.001',
   'lesson.portfolio.diversification.001',
 ];
-const academyMarketFoundationLessons = [
-  'Borsa ne işe yarar?',
-  'Endeks neyi gösterir?',
-  'Tek işlemle bir sepete nasıl yatırım yapılır?',
-  'Tahvil nedir, fiyatı neden değişebilir?',
-  'Döviz kuru aslında neyi karşılaştırır?',
-  'Altın, petrol ve buğday neden aynı grupta?',
+const academyFoundationPaths = [
+  {
+    key: 'market',
+    starterLabel: /Piyasaları daha iyi anla/i,
+    lessons: [
+      'Borsa ne işe yarar?',
+      'Endeks neyi gösterir?',
+      'Tek işlemle bir sepete nasıl yatırım yapılır?',
+      'Tahvil nedir, fiyatı neden değişebilir?',
+      'Döviz kuru aslında neyi karşılaştırır?',
+      'Altın, petrol ve buğday neden aynı grupta?',
+    ],
+  },
+  {
+    key: 'technical',
+    starterLabel: /Grafikleri derinleştir/i,
+    lessons: [
+      'Fiyat bir seviyeyi aşınca neye bakmalısın?',
+      'Fiyat seviyeyi aşıp geri dönerse ne olmuş olabilir?',
+      'Kısa geri çekilme trendin bittiğini gösterir mi?',
+      'Fiyat neden bazen iki sınır arasında gidip gelir?',
+      'Hareket neden bazen hızlanır, bazen yavaşlar?',
+      'Grafikteki yardımcı çizgi geleceği bilir mi?',
+    ],
+  },
 ];
 
 async function seedCompletedBeginnerPath(page) {
@@ -72,27 +90,27 @@ async function openCompletedAcademy(page) {
   await page.getByText('Şimdi yalnız ilgini seç.', { exact: true }).waitFor();
 }
 
-async function openAcademyMarketsFoundation(page) {
+async function openAcademyFoundation(page, path) {
   await openCompletedAcademy(page);
-  await page.getByRole('button', { name: /Piyasaları daha iyi anla/i }).click();
+  await page.getByRole('button', { name: path.starterLabel }).click();
   await page.getByText('ÖNCE BUNLARLA BAŞLA', { exact: true }).waitFor();
   await page.getByText('SONRA DERİNLEŞ', { exact: true }).waitFor();
 }
 
-async function walkAcademyMarketLesson(page, lessonName, lessonIndex) {
-  await openAcademyMarketsFoundation(page);
+async function walkAcademyFoundationLesson(page, path, lessonName, lessonIndex) {
+  await openAcademyFoundation(page, path);
   await page.getByRole('button', { name: lessonName, exact: true }).click();
   await page.getByText(/Adım 1\//).waitFor();
   const stepMatch = (await page.getByText(/Adım 1\//).innerText()).match(/\/(\d+)/);
   const totalSteps = Number(stepMatch?.[1] ?? 1);
   if (!Number.isFinite(totalSteps) || totalSteps < 1) {
-    throw new Error(`Invalid Academy market lesson step count for ${lessonName}.`);
+    throw new Error(`Invalid Academy ${path.key} lesson step count for ${lessonName}.`);
   }
 
   for (let step = 1; step <= totalSteps; step += 1) {
-    await assertNoHorizontalOverflow(page, `academy-market-${lessonIndex}-step-${step}`);
+    await assertNoHorizontalOverflow(page, `academy-${path.key}-${lessonIndex}-step-${step}`);
     await page.screenshot({
-      path: `visual-qa/academy-market-foundation-${String(lessonIndex).padStart(2, '0')}-step-${String(step).padStart(2, '0')}.png`,
+      path: `visual-qa/academy-${path.key}-foundation-${String(lessonIndex).padStart(2, '0')}-step-${String(step).padStart(2, '0')}.png`,
       fullPage: true,
     });
     if (step < totalSteps) {
@@ -140,14 +158,13 @@ try {
   await assertNoHorizontalOverflow(page, 'post-core-academy');
   await page.screenshot({ path: 'visual-qa/post-core-academy.png', fullPage: true });
 
-  await page.getByRole('button', { name: /Piyasaları daha iyi anla/i }).click();
-  await page.getByText('ÖNCE BUNLARLA BAŞLA', { exact: true }).waitFor();
-  await page.getByText('SONRA DERİNLEŞ', { exact: true }).waitFor();
-  await assertNoHorizontalOverflow(page, 'academy-markets-layered');
-  await page.screenshot({ path: 'visual-qa/academy-markets-layered.png', fullPage: true });
-
-  for (let index = 0; index < academyMarketFoundationLessons.length; index += 1) {
-    await walkAcademyMarketLesson(page, academyMarketFoundationLessons[index], index + 1);
+  for (const path of academyFoundationPaths) {
+    await openAcademyFoundation(page, path);
+    await assertNoHorizontalOverflow(page, `academy-${path.key}-layered`);
+    await page.screenshot({ path: `visual-qa/academy-${path.key}-layered.png`, fullPage: true });
+    for (let index = 0; index < path.lessons.length; index += 1) {
+      await walkAcademyFoundationLesson(page, path, path.lessons[index], index + 1);
+    }
   }
 } finally {
   await browser.close();
