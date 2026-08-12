@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useNavigation, useRoute, type RouteProp } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { BEGINNER_SECTIONS } from '../../domain/learning/beginnerJourney';
+import { BEGINNER_SECTION_IDS, BEGINNER_SECTIONS } from '../../domain/learning/beginnerJourney';
 import { MICRO_LESSON_CATALOG } from '../../domain/learning/catalog';
 import { selectLocalizedText, type LearningLanguage } from '../../domain/learning/presentation';
 import { useLanguageStore } from '../../store/useLanguageStore';
@@ -61,6 +61,12 @@ export function BeginnerSectionScreen() {
     .filter((lesson) => lesson !== undefined);
   const completedCount = lessons.filter((lesson) => completedLessonIds.includes(lesson.id)).length;
   const progress = lessons.length ? completedCount / lessons.length : 0;
+  const sectionComplete = lessons.length > 0 && completedCount === lessons.length;
+  const sectionIndex = BEGINNER_SECTION_IDS.indexOf(section.id);
+  const nextSectionId = sectionIndex >= 0 && sectionIndex < BEGINNER_SECTION_IDS.length - 1
+    ? BEGINNER_SECTION_IDS[sectionIndex + 1]
+    : undefined;
+  const nextSection = nextSectionId ? BEGINNER_SECTIONS[nextSectionId] : undefined;
 
   const openLesson = (lessonId: string) => {
     const checkpoint = lessonCheckpoints[lessonId];
@@ -73,6 +79,14 @@ export function BeginnerSectionScreen() {
       return;
     }
     navigation.navigate('MicroLesson', { lessonId });
+  };
+
+  const continueAfterSection = () => {
+    if (nextSectionId) {
+      navigation.replace('BeginnerSection', { sectionId: nextSectionId });
+      return;
+    }
+    navigation.navigate('Academy');
   };
 
   return (
@@ -95,7 +109,10 @@ export function BeginnerSectionScreen() {
 
         <View style={styles.hero}>
           <Text style={styles.heroEyebrow}>{language === 'tr' ? 'BAŞLANGIÇ · 6 KISA DERS' : 'BEGINNER · 6 SHORT LESSONS'}</Text>
-          <Text style={styles.heroTitle}>{sectionHero(section.id, language)}</Text>
+          <Text style={styles.heroTitle}>{sectionComplete
+            ? language === 'tr' ? 'Bu bölümü tamamladın.' : 'You completed this section.'
+            : sectionHero(section.id, language)}
+          </Text>
           <Text style={styles.heroBody}>{selectLocalizedText(section.description, language)}</Text>
           <View style={styles.progressMeta}>
             <Text style={styles.progressText}>{completedCount}/{lessons.length} {language === 'tr' ? 'ders tamamlandı' : 'lessons completed'}</Text>
@@ -104,14 +121,16 @@ export function BeginnerSectionScreen() {
           <View style={styles.progressTrack}><View style={[styles.progressFill, { width: `${progress * 100}%` }]} /></View>
         </View>
 
-        <View style={styles.ruleCard}>
-          <Text style={styles.ruleTitle}>{language === 'tr' ? 'Bu bölümde kural basit:' : 'The rule in this section is simple:'}</Text>
-          <Text style={styles.ruleBody}>
-            {language === 'tr'
-              ? 'Önce anlamı gör. Terimin adını sonra öğren. Her ders tek ana fikre odaklanır.'
-              : 'See the meaning first. Learn the term second. Each lesson focuses on one main idea.'}
-          </Text>
-        </View>
+        {!sectionComplete ? (
+          <View style={styles.ruleCard}>
+            <Text style={styles.ruleTitle}>{language === 'tr' ? 'Bu bölümde kural basit:' : 'The rule in this section is simple:'}</Text>
+            <Text style={styles.ruleBody}>
+              {language === 'tr'
+                ? 'Önce anlamı gör. Terimin adını sonra öğren. Her ders tek ana fikre odaklanır.'
+                : 'See the meaning first. Learn the term second. Each lesson focuses on one main idea.'}
+            </Text>
+          </View>
+        ) : null}
 
         <View style={styles.lessonList}>
           {lessons.map((lesson, index) => {
@@ -123,7 +142,7 @@ export function BeginnerSectionScreen() {
                 key={lesson.id}
                 accessibilityRole="button"
                 onPress={() => openLesson(lesson.id)}
-                style={({ pressed }) => [styles.lessonCard, pressed && styles.lessonCardPressed]}
+                style={({ pressed }) => [styles.lessonCard, completed && styles.lessonCardComplete, pressed && styles.lessonCardPressed]}
               >
                 <View style={[styles.lessonNumber, completed && styles.lessonNumberComplete]}>
                   <Text style={styles.lessonNumberText}>{completed ? '✓' : index + 1}</Text>
@@ -133,7 +152,9 @@ export function BeginnerSectionScreen() {
                   <Text style={styles.lessonMeta}>
                     {resume
                       ? language === 'tr' ? 'Kaldığın yerden devam et' : 'Continue where you left off'
-                      : `${lesson.estimatedMinutes} ${language === 'tr' ? 'dk' : 'min'}`}
+                      : completed
+                        ? language === 'tr' ? 'Tamamlandı' : 'Complete'
+                        : `${lesson.estimatedMinutes} ${language === 'tr' ? 'dk' : 'min'}`}
                   </Text>
                 </View>
                 <Text style={styles.openText}>›</Text>
@@ -142,10 +163,41 @@ export function BeginnerSectionScreen() {
           })}
         </View>
 
-        <View style={styles.footerNote}>
-          <Text style={styles.footerTitle}>{language === 'tr' ? 'Ezber yok.' : 'No memorization.'}</Text>
-          <Text style={styles.footerBody}>{sectionOutcome(section.id, language)}</Text>
-        </View>
+        {sectionComplete ? (
+          <View style={styles.completionCard}>
+            <Text style={styles.completionEyebrow}>{language === 'tr' ? 'BÖLÜM TAMAMLANDI' : 'SECTION COMPLETE'}</Text>
+            <Text style={styles.completionTitle}>
+              {nextSection
+                ? language === 'tr' ? 'Hazırsan sıradaki adıma geç.' : 'Move to the next step when you are ready.'
+                : language === 'tr' ? 'Temel yolun burada tamamlandı.' : 'Your foundation path is complete.'}
+            </Text>
+            <Text style={styles.completionBody}>
+              {nextSection
+                ? language === 'tr'
+                  ? `Sıradaki bölüm: ${nextSection.title.tr}. Burada da aynı sade öğrenme dili devam edecek.`
+                  : `Next section: ${nextSection.title.en}. The same simple learning language continues there.`
+                : language === 'tr'
+                  ? 'Şimdi yalnız ilgini çeken ileri alanda derinleşebilirsin. Hepsini yapmak zorunda değilsin.'
+                  : 'Now go deeper only in an advanced subject that interests you. You do not need to do everything.'}
+            </Text>
+            <Pressable
+              accessibilityRole="button"
+              onPress={continueAfterSection}
+              style={({ pressed }) => [styles.nextButton, pressed && styles.nextButtonPressed]}
+            >
+              <Text style={styles.nextButtonText}>
+                {nextSection
+                  ? language === 'tr' ? 'Sıradaki bölüme geç' : 'Continue to next section'
+                  : language === 'tr' ? 'İleri yolları gör' : 'See deeper paths'}
+              </Text>
+            </Pressable>
+          </View>
+        ) : (
+          <View style={styles.footerNote}>
+            <Text style={styles.footerTitle}>{language === 'tr' ? 'Ezber yok.' : 'No memorization.'}</Text>
+            <Text style={styles.footerBody}>{sectionOutcome(section.id, language)}</Text>
+          </View>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
@@ -173,6 +225,7 @@ const styles = StyleSheet.create({
   ruleBody: { color: '#9FB0C3', fontSize: 12, lineHeight: 18 },
   lessonList: { gap: 10 },
   lessonCard: { minHeight: 78, flexDirection: 'row', alignItems: 'center', gap: 12, padding: 14, borderRadius: 18, backgroundColor: '#0B1B2B', borderWidth: 1, borderColor: '#29445B' },
+  lessonCardComplete: { borderColor: '#2B5C58', backgroundColor: '#0A2026' },
   lessonCardPressed: { backgroundColor: '#102437' },
   lessonNumber: { width: 40, height: 40, borderRadius: 13, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: '#2D6170', backgroundColor: '#113644' },
   lessonNumberComplete: { borderColor: '#31D1BF', backgroundColor: '#113D3A' },
@@ -181,6 +234,13 @@ const styles = StyleSheet.create({
   lessonTitle: { color: '#F8FAFC', fontSize: 16, lineHeight: 21, fontWeight: '800' },
   lessonMeta: { color: '#8297AA', fontSize: 11, lineHeight: 15 },
   openText: { color: '#31D1BF', fontSize: 24 },
+  completionCard: { gap: 8, padding: 18, borderRadius: 18, borderWidth: 1, borderColor: '#34796F', backgroundColor: '#0A292B' },
+  completionEyebrow: { color: '#5EEAD4', fontSize: 10, fontWeight: '900', letterSpacing: 0.8 },
+  completionTitle: { color: '#F8FAFC', fontSize: 18, lineHeight: 24, fontWeight: '900' },
+  completionBody: { color: '#ABC3C8', fontSize: 12, lineHeight: 18 },
+  nextButton: { alignSelf: 'flex-start', minHeight: 44, justifyContent: 'center', paddingHorizontal: 16, borderRadius: 13, backgroundColor: '#31D1BF' },
+  nextButtonPressed: { opacity: 0.78 },
+  nextButtonText: { color: '#05211F', fontSize: 12, fontWeight: '900' },
   footerNote: { gap: 5, padding: 17, borderRadius: 17, borderWidth: 1, borderColor: '#1E4550', backgroundColor: '#0A2228' },
   footerTitle: { color: '#5EEAD4', fontSize: 14, fontWeight: '900' },
   footerBody: { color: '#A7BAC8', fontSize: 12, lineHeight: 18 },
