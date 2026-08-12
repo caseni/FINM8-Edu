@@ -112,6 +112,18 @@ if (editorialDepth.duplicateQuizExplanationGroups.length > 0) {
 
 const blockers: string[] = [];
 
+if (english.incompleteLessons.length > 0) {
+  blockers.push(`English editorial coverage incomplete for ${english.incompleteLessons.length} lesson(s)`);
+}
+
+if (assessment.lowSignalIssues.length > 0) {
+  blockers.push(`low-signal assessment issues: ${assessment.lowSignalIssues.length}`);
+}
+
+if (assessment.duplicatePromptGroups.length > 0) {
+  blockers.push(`duplicate quiz prompt groups: ${assessment.duplicatePromptGroups.length}`);
+}
+
 if (curriculumOverlap.exactSurfaceGroups.length > 0) {
   for (const group of curriculumOverlap.exactSurfaceGroups) {
     blockers.push(
@@ -120,10 +132,38 @@ if (curriculumOverlap.exactSurfaceGroups.length > 0) {
   }
 }
 
+if (curriculumOverlap.nearDuplicatePairs.length > 0) {
+  blockers.push(`near-duplicate lesson pairs: ${curriculumOverlap.nearDuplicatePairs.length}`);
+}
+
 if (visualCoverage.lessonsWithoutAnyVisualAnchor.length > 0) {
   for (const lesson of visualCoverage.lessonsWithoutAnyVisualAnchor) {
     blockers.push(`lesson has no visual anchor: ${lesson.lessonId} -> ${lesson.title}`);
   }
+}
+
+if (editorialDepth.lessonsWithoutExplanation.length > 0) {
+  blockers.push(`lessons without explanation blocks: ${editorialDepth.lessonsWithoutExplanation.length}`);
+}
+
+if (editorialDepth.lessonsWithoutMisconception.length > 0) {
+  blockers.push(`lessons without misconception blocks: ${editorialDepth.lessonsWithoutMisconception.length}`);
+}
+
+if (editorialDepth.thinTeachingLessons.length > 0) {
+  blockers.push(`thin teaching lessons: ${editorialDepth.thinTeachingLessons.length}`);
+}
+
+if (editorialDepth.terseQuizExplanations.length > 0) {
+  blockers.push(`terse quiz explanations: ${editorialDepth.terseQuizExplanations.length}`);
+}
+
+if (editorialDepth.duplicateTaskPromptGroups.length > 0) {
+  blockers.push(`duplicate practical-task prompt groups: ${editorialDepth.duplicateTaskPromptGroups.length}`);
+}
+
+if (editorialDepth.duplicateQuizExplanationGroups.length > 0) {
+  blockers.push(`duplicate quiz-explanation groups: ${editorialDepth.duplicateQuizExplanationGroups.length}`);
 }
 
 if (blockers.length > 0) {
