@@ -1,4 +1,5 @@
 import { NavigatorScreenParams } from '@react-navigation/native';
+import type { BeginnerSectionId } from '../domain/learning/beginnerJourney';
 import type { LearningConceptKey } from '../domain/learning/types';
 
 interface CurrentQuizReviewRouteContext {
@@ -8,6 +9,7 @@ interface CurrentQuizReviewRouteContext {
 
 export type RootStackParamList = {
   Home: undefined;
+  BeginnerSection: { sectionId: BeginnerSectionId };
   Academy: undefined;
   LearningOnboarding: undefined;
   MicroLesson: {
@@ -32,6 +34,7 @@ export type AuthStackParamList = {
 
 export type MainStackParamList = {
   Home: undefined;
+  BeginnerSection: { sectionId: BeginnerSectionId };
   Academy: undefined;
   LearningOnboarding: undefined;
   MicroLesson: {
