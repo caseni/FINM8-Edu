@@ -14,6 +14,14 @@ const allTracks = [
   'Varlık Okulları',
 ];
 const representativeTracks = ['Teknik Analiz', 'Algoritmik Trade ve Quant', 'SMC / ICT · İleri'];
+const beginnerMarketLessons = [
+  'Bir fiyat nasıl ortaya çıkar',
+  'Piyasada aldığın şey aslında nedir',
+  'Neden bazen alıp satmak kolay, bazen zor',
+  'Alış ve satış fiyatı neden farklı olabilir',
+  'Emir verirken aslında ne seçiyorsun',
+  'Ekrandaki fiyat neden işlem fiyatın olmayabilir',
+];
 const diagnostics = [];
 
 const slug = (value) => value
@@ -65,6 +73,12 @@ async function openHome(page) {
   await page.getByText('Öğrenmeye Başla', { exact: true }).waitFor({ timeout: 10000 });
 }
 
+async function openBeginnerSection(page, sectionName) {
+  await openHome(page);
+  await page.getByRole('button', { name: new RegExp(sectionName, 'i') }).first().click();
+  await page.getByText('Önce günlük hayatta ne olduğunu anla.', { exact: true }).waitFor();
+}
+
 async function walkBeginnerLesson(page, lessonName, filePrefix) {
   await page.getByRole('button', { name: new RegExp(lessonName, 'i') }).click();
   await page.getByText(/Adım 1\//).waitFor();
@@ -90,18 +104,19 @@ async function captureBeginnerFlow(page) {
   await assertNoHorizontalOverflow(page, 'beginner-mobile-home');
   await page.screenshot({ path: 'visual-qa/beginner-mobile-home.png', fullPage: true });
 
-  await page.getByRole('button', { name: /Para ve Ekonomi/i }).first().click();
-  await page.getByText('Önce günlük hayatta ne olduğunu anla.', { exact: true }).waitFor();
+  await openBeginnerSection(page, 'Para ve Ekonomi');
   await assertNoHorizontalOverflow(page, 'beginner-mobile-money-economy');
   await page.screenshot({ path: 'visual-qa/beginner-mobile-money-economy.png', fullPage: true });
   await walkBeginnerLesson(page, 'Aynı para neden zamanla daha az şey alır', 'beginner-money-mobile');
 
-  await openHome(page);
-  await page.getByRole('button', { name: /Piyasalar Nasıl Çalışır/i }).first().click();
-  await page.getByText('Önce günlük hayatta ne olduğunu anla.', { exact: true }).waitFor();
+  await openBeginnerSection(page, 'Piyasalar Nasıl Çalışır');
   await assertNoHorizontalOverflow(page, 'beginner-mobile-markets');
   await page.screenshot({ path: 'visual-qa/beginner-mobile-markets.png', fullPage: true });
-  await walkBeginnerLesson(page, 'Bir fiyat nasıl ortaya çıkar', 'beginner-markets-mobile');
+
+  for (const lessonName of beginnerMarketLessons) {
+    await openBeginnerSection(page, 'Piyasalar Nasıl Çalışır');
+    await walkBeginnerLesson(page, lessonName, `beginner-markets-${slug(lessonName)}-mobile`);
+  }
 }
 
 async function openAcademy(page) {
@@ -180,14 +195,11 @@ try {
   await assertNoHorizontalOverflow(desktop, 'beginner-desktop-home');
   await desktop.screenshot({ path: 'visual-qa/beginner-desktop-home.png', fullPage: true });
 
-  await desktop.getByRole('button', { name: /Para ve Ekonomi/i }).first().click();
-  await desktop.getByText('Önce günlük hayatta ne olduğunu anla.', { exact: true }).waitFor();
+  await openBeginnerSection(desktop, 'Para ve Ekonomi');
   await assertNoHorizontalOverflow(desktop, 'beginner-desktop-money-economy');
   await desktop.screenshot({ path: 'visual-qa/beginner-desktop-money-economy.png', fullPage: true });
 
-  await openHome(desktop);
-  await desktop.getByRole('button', { name: /Piyasalar Nasıl Çalışır/i }).first().click();
-  await desktop.getByText('Önce günlük hayatta ne olduğunu anla.', { exact: true }).waitFor();
+  await openBeginnerSection(desktop, 'Piyasalar Nasıl Çalışır');
   await assertNoHorizontalOverflow(desktop, 'beginner-desktop-markets');
   await desktop.screenshot({ path: 'visual-qa/beginner-desktop-markets.png', fullPage: true });
 
