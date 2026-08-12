@@ -68,7 +68,7 @@ const beginnerEndToEndCases = [
     section: 'Grafikleri Korkmadan Oku',
     lesson: 'Grafikte gördüğün şey aslında nedir',
     taskWrong: 'Henüz oluşmamış sonraki fiyatı',
-    taskCorrect: ['O zaman aralığında ulaşılan en yüksek fiyatı'],
+    taskCorrect: ['O zaman aralığında ulaşılan en yüksek fiyatı', 'O zaman aralığında ulaşılan en düşük fiyatı'],
     quizAnswers: ['Gelecekteki kesin fiyatı', 'Başlangıç ile bitiş fiyatı arasını', 'Hayır'],
   },
   {
