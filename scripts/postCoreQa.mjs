@@ -53,6 +53,18 @@ const academyFoundationPaths = [
       'Grafikteki yardımcı çizgi geleceği bilir mi?',
     ],
   },
+  {
+    key: 'fundamental',
+    starterLabel: /Şirketleri anlamaya başla/i,
+    lessons: [
+      'Bir şirketi anlamak için neden tek sayı yetmez?',
+      'Satış artarken kâr neden düşebilir?',
+      'Şirketin sahip oldukları ve borçları neden birlikte okunur?',
+      'Kâr eden şirketin kasası neden boşalabilir?',
+      '100 liralık satıştan şirkete ne kadar kalıyor?',
+      'Şirketin borcu ne zaman tehlikeli hale gelir?',
+    ],
+  },
 ];
 
 async function seedCompletedBeginnerPath(page) {
