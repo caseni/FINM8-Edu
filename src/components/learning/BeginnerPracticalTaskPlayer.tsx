@@ -145,8 +145,8 @@ export function BeginnerPracticalTaskPlayer({
             <View style={[styles.feedbackCard, passed ? styles.feedbackPassed : styles.feedbackRetry]} accessibilityRole="summary">
               <Text style={[styles.feedbackTitle, passed ? styles.feedbackTitlePassed : styles.feedbackTitleRetry]}>
                 {passed
-                  ? language === 'tr' ? 'Doğru.' : 'Correct.'
-                  : language === 'tr' ? 'Bu kez olmadı.' : 'Not this time.'}
+                  ? language === 'tr' ? 'Doğru. Seçimin senaryodaki kanıtlarla uyumlu.' : 'Correct. Your selection matches the evidence in the scenario.'
+                  : language === 'tr' ? 'Henüz değil. Senaryodaki ipuçlarını birlikte değerlendir.' : 'Not yet. Evaluate the clues in the scenario together.'}
               </Text>
               <Text style={styles.feedbackText}>
                 {passed
