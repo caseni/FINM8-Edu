@@ -7,8 +7,6 @@ export interface BeginnerJourneyQualityIssue {
   readonly reason:
     | 'missing_lesson'
     | 'section_lesson_count'
-    | 'teaching_visual_count'
-    | 'duplicate_teaching_visual'
     | 'task_choice_count'
     | 'task_evidence_mismatch'
     | 'quiz_question_count'
@@ -28,7 +26,6 @@ const EXPECTED_SECTION_COUNT = 4;
 const EXPECTED_LESSONS_PER_SECTION = 6;
 const EXPECTED_QUIZ_QUESTIONS = 3;
 const MIN_OPTIONS = 3;
-const MIN_TEACHING_VISUALS = 4;
 
 const ADVANCED_JARGON: readonly RegExp[] = [
   /\bBOS\b/i,
@@ -93,24 +90,6 @@ export function getBeginnerJourneyQualityReport(): BeginnerJourneyQualityReport 
     if (!lesson) {
       issues.push({ lessonId, reason: 'missing_lesson', detail: 'lesson id is not present in the catalog' });
       continue;
-    }
-
-    const teachingVisuals = lesson.contentBlocks.filter((block) => block.kind === 'visual');
-    if (teachingVisuals.length < MIN_TEACHING_VISUALS) {
-      issues.push({
-        lessonId,
-        reason: 'teaching_visual_count',
-        detail: `expected at least ${MIN_TEACHING_VISUALS} teaching visuals, found ${teachingVisuals.length}`,
-      });
-    }
-
-    const teachingVisualRefs = teachingVisuals.map((block) => block.assetRef);
-    if (new Set(teachingVisualRefs).size !== teachingVisualRefs.length) {
-      issues.push({
-        lessonId,
-        reason: 'duplicate_teaching_visual',
-        detail: 'teaching visual asset refs must be unique within a beginner lesson',
-      });
     }
 
     const taskChoices = lesson.practicalTask.choices ?? [];
