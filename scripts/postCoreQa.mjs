@@ -116,7 +116,7 @@ async function openCompletedAcademy(page) {
 
 async function openAcademyFoundation(page, path) {
   await openCompletedAcademy(page);
-  await page.getByRole('button', { name: path.starterLabel }).click();
+  await page.getByRole('button', { name: path.starterLabel }).first().click();
   await page.getByText('ÖNCE BUNLARLA BAŞLA', { exact: true }).waitFor();
   await page.getByText('SONRA DERİNLEŞ', { exact: true }).waitFor();
 }
