@@ -224,7 +224,7 @@ async function captureBeginnerEndToEnd(page, testCase) {
   await page.getByText('Doğru. Seçimin senaryodaki kanıtlarla uyumlu.', { exact: true }).waitFor();
   await assertNoHorizontalOverflow(page, `${prefix}-task-correct`);
   await page.screenshot({ path: `visual-qa/${prefix}-task-correct.png`, fullPage: true });
-  await page.getByRole('button', { name: /Quiz’e geç/i }).click();
+  await page.getByRole('button', { name: /Quiz.?e geç/i }).click();
 
   await page.getByText('MİNİ QUIZ', { exact: true }).waitFor();
   for (let index = 0; index < testCase.quizAnswers.length; index += 1) {
