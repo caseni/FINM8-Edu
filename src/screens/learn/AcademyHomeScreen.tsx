@@ -2,7 +2,8 @@ import React, { useMemo, useState } from 'react';
 import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { ACADEMY_TRACK_IDS, ACADEMY_TRACKS } from '../../domain/learning/academyTracks';
+import { ACADEMY_TRACK_IDS, ACADEMY_TRACKS, type AcademyTrackId } from '../../domain/learning/academyTracks';
+import { BEGINNER_SECTION_IDS, BEGINNER_SECTIONS } from '../../domain/learning/beginnerJourney';
 import { MICRO_LESSON_CATALOG } from '../../domain/learning/catalog';
 import { selectLocalizedText, type LearningLanguage } from '../../domain/learning/presentation';
 import { useLanguageStore } from '../../store/useLanguageStore';
@@ -10,6 +11,26 @@ import { useLearningProgressStore } from '../../store/useLearningProgressStore';
 import type { RootStackParamList } from '../../types/navigation';
 
 type Navigation = NativeStackNavigationProp<RootStackParamList, 'Academy'>;
+
+const STARTER_TRACK_IDS: readonly AcademyTrackId[] = [
+  'financial_markets',
+  'technical_analysis',
+  'fundamental_analysis',
+  'risk_portfolio',
+];
+
+const STARTER_TRACK_LABELS: Readonly<Record<AcademyTrackId, { tr: string; en: string }>> = {
+  economy: { tr: 'Ekonomiyi derinleştir', en: 'Go deeper into economics' },
+  financial_markets: { tr: 'Piyasaları daha iyi anla', en: 'Understand markets better' },
+  technical_analysis: { tr: 'Grafikleri derinleştir', en: 'Go deeper into charts' },
+  fundamental_analysis: { tr: 'Şirketleri anlamaya başla', en: 'Start understanding companies' },
+  risk_portfolio: { tr: 'Risk ve portföyü güçlendir', en: 'Strengthen risk and portfolio skills' },
+  market_psychology: { tr: 'Davranışlarını daha iyi anla', en: 'Understand behavior better' },
+  strategies: { tr: 'Yöntemleri karşılaştır', en: 'Compare methods' },
+  algo_quant: { tr: 'Sistematik düşünmeyi öğren', en: 'Learn systematic thinking' },
+  smc_ict: { tr: 'İleri teknik dili incele', en: 'Explore advanced technical language' },
+  asset_schools: { tr: 'Varlık türlerinde derinleş', en: 'Go deeper by asset class' },
+};
 
 export function AcademyHomeScreen() {
   const navigation = useNavigation<Navigation>();
@@ -23,6 +44,8 @@ export function AcademyHomeScreen() {
     () => new Map(MICRO_LESSON_CATALOG.map((lesson) => [lesson.id, lesson] as const)),
     []
   );
+  const beginnerLessonIds = BEGINNER_SECTION_IDS.flatMap((sectionId) => BEGINNER_SECTIONS[sectionId].lessonIds);
+  const beginnerComplete = beginnerLessonIds.length > 0 && beginnerLessonIds.every((lessonId) => completedLessonIds.includes(lessonId));
 
   const openLesson = (lessonId: string) => {
     const checkpoint = lessonCheckpoints[lessonId];
@@ -56,25 +79,68 @@ export function AcademyHomeScreen() {
         </View>
 
         <View style={styles.hero}>
-          <Text style={styles.heroEyebrow}>{language === 'tr' ? 'CORE’UN ÜZERİNE İNŞA ET' : 'BUILD BEYOND CORE'}</Text>
+          <Text style={styles.heroEyebrow}>
+            {beginnerComplete
+              ? language === 'tr' ? 'TEMEL TAMAM' : 'FOUNDATION COMPLETE'
+              : language === 'tr' ? 'CORE’UN ÜZERİNE İNŞA ET' : 'BUILD BEYOND CORE'}
+          </Text>
           <Text style={styles.heroTitle}>
-            {language === 'tr'
-              ? 'Finansı konu konu derinleştir.'
-              : 'Go deeper, one subject at a time.'}
+            {beginnerComplete
+              ? language === 'tr' ? 'Şimdi yalnız ilgini seç.' : 'Now choose only what interests you.'
+              : language === 'tr' ? 'Finansı konu konu derinleştir.' : 'Go deeper, one subject at a time.'}
           </Text>
           <Text style={styles.heroBody}>
-            {language === 'tr'
-              ? 'Core günlük öğrenme yolun olarak kalır. Academy’de ekonomi, finansal piyasalar, teknik ve temel analiz, psikoloji ve sistematik yaklaşımları istediğin sırayla derinleştirebilirsin.'
-              : 'Core remains your daily learning path. Academy lets you go deeper into economics, financial markets, technical and fundamental analysis, psychology, and systematic approaches.'}
+            {beginnerComplete
+              ? language === 'tr'
+                ? 'Dört temel alanı tamamladın. Burada her şeyi yapmak zorunda değilsin; merak ettiğin tek bir alandan devam etmen yeterli.'
+                : 'You completed the four foundation areas. You do not need to do everything here; continuing with one subject that interests you is enough.'
+              : language === 'tr'
+                ? 'Core günlük öğrenme yolun olarak kalır. Academy’de ekonomi, finansal piyasalar, teknik ve temel analiz, psikoloji ve sistematik yaklaşımları istediğin sırayla derinleştirebilirsin.'
+                : 'Core remains your daily learning path. Academy lets you go deeper into economics, financial markets, technical and fundamental analysis, psychology, and systematic approaches.'}
           </Text>
         </View>
 
+        {beginnerComplete ? (
+          <View style={styles.starterGuide}>
+            <Text style={styles.starterEyebrow}>{language === 'tr' ? 'NEREDEN DEVAM EDEBİLİRSİN?' : 'WHERE CAN YOU GO NEXT?'}</Text>
+            <Text style={styles.starterTitle}>{language === 'tr' ? 'Dört sade seçenekten birini seç.' : 'Choose one of four simple directions.'}</Text>
+            <Text style={styles.starterBody}>
+              {language === 'tr'
+                ? 'Bir seçim diğerlerini kapatmaz. Yalnız şu anda en çok merak ettiğin konuya gir.'
+                : 'One choice does not lock the others. Start with the subject you are most curious about right now.'}
+            </Text>
+            <View style={styles.starterOptions}>
+              {STARTER_TRACK_IDS.map((trackId) => {
+                const track = ACADEMY_TRACKS[trackId];
+                return (
+                  <Pressable
+                    key={trackId}
+                    accessibilityRole="button"
+                    onPress={() => setExpandedTrackId(trackId)}
+                    style={({ pressed }) => [styles.starterOption, pressed && styles.starterOptionPressed]}
+                  >
+                    <View style={styles.starterOptionCopy}>
+                      <Text style={styles.starterOptionTitle}>{STARTER_TRACK_LABELS[trackId][language]}</Text>
+                      <Text style={styles.starterOptionMeta}>{selectLocalizedText(track.title, language)}</Text>
+                    </View>
+                    <Text style={styles.starterOptionArrow}>›</Text>
+                  </Pressable>
+                );
+              })}
+            </View>
+          </View>
+        ) : null}
+
         <View style={styles.sectionHeading}>
-          <Text style={styles.sectionTitle}>{language === 'tr' ? 'İlgini seç' : 'Choose your subject'}</Text>
+          <Text style={styles.sectionTitle}>{language === 'tr' ? (beginnerComplete ? 'Tüm ileri alanlar' : 'İlgini seç') : (beginnerComplete ? 'All deeper subjects' : 'Choose your subject')}</Text>
           <Text style={styles.sectionBody}>
             {language === 'tr'
-              ? 'Bir okulu aç, derslerini incele. Hepsini aynı anda bitirmen gerekmez.'
-              : 'Open one school to explore its lessons. You do not need to complete everything at once.'}
+              ? beginnerComplete
+                ? 'Yukarıdaki dört yoldan başlayabilir veya aşağıdaki diğer ileri alanlara göz atabilirsin.'
+                : 'Bir okulu aç, derslerini incele. Hepsini aynı anda bitirmen gerekmez.'
+              : beginnerComplete
+                ? 'Start with one of the four directions above, or explore the other advanced subjects below.'
+                : 'Open one school to explore its lessons. You do not need to complete everything at once.'}
           </Text>
         </View>
 
@@ -215,6 +281,17 @@ const styles = StyleSheet.create({
   heroEyebrow: { color: '#5EEAD4', fontSize: 10, fontWeight: '900', letterSpacing: 0.8 },
   heroTitle: { color: '#F8FAFC', fontSize: 23, lineHeight: 30, fontWeight: '900' },
   heroBody: { color: '#B8D6D5', fontSize: 14, lineHeight: 21 },
+  starterGuide: { gap: 8, padding: 18, borderRadius: 20, borderWidth: 1, borderColor: '#2B5F63', backgroundColor: '#0A2028' },
+  starterEyebrow: { color: '#5EEAD4', fontSize: 10, fontWeight: '900', letterSpacing: 0.8 },
+  starterTitle: { color: '#F8FAFC', fontSize: 18, lineHeight: 24, fontWeight: '900' },
+  starterBody: { color: '#9FB6C1', fontSize: 12, lineHeight: 18 },
+  starterOptions: { gap: 8, marginTop: 2 },
+  starterOption: { minHeight: 58, flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 13, paddingVertical: 10, borderRadius: 14, backgroundColor: '#0D2933', borderWidth: 1, borderColor: '#28515A' },
+  starterOptionPressed: { backgroundColor: '#12343D' },
+  starterOptionCopy: { flex: 1, gap: 2 },
+  starterOptionTitle: { color: '#F8FAFC', fontSize: 14, fontWeight: '800' },
+  starterOptionMeta: { color: '#83A5B1', fontSize: 10, fontWeight: '700' },
+  starterOptionArrow: { color: '#5EEAD4', fontSize: 22 },
   sectionHeading: { gap: 5, marginTop: 2 },
   sectionTitle: { color: '#F8FAFC', fontSize: 20, fontWeight: '800' },
   sectionBody: { color: '#8FA4B8', fontSize: 13, lineHeight: 19 },
