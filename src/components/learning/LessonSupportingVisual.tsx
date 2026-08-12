@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import type { LearningLanguage } from '../../domain/learning/presentation';
 import { defaultLearningTheme, type LearningTheme } from '../../theme/learningTheme';
+import { AcademyFundamentalStoryVisual, isAcademyFundamentalStoryAsset } from './AcademyFundamentalStoryVisual';
 import { AcademyMarketsStoryVisual, isAcademyMarketsStoryAsset } from './AcademyMarketsStoryVisual';
 import { AlgoQuantSlideVisual, isAlgoQuantSlideAsset } from './AlgoQuantSlideVisual';
 import { AssetSchoolSlideVisual, isAssetSchoolSlideAsset } from './AssetSchoolSlideVisual';
@@ -46,13 +47,15 @@ export function LessonSupportingVisual({ assetRef, alt, language, role, theme = 
   const isBeginnerChart = isBeginnerChartStoryAsset(assetRef);
   const isBeginnerMarket = isBeginnerMarketStoryAsset(assetRef);
   const isAcademyMarketFoundation = isAcademyMarketsStoryAsset(assetRef);
+  const isAcademyFundamentalFoundation = isAcademyFundamentalStoryAsset(assetRef);
   const isEconomy = isEconomySlideAsset(assetRef);
-  const hideEditorialLabel = isBeginnerEconomy || isBeginnerRisk || isBeginnerChart || isBeginnerMarket || isAcademyMarketFoundation || isEconomy;
+  const hideEditorialLabel = isBeginnerEconomy || isBeginnerRisk || isBeginnerChart || isBeginnerMarket || isAcademyMarketFoundation || isAcademyFundamentalFoundation || isEconomy;
   const visual = isBeginnerEconomy ? <BeginnerEconomyStoryVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
     : isBeginnerRisk ? <BeginnerRiskStoryVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
     : isBeginnerChart ? <BeginnerChartStoryVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
     : isBeginnerMarket ? <BeginnerMarketStoryVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
     : isAcademyMarketFoundation ? <AcademyMarketsStoryVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
+    : isAcademyFundamentalFoundation ? <AcademyFundamentalStoryVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
     : isMarketFoundationSlideAsset(assetRef) ? <MarketFoundationSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
     : isChartLessonSlideAsset(assetRef) ? <ChartLessonSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
     : isRiskLessonSlideAsset(assetRef) ? <RiskLessonSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
