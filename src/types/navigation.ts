@@ -9,6 +9,8 @@ interface CurrentQuizReviewRouteContext {
 export type RootStackParamList = {
   Home: undefined;
   Academy: undefined;
+  PublicLearnIndex: undefined;
+  PublicLearn: { slug: string };
   LearningOnboarding: undefined;
   MicroLesson: {
     lessonId: string;
@@ -33,6 +35,8 @@ export type AuthStackParamList = {
 export type MainStackParamList = {
   Home: undefined;
   Academy: undefined;
+  PublicLearnIndex: undefined;
+  PublicLearn: { slug: string };
   LearningOnboarding: undefined;
   MicroLesson: {
     lessonId: string;
