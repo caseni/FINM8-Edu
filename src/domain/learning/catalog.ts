@@ -1,6 +1,7 @@
 import { normalizeAssessmentSignalQuality } from './assessmentSignalQuality';
 import { normalizeBeginnerChartEditorial } from './beginnerChartEditorial';
 import { normalizeBeginnerChartExplanationQuality } from './beginnerChartExplanationQuality';
+import { normalizeBeginnerChartTaskQuality } from './beginnerChartTaskQuality';
 import { normalizeBeginnerMarketEditorial } from './beginnerMarketEditorial';
 import { ensureBeginnerMarketVisualStep } from './beginnerMarketVisualStep';
 import { normalizeBeginnerRiskEditorial } from './beginnerRiskEditorial';
@@ -78,6 +79,7 @@ export const MICRO_LESSON_CATALOG: readonly MicroLesson[] = MICRO_LESSON_CANDIDA
   .map(normalizeBeginnerMarketEditorial)
   .map(ensureBeginnerMarketVisualStep)
   .map(normalizeBeginnerChartEditorial)
+  .map(normalizeBeginnerChartTaskQuality)
   .map(normalizeBeginnerChartExplanationQuality)
   .map(normalizeBeginnerRiskEditorial)
   .map(normalizeBeginnerRiskTaskQuality)
