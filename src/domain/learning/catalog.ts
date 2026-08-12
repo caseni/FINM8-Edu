@@ -1,3 +1,4 @@
+import { normalizeAcademyFundamentalEditorial } from './academyFundamentalEditorial';
 import { normalizeAcademyMarketsEditorial } from './academyMarketsEditorial';
 import { normalizeAcademyMarketsPromptQuality } from './academyMarketsPromptQuality';
 import { normalizeAcademyTechnicalEditorial } from './academyTechnicalEditorial';
@@ -89,6 +90,7 @@ export const MICRO_LESSON_CATALOG: readonly MicroLesson[] = MICRO_LESSON_CANDIDA
   .map(normalizeAcademyMarketsEditorial)
   .map(normalizeAcademyMarketsPromptQuality)
   .map(normalizeAcademyTechnicalEditorial)
+  .map(normalizeAcademyFundamentalEditorial)
   .map(normalizeBehaviorEvidenceEnglishEditorial)
   .map(normalizeAssessmentSignalQuality)
   .map(normalizeQuizExplanationQuality);
