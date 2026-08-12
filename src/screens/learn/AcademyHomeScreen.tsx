@@ -154,6 +154,44 @@ export function AcademyHomeScreen() {
           const progress = lessons.length > 0 ? completedCount / lessons.length : 0;
           const expanded = active && expandedTrackId === track.id;
           const trackTitle = selectLocalizedText(track.title, language);
+          const firstLayerLessons = lessons.slice(0, 6);
+          const deeperLessons = lessons.slice(6);
+
+          const renderLessonRows = (group: typeof lessons, offset: number) => group.map((lesson, groupIndex) => {
+            const completed = completedLessonIds.includes(lesson.id);
+            const checkpoint = lessonCheckpoints[lesson.id];
+            const resumeLabel = checkpoint?.stage === 'task'
+              ? language === 'tr' ? 'Devam · Görev' : 'Resume · Task'
+              : checkpoint?.stage === 'quiz'
+                ? language === 'tr' ? 'Devam · Quiz' : 'Resume · Quiz'
+                : checkpoint?.stage === 'lesson'
+                  ? language === 'tr' ? 'Devam · Ders' : 'Resume · Lesson'
+                  : undefined;
+            return (
+              <Pressable
+                key={lesson.id}
+                accessibilityRole="button"
+                accessibilityLabel={
+                  resumeLabel
+                    ? `${selectLocalizedText(lesson.title, language)} · ${resumeLabel}`
+                    : selectLocalizedText(lesson.title, language)
+                }
+                onPress={() => openLesson(lesson.id)}
+                style={({ pressed }) => [styles.lessonRow, pressed && styles.lessonRowPressed]}
+              >
+                <View style={[styles.lessonMarker, completed && styles.lessonMarkerComplete]}>
+                  <Text style={styles.lessonMarkerText}>{completed ? '✓' : offset + groupIndex + 1}</Text>
+                </View>
+                <View style={styles.lessonCopy}>
+                  <Text style={styles.lessonTitle}>{selectLocalizedText(lesson.title, language)}</Text>
+                  <Text style={[styles.lessonMeta, resumeLabel && styles.lessonMetaResume]}>
+                    {resumeLabel ?? `${lesson.estimatedMinutes} ${language === 'tr' ? 'dk' : 'min'}`}
+                  </Text>
+                </View>
+                <Text style={styles.openText}>›</Text>
+              </Pressable>
+            );
+          });
 
           return (
             <View key={track.id} style={[styles.trackCard, !active && styles.trackCardPlanned]}>
@@ -214,41 +252,28 @@ export function AcademyHomeScreen() {
 
               {expanded ? (
                 <View style={styles.lessonList}>
-                  {lessons.map((lesson, index) => {
-                    const completed = completedLessonIds.includes(lesson.id);
-                    const checkpoint = lessonCheckpoints[lesson.id];
-                    const resumeLabel = checkpoint?.stage === 'task'
-                      ? language === 'tr' ? 'Devam · Görev' : 'Resume · Task'
-                      : checkpoint?.stage === 'quiz'
-                        ? language === 'tr' ? 'Devam · Quiz' : 'Resume · Quiz'
-                        : checkpoint?.stage === 'lesson'
-                          ? language === 'tr' ? 'Devam · Ders' : 'Resume · Lesson'
-                          : undefined;
-                    return (
-                      <Pressable
-                        key={lesson.id}
-                        accessibilityRole="button"
-                        accessibilityLabel={
-                          resumeLabel
-                            ? `${selectLocalizedText(lesson.title, language)} · ${resumeLabel}`
-                            : selectLocalizedText(lesson.title, language)
-                        }
-                        onPress={() => openLesson(lesson.id)}
-                        style={({ pressed }) => [styles.lessonRow, pressed && styles.lessonRowPressed]}
-                      >
-                        <View style={[styles.lessonMarker, completed && styles.lessonMarkerComplete]}>
-                          <Text style={styles.lessonMarkerText}>{completed ? '✓' : index + 1}</Text>
-                        </View>
-                        <View style={styles.lessonCopy}>
-                          <Text style={styles.lessonTitle}>{selectLocalizedText(lesson.title, language)}</Text>
-                          <Text style={[styles.lessonMeta, resumeLabel && styles.lessonMetaResume]}>
-                            {resumeLabel ?? `${lesson.estimatedMinutes} ${language === 'tr' ? 'dk' : 'min'}`}
-                          </Text>
-                        </View>
-                        <Text style={styles.openText}>›</Text>
-                      </Pressable>
-                    );
-                  })}
+                  <View style={styles.lessonGroupHeader}>
+                    <Text style={styles.lessonGroupEyebrow}>{language === 'tr' ? 'ÖNCE BUNLARLA BAŞLA' : 'START HERE FIRST'}</Text>
+                    <Text style={styles.lessonGroupDetail}>
+                      {language === 'tr'
+                        ? 'İlk 6 ders temel fikri sade biçimde kurar.'
+                        : 'The first 6 lessons build the core idea in plain language.'}
+                    </Text>
+                  </View>
+                  {renderLessonRows(firstLayerLessons, 0)}
+                  {deeperLessons.length > 0 ? (
+                    <>
+                      <View style={[styles.lessonGroupHeader, styles.lessonGroupAdvanced]}>
+                        <Text style={styles.lessonGroupEyebrowMuted}>{language === 'tr' ? 'SONRA DERİNLEŞ' : 'GO DEEPER LATER'}</Text>
+                        <Text style={styles.lessonGroupDetail}>
+                          {language === 'tr'
+                            ? 'Hazır olduğunda daha teknik ayrıntılara geç. Bu bölüm zorunlu değil.'
+                            : 'Move into more technical detail when you are ready. This layer is optional.'}
+                        </Text>
+                      </View>
+                      {renderLessonRows(deeperLessons, firstLayerLessons.length)}
+                    </>
+                  ) : null}
                 </View>
               ) : null}
             </View>
@@ -318,6 +343,11 @@ const styles = StyleSheet.create({
   trackToggleText: { color: '#5EEAD4', fontSize: 12, fontWeight: '800' },
   trackToggleIcon: { color: '#5EEAD4', fontSize: 17, fontWeight: '800' },
   lessonList: { paddingHorizontal: 16, paddingBottom: 14 },
+  lessonGroupHeader: { gap: 3, paddingTop: 13, paddingBottom: 8 },
+  lessonGroupAdvanced: { marginTop: 8, paddingTop: 16, borderTopWidth: 1, borderTopColor: '#21394D' },
+  lessonGroupEyebrow: { color: '#5EEAD4', fontSize: 9, fontWeight: '900', letterSpacing: 0.8 },
+  lessonGroupEyebrowMuted: { color: '#8FA4B8', fontSize: 9, fontWeight: '900', letterSpacing: 0.8 },
+  lessonGroupDetail: { color: '#8197A9', fontSize: 11, lineHeight: 16 },
   lessonRow: { minHeight: 58, flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 9, borderTopWidth: 1, borderTopColor: '#172F46' },
   lessonRowPressed: { opacity: 0.74 },
   lessonMarker: { width: 30, height: 30, alignItems: 'center', justifyContent: 'center', borderRadius: 10, backgroundColor: '#102033', borderWidth: 1, borderColor: '#294057' },
