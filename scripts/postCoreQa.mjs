@@ -28,6 +28,14 @@ const beginnerLessonIds = [
   'lesson.risk.stop-orders.001',
   'lesson.portfolio.diversification.001',
 ];
+const academyMarketFoundationLessons = [
+  'Borsa ne işe yarar?',
+  'Endeks neyi gösterir?',
+  'Tek işlemle bir sepete nasıl yatırım yapılır?',
+  'Tahvil nedir, fiyatı neden değişebilir?',
+  'Döviz kuru aslında neyi karşılaştırır?',
+  'Altın, petrol ve buğday neden aynı grupta?',
+];
 
 async function seedCompletedBeginnerPath(page) {
   await page.goto(baseUrl, { waitUntil: 'networkidle' });
@@ -54,6 +62,43 @@ async function assertNoHorizontalOverflow(page, label) {
   }));
   if (overflow.page > overflow.viewport + 1) {
     throw new Error(`${label} has horizontal overflow: ${overflow.page}px > ${overflow.viewport}px`);
+  }
+}
+
+async function openCompletedAcademy(page) {
+  await page.goto(baseUrl, { waitUntil: 'networkidle' });
+  await page.getByText('24 / 24 TAMAMLANDI', { exact: true }).waitFor();
+  await page.getByRole('button', { name: 'İleri yola geç' }).click();
+  await page.getByText('Şimdi yalnız ilgini seç.', { exact: true }).waitFor();
+}
+
+async function openAcademyMarketsFoundation(page) {
+  await openCompletedAcademy(page);
+  await page.getByRole('button', { name: /Piyasaları daha iyi anla/i }).click();
+  await page.getByText('ÖNCE BUNLARLA BAŞLA', { exact: true }).waitFor();
+  await page.getByText('SONRA DERİNLEŞ', { exact: true }).waitFor();
+}
+
+async function walkAcademyMarketLesson(page, lessonName, lessonIndex) {
+  await openAcademyMarketsFoundation(page);
+  await page.getByRole('button', { name: lessonName, exact: true }).click();
+  await page.getByText(/Adım 1\//).waitFor();
+  const stepMatch = (await page.getByText(/Adım 1\//).innerText()).match(/\/(\d+)/);
+  const totalSteps = Number(stepMatch?.[1] ?? 1);
+  if (!Number.isFinite(totalSteps) || totalSteps < 1) {
+    throw new Error(`Invalid Academy market lesson step count for ${lessonName}.`);
+  }
+
+  for (let step = 1; step <= totalSteps; step += 1) {
+    await assertNoHorizontalOverflow(page, `academy-market-${lessonIndex}-step-${step}`);
+    await page.screenshot({
+      path: `visual-qa/academy-market-foundation-${String(lessonIndex).padStart(2, '0')}-step-${String(step).padStart(2, '0')}.png`,
+      fullPage: true,
+    });
+    if (step < totalSteps) {
+      await page.getByRole('button', { name: /Sonraki adıma geç/i }).click();
+      await page.getByText(new RegExp(`Adım ${step + 1}\\/${totalSteps}`)).waitFor();
+    }
   }
 }
 
@@ -94,6 +139,16 @@ try {
   }
   await assertNoHorizontalOverflow(page, 'post-core-academy');
   await page.screenshot({ path: 'visual-qa/post-core-academy.png', fullPage: true });
+
+  await page.getByRole('button', { name: /Piyasaları daha iyi anla/i }).click();
+  await page.getByText('ÖNCE BUNLARLA BAŞLA', { exact: true }).waitFor();
+  await page.getByText('SONRA DERİNLEŞ', { exact: true }).waitFor();
+  await assertNoHorizontalOverflow(page, 'academy-markets-layered');
+  await page.screenshot({ path: 'visual-qa/academy-markets-layered.png', fullPage: true });
+
+  for (let index = 0; index < academyMarketFoundationLessons.length; index += 1) {
+    await walkAcademyMarketLesson(page, academyMarketFoundationLessons[index], index + 1);
+  }
 } finally {
   await browser.close();
 }
