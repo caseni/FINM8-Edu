@@ -7,6 +7,7 @@ import type { LessonSupportingVisualRole } from './LessonSupportingVisual';
 type Topic = 'statements' | 'income' | 'balance' | 'cashFlow' | 'profitability' | 'debt';
 
 const statementsProfitCashHookImage = require('../../../assets/learning/academy/fundamental/fundamental-statements-profit-cash-hook.webp');
+const incomeSalesCostsHookImage = require('../../../assets/learning/academy/fundamental/fundamental-income-sales-costs-hook.webp');
 
 export interface AcademyFundamentalStoryVisualProps {
   assetRef: string;
@@ -36,10 +37,16 @@ export function AcademyFundamentalStoryVisual({ assetRef, alt, language, role, t
   const styles = createStyles(theme);
   const tr = language === 'tr';
 
-  if (topic === 'statements' && role === 'hook') {
+  const hookPhoto = topic === 'statements'
+    ? statementsProfitCashHookImage
+    : topic === 'income'
+      ? incomeSalesCostsHookImage
+      : undefined;
+
+  if (hookPhoto && role === 'hook') {
     return (
       <View style={styles.photoShell} accessibilityRole="image" accessibilityLabel={alt}>
-        <Image source={statementsProfitCashHookImage} resizeMode="cover" style={styles.photo} />
+        <Image source={hookPhoto} resizeMode="cover" style={styles.photo} />
       </View>
     );
   }
