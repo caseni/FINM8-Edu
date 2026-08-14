@@ -3,10 +3,14 @@ import { chromium } from 'playwright-core';
 const baseUrl = 'http://127.0.0.1:4173/';
 const tracks = [
   'Ekonomiyi Anla',
+  'Piyasaları Anla',
+  'Grafikleri Derinleştir',
+  'Şirketleri Anla',
+  'Risk ve Portföy',
+  'Karar Psikolojisi',
+  'Yöntemler ve Planlar',
   'Sistematik ve Sayısal Yaklaşımlar',
   'İleri Grafik Yaklaşımları',
-  'Yöntemler ve Planlar',
-  'Karar Psikolojisi',
   'Varlık Türlerini Anla',
 ];
 
