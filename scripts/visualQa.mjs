@@ -250,8 +250,16 @@ async function openTrackAndFindFirstLesson(page, trackTitle) {
   await page.getByRole('button', { name: new RegExp(`^${escaped} derslerini aç$`, 'i') }).click();
   await page.waitForTimeout(150);
   const after = await buttonNames(page);
-  const firstLessonName = after.find((name) => !before.has(name) && !/derslerini kapat$/i.test(name));
-  if (!firstLessonName) throw new Error(`No lesson button became visible for ${trackTitle}`);
+  const nextActionPattern = /^(Derse başla|Derse devam et|Göreve devam et|Quiz’e devam et):/i;
+  const nextActionName = after.find((name) => !before.has(name) && nextActionPattern.test(name));
+  if (!nextActionName) throw new Error(`No Academy next-action button became visible for ${trackTitle}`);
+  const firstLessonName = after.find((name) => (
+    !before.has(name)
+    && !/derslerini kapat$/i.test(name)
+    && !nextActionPattern.test(name)
+    && !/· Devam ·/i.test(name)
+  ));
+  if (!firstLessonName) throw new Error(`No fresh lesson button became visible for ${trackTitle}`);
   return firstLessonName;
 }
 
