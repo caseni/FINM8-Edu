@@ -312,9 +312,8 @@ const createStyles = (theme: LearningTheme) =>
     contextLabel: { color: theme.colors.textMuted, fontSize: 12 },
     lessonTitle: { color: theme.colors.text, fontSize: 21, lineHeight: 28, fontWeight: '800' },
     slide: {
-      flex: 1,
-      minHeight: 260,
-      justifyContent: 'center',
+      width: '100%',
+      justifyContent: 'flex-start',
       padding: theme.spacing.md,
       backgroundColor: theme.colors.surface,
       borderColor: theme.colors.border,
@@ -322,9 +321,7 @@ const createStyles = (theme: LearningTheme) =>
       borderRadius: theme.radius.large,
     },
     visualSlide: {
-      flex: 1,
-      minHeight: 340,
-      justifyContent: 'center',
+      justifyContent: 'flex-start',
     },
     takeaway: { gap: theme.spacing.md },
     takeawayEyebrow: { color: theme.colors.primary, fontSize: 12, fontWeight: '800' },
