@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import type { LearningLanguage } from '../../domain/learning/presentation';
 import { defaultLearningTheme, type LearningTheme } from '../../theme/learningTheme';
 import { AcademyAssetPremiumHookVisual, isAcademyAssetPremiumHookAsset } from './AcademyAssetPremiumHookVisual';
+import { AcademyEconomyPremiumHookVisual, isAcademyEconomyPremiumHookAsset } from './AcademyEconomyPremiumHookVisual';
 import { AcademyEditorialImageVisual, hasAcademyEditorialImage } from './AcademyEditorialImageVisual';
 import { AcademyFundamentalStoryVisual, isAcademyFundamentalStoryAsset } from './AcademyFundamentalStoryVisual';
 import { AcademyMarketsStoryVisual, isAcademyMarketsStoryAsset } from './AcademyMarketsStoryVisual';
@@ -53,6 +54,7 @@ export function LessonSupportingVisual({ assetRef, alt, language, role, theme = 
   const labelStyle = role === 'misconception' ? styles.warningLabel : role === 'risk' ? styles.riskLabel : role === 'practice' ? styles.successLabel : role === 'hook' || role === 'summary' ? styles.primaryLabel : undefined;
   const hasEditorialImage = hasAcademyEditorialImage(assetRef, role);
   const hasPremiumHook = role === 'hook' && isAcademyPremiumHookAsset(assetRef);
+  const hasEconomyPremiumHook = role === 'hook' && isAcademyEconomyPremiumHookAsset(assetRef);
   const hasTechnicalPremiumHook = role === 'hook' && isAcademyTechnicalPremiumHookAsset(assetRef);
   const hasSmcPremiumHook = role === 'hook' && isAcademySmcPremiumHookAsset(assetRef);
   const hasQuantPremiumHook = role === 'hook' && isAcademyQuantPremiumHookAsset(assetRef);
@@ -67,9 +69,10 @@ export function LessonSupportingVisual({ assetRef, alt, language, role, theme = 
   const isAcademyFundamentalFoundation = isAcademyFundamentalStoryAsset(assetRef);
   const isAcademyRiskPortfolioFoundation = isAcademyRiskPortfolioStoryAsset(assetRef);
   const isEconomy = isEconomySlideAsset(assetRef);
-  const hideEditorialLabel = hasEditorialImage || hasPremiumHook || hasTechnicalPremiumHook || hasSmcPremiumHook || hasQuantPremiumHook || hasStrategyPremiumHook || hasPsychologyPremiumHook || hasAssetPremiumHook || isBeginnerEconomy || isBeginnerRisk || isBeginnerChart || isBeginnerMarket || isAcademyMarketFoundation || isAcademyFundamentalFoundation || isAcademyRiskPortfolioFoundation || isEconomy;
+  const hideEditorialLabel = hasEditorialImage || hasPremiumHook || hasEconomyPremiumHook || hasTechnicalPremiumHook || hasSmcPremiumHook || hasQuantPremiumHook || hasStrategyPremiumHook || hasPsychologyPremiumHook || hasAssetPremiumHook || isBeginnerEconomy || isBeginnerRisk || isBeginnerChart || isBeginnerMarket || isAcademyMarketFoundation || isAcademyFundamentalFoundation || isAcademyRiskPortfolioFoundation || isEconomy;
   const visual = hasEditorialImage ? <AcademyEditorialImageVisual assetRef={assetRef} alt={alt} role={role} theme={theme} />
     : hasPremiumHook ? <AcademyPremiumHookVisual assetRef={assetRef} alt={alt} theme={theme} />
+    : hasEconomyPremiumHook ? <AcademyEconomyPremiumHookVisual assetRef={assetRef} alt={alt} theme={theme} />
     : hasTechnicalPremiumHook ? <AcademyTechnicalPremiumHookVisual assetRef={assetRef} alt={alt} theme={theme} />
     : hasSmcPremiumHook ? <AcademySmcPremiumHookVisual assetRef={assetRef} alt={alt} theme={theme} />
     : hasQuantPremiumHook ? <AcademyQuantPremiumHookVisual assetRef={assetRef} alt={alt} theme={theme} />
