@@ -63,13 +63,16 @@ export function MicroLessonScreen({ route, navigation }: Props) {
   );
   const currentQuizReview = route.params.currentQuizReview;
   const isReadOnlyReview = route.params.review || Boolean(currentQuizReview);
+  const navigationState = navigation.getState();
+  const previousRoute = navigationState.routes[navigationState.index - 1];
+  const openedFromAcademy = route.params.source === 'academy' || previousRoute?.name === 'Academy';
 
   if (!lesson) return <View><Text>Ders bulunamadı.</Text></View>;
 
-  const useBeginnerEconomyVisual = BEGINNER_ECONOMY_LESSON_IDS.has(lesson.id);
-  const useBeginnerMarketVisual = BEGINNER_MARKET_LESSON_IDS.has(lesson.id);
-  const useBeginnerChartVisual = BEGINNER_CHART_LESSON_IDS.has(lesson.id);
-  const useBeginnerRiskVisual = BEGINNER_RISK_LESSON_IDS.has(lesson.id);
+  const useBeginnerEconomyVisual = !openedFromAcademy && BEGINNER_ECONOMY_LESSON_IDS.has(lesson.id);
+  const useBeginnerMarketVisual = !openedFromAcademy && BEGINNER_MARKET_LESSON_IDS.has(lesson.id);
+  const useBeginnerChartVisual = !openedFromAcademy && BEGINNER_CHART_LESSON_IDS.has(lesson.id);
+  const useBeginnerRiskVisual = !openedFromAcademy && BEGINNER_RISK_LESSON_IDS.has(lesson.id);
 
   return (
     <LessonPlayer
