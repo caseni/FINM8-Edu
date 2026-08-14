@@ -53,6 +53,7 @@ jobs:
           mkdir -p visual-qa
           node scripts/visualQa.mjs
           node scripts/advancedHookQa.mjs
+          node scripts/advancedContinuationQa.mjs
           node scripts/postCoreQa.mjs
 
       - name: Upload visual QA screenshots
