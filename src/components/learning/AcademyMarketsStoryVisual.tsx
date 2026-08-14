@@ -1,10 +1,12 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
 import type { LearningLanguage } from '../../domain/learning/presentation';
 import { defaultLearningTheme, type LearningTheme } from '../../theme/learningTheme';
 import type { LessonSupportingVisualRole } from './LessonSupportingVisual';
 
 type Topic = 'exchange' | 'index' | 'etf' | 'bond' | 'forex' | 'commodity';
+
+const exchangeHookImage = require('../../../assets/learning/academy/markets/markets-exchange-hook.jpg');
 
 export interface AcademyMarketsStoryVisualProps {
   assetRef: string;
@@ -39,6 +41,14 @@ export function AcademyMarketsStoryVisual({
   if (!topic) return null;
   const styles = createStyles(theme);
   const tr = language === 'tr';
+
+  if (topic === 'exchange' && role === 'hook') {
+    return (
+      <View style={styles.photoShell} accessibilityRole="image" accessibilityLabel={alt}>
+        <Image source={exchangeHookImage} resizeMode="cover" style={styles.photo} />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.shell} accessibilityRole="image" accessibilityLabel={alt}>
@@ -304,6 +314,8 @@ function Wheat({ styles }: { styles: ReturnType<typeof createStyles> }) {
 }
 
 const createStyles = (theme: LearningTheme) => StyleSheet.create({
+  photoShell: { width: '100%', aspectRatio: 16 / 9, overflow: 'hidden', borderRadius: 20, borderWidth: 1, borderColor: '#24465C', backgroundColor: '#06111B' },
+  photo: { width: '100%', height: '100%' },
   shell: { width: '100%', minHeight: 238, borderRadius: 20, borderWidth: 1, borderColor: '#24465C', backgroundColor: '#081725', padding: 16, justifyContent: 'center' },
   story: { gap: 18 },
   heading: { gap: 5 },
