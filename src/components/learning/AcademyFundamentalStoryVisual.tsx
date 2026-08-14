@@ -8,6 +8,7 @@ type Topic = 'statements' | 'income' | 'balance' | 'cashFlow' | 'profitability' 
 
 const statementsProfitCashHookImage = require('../../../assets/learning/academy/fundamental/fundamental-statements-profit-cash-hook.webp');
 const incomeSalesCostsHookImage = require('../../../assets/learning/academy/fundamental/fundamental-income-sales-costs-hook.webp');
+const balanceSheetHookImage = require('../../../assets/learning/academy/fundamental/fundamental-balance-sheet-hook.jpg');
 
 export interface AcademyFundamentalStoryVisualProps {
   assetRef: string;
@@ -41,11 +42,13 @@ export function AcademyFundamentalStoryVisual({ assetRef, alt, language, role, t
     ? statementsProfitCashHookImage
     : topic === 'income'
       ? incomeSalesCostsHookImage
-      : undefined;
+      : topic === 'balance'
+        ? balanceSheetHookImage
+        : undefined;
 
   if (hookPhoto && role === 'hook') {
     return (
-      <View style={styles.photoShell} accessibilityRole="image" accessibilityLabel={alt}>
+      <View style={[styles.photoShell, topic === 'balance' && styles.photoShellWide]} accessibilityRole="image" accessibilityLabel={alt}>
         <Image source={hookPhoto} resizeMode="cover" style={styles.photo} />
       </View>
     );
@@ -215,6 +218,7 @@ function Debt({ role, tr, styles }: SceneProps) {
 const createStyles = (theme: LearningTheme) => StyleSheet.create({
   photoShell: { width: '100%', aspectRatio: 0.8, overflow: 'hidden', borderRadius: 20, borderWidth: 1, borderColor: '#24465C', backgroundColor: '#06111B' },
   photo: { width: '100%', height: '100%' },
+  photoShellWide: { aspectRatio: 16 / 9 },
   shell: { width: '100%', minHeight: 240, justifyContent: 'center', borderRadius: 20, borderWidth: 1, borderColor: '#24465C', backgroundColor: '#081725', padding: 16 },
   story: { gap: 18 },
   head: { gap: 5 },
