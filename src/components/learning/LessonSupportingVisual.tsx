@@ -4,6 +4,7 @@ import type { LearningLanguage } from '../../domain/learning/presentation';
 import { defaultLearningTheme, type LearningTheme } from '../../theme/learningTheme';
 import { AcademyAdvancedCleanVisual, isAcademyAdvancedCleanAsset } from './AcademyAdvancedCleanVisual';
 import { AcademyAssetPremiumHookVisual, isAcademyAssetPremiumHookAsset } from './AcademyAssetPremiumHookVisual';
+import { AcademyCoreExpansionCleanVisual, isAcademyCoreExpansionCleanAsset } from './AcademyCoreExpansionCleanVisual';
 import { AcademyEconomyPremiumHookVisual, isAcademyEconomyPremiumHookAsset } from './AcademyEconomyPremiumHookVisual';
 import { AcademyEditorialImageVisual, hasAcademyEditorialImage } from './AcademyEditorialImageVisual';
 import { AcademyFoundationCleanVisual, isAcademyFoundationCleanAsset } from './AcademyFoundationCleanVisual';
@@ -62,9 +63,10 @@ export function LessonSupportingVisual({ assetRef, alt, language, role, theme = 
   const hasStrategyPremiumHook = role === 'hook' && isAcademyStrategyPremiumHookAsset(assetRef);
   const hasPsychologyPremiumHook = role === 'hook' && isAcademyPsychologyPremiumHookAsset(assetRef);
   const hasAssetPremiumHook = role === 'hook' && isAcademyAssetPremiumHookAsset(assetRef);
+  const hasCoreExpansionCleanVisual = isAcademyCoreExpansionCleanAsset(assetRef);
   const hasFoundationCleanVisual = role !== 'hook' && isAcademyFoundationCleanAsset(assetRef);
   const hasAdvancedCleanVisual = role !== 'hook' && isAcademyAdvancedCleanAsset(assetRef);
-  const hasEditorialImage = !hasFoundationCleanVisual && !hasAdvancedCleanVisual && hasAcademyEditorialImage(assetRef, role);
+  const hasEditorialImage = !hasCoreExpansionCleanVisual && !hasFoundationCleanVisual && !hasAdvancedCleanVisual && hasAcademyEditorialImage(assetRef, role);
   const isBeginnerEconomy = isBeginnerEconomyStoryAsset(assetRef);
   const isBeginnerRisk = isBeginnerRiskStoryAsset(assetRef);
   const isBeginnerChart = isBeginnerChartStoryAsset(assetRef);
@@ -73,8 +75,8 @@ export function LessonSupportingVisual({ assetRef, alt, language, role, theme = 
   const isAcademyFundamentalFoundation = isAcademyFundamentalStoryAsset(assetRef);
   const isAcademyRiskPortfolioFoundation = isAcademyRiskPortfolioStoryAsset(assetRef);
   const isEconomy = isEconomySlideAsset(assetRef);
-  const emphasizeCleanPractice = role === 'practice' && (hasFoundationCleanVisual || hasAdvancedCleanVisual);
-  const hideEditorialLabel = hasEditorialImage || hasPremiumHook || hasEconomyPremiumHook || hasTechnicalPremiumHook || hasSmcPremiumHook || hasQuantPremiumHook || hasStrategyPremiumHook || hasPsychologyPremiumHook || hasAssetPremiumHook || hasFoundationCleanVisual || hasAdvancedCleanVisual || isBeginnerEconomy || isBeginnerRisk || isBeginnerChart || isBeginnerMarket || isAcademyMarketFoundation || isAcademyFundamentalFoundation || isAcademyRiskPortfolioFoundation || isEconomy;
+  const emphasizeCleanPractice = role === 'practice' && (hasCoreExpansionCleanVisual || hasFoundationCleanVisual || hasAdvancedCleanVisual);
+  const hideEditorialLabel = hasEditorialImage || hasPremiumHook || hasEconomyPremiumHook || hasTechnicalPremiumHook || hasSmcPremiumHook || hasQuantPremiumHook || hasStrategyPremiumHook || hasPsychologyPremiumHook || hasAssetPremiumHook || hasCoreExpansionCleanVisual || hasFoundationCleanVisual || hasAdvancedCleanVisual || isBeginnerEconomy || isBeginnerRisk || isBeginnerChart || isBeginnerMarket || isAcademyMarketFoundation || isAcademyFundamentalFoundation || isAcademyRiskPortfolioFoundation || isEconomy;
   const visual = hasEditorialImage ? <AcademyEditorialImageVisual assetRef={assetRef} alt={alt} role={role} theme={theme} />
     : hasPremiumHook ? <AcademyPremiumHookVisual assetRef={assetRef} alt={alt} theme={theme} />
     : hasEconomyPremiumHook ? <AcademyEconomyPremiumHookVisual assetRef={assetRef} alt={alt} theme={theme} />
@@ -84,6 +86,7 @@ export function LessonSupportingVisual({ assetRef, alt, language, role, theme = 
     : hasStrategyPremiumHook ? <AcademyStrategyPremiumHookVisual assetRef={assetRef} alt={alt} theme={theme} />
     : hasPsychologyPremiumHook ? <AcademyPsychologyPremiumHookVisual assetRef={assetRef} alt={alt} theme={theme} />
     : hasAssetPremiumHook ? <AcademyAssetPremiumHookVisual assetRef={assetRef} alt={alt} theme={theme} />
+    : hasCoreExpansionCleanVisual ? <AcademyCoreExpansionCleanVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
     : hasFoundationCleanVisual ? <AcademyFoundationCleanVisual assetRef={assetRef} alt={alt} language={language} role={role as Exclude<LessonSupportingVisualRole, 'hook'>} theme={theme} />
     : hasAdvancedCleanVisual ? <AcademyAdvancedCleanVisual assetRef={assetRef} alt={alt} language={language} role={role as Exclude<LessonSupportingVisualRole, 'hook'>} theme={theme} />
     : isBeginnerEconomy ? <BeginnerEconomyStoryVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
