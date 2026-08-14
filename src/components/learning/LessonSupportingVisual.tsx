@@ -73,6 +73,7 @@ export function LessonSupportingVisual({ assetRef, alt, language, role, theme = 
   const isAcademyFundamentalFoundation = isAcademyFundamentalStoryAsset(assetRef);
   const isAcademyRiskPortfolioFoundation = isAcademyRiskPortfolioStoryAsset(assetRef);
   const isEconomy = isEconomySlideAsset(assetRef);
+  const emphasizeCleanPractice = role === 'practice' && (hasFoundationCleanVisual || hasAdvancedCleanVisual);
   const hideEditorialLabel = hasEditorialImage || hasPremiumHook || hasEconomyPremiumHook || hasTechnicalPremiumHook || hasSmcPremiumHook || hasQuantPremiumHook || hasStrategyPremiumHook || hasPsychologyPremiumHook || hasAssetPremiumHook || hasFoundationCleanVisual || hasAdvancedCleanVisual || isBeginnerEconomy || isBeginnerRisk || isBeginnerChart || isBeginnerMarket || isAcademyMarketFoundation || isAcademyFundamentalFoundation || isAcademyRiskPortfolioFoundation || isEconomy;
   const visual = hasEditorialImage ? <AcademyEditorialImageVisual assetRef={assetRef} alt={alt} role={role} theme={theme} />
     : hasPremiumHook ? <AcademyPremiumHookVisual assetRef={assetRef} alt={alt} theme={theme} />
@@ -112,10 +113,18 @@ export function LessonSupportingVisual({ assetRef, alt, language, role, theme = 
     : isSmcIctSlideAsset(assetRef) ? <SmcIctSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
     : isAssetSchoolSlideAsset(assetRef) ? <AssetSchoolSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
     : <LearningVisual assetRef={`${assetRef}#${role}`} alt={alt} language={language} theme={theme} />;
-  return <View style={styles.wrapper}>{hideEditorialLabel ? null : <Text style={[styles.eyebrow, labelStyle]}>{label}</Text>}{visual}</View>;
+
+  const presentedVisual = emphasizeCleanPractice
+    ? <View style={styles.practiceFrame}><View style={styles.practiceScale}>{visual}</View></View>
+    : visual;
+
+  return <View style={styles.wrapper}>{hideEditorialLabel ? null : <Text style={[styles.eyebrow, labelStyle]}>{label}</Text>}{presentedVisual}</View>;
 }
 
 const createStyles = (theme: LearningTheme) => StyleSheet.create({
-  wrapper: { gap: theme.spacing.sm, marginTop: theme.spacing.xs }, eyebrow: { color: theme.colors.textMuted, fontSize: 10, fontWeight: '900', letterSpacing: 0.8 },
+  wrapper: { gap: theme.spacing.sm, marginTop: theme.spacing.xs },
+  practiceFrame: { minHeight: 320, alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
+  practiceScale: { width: '72%', transform: [{ scale: 1.38 }] },
+  eyebrow: { color: theme.colors.textMuted, fontSize: 10, fontWeight: '900', letterSpacing: 0.8 },
   primaryLabel: { color: theme.colors.primary }, successLabel: { color: theme.colors.success }, warningLabel: { color: theme.colors.warning }, riskLabel: { color: theme.colors.risk },
 });
