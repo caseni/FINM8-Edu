@@ -1,7 +1,7 @@
 import { chromium } from 'playwright-core';
 
 const baseUrl = 'http://127.0.0.1:4173/';
-const tracks = ['Karar Psikolojisi', 'Yöntemler ve Planlar', 'Varlık Türlerini Anla'];
+const tracks = ['Ekonomiyi Anla', 'Karar Psikolojisi', 'Yöntemler ve Planlar', 'Varlık Türlerini Anla'];
 
 const slug = (value) => value
   .toLocaleLowerCase('tr-TR')
