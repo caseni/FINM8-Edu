@@ -7,6 +7,8 @@ interface CurrentQuizReviewRouteContext {
   reviewedEvidenceThroughAt: string;
 }
 
+type LessonPresentationSource = 'beginner' | 'academy';
+
 export type RootStackParamList = {
   Home: undefined;
   BeginnerSection: { sectionId: BeginnerSectionId };
@@ -16,6 +18,7 @@ export type RootStackParamList = {
     lessonId: string;
     review?: boolean;
     currentQuizReview?: CurrentQuizReviewRouteContext;
+    source?: LessonPresentationSource;
   };
   PracticalTask: { lessonId: string; review?: boolean };
   LessonQuiz: { lessonId: string; review?: boolean; spacedReview?: boolean };
@@ -41,6 +44,7 @@ export type MainStackParamList = {
     lessonId: string;
     review?: boolean;
     currentQuizReview?: CurrentQuizReviewRouteContext;
+    source?: LessonPresentationSource;
   };
   PracticalTask: { lessonId: string; review?: boolean };
   LessonQuiz: { lessonId: string; review?: boolean; spacedReview?: boolean };
