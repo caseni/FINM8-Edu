@@ -43,5 +43,8 @@ jobs:
       - name: Content quality audit
         run: npm run quality:content
 
+      - name: Academy visual routing audit
+        run: node scripts/academyVisualRoutingAudit.mjs
+
       - name: Build web bundle
         run: npm run build:web
