@@ -4,6 +4,7 @@ import path from 'node:path';
 const root = process.cwd();
 const academyDir = path.join(root, 'src/domain/learning/examples/academy');
 const visualDir = path.join(root, 'src/components/learning');
+const expectedAcademyLessonCount = 120; // 24 beginner lessons live outside Academy; total product catalog = 144.
 
 function filesRecursively(dir, predicate) {
   const result = [];
@@ -61,6 +62,7 @@ console.log(`academy lesson slugs: ${lessons.length}`);
 console.log(`topic-routed lesson slugs: ${routed.length}/${lessons.length}`);
 console.log(`generic visual fallback candidates: ${unmatched.length}`);
 console.log(`duplicate academy slugs: ${duplicateSlugs.length}`);
+console.log(`product catalog composition: 24 beginner + ${lessons.length} Academy = ${24 + lessons.length}`);
 
 if (unmatched.length > 0) {
   console.log('Unmatched Academy lesson slugs:');
@@ -72,8 +74,8 @@ if (duplicateSlugs.length > 0) {
   for (const [slug, count] of duplicateSlugs) console.log(`- ${slug}: ${count}`);
 }
 
-if (lessons.length !== 144) {
-  throw new Error(`Academy lesson catalog drifted: expected 144 slugs, found ${lessons.length}`);
+if (lessons.length !== expectedAcademyLessonCount) {
+  throw new Error(`Academy lesson catalog drifted: expected ${expectedAcademyLessonCount} slugs, found ${lessons.length}`);
 }
 if (duplicateSlugs.length > 0) {
   throw new Error(`Academy visual routing audit found ${duplicateSlugs.length} duplicate slug(s)`);
