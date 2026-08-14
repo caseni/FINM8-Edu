@@ -6,7 +6,9 @@ import { AcademyEditorialImageVisual, hasAcademyEditorialImage } from './Academy
 import { AcademyFundamentalStoryVisual, isAcademyFundamentalStoryAsset } from './AcademyFundamentalStoryVisual';
 import { AcademyMarketsStoryVisual, isAcademyMarketsStoryAsset } from './AcademyMarketsStoryVisual';
 import { AcademyPremiumHookVisual, isAcademyPremiumHookAsset } from './AcademyPremiumHookVisual';
+import { AcademyQuantPremiumHookVisual, isAcademyQuantPremiumHookAsset } from './AcademyQuantPremiumHookVisual';
 import { AcademyRiskPortfolioStoryVisual, isAcademyRiskPortfolioStoryAsset } from './AcademyRiskPortfolioStoryVisual';
+import { AcademySmcPremiumHookVisual, isAcademySmcPremiumHookAsset } from './AcademySmcPremiumHookVisual';
 import { AcademyTechnicalPremiumHookVisual, isAcademyTechnicalPremiumHookAsset } from './AcademyTechnicalPremiumHookVisual';
 import { AlgoQuantSlideVisual, isAlgoQuantSlideAsset } from './AlgoQuantSlideVisual';
 import { AssetSchoolSlideVisual, isAssetSchoolSlideAsset } from './AssetSchoolSlideVisual';
@@ -49,6 +51,8 @@ export function LessonSupportingVisual({ assetRef, alt, language, role, theme = 
   const hasEditorialImage = hasAcademyEditorialImage(assetRef, role);
   const hasPremiumHook = role === 'hook' && isAcademyPremiumHookAsset(assetRef);
   const hasTechnicalPremiumHook = role === 'hook' && isAcademyTechnicalPremiumHookAsset(assetRef);
+  const hasSmcPremiumHook = role === 'hook' && isAcademySmcPremiumHookAsset(assetRef);
+  const hasQuantPremiumHook = role === 'hook' && isAcademyQuantPremiumHookAsset(assetRef);
   const isBeginnerEconomy = isBeginnerEconomyStoryAsset(assetRef);
   const isBeginnerRisk = isBeginnerRiskStoryAsset(assetRef);
   const isBeginnerChart = isBeginnerChartStoryAsset(assetRef);
@@ -57,10 +61,12 @@ export function LessonSupportingVisual({ assetRef, alt, language, role, theme = 
   const isAcademyFundamentalFoundation = isAcademyFundamentalStoryAsset(assetRef);
   const isAcademyRiskPortfolioFoundation = isAcademyRiskPortfolioStoryAsset(assetRef);
   const isEconomy = isEconomySlideAsset(assetRef);
-  const hideEditorialLabel = hasEditorialImage || hasPremiumHook || hasTechnicalPremiumHook || isBeginnerEconomy || isBeginnerRisk || isBeginnerChart || isBeginnerMarket || isAcademyMarketFoundation || isAcademyFundamentalFoundation || isAcademyRiskPortfolioFoundation || isEconomy;
+  const hideEditorialLabel = hasEditorialImage || hasPremiumHook || hasTechnicalPremiumHook || hasSmcPremiumHook || hasQuantPremiumHook || isBeginnerEconomy || isBeginnerRisk || isBeginnerChart || isBeginnerMarket || isAcademyMarketFoundation || isAcademyFundamentalFoundation || isAcademyRiskPortfolioFoundation || isEconomy;
   const visual = hasEditorialImage ? <AcademyEditorialImageVisual assetRef={assetRef} alt={alt} role={role} theme={theme} />
     : hasPremiumHook ? <AcademyPremiumHookVisual assetRef={assetRef} alt={alt} theme={theme} />
     : hasTechnicalPremiumHook ? <AcademyTechnicalPremiumHookVisual assetRef={assetRef} alt={alt} theme={theme} />
+    : hasSmcPremiumHook ? <AcademySmcPremiumHookVisual assetRef={assetRef} alt={alt} theme={theme} />
+    : hasQuantPremiumHook ? <AcademyQuantPremiumHookVisual assetRef={assetRef} alt={alt} theme={theme} />
     : isBeginnerEconomy ? <BeginnerEconomyStoryVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
     : isBeginnerRisk ? <BeginnerRiskStoryVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
     : isBeginnerChart ? <BeginnerChartStoryVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
