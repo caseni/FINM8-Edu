@@ -7,6 +7,7 @@ import type { LessonSupportingVisualRole } from './LessonSupportingVisual';
 type Topic = 'exchange' | 'index' | 'etf' | 'bond' | 'forex' | 'commodity';
 
 const exchangeHookImage = require('../../../assets/learning/academy/markets/markets-exchange-hook.jpg');
+const indexHookImage = require('../../../assets/learning/academy/markets/markets-index-hook.jpg');
 
 export interface AcademyMarketsStoryVisualProps {
   assetRef: string;
@@ -42,10 +43,10 @@ export function AcademyMarketsStoryVisual({
   const styles = createStyles(theme);
   const tr = language === 'tr';
 
-  if (topic === 'exchange' && role === 'hook') {
+  if (role === 'hook' && (topic === 'exchange' || topic === 'index')) {
     return (
       <View style={styles.photoShell} accessibilityRole="image" accessibilityLabel={alt}>
-        <Image source={exchangeHookImage} resizeMode="cover" style={styles.photo} />
+        <Image source={topic === 'exchange' ? exchangeHookImage : indexHookImage} resizeMode="cover" style={styles.photo} />
       </View>
     );
   }
