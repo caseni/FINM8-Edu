@@ -10,6 +10,7 @@ const statementsProfitCashHookImage = require('../../../assets/learning/academy/
 const incomeSalesCostsHookImage = require('../../../assets/learning/academy/fundamental/fundamental-income-sales-costs-hook.webp');
 const balanceSheetHookImage = require('../../../assets/learning/academy/fundamental/fundamental-balance-sheet-hook.jpg');
 const debtLiquidityHookImage = require('../../../assets/learning/academy/fundamental/fundamental-debt-liquidity-hook.jpg');
+const cashFlowHookImage = require('../../../assets/learning/academy/fundamental/fundamental-cash-flow-hook.jpg');
 
 export interface AcademyFundamentalStoryVisualProps {
   assetRef: string;
@@ -47,11 +48,13 @@ export function AcademyFundamentalStoryVisual({ assetRef, alt, language, role, t
         ? balanceSheetHookImage
         : topic === 'debt'
           ? debtLiquidityHookImage
-          : undefined;
+          : topic === 'cashFlow'
+            ? cashFlowHookImage
+            : undefined;
 
   if (hookPhoto && role === 'hook') {
     return (
-      <View style={[styles.photoShell, ['balance', 'debt'].includes(topic) && styles.photoShellWide]} accessibilityRole="image" accessibilityLabel={alt}>
+      <View style={[styles.photoShell, ['balance', 'debt', 'cashFlow'].includes(topic) && styles.photoShellWide]} accessibilityRole="image" accessibilityLabel={alt}>
         <Image source={hookPhoto} resizeMode="cover" style={styles.photo} />
       </View>
     );
