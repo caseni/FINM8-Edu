@@ -5,6 +5,11 @@ const root = process.cwd();
 const academyDir = path.join(root, 'src/domain/learning/examples/academy');
 const visualDir = path.join(root, 'src/components/learning');
 const expectedAcademyLessonCount = 120; // 24 beginner lessons live outside Academy; total product catalog = 144.
+const modernVisualFiles = new Set([
+  'AcademyFoundationCleanVisual.tsx',
+  'AcademyAdvancedCleanVisual.tsx',
+  'AcademyCoreExpansionCleanVisual.tsx',
+]);
 
 function filesRecursively(dir, predicate) {
   const result = [];
@@ -24,6 +29,7 @@ const visualFiles = filesRecursively(
   visualDir,
   (file) => /\.tsx$/.test(file) && !file.endsWith('LearningVisual.tsx'),
 );
+const modernFiles = visualFiles.filter((file) => modernVisualFiles.has(path.basename(file)));
 
 const lessons = [];
 for (const file of lessonFiles) {
@@ -39,16 +45,26 @@ const visualSources = visualFiles.map((file) => ({
   file: path.relative(root, file),
   source: fs.readFileSync(file, 'utf8'),
 }));
+const modernSources = modernFiles.map((file) => ({
+  file: path.relative(root, file),
+  source: fs.readFileSync(file, 'utf8'),
+}));
 
-const routed = [];
-const unmatched = [];
-for (const lesson of lessons) {
-  const matches = visualSources
-    .filter(({ source }) => source.includes(lesson.slug))
-    .map(({ file }) => file);
-  if (matches.length > 0) routed.push({ ...lesson, matches });
-  else unmatched.push(lesson);
+function routeCoverage(sources) {
+  const matched = [];
+  const unmatched = [];
+  for (const lesson of lessons) {
+    const matches = sources
+      .filter(({ source }) => source.includes(lesson.slug))
+      .map(({ file }) => file);
+    if (matches.length > 0) matched.push({ ...lesson, matches });
+    else unmatched.push(lesson);
+  }
+  return { matched, unmatched };
 }
+
+const routed = routeCoverage(visualSources);
+const modern = routeCoverage(modernSources);
 
 const duplicateSlugs = Array.from(
   lessons.reduce((map, lesson) => {
@@ -59,14 +75,21 @@ const duplicateSlugs = Array.from(
 
 console.log('FINM8 EDU Academy visual routing audit');
 console.log(`academy lesson slugs: ${lessons.length}`);
-console.log(`topic-routed lesson slugs: ${routed.length}/${lessons.length}`);
-console.log(`generic visual fallback candidates: ${unmatched.length}`);
+console.log(`topic-routed lesson slugs: ${routed.matched.length}/${lessons.length}`);
+console.log(`generic visual fallback candidates: ${routed.unmatched.length}`);
+console.log(`modern clean visual coverage: ${modern.matched.length}/${lessons.length}`);
+console.log(`legacy-only visual candidates: ${modern.unmatched.length}`);
 console.log(`duplicate academy slugs: ${duplicateSlugs.length}`);
 console.log(`product catalog composition: 24 beginner + ${lessons.length} Academy = ${24 + lessons.length}`);
 
-if (unmatched.length > 0) {
+if (routed.unmatched.length > 0) {
   console.log('Unmatched Academy lesson slugs:');
-  for (const item of unmatched) console.log(`- ${item.slug} (${item.file})`);
+  for (const item of routed.unmatched) console.log(`- ${item.slug} (${item.file})`);
+}
+
+if (modern.unmatched.length > 0) {
+  console.log('Academy lessons outside the modern clean visual system:');
+  for (const item of modern.unmatched) console.log(`- ${item.slug} (${item.file})`);
 }
 
 if (duplicateSlugs.length > 0) {
@@ -80,8 +103,11 @@ if (lessons.length !== expectedAcademyLessonCount) {
 if (duplicateSlugs.length > 0) {
   throw new Error(`Academy visual routing audit found ${duplicateSlugs.length} duplicate slug(s)`);
 }
-if (unmatched.length > 0) {
-  throw new Error(`Academy visual routing audit found ${unmatched.length} generic-fallback candidate(s)`);
+if (routed.unmatched.length > 0) {
+  throw new Error(`Academy visual routing audit found ${routed.unmatched.length} generic-fallback candidate(s)`);
+}
+if (modern.unmatched.length > 0) {
+  throw new Error(`Academy visual routing audit found ${modern.unmatched.length} legacy-only visual candidate(s)`);
 }
 
 console.log('academy visual routing blockers: 0');
