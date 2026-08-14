@@ -54,7 +54,6 @@ export function LessonSupportingVisual({ assetRef, alt, language, role, theme = 
   const styles = createStyles(theme);
   const label = ROLE_LABELS[role][language];
   const labelStyle = role === 'misconception' ? styles.warningLabel : role === 'risk' ? styles.riskLabel : role === 'practice' ? styles.successLabel : role === 'hook' || role === 'summary' ? styles.primaryLabel : undefined;
-  const hasEditorialImage = hasAcademyEditorialImage(assetRef, role);
   const hasPremiumHook = role === 'hook' && isAcademyPremiumHookAsset(assetRef);
   const hasEconomyPremiumHook = role === 'hook' && isAcademyEconomyPremiumHookAsset(assetRef);
   const hasTechnicalPremiumHook = role === 'hook' && isAcademyTechnicalPremiumHookAsset(assetRef);
@@ -65,6 +64,7 @@ export function LessonSupportingVisual({ assetRef, alt, language, role, theme = 
   const hasAssetPremiumHook = role === 'hook' && isAcademyAssetPremiumHookAsset(assetRef);
   const hasFoundationCleanVisual = role !== 'hook' && isAcademyFoundationCleanAsset(assetRef);
   const hasAdvancedCleanVisual = role !== 'hook' && isAcademyAdvancedCleanAsset(assetRef);
+  const hasEditorialImage = !hasFoundationCleanVisual && !hasAdvancedCleanVisual && hasAcademyEditorialImage(assetRef, role);
   const isBeginnerEconomy = isBeginnerEconomyStoryAsset(assetRef);
   const isBeginnerRisk = isBeginnerRiskStoryAsset(assetRef);
   const isBeginnerChart = isBeginnerChartStoryAsset(assetRef);
