@@ -164,7 +164,7 @@ function Seg({ s, left, top, width, rotate, tone='neutral' }: { s:S; left:`${num
   return <View style={[s.seg,tone==='good'&&s.segGood,tone==='warn'&&s.segWarn,{left,top,width,transform:[{rotate:`${rotate}deg`}]}]}/>;
 }
 function Breakout({ s, warn }: { s: S; warn: boolean }) {
-  return <View style={s.chart}><View style={s.resistance}/><Seg s={s} left="8%" top="68%" width="22%" rotate={-18}/><Seg s={s} left="27%" top="60%" width="20%" rotate={18}/><Seg s={s} left="44%" top="63%" width="23%" rotate={-34} tone="good"/><Seg s={s} left="64%" top="42%" width="24%" rotate={warn?'18':-12} tone={warn?'warn':'good'}/></View>;
+  return <View style={s.chart}><View style={s.resistance}/><Seg s={s} left="8%" top="68%" width="22%" rotate={-18}/><Seg s={s} left="27%" top="60%" width="20%" rotate={18}/><Seg s={s} left="44%" top="63%" width="23%" rotate={-34} tone="good"/><Seg s={s} left="64%" top="42%" width="24%" rotate={warn ? 18 : -12} tone={warn?'warn':'good'}/></View>;
 }
 function FalseBreakout({ s, warn }: { s: S; warn: boolean }) {
   return <View style={s.chart}><View style={s.resistance}/><Seg s={s} left="8%" top="68%" width="22%" rotate={-20}/><Seg s={s} left="27%" top="60%" width="20%" rotate={18}/><Seg s={s} left="44%" top="62%" width="20%" rotate={-36} tone="good"/><Seg s={s} left="61%" top="39%" width="17%" rotate={38} tone="warn"/><Seg s={s} left="75%" top="54%" width="15%" rotate={18} tone={warn?'warn':'neutral'}/></View>;
