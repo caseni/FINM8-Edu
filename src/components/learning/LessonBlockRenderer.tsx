@@ -235,7 +235,7 @@ const createStyles = (theme: LearningTheme) =>
       fontWeight: '800',
       lineHeight: 36,
     },
-    body: { color: theme.colors.text, fontSize: 18, lineHeight: 28, flex: 1 },
+    body: { color: theme.colors.text, fontSize: 18, lineHeight: 28 },
     caption: { color: theme.colors.textMuted, fontSize: 14, lineHeight: 20 },
     bulletRow: { flexDirection: 'row', gap: theme.spacing.sm },
     bullet: { color: theme.colors.primary, fontSize: 20, fontWeight: '800' },
