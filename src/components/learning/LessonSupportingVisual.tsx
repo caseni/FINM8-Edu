@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import type { LearningLanguage } from '../../domain/learning/presentation';
 import { defaultLearningTheme, type LearningTheme } from '../../theme/learningTheme';
+import { AcademyEditorialImageVisual, hasAcademyEditorialImage } from './AcademyEditorialImageVisual';
 import { AcademyFundamentalStoryVisual, isAcademyFundamentalStoryAsset } from './AcademyFundamentalStoryVisual';
 import { AcademyMarketsStoryVisual, isAcademyMarketsStoryAsset } from './AcademyMarketsStoryVisual';
 import { AcademyRiskPortfolioStoryVisual, isAcademyRiskPortfolioStoryAsset } from './AcademyRiskPortfolioStoryVisual';
@@ -43,6 +44,7 @@ export function LessonSupportingVisual({ assetRef, alt, language, role, theme = 
   const styles = createStyles(theme);
   const label = ROLE_LABELS[role][language];
   const labelStyle = role === 'misconception' ? styles.warningLabel : role === 'risk' ? styles.riskLabel : role === 'practice' ? styles.successLabel : role === 'hook' || role === 'summary' ? styles.primaryLabel : undefined;
+  const hasEditorialImage = hasAcademyEditorialImage(assetRef, role);
   const isBeginnerEconomy = isBeginnerEconomyStoryAsset(assetRef);
   const isBeginnerRisk = isBeginnerRiskStoryAsset(assetRef);
   const isBeginnerChart = isBeginnerChartStoryAsset(assetRef);
@@ -51,8 +53,9 @@ export function LessonSupportingVisual({ assetRef, alt, language, role, theme = 
   const isAcademyFundamentalFoundation = isAcademyFundamentalStoryAsset(assetRef);
   const isAcademyRiskPortfolioFoundation = isAcademyRiskPortfolioStoryAsset(assetRef);
   const isEconomy = isEconomySlideAsset(assetRef);
-  const hideEditorialLabel = isBeginnerEconomy || isBeginnerRisk || isBeginnerChart || isBeginnerMarket || isAcademyMarketFoundation || isAcademyFundamentalFoundation || isAcademyRiskPortfolioFoundation || isEconomy;
-  const visual = isBeginnerEconomy ? <BeginnerEconomyStoryVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
+  const hideEditorialLabel = hasEditorialImage || isBeginnerEconomy || isBeginnerRisk || isBeginnerChart || isBeginnerMarket || isAcademyMarketFoundation || isAcademyFundamentalFoundation || isAcademyRiskPortfolioFoundation || isEconomy;
+  const visual = hasEditorialImage ? <AcademyEditorialImageVisual assetRef={assetRef} alt={alt} role={role} theme={theme} />
+    : isBeginnerEconomy ? <BeginnerEconomyStoryVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
     : isBeginnerRisk ? <BeginnerRiskStoryVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
     : isBeginnerChart ? <BeginnerChartStoryVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
     : isBeginnerMarket ? <BeginnerMarketStoryVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
