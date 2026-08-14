@@ -156,6 +156,18 @@ export function AcademyHomeScreen() {
           const trackTitle = selectLocalizedText(track.title, language);
           const firstLayerLessons = lessons.slice(0, 6);
           const deeperLessons = lessons.slice(6);
+          const resumeLesson = lessons.find((lesson) => (
+            !completedLessonIds.includes(lesson.id) && Boolean(lessonCheckpoints[lesson.id])
+          ));
+          const nextLesson = resumeLesson ?? lessons.find((lesson) => !completedLessonIds.includes(lesson.id));
+          const nextCheckpoint = nextLesson ? lessonCheckpoints[nextLesson.id] : undefined;
+          const nextActionLabel = nextCheckpoint?.stage === 'task'
+            ? language === 'tr' ? 'Göreve devam et' : 'Resume task'
+            : nextCheckpoint?.stage === 'quiz'
+              ? language === 'tr' ? 'Quiz’e devam et' : 'Resume quiz'
+              : nextCheckpoint?.stage === 'lesson'
+                ? language === 'tr' ? 'Derse devam et' : 'Resume lesson'
+                : language === 'tr' ? 'Derse başla' : 'Start lesson';
 
           const renderLessonRows = (group: typeof lessons, offset: number) => group.map((lesson, groupIndex) => {
             const completed = completedLessonIds.includes(lesson.id);
@@ -252,6 +264,38 @@ export function AcademyHomeScreen() {
 
               {expanded ? (
                 <View style={styles.lessonList}>
+                  {nextLesson ? (
+                    <Pressable
+                      accessibilityRole="button"
+                      accessibilityLabel={`${nextActionLabel}: ${selectLocalizedText(nextLesson.title, language)}`}
+                      onPress={() => openLesson(nextLesson.id)}
+                      style={({ pressed }) => [styles.nextLessonCard, pressed && styles.nextLessonCardPressed]}
+                    >
+                      <View style={styles.nextLessonCopy}>
+                        <Text style={styles.nextLessonEyebrow}>
+                          {resumeLesson
+                            ? language === 'tr' ? 'KALDIĞIN YER' : 'CONTINUE HERE'
+                            : language === 'tr' ? 'SIRADAKİ DERS' : 'NEXT LESSON'}
+                        </Text>
+                        <Text style={styles.nextLessonTitle}>
+                          {selectLocalizedText(nextLesson.title, language)}
+                        </Text>
+                        <Text style={styles.nextLessonMeta}>{nextActionLabel}</Text>
+                      </View>
+                      <Text style={styles.nextLessonArrow}>›</Text>
+                    </Pressable>
+                  ) : (
+                    <View style={styles.trackCompleteCard}>
+                      <Text style={styles.trackCompleteEyebrow}>
+                        {language === 'tr' ? 'OKUL TAMAMLANDI' : 'SCHOOL COMPLETE'}
+                      </Text>
+                      <Text style={styles.trackCompleteText}>
+                        {language === 'tr'
+                          ? 'Bu alandaki tüm dersleri tamamladın.'
+                          : 'You completed every lesson in this subject.'}
+                      </Text>
+                    </View>
+                  )}
                   <View style={styles.lessonGroupHeader}>
                     <Text style={styles.lessonGroupEyebrow}>{language === 'tr' ? 'ÖNCE BUNLARLA BAŞLA' : 'START HERE FIRST'}</Text>
                     <Text style={styles.lessonGroupDetail}>
@@ -343,6 +387,16 @@ const styles = StyleSheet.create({
   trackToggleText: { color: '#5EEAD4', fontSize: 12, fontWeight: '800' },
   trackToggleIcon: { color: '#5EEAD4', fontSize: 17, fontWeight: '800' },
   lessonList: { paddingHorizontal: 16, paddingBottom: 14 },
+  nextLessonCard: { minHeight: 86, flexDirection: 'row', alignItems: 'center', gap: 12, marginTop: 14, marginBottom: 5, padding: 14, borderRadius: 16, borderWidth: 1, borderColor: '#2E706D', backgroundColor: '#0D2B33' },
+  nextLessonCardPressed: { backgroundColor: '#123840' },
+  nextLessonCopy: { flex: 1, gap: 4 },
+  nextLessonEyebrow: { color: '#5EEAD4', fontSize: 9, fontWeight: '900', letterSpacing: 0.8 },
+  nextLessonTitle: { color: '#F8FAFC', fontSize: 15, lineHeight: 20, fontWeight: '900' },
+  nextLessonMeta: { color: '#9BC7C6', fontSize: 11, fontWeight: '800' },
+  nextLessonArrow: { color: '#5EEAD4', fontSize: 26, fontWeight: '600' },
+  trackCompleteCard: { gap: 4, marginTop: 14, marginBottom: 5, padding: 14, borderRadius: 16, borderWidth: 1, borderColor: '#2E706D', backgroundColor: '#0B252D' },
+  trackCompleteEyebrow: { color: '#5EEAD4', fontSize: 9, fontWeight: '900', letterSpacing: 0.8 },
+  trackCompleteText: { color: '#B8D6D5', fontSize: 13, lineHeight: 18, fontWeight: '700' },
   lessonGroupHeader: { gap: 3, paddingTop: 13, paddingBottom: 8 },
   lessonGroupAdvanced: { marginTop: 8, paddingTop: 16, borderTopWidth: 1, borderTopColor: '#21394D' },
   lessonGroupEyebrow: { color: '#5EEAD4', fontSize: 9, fontWeight: '900', letterSpacing: 0.8 },
