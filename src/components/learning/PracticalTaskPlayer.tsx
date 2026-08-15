@@ -329,6 +329,7 @@ export function PracticalTaskPlayer({
           return (
             <Pressable
               accessibilityRole="button"
+              accessibilityLabel={selectLocalizedText(choice.label, language)}
               accessibilityState={{ disabled: checked, selected: isSelected }}
               key={choice.id}
               onPress={() => toggle(choice.id)}
