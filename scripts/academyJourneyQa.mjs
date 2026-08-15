@@ -13,6 +13,7 @@ const tracks = [
   'İleri Grafik Yaklaşımları',
   'Varlık Türlerini Anla',
 ];
+const diagnostics = [];
 
 const slug = (value) => value
   .toLocaleLowerCase('tr-TR')
@@ -21,6 +22,16 @@ const slug = (value) => value
   .replace(/ı/g, 'i')
   .replace(/[^a-z0-9]+/g, '-')
   .replace(/^-|-$/g, '');
+
+const escapeRegExp = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+function attachDiagnostics(page) {
+  page.on('pageerror', (error) => diagnostics.push(`[pageerror] ${error.stack || error.message}`));
+  page.on('requestfailed', (request) => diagnostics.push(`[requestfailed] ${request.method()} ${request.url()} :: ${request.failure()?.errorText || 'unknown'}`));
+  page.on('response', (response) => {
+    if (response.status() >= 500) diagnostics.push(`[response:${response.status()}] ${response.url()}`);
+  });
+}
 
 async function assertNoHorizontalOverflow(page, label) {
   const overflow = await page.evaluate(() => ({
@@ -54,7 +65,7 @@ async function buttonNames(page) {
 
 async function openTrackAndFindFirstLesson(page, trackTitle) {
   const before = new Set(await buttonNames(page));
-  const escaped = trackTitle.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const escaped = escapeRegExp(trackTitle);
   await page.getByRole('button', { name: new RegExp(`^${escaped} derslerini aç$`, 'i') }).click();
   await page.waitForTimeout(150);
   const after = await buttonNames(page);
@@ -128,7 +139,7 @@ async function quizOptionNames(page) {
   return (await buttonNames(page)).filter((name) => !excluded.test(name));
 }
 
-async function completeQuiz(page, prefix) {
+async function completeQuiz(page, prefix, firstLessonName) {
   await page.getByText('MİNİ QUIZ', { exact: true }).waitFor();
   for (let question = 1; question <= 3; question += 1) {
     await page.getByText(`${question}/3`, { exact: true }).waitFor();
@@ -145,17 +156,33 @@ async function completeQuiz(page, prefix) {
   }
 
   await page.getByText(/Quiz tamamlandı|Kısa bir tekrar iyi olur/, { exact: true }).waitFor();
+  const passed = (await page.getByText('Quiz tamamlandı', { exact: true }).count()) > 0;
   await assertNoHorizontalOverflow(page, `${prefix}-result`);
   await page.screenshot({ path: `visual-qa/${prefix}-result.png`, fullPage: true });
 
   const passReturn = page.getByRole('button', { name: 'Öğrenme alanına dön', exact: true });
   const failReturn = page.getByRole('button', { name: 'Öğrenme yoluna dön', exact: true });
-  if (await passReturn.count()) await passReturn.click();
-  else if (await failReturn.count()) await failReturn.click();
-  else throw new Error(`${prefix}: result screen has no learning return action`);
+  if (passed && await passReturn.count()) await passReturn.click();
+  else if (!passed && await failReturn.count()) await failReturn.click();
+  else throw new Error(`${prefix}: result screen has no matching learning return action`);
 
   await page.getByText('Finansı konu konu derinleştir.', { exact: true }).waitFor();
   await assertNoHorizontalOverflow(page, `${prefix}-academy-return`);
+
+  if (passed) {
+    const nextAction = page.getByRole('button', { name: /^Derse başla:/i });
+    if (!(await nextAction.count())) throw new Error(`${prefix}: passed quiz did not advance to a next lesson`);
+    const nextName = await nextAction.first().getAttribute('aria-label');
+    if (nextName?.includes(firstLessonName)) throw new Error(`${prefix}: passed quiz still points to completed first lesson`);
+  } else {
+    const resume = page.getByRole('button', {
+      name: new RegExp(`^Quiz’e devam et: ${escapeRegExp(firstLessonName)}$`, 'i'),
+    });
+    if (!(await resume.count())) throw new Error(`${prefix}: failed quiz did not preserve quiz resume checkpoint`);
+  }
+
+  await page.screenshot({ path: `visual-qa/${prefix}-academy-return.png`, fullPage: true });
+  return passed;
 }
 
 async function runTrackJourney(page, trackTitle) {
@@ -165,15 +192,19 @@ async function runTrackJourney(page, trackTitle) {
   await advanceLessonToTask(page, firstLessonName);
   await assertNoHorizontalOverflow(page, `${prefix}-task`);
   await solveTask(page, prefix);
-  await completeQuiz(page, prefix);
-  console.log(`${trackTitle}: lesson -> task -> quiz -> result -> Academy PASS`);
+  const passed = await completeQuiz(page, prefix, firstLessonName);
+  console.log(`${trackTitle}: lesson -> task -> quiz -> result -> Academy PASS (${passed ? 'quiz passed' : 'quiz failed/resume preserved'})`);
 }
 
 const browser = await chromium.launch({ executablePath: process.env.CHROME_BIN, headless: true });
 try {
   const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+  attachDiagnostics(page);
   for (const trackTitle of tracks) {
     await runTrackJourney(page, trackTitle);
+  }
+  if (diagnostics.length > 0) {
+    throw new Error(`Academy journey runtime diagnostics:\n${diagnostics.join('\n')}`);
   }
 } finally {
   await browser.close();
