@@ -77,6 +77,7 @@ try {
   await page.getByText(/Academy doğrusal değil/i).waitFor();
   const exploreOtherSubjects = page.getByRole('button', { name: 'Diğer Academy alanlarına göz at', exact: true });
   await exploreOtherSubjects.waitFor();
+  await exploreOtherSubjects.scrollIntoViewIfNeeded();
   await assertNoHorizontalOverflow(page, 'academy-school-complete-expanded');
   await page.screenshot({ path: 'visual-qa/academy-school-complete-expanded.png', fullPage: true });
 
