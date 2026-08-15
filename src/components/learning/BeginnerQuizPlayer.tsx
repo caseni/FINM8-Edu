@@ -82,6 +82,7 @@ export function BeginnerQuizPlayer({
               return (
                 <Pressable
                   accessibilityRole="button"
+                  accessibilityLabel={selectLocalizedText(option.label, language)}
                   accessibilityState={{ selected, disabled: revealed }}
                   disabled={revealed}
                   key={option.id}
