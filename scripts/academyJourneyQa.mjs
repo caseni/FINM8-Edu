@@ -69,7 +69,7 @@ async function markedChoiceIndexes(page) {
   const count = await buttons.count();
   for (let index = 0; index < count; index += 1) {
     const text = (await buttons.nth(index).innerText()).trim();
-    if (/^[○●✓×]/.test(text)) indexes.push(index);
+    if (/^[○●✓×]\s+\S/.test(text)) indexes.push(index);
   }
   return indexes;
 }
@@ -124,13 +124,16 @@ async function solveTask(page, prefix) {
   }
   combinations.sort((a, b) => a.length - b.length);
 
-  for (const combo of combinations) {
+  for (let attempt = 0; attempt < combinations.length; attempt += 1) {
+    const combo = combinations[attempt];
     const currentChoiceIndexes = await markedChoiceIndexes(page);
     const buttons = page.getByRole('button');
+    console.log(`${prefix}: task attempt ${attempt + 1}/${combinations.length} choices=${combo.join(',')}`);
     for (const choiceIndex of combo) {
       await buttons.nth(currentChoiceIndexes[choiceIndex]).click();
     }
     const checkButton = page.getByRole('button', { name: 'Kontrol et', exact: true });
+    await checkButton.waitFor();
     if (await checkButton.isDisabled()) {
       throw new Error(`${prefix}: task answer controls did not create a selectable response`);
     }
@@ -148,6 +151,7 @@ async function solveTask(page, prefix) {
       throw new Error(`${prefix}: task produced neither pass nor retry state`);
     }
     await retryButton.click();
+    await page.getByRole('button', { name: 'Kontrol et', exact: true }).waitFor();
   }
 
   throw new Error(`${prefix}: no task choice combination passed`);
