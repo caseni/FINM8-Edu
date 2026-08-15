@@ -160,18 +160,29 @@ async function completeQuiz(page, prefix, firstLessonName) {
   await assertNoHorizontalOverflow(page, `${prefix}-result`);
   await page.screenshot({ path: `visual-qa/${prefix}-result.png`, fullPage: true });
 
-  const passReturn = page.getByRole('button', { name: 'Öğrenme alanına dön', exact: true });
-  const failReturn = page.getByRole('button', { name: 'Öğrenme yoluna dön', exact: true });
-  if (passed && await passReturn.count()) await passReturn.click();
-  else if (!passed && await failReturn.count()) await failReturn.click();
-  else throw new Error(`${prefix}: result screen has no matching learning return action`);
+  if (passed) {
+    const nextLesson = page.getByRole('button', { name: 'Sıradaki derse geç', exact: true });
+    const academyReturn = page.getByRole('button', { name: 'Academy’ye dön', exact: true });
+    if (!(await nextLesson.count()) || !(await academyReturn.count())) {
+      throw new Error(`${prefix}: passed Academy quiz is missing next-lesson or Academy-return action`);
+    }
+    await nextLesson.click();
+    await page.getByText(/Adım 1\//).waitFor();
+    await assertNoHorizontalOverflow(page, `${prefix}-next-lesson`);
+    await page.screenshot({ path: `visual-qa/${prefix}-next-lesson.png`, fullPage: true });
+    await page.getByRole('button', { name: 'Dersten çık', exact: true }).click();
+  } else {
+    const academyReturn = page.getByRole('button', { name: 'Academy’ye dön', exact: true });
+    if (!(await academyReturn.count())) throw new Error(`${prefix}: failed Academy quiz has no Academy return action`);
+    await academyReturn.click();
+  }
 
   await page.getByText('Finansı konu konu derinleştir.', { exact: true }).waitFor();
   await assertNoHorizontalOverflow(page, `${prefix}-academy-return`);
 
   if (passed) {
-    const nextAction = page.getByRole('button', { name: /^Derse başla:/i });
-    if (!(await nextAction.count())) throw new Error(`${prefix}: passed quiz did not advance to a next lesson`);
+    const nextAction = page.getByRole('button', { name: /^Derse devam et:/i });
+    if (!(await nextAction.count())) throw new Error(`${prefix}: direct next lesson did not preserve its lesson checkpoint`);
     const nextName = await nextAction.first().getAttribute('aria-label');
     if (nextName?.includes(firstLessonName)) throw new Error(`${prefix}: passed quiz still points to completed first lesson`);
   } else {
@@ -193,7 +204,7 @@ async function runTrackJourney(page, trackTitle) {
   await assertNoHorizontalOverflow(page, `${prefix}-task`);
   await solveTask(page, prefix);
   const passed = await completeQuiz(page, prefix, firstLessonName);
-  console.log(`${trackTitle}: lesson -> task -> quiz -> result -> Academy PASS (${passed ? 'quiz passed' : 'quiz failed/resume preserved'})`);
+  console.log(`${trackTitle}: lesson -> task -> quiz -> result -> Academy PASS (${passed ? 'quiz passed -> next lesson' : 'quiz failed -> resume preserved'})`);
 }
 
 const browser = await chromium.launch({ executablePath: process.env.CHROME_BIN, headless: true });
