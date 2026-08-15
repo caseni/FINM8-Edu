@@ -1,7 +1,10 @@
 import { chromium } from 'playwright-core';
 
 const baseUrl = 'http://127.0.0.1:4173/';
-const trackTitle = 'Piyasaları Anla';
+const academyTrackTitle = 'Piyasaları Anla';
+const beginnerSectionTitle = 'Para ve Ekonomi';
+const beginnerLessonTitle = 'Aynı para neden zamanla daha az şey alır';
+const beginnerCorrectTaskAnswer = 'Paranın satın alma gücü azalmıştır';
 
 async function buttonNames(page) {
   return page.getByRole('button').evaluateAll((buttons) =>
@@ -12,32 +15,11 @@ async function buttonNames(page) {
   );
 }
 
-async function openFirstLesson(page) {
-  await page.goto(baseUrl, { waitUntil: 'networkidle' });
-  await page.getByText('Öğrenmeye Başla', { exact: true }).waitFor({ timeout: 10000 });
-  await page.getByRole('button', { name: /İleri konular/i }).click();
-  await page.getByText('Finansı konu konu derinleştir.', { exact: true }).waitFor();
-
-  const before = new Set(await buttonNames(page));
-  await page.getByRole('button', { name: /^Piyasaları Anla derslerini aç$/i }).click();
-  await page.waitForTimeout(150);
-  const after = await buttonNames(page);
-  const nextActionPattern = /^(Derse başla|Derse devam et|Göreve devam et|Quiz’e devam et):/i;
-  const lessonName = after.find((name) => (
-    !before.has(name)
-    && !/derslerini kapat$/i.test(name)
-    && !nextActionPattern.test(name)
-    && !/· Devam ·/i.test(name)
-  ));
-  if (!lessonName) throw new Error(`No first lesson found for ${trackTitle}`);
-  await page.getByRole('button', { name: lessonName, exact: true }).click();
-  return lessonName;
-}
-
-async function advanceToTask(page) {
+async function advanceLessonToTask(page) {
   await page.getByText(/Adım 1\//).waitFor();
   const stepMatch = (await page.getByText(/Adım 1\//).innerText()).match(/\/(\d+)/);
   const totalSteps = Number(stepMatch?.[1] ?? 1);
+  if (!Number.isFinite(totalSteps) || totalSteps < 1) throw new Error('Invalid lesson step count');
   for (let step = 1; step < totalSteps; step += 1) {
     await page.getByRole('button', { name: /Sonraki adıma geç/i }).click();
     await page.getByText(new RegExp(`Adım ${step + 1}\\/${totalSteps}`)).waitFor();
@@ -78,6 +60,78 @@ async function assertCleanAnswerLabels(page, stage) {
   return answers;
 }
 
+async function assertSelectedState(answer, stage) {
+  await answer.click();
+  const selected = await answer.getAttribute('aria-selected');
+  if (selected !== 'true') {
+    throw new Error(`${stage}: selected answer did not expose aria-selected=true (got ${selected})`);
+  }
+}
+
+async function openAcademyFirstLesson(page) {
+  await page.goto(baseUrl, { waitUntil: 'networkidle' });
+  await page.getByText('Öğrenmeye Başla', { exact: true }).waitFor({ timeout: 10000 });
+  await page.getByRole('button', { name: /İleri konular/i }).click();
+  await page.getByText('Finansı konu konu derinleştir.', { exact: true }).waitFor();
+
+  const before = new Set(await buttonNames(page));
+  await page.getByRole('button', { name: new RegExp(`^${academyTrackTitle} derslerini aç$`, 'i') }).click();
+  await page.waitForTimeout(150);
+  const after = await buttonNames(page);
+  const nextActionPattern = /^(Derse başla|Derse devam et|Göreve devam et|Quiz’e devam et):/i;
+  const lessonName = after.find((name) => (
+    !before.has(name)
+    && !/derslerini kapat$/i.test(name)
+    && !nextActionPattern.test(name)
+    && !/· Devam ·/i.test(name)
+  ));
+  if (!lessonName) throw new Error(`No first lesson found for ${academyTrackTitle}`);
+  await page.getByRole('button', { name: lessonName, exact: true }).click();
+  return lessonName;
+}
+
+async function checkAcademyAssessmentAccessibility(page) {
+  const lessonName = await openAcademyFirstLesson(page);
+  await advanceLessonToTask(page);
+
+  const taskAnswers = await assertCleanAnswerLabels(page, 'Academy task');
+  await assertSelectedState(taskAnswers[0], 'Academy task');
+  await page.getByRole('button', { name: 'Kontrol et', exact: true }).click();
+  const quizButton = page.getByRole('button', { name: 'Quiz’e geç', exact: true });
+  await quizButton.waitFor();
+  await quizButton.click();
+  await page.getByText('MİNİ QUIZ', { exact: true }).waitFor();
+
+  const quizAnswers = await assertCleanAnswerLabels(page, 'Academy quiz');
+  await assertSelectedState(quizAnswers[0], 'Academy quiz');
+  console.log(`${lessonName}: Academy task + quiz accessibility labels/state PASS`);
+}
+
+async function checkBeginnerQuizAccessibility(page) {
+  await page.goto(baseUrl, { waitUntil: 'networkidle' });
+  await page.getByText('Öğrenmeye Başla', { exact: true }).waitFor({ timeout: 10000 });
+  await page.getByRole('button', { name: new RegExp(beginnerSectionTitle, 'i') }).first().click();
+  await page.getByText('BAŞLANGIÇ · 6 KISA DERS', { exact: true }).waitFor();
+  await page.getByRole('button', { name: new RegExp(beginnerLessonTitle, 'i') }).click();
+  await advanceLessonToTask(page);
+
+  const beginnerTaskAnswer = page.getByRole('button', { name: beginnerCorrectTaskAnswer, exact: true });
+  await beginnerTaskAnswer.waitFor();
+  await beginnerTaskAnswer.click();
+  if ((await beginnerTaskAnswer.getAttribute('aria-selected')) !== 'true') {
+    throw new Error('Beginner task: correct answer did not expose aria-selected=true');
+  }
+  await page.getByRole('button', { name: 'Kontrol et', exact: true }).click();
+  const quizButton = page.getByRole('button', { name: 'Quiz’e geç', exact: true });
+  await quizButton.waitFor();
+  await quizButton.click();
+  await page.getByText('MİNİ QUIZ', { exact: true }).waitFor();
+
+  const quizAnswers = await assertCleanAnswerLabels(page, 'Beginner quiz');
+  await assertSelectedState(quizAnswers[0], 'Beginner quiz');
+  console.log(`${beginnerLessonTitle}: Beginner quiz accessibility labels/state PASS`);
+}
+
 const browser = await chromium.launch({ executablePath: process.env.CHROME_BIN, headless: true });
 try {
   const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
@@ -88,32 +142,13 @@ try {
     if (response.status() >= 500) diagnostics.push(`[response:${response.status()}] ${response.url()}`);
   });
 
-  const lessonName = await openFirstLesson(page);
-  await advanceToTask(page);
-
-  const taskAnswers = await assertCleanAnswerLabels(page, 'task');
-  await taskAnswers[0].click();
-  const taskSelected = await taskAnswers[0].getAttribute('aria-selected');
-  if (taskSelected !== 'true') {
-    throw new Error(`task: selected answer did not expose aria-selected=true (got ${taskSelected})`);
-  }
-  await page.getByRole('button', { name: 'Kontrol et', exact: true }).click();
-  const quizButton = page.getByRole('button', { name: 'Quiz’e geç', exact: true });
-  await quizButton.waitFor();
-  await quizButton.click();
-  await page.getByText('MİNİ QUIZ', { exact: true }).waitFor();
-
-  const quizAnswers = await assertCleanAnswerLabels(page, 'quiz');
-  await quizAnswers[0].click();
-  const quizSelected = await quizAnswers[0].getAttribute('aria-selected');
-  if (quizSelected !== 'true') {
-    throw new Error(`quiz: selected answer did not expose aria-selected=true (got ${quizSelected})`);
-  }
+  await checkAcademyAssessmentAccessibility(page);
+  await checkBeginnerQuizAccessibility(page);
 
   if (diagnostics.length > 0) {
     throw new Error(`Assessment accessibility diagnostics:\n${diagnostics.join('\n')}`);
   }
-  console.log(`${lessonName}: task + quiz accessibility labels/state PASS`);
+  console.log('Assessment accessibility: Academy task + Academy quiz + Beginner quiz PASS');
 } finally {
   await browser.close();
 }
