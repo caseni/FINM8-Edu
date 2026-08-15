@@ -3,6 +3,7 @@ import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'rea
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { LearningFlowHeader, QuizPlayer } from '../../components/learning';
 import { BeginnerQuizPlayer } from '../../components/learning/BeginnerQuizPlayer';
+import { ACADEMY_TRACK_IDS, ACADEMY_TRACKS } from '../../domain/learning/academyTracks';
 import { BEGINNER_SECTIONS } from '../../domain/learning/beginnerJourney';
 import { getMicroLessonById } from '../../domain/learning/catalog';
 import { INITIAL_BADGES } from '../../domain/learning/examples/badges';
@@ -30,6 +31,9 @@ export function LessonQuizScreen({ route, navigation }: Props) {
   const [result, setResult] = useState<QuizResult>();
   const [newBadgeTitle, setNewBadgeTitle] = useState<string>();
   const isSpacedReview = route.params.spacedReview === true;
+  const navigationState = navigation.getState();
+  const previousRoute = navigationState.routes[navigationState.index - 1];
+  const openedFromAcademy = previousRoute?.name === 'Academy';
 
   useEffect(() => {
     if (lesson && !route.params.review && !isSpacedReview) saveLessonCheckpoint(lesson.id, 'quiz');
@@ -47,6 +51,13 @@ export function LessonQuizScreen({ route, navigation }: Props) {
 
   const beginner = BEGINNER_LESSON_IDS.has(lesson.id);
   const reinforcementBlock = lesson.contentBlocks.find((block) => block.kind === 'visual');
+  const academyTrack = openedFromAcademy
+    ? ACADEMY_TRACK_IDS.map((trackId) => ACADEMY_TRACKS[trackId]).find((track) => track.lessonIds.includes(lesson.id))
+    : undefined;
+  const academyLessonIndex = academyTrack ? academyTrack.lessonIds.indexOf(lesson.id) : -1;
+  const nextAcademyLessonId = academyTrack && academyLessonIndex >= 0
+    ? academyTrack.lessonIds[academyLessonIndex + 1]
+    : undefined;
 
   const handleComplete = (_previewResult: QuizResult, submissions: readonly { questionId: string; selectedOptionId: string }[]) => {
     if (route.params.review) {
@@ -70,6 +81,44 @@ export function LessonQuizScreen({ route, navigation }: Props) {
   };
 
   if (result) {
+    const canContinueAcademy = Boolean(
+      result.passed &&
+      openedFromAcademy &&
+      !route.params.review &&
+      !isSpacedReview &&
+      nextAcademyLessonId
+    );
+    const primaryLabel = result.passed
+      ? route.params.review
+        ? language === 'tr' ? 'Review merkezine dön' : 'Return to review center'
+        : canContinueAcademy
+          ? language === 'tr' ? 'Sıradaki derse geç' : 'Continue to next lesson'
+          : openedFromAcademy
+            ? language === 'tr' ? 'Academy’ye dön' : 'Return to Academy'
+            : language === 'tr' ? 'Öğrenme alanına dön' : 'Return to learning'
+      : isSpacedReview
+        ? language === 'tr' ? 'Tekrarı yeniden dene' : 'Retry the review'
+        : language === 'tr' ? 'Quiz’i tekrar dene' : 'Retry the quiz';
+    const secondaryLabel = result.passed && canContinueAcademy
+      ? language === 'tr' ? 'Academy’ye dön' : 'Return to Academy'
+      : route.params.review
+        ? language === 'tr' ? 'Review merkezine dön' : 'Return to review center'
+        : openedFromAcademy
+          ? language === 'tr' ? 'Academy’ye dön' : 'Return to Academy'
+          : language === 'tr' ? 'Öğrenme yoluna dön' : 'Return to learning path';
+
+    const handlePrimary = () => {
+      if (!result.passed) {
+        setResult(undefined);
+        return;
+      }
+      if (canContinueAcademy && nextAcademyLessonId) {
+        navigation.replace('MicroLesson', { lessonId: nextAcademyLessonId, source: 'academy' });
+        return;
+      }
+      returnToEntry();
+    };
+
     return (
       <SafeAreaView style={styles.safeArea}>
         <LearningFlowHeader
@@ -105,29 +154,20 @@ export function LessonQuizScreen({ route, navigation }: Props) {
         <View style={styles.resultFooter}>
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel={result.passed
-              ? route.params.review
-                ? language === 'tr' ? 'Review merkezine dön' : 'Return to review center'
-                : language === 'tr' ? 'Öğrenme alanına dön' : 'Return to learning'
-              : isSpacedReview
-                ? language === 'tr' ? 'Tekrarı yeniden dene' : 'Retry the review'
-                : language === 'tr' ? 'Quiz’i tekrar dene' : 'Retry the quiz'}
+            accessibilityLabel={primaryLabel}
             style={styles.button}
-            onPress={() => result.passed ? returnToEntry() : setResult(undefined)}
+            onPress={handlePrimary}
           >
-            <Text style={styles.buttonText}>
-              {result.passed
-                ? route.params.review
-                  ? language === 'tr' ? 'Review merkezine dön' : 'Return to review center'
-                  : language === 'tr' ? 'Öğrenme alanına dön' : 'Return to learning'
-                : isSpacedReview
-                  ? language === 'tr' ? 'Tekrarı yeniden dene' : 'Retry the review'
-                  : language === 'tr' ? 'Quiz’i tekrar dene' : 'Retry the quiz'}
-            </Text>
+            <Text style={styles.buttonText}>{primaryLabel}</Text>
           </Pressable>
-          {!result.passed ? (
-            <Pressable accessibilityRole="button" style={styles.secondaryButton} onPress={returnToEntry}>
-              <Text style={styles.secondaryButtonText}>{route.params.review ? (language === 'tr' ? 'Review merkezine dön' : 'Return to review center') : (language === 'tr' ? 'Öğrenme yoluna dön' : 'Return to learning path')}</Text>
+          {(!result.passed || canContinueAcademy) ? (
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={secondaryLabel}
+              style={styles.secondaryButton}
+              onPress={returnToEntry}
+            >
+              <Text style={styles.secondaryButtonText}>{secondaryLabel}</Text>
             </Pressable>
           ) : null}
         </View>
