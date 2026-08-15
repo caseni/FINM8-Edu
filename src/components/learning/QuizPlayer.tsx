@@ -35,13 +35,7 @@ export interface QuizPlayerProps {
   eyebrow?: LocalizedText;
 }
 
-export function QuizPlayer({
-  quiz,
-  language,
-  theme = defaultLearningTheme,
-  onComplete,
-  eyebrow,
-}: QuizPlayerProps) {
+export function QuizPlayer({ quiz, language, theme = defaultLearningTheme, onComplete, eyebrow }: QuizPlayerProps) {
   const [questionIndex, setQuestionIndex] = useState(0);
   const [selectedOptionId, setSelectedOptionId] = useState<string>();
   const [revealed, setRevealed] = useState(false);
@@ -118,10 +112,15 @@ export function QuizPlayer({
               const selected = option.id === selectedOptionId;
               const correct = revealed && option.id === question.correctOptionId;
               const incorrect = revealed && selected && !correct;
+              const optionLabel = selectLocalizedText(option.label, language);
               return (
                 <Pressable
+                  role="radio"
+                  aria-label={optionLabel}
+                  aria-checked={selected}
+                  aria-disabled={revealed}
                   accessibilityRole="radio"
-                  accessibilityLabel={selectLocalizedText(option.label, language)}
+                  accessibilityLabel={optionLabel}
                   accessibilityState={{ disabled: revealed, checked: selected }}
                   disabled={revealed}
                   key={option.id}
@@ -129,10 +128,8 @@ export function QuizPlayer({
                   style={[styles.option, selected && styles.selectedOption, correct && styles.correctOption, incorrect && styles.incorrectOption]}
                 >
                   <View style={styles.optionContent}>
-                    <Text style={[styles.optionMark, correct && styles.correctMark, incorrect && styles.incorrectMark]}>
-                      {correct ? '✓' : incorrect ? '×' : selected ? '●' : '○'}
-                    </Text>
-                    <Text style={styles.optionText}>{selectLocalizedText(option.label, language)}</Text>
+                    <Text style={[styles.optionMark, correct && styles.correctMark, incorrect && styles.incorrectMark]}>{correct ? '✓' : incorrect ? '×' : selected ? '●' : '○'}</Text>
+                    <Text style={styles.optionText}>{optionLabel}</Text>
                   </View>
                 </Pressable>
               );
@@ -147,14 +144,8 @@ export function QuizPlayer({
                 </>
               ) : (
                 <>
-                  <Text style={[styles.feedbackLine, styles.feedbackIncorrect]}>
-                    {language === 'tr' ? '× Senin seçimin: ' : '× Your answer: '}
-                    <Text style={styles.feedbackValue}>{selectedOption ? selectLocalizedText(selectedOption.label, language) : '—'}</Text>
-                  </Text>
-                  <Text style={styles.feedbackLine}>
-                    {language === 'tr' ? '✓ Doğru cevap: ' : '✓ Correct answer: '}
-                    <Text style={styles.feedbackValue}>{correctOption ? selectLocalizedText(correctOption.label, language) : '—'}</Text>
-                  </Text>
+                  <Text style={[styles.feedbackLine, styles.feedbackIncorrect]}>{language === 'tr' ? '× Senin seçimin: ' : '× Your answer: '}<Text style={styles.feedbackValue}>{selectedOption ? selectLocalizedText(selectedOption.label, language) : '—'}</Text></Text>
+                  <Text style={styles.feedbackLine}>{language === 'tr' ? '✓ Doğru cevap: ' : '✓ Correct answer: '}<Text style={styles.feedbackValue}>{correctOption ? selectLocalizedText(correctOption.label, language) : '—'}</Text></Text>
                   <Text style={styles.explanationText}>{language === 'tr' ? 'Neden: ' : 'Why: '}{selectLocalizedText(question.explanation, language)}</Text>
                 </>
               )}
@@ -190,14 +181,7 @@ export function QuizPlayer({
         </View>
       </ScrollView>
       <View style={styles.footer}>
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel={actionLabel}
-          accessibilityState={{ disabled: !selectedOptionId }}
-          disabled={!selectedOptionId}
-          onPress={revealed ? next : reveal}
-          style={[styles.button, !selectedOptionId && styles.disabled]}
-        >
+        <Pressable accessibilityRole="button" accessibilityLabel={actionLabel} accessibilityState={{ disabled: !selectedOptionId }} disabled={!selectedOptionId} onPress={revealed ? next : reveal} style={[styles.button, !selectedOptionId && styles.disabled]}>
           <Text style={styles.buttonText}>{actionLabel}</Text>
         </Pressable>
       </View>
