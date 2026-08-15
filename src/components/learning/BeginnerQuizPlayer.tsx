@@ -81,9 +81,9 @@ export function BeginnerQuizPlayer({
               const incorrect = revealed && selected && !correct;
               return (
                 <Pressable
-                  accessibilityRole="button"
+                  accessibilityRole="radio"
                   accessibilityLabel={selectLocalizedText(option.label, language)}
-                  accessibilityState={{ selected, disabled: revealed }}
+                  accessibilityState={{ checked: selected, disabled: revealed }}
                   disabled={revealed}
                   key={option.id}
                   onPress={() => setSelectedOptionId(option.id)}
