@@ -1,10 +1,6 @@
 import React, { useMemo, useRef, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
-import {
-  selectAudienceCopy,
-  selectLocalizedText,
-  type LearningLanguage,
-} from '../../domain/learning/presentation';
+import { selectAudienceCopy, selectLocalizedText, type LearningLanguage } from '../../domain/learning/presentation';
 import type { LocalizedText, PracticalTask, PresentationMode } from '../../domain/learning/types';
 import { defaultLearningTheme, type LearningTheme } from '../../theme/learningTheme';
 import { BreakOfStructureVisual } from './BreakOfStructureVisual';
@@ -34,15 +30,7 @@ export interface PracticalTaskPlayerProps {
   eyebrow?: LocalizedText;
 }
 
-export function PracticalTaskPlayer({
-  task,
-  language,
-  presentationMode,
-  theme = defaultLearningTheme,
-  onComplete,
-  completionLabel,
-  eyebrow,
-}: PracticalTaskPlayerProps) {
+export function PracticalTaskPlayer({ task, language, presentationMode, theme = defaultLearningTheme, onComplete, completionLabel, eyebrow }: PracticalTaskPlayerProps) {
   const [selected, setSelected] = useState<string[]>([]);
   const [checked, setChecked] = useState(false);
   const completionLocked = useRef(false);
@@ -102,27 +90,16 @@ export function PracticalTaskPlayer({
       <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled">
         <View style={styles.container}>
           <Text style={styles.eyebrow}>
-            {eyebrow
-              ? selectLocalizedText(eyebrow, language)
-              : task.kind === 'chart_identification'
-                ? language === 'tr' ? 'GRAFİK GÖREVİ' : 'CHART TASK'
-                : language === 'tr' ? 'SENARYO GÖREVİ' : 'SCENARIO TASK'}
+            {eyebrow ? selectLocalizedText(eyebrow, language) : task.kind === 'chart_identification' ? language === 'tr' ? 'GRAFİK GÖREVİ' : 'CHART TASK' : language === 'tr' ? 'SENARYO GÖREVİ' : 'SCENARIO TASK'}
           </Text>
           <Text style={styles.prompt}>{selectAudienceCopy(task.prompt, presentationMode, language)}</Text>
+
           {hidesAnswerRevealingTeachingVisual ? (
-            <View
-              accessibilityRole="image"
-              accessibilityLabel={language === 'tr' ? 'Öğretici cevap etiketleri gizlenmiş uygulama görevi paneli' : 'Practical task panel with teaching answer labels hidden'}
-              style={styles.recallPanel}
-            >
+            <View accessibilityRole="image" accessibilityLabel={language === 'tr' ? 'Öğretici cevap etiketleri gizlenmiş uygulama görevi paneli' : 'Practical task panel with teaching answer labels hidden'} style={styles.recallPanel}>
               <Text style={styles.recallMark}>?</Text>
               <View style={styles.recallCopy}>
                 <Text style={styles.recallTitle}>{language === 'tr' ? 'KENDİN UYGULA' : 'APPLY IT YOURSELF'}</Text>
-                <Text style={styles.recallText}>
-                  {language === 'tr'
-                    ? 'Bu görevde ders görselindeki cevap etiketleri gösterilmez. Senaryoyu ve seçenekleri kendi yorumunla değerlendir.'
-                    : 'Teaching answer labels are hidden in this task. Evaluate the scenario and choices using your own understanding.'}
-                </Text>
+                <Text style={styles.recallText}>{language === 'tr' ? 'Bu görevde ders görselindeki cevap etiketleri gösterilmez. Senaryoyu ve seçenekleri kendi yorumunla değerlendir.' : 'Teaching answer labels are hidden in this task. Evaluate the scenario and choices using your own understanding.'}</Text>
               </View>
             </View>
           ) : isMarketInstrumentsVisual ? (
@@ -166,16 +143,22 @@ export function PracticalTaskPlayer({
               <Text style={styles.scenarioText}>{language === 'tr' ? 'Senaryoyu değerlendir ve en güçlü seçeneği işaretle.' : 'Evaluate the scenario and choose the strongest answer.'}</Text>
             </View>
           )}
+
           <Text style={styles.helper}>{language === 'tr' ? `${task.expectedEvidence.length} doğru kanıtı seç.` : `Select ${task.expectedEvidence.length} correct ${task.expectedEvidence.length === 1 ? 'answer' : 'pieces of evidence'}.`}</Text>
           <View style={styles.choices}>
             {choices.map((choice) => {
               const isSelected = selected.includes(choice.id);
               const isExpected = checked && task.expectedEvidence.includes(choice.id);
               const isWrong = checked && isSelected && !isExpected;
+              const choiceLabel = selectLocalizedText(choice.label, language);
               return (
                 <Pressable
+                  role="checkbox"
+                  aria-label={choiceLabel}
+                  aria-checked={isSelected}
+                  aria-disabled={checked}
                   accessibilityRole="checkbox"
-                  accessibilityLabel={selectLocalizedText(choice.label, language)}
+                  accessibilityLabel={choiceLabel}
                   accessibilityState={{ disabled: checked, checked: isSelected }}
                   key={choice.id}
                   onPress={() => toggle(choice.id)}
@@ -183,17 +166,13 @@ export function PracticalTaskPlayer({
                 >
                   <View style={styles.choiceContent}>
                     <Text style={[styles.choiceMark, isExpected && styles.choiceMarkCorrect, isWrong && styles.choiceMarkWrong]}>{isExpected ? '✓' : isWrong ? '×' : isSelected ? '●' : '○'}</Text>
-                    <Text style={styles.choiceText}>{selectLocalizedText(choice.label, language)}</Text>
+                    <Text style={styles.choiceText}>{choiceLabel}</Text>
                   </View>
                 </Pressable>
               );
             })}
           </View>
-          {checked ? (
-            <Text style={[styles.feedback, passed ? styles.feedbackPassed : styles.feedbackRetry]}>
-              {passed ? language === 'tr' ? 'Doğru. Seçimin senaryodaki kanıtlarla uyumlu.' : 'Correct. Your selection matches the evidence in the scenario.' : language === 'tr' ? 'Henüz değil. Senaryodaki ipuçlarını birlikte değerlendir.' : 'Not yet. Evaluate the clues in the scenario together.'}
-            </Text>
-          ) : null}
+          {checked ? <Text style={[styles.feedback, passed ? styles.feedbackPassed : styles.feedbackRetry]}>{passed ? language === 'tr' ? 'Doğru. Seçimin senaryodaki kanıtlarla uyumlu.' : 'Correct. Your selection matches the evidence in the scenario.' : language === 'tr' ? 'Henüz değil. Senaryodaki ipuçlarını birlikte değerlendir.' : 'Not yet. Evaluate the clues in the scenario together.'}</Text> : null}
         </View>
       </ScrollView>
       <View style={styles.footer}>
