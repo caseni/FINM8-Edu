@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Text, View } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { LessonPlayer } from '../../components/learning';
@@ -66,6 +66,12 @@ export function MicroLessonScreen({ route, navigation }: Props) {
   const navigationState = navigation.getState();
   const previousRoute = navigationState.routes[navigationState.index - 1];
   const openedFromAcademy = route.params.source === 'academy' || previousRoute?.name === 'Academy';
+
+  useEffect(() => {
+    if (lesson && !isReadOnlyReview && !checkpoint) {
+      saveLessonCheckpoint(lesson.id, 'lesson', 0);
+    }
+  }, [checkpoint, isReadOnlyReview, lesson, saveLessonCheckpoint]);
 
   if (!lesson) return <View><Text>Ders bulunamadı.</Text></View>;
 
