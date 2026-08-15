@@ -80,7 +80,7 @@ async function openTrackAndFindFirstLesson(page, trackTitle) {
   return firstLessonName;
 }
 
-async function advanceLessonToTask(page, lessonName) {
+async function advanceLessonToTask(page, lessonName, prefix) {
   await page.getByRole('button', { name: lessonName, exact: true }).click();
   await page.getByText(/Adım 1\//).waitFor();
   const stepMatch = (await page.getByText(/Adım 1\//).innerText()).match(/\/(\d+)/);
@@ -90,8 +90,10 @@ async function advanceLessonToTask(page, lessonName) {
     await page.getByRole('button', { name: /Sonraki adıma geç/i }).click();
     await page.getByText(new RegExp(`Adım ${step + 1}\\/${totalSteps}`)).waitFor();
   }
-  await page.getByRole('button', { name: /Göreve geç/i }).click();
-  await page.getByText(/SENARYO GÖREVİ|GRAFİK GÖREVİ/).waitFor();
+  await page.getByRole('button', { name: 'Göreve geç', exact: true }).click();
+  await page.getByText('GÖREV · 2/3', { exact: true }).waitFor();
+  await assertNoHorizontalOverflow(page, `${prefix}-task-entry`);
+  await page.screenshot({ path: `visual-qa/${prefix}-task-entry.png`, fullPage: true });
 }
 
 async function taskChoiceNames(page) {
@@ -200,8 +202,7 @@ async function runTrackJourney(page, trackTitle) {
   const prefix = `academy-e2e-${slug(trackTitle)}`;
   await openAcademy(page);
   const firstLessonName = await openTrackAndFindFirstLesson(page, trackTitle);
-  await advanceLessonToTask(page, firstLessonName);
-  await assertNoHorizontalOverflow(page, `${prefix}-task`);
+  await advanceLessonToTask(page, firstLessonName, prefix);
   await solveTask(page, prefix);
   const passed = await completeQuiz(page, prefix, firstLessonName);
   console.log(`${trackTitle}: lesson -> task -> quiz -> result -> Academy PASS (${passed ? 'quiz passed -> next lesson' : 'quiz failed -> resume preserved'})`);
