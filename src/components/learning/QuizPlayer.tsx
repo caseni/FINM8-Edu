@@ -52,80 +52,28 @@ export function QuizPlayer({
   const selectedIsCorrect = selectedOptionId === question.correctOptionId;
   const selectedOption = question.options.find((option) => option.id === selectedOptionId);
   const correctOption = question.options.find((option) => option.id === question.correctOptionId);
-  const isPriceFormationVisual =
-    question.visual?.assetRef.includes('fiyat-piyasada-nasil-olusur') ?? false;
-  const isLiquidityImpactVisual =
-    question.visual?.assetRef.includes('likidite-neden-onemlidir') ?? false;
-  const isBidAskSpreadVisual =
-    question.visual?.assetRef.includes('bid-ask-spread-nedir') ?? false;
-  const isOrderTypesVisual =
-    question.visual?.assetRef.includes('piyasa-limit-stop-emirleri') ?? false;
-  const isSlippageExecutionVisual =
-    question.visual?.assetRef.includes('gerceklesme-fiyati-kayma') ?? false;
-  const isTimeframeContextVisual =
-    question.visual?.assetRef.includes('timeframes') ||
-    question.visual?.assetRef.includes('zaman-dilimi') ||
-    false;
-  const isTrendStructureVisual =
-    question.visual?.assetRef.includes('trend-yon-mu-yapi-mi') ||
-    question.visual?.assetRef.includes('trend-structure') ||
-    false;
-  const isSupportResistanceZoneVisual =
-    question.visual?.assetRef.includes('destek-direnc-bolgedir') ||
-    question.visual?.assetRef.includes('support-resistance-zone') ||
-    false;
-  const isBreakOfStructureVisual =
-    question.visual?.assetRef.includes('bos-starter') ?? false;
-  const isChangeOfCharacterVisual =
-    question.visual?.assetRef.includes('choch') ?? false;
-  const isVolatilityRangeVisual =
-    question.visual?.assetRef.includes('volatilite-once-risktir') ||
-    question.visual?.assetRef.includes('volatility-range') ||
-    false;
-  const isPositionSizingVisual =
-    question.visual?.assetRef.includes('pozisyon-buyuklugu-once-gelir') ?? false;
-  const isRiskRewardVisual =
-    question.visual?.assetRef.includes('risk-getiri-tek-basina-yetmez') ?? false;
-  const isStopOrderVisual =
-    question.visual?.assetRef.includes('stop-emri-garanti-midir') ?? false;
-  const isDiversificationVisual =
-    question.visual?.assetRef.includes('cok-varlik-cesitlendirme-degildir') ?? false;
-  const isFomoDecisionVisual =
-    question.visual?.assetRef.includes('fomo-karari-nasil-bozar') ?? false;
-  const isOvertradingDecisionVisual =
-    question.visual?.assetRef.includes('asiri-islem-nasil-fark-edilir') ?? false;
-  const isConfirmationBiasVisual =
-    question.visual?.assetRef.includes('sadece-hakli-cikaran-kanit') ?? false;
-  const isDecisionJournalVisual =
-    question.visual?.assetRef.includes('sonucu-degil-karari-kaydet') ?? false;
-  const isRiskBasicsVisual =
-    question.visual?.assetRef.includes('risk-belirsizlik-kayip') ?? false;
-  const isCandleAnatomyVisual =
-    question.visual?.assetRef.includes('bir-mum') ||
-    question.visual?.assetRef.includes('candle-ohlc') ||
-    false;
-  const isConceptVisual =
-    isPriceFormationVisual ||
-    isLiquidityImpactVisual ||
-    isBidAskSpreadVisual ||
-    isOrderTypesVisual ||
-    isSlippageExecutionVisual ||
-    isTimeframeContextVisual ||
-    isTrendStructureVisual ||
-    isSupportResistanceZoneVisual ||
-    isBreakOfStructureVisual ||
-    isChangeOfCharacterVisual ||
-    isVolatilityRangeVisual ||
-    isPositionSizingVisual ||
-    isRiskRewardVisual ||
-    isStopOrderVisual ||
-    isDiversificationVisual ||
-    isFomoDecisionVisual ||
-    isOvertradingDecisionVisual ||
-    isConfirmationBiasVisual ||
-    isDecisionJournalVisual ||
-    isRiskBasicsVisual ||
-    isCandleAnatomyVisual;
+  const isPriceFormationVisual = question.visual?.assetRef.includes('fiyat-piyasada-nasil-olusur') ?? false;
+  const isLiquidityImpactVisual = question.visual?.assetRef.includes('likidite-neden-onemlidir') ?? false;
+  const isBidAskSpreadVisual = question.visual?.assetRef.includes('bid-ask-spread-nedir') ?? false;
+  const isOrderTypesVisual = question.visual?.assetRef.includes('piyasa-limit-stop-emirleri') ?? false;
+  const isSlippageExecutionVisual = question.visual?.assetRef.includes('gerceklesme-fiyati-kayma') ?? false;
+  const isTimeframeContextVisual = question.visual?.assetRef.includes('timeframes') || question.visual?.assetRef.includes('zaman-dilimi') || false;
+  const isTrendStructureVisual = question.visual?.assetRef.includes('trend-yon-mu-yapi-mi') || question.visual?.assetRef.includes('trend-structure') || false;
+  const isSupportResistanceZoneVisual = question.visual?.assetRef.includes('destek-direnc-bolgedir') || question.visual?.assetRef.includes('support-resistance-zone') || false;
+  const isBreakOfStructureVisual = question.visual?.assetRef.includes('bos-starter') ?? false;
+  const isChangeOfCharacterVisual = question.visual?.assetRef.includes('choch') ?? false;
+  const isVolatilityRangeVisual = question.visual?.assetRef.includes('volatilite-once-risktir') || question.visual?.assetRef.includes('volatility-range') || false;
+  const isPositionSizingVisual = question.visual?.assetRef.includes('pozisyon-buyuklugu-once-gelir') ?? false;
+  const isRiskRewardVisual = question.visual?.assetRef.includes('risk-getiri-tek-basina-yetmez') ?? false;
+  const isStopOrderVisual = question.visual?.assetRef.includes('stop-emri-garanti-midir') ?? false;
+  const isDiversificationVisual = question.visual?.assetRef.includes('cok-varlik-cesitlendirme-degildir') ?? false;
+  const isFomoDecisionVisual = question.visual?.assetRef.includes('fomo-karari-nasil-bozar') ?? false;
+  const isOvertradingDecisionVisual = question.visual?.assetRef.includes('asiri-islem-nasil-fark-edilir') ?? false;
+  const isConfirmationBiasVisual = question.visual?.assetRef.includes('sadece-hakli-cikaran-kanit') ?? false;
+  const isDecisionJournalVisual = question.visual?.assetRef.includes('sonucu-degil-karari-kaydet') ?? false;
+  const isRiskBasicsVisual = question.visual?.assetRef.includes('risk-belirsizlik-kayip') ?? false;
+  const isCandleAnatomyVisual = question.visual?.assetRef.includes('bir-mum') || question.visual?.assetRef.includes('candle-ohlc') || false;
+  const isConceptVisual = isPriceFormationVisual || isLiquidityImpactVisual || isBidAskSpreadVisual || isOrderTypesVisual || isSlippageExecutionVisual || isTimeframeContextVisual || isTrendStructureVisual || isSupportResistanceZoneVisual || isBreakOfStructureVisual || isChangeOfCharacterVisual || isVolatilityRangeVisual || isPositionSizingVisual || isRiskRewardVisual || isStopOrderVisual || isDiversificationVisual || isFomoDecisionVisual || isOvertradingDecisionVisual || isConfirmationBiasVisual || isDecisionJournalVisual || isRiskBasicsVisual || isCandleAnatomyVisual;
 
   useEffect(() => {
     advancingRef.current = false;
@@ -139,10 +87,7 @@ export function QuizPlayer({
   const next = () => {
     if (!selectedOptionId || advancingRef.current) return;
     advancingRef.current = true;
-    const nextSubmissions = [
-      ...submissions,
-      { questionId: question.id, selectedOptionId },
-    ];
+    const nextSubmissions = [...submissions, { questionId: question.id, selectedOptionId }];
     if (questionIndex === quiz.questions.length - 1) {
       onComplete(scoreQuiz(quiz, nextSubmissions), nextSubmissions);
       return;
@@ -163,304 +108,134 @@ export function QuizPlayer({
     <View style={styles.shell}>
       <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled">
         <View style={styles.container}>
-      <View style={styles.progressRow}>
-        <Text style={styles.eyebrow}>{eyebrow ? selectLocalizedText(eyebrow, language) : language === 'tr' ? 'MİNİ QUIZ' : 'MINI QUIZ'}</Text>
-        <Text style={styles.progress}>
-          {questionIndex + 1}/{quiz.questions.length}
-        </Text>
-      </View>
-      <Text style={styles.question}>{selectLocalizedText(question.prompt, language)}</Text>
-      <View style={styles.options}>
-        {question.options.map((option) => {
-          const selected = option.id === selectedOptionId;
-          const correct = revealed && option.id === question.correctOptionId;
-          const incorrect = revealed && selected && !correct;
-          return (
-            <Pressable
-              accessibilityRole="button"
-              accessibilityLabel={selectLocalizedText(option.label, language)}
-              accessibilityState={{ disabled: revealed, selected }}
-              disabled={revealed}
-              key={option.id}
-              onPress={() => setSelectedOptionId(option.id)}
-              style={[
-                styles.option,
-                selected && styles.selectedOption,
-                correct && styles.correctOption,
-                incorrect && styles.incorrectOption,
-              ]}
-            >
-              <View style={styles.optionContent}>
-                <Text style={[styles.optionMark, correct && styles.correctMark, incorrect && styles.incorrectMark]}>
-                  {correct ? '✓' : incorrect ? '×' : selected ? '●' : '○'}
-                </Text>
-                <Text style={styles.optionText}>{selectLocalizedText(option.label, language)}</Text>
-              </View>
-            </Pressable>
-          );
-        })}
-      </View>
-      {revealed ? (
-        <View style={[styles.explanation, selectedIsCorrect ? styles.explanationCorrect : styles.explanationIncorrect]}>
-          {selectedIsCorrect ? (
-            <>
-              <Text style={[styles.feedbackTitle, styles.feedbackCorrect]}>
-                {language === 'tr' ? '✓ Doğru' : '✓ Correct'}
-              </Text>
-              <Text style={styles.explanationText}>
-                {language === 'tr' ? 'Neden: ' : 'Why: '}
-                {selectLocalizedText(question.explanation, language)}
-              </Text>
-            </>
-          ) : (
-            <>
-              <Text style={[styles.feedbackLine, styles.feedbackIncorrect]}>
-                {language === 'tr' ? '× Senin seçimin: ' : '× Your answer: '}
-                <Text style={styles.feedbackValue}>
-                  {selectedOption ? selectLocalizedText(selectedOption.label, language) : '—'}
-                </Text>
-              </Text>
-              <Text style={styles.feedbackLine}>
-                {language === 'tr' ? '✓ Doğru cevap: ' : '✓ Correct answer: '}
-                <Text style={styles.feedbackValue}>
-                  {correctOption ? selectLocalizedText(correctOption.label, language) : '—'}
-                </Text>
-              </Text>
-              <Text style={styles.explanationText}>
-                {language === 'tr' ? 'Neden: ' : 'Why: '}
-                {selectLocalizedText(question.explanation, language)}
-              </Text>
-            </>
-          )}
-        </View>
-      ) : null}
-      {revealed && question.visual ? (
-        <View style={styles.visualWrap}>
-          <Text style={styles.visualEyebrow}>
-            {isConceptVisual
-              ? language === 'tr' ? 'KAVRAMI GÖRSELLE PEKİŞTİR' : 'REINFORCE WITH THE VISUAL'
-              : language === 'tr' ? 'GRAFİKLE PEKİŞTİR' : 'REINFORCE WITH THE CHART'}
-          </Text>
-          {isPriceFormationVisual ? (
-            <PriceFormationVisual
-              alt={selectLocalizedText(question.visual.alt, language)}
-              language={language}
-              theme={theme}
-            />
-          ) : isLiquidityImpactVisual ? (
-            <LiquidityImpactVisual
-              alt={selectLocalizedText(question.visual.alt, language)}
-              language={language}
-              theme={theme}
-            />
-          ) : isBidAskSpreadVisual ? (
-            <BidAskSpreadVisual
-              alt={selectLocalizedText(question.visual.alt, language)}
-              language={language}
-              theme={theme}
-            />
-          ) : isOrderTypesVisual ? (
-            <OrderTypesVisual
-              alt={selectLocalizedText(question.visual.alt, language)}
-              language={language}
-              theme={theme}
-            />
-          ) : isSlippageExecutionVisual ? (
-            <SlippageExecutionVisual
-              alt={selectLocalizedText(question.visual.alt, language)}
-              language={language}
-              theme={theme}
-            />
-          ) : isTimeframeContextVisual ? (
-            <TimeframeContextVisual
-              alt={selectLocalizedText(question.visual.alt, language)}
-              language={language}
-              theme={theme}
-            />
-          ) : isTrendStructureVisual ? (
-            <TrendStructureVisual
-              alt={selectLocalizedText(question.visual.alt, language)}
-              language={language}
-              theme={theme}
-            />
-          ) : isSupportResistanceZoneVisual ? (
-            <SupportResistanceZoneVisual
-              alt={selectLocalizedText(question.visual.alt, language)}
-              language={language}
-              theme={theme}
-            />
-          ) : isBreakOfStructureVisual ? (
-            <BreakOfStructureVisual
-              alt={selectLocalizedText(question.visual.alt, language)}
-              language={language}
-              theme={theme}
-            />
-          ) : isChangeOfCharacterVisual ? (
-            <ChangeOfCharacterVisual
-              alt={selectLocalizedText(question.visual.alt, language)}
-              language={language}
-              theme={theme}
-            />
-          ) : isVolatilityRangeVisual ? (
-            <VolatilityRangeVisual
-              alt={selectLocalizedText(question.visual.alt, language)}
-              language={language}
-              theme={theme}
-            />
-          ) : isPositionSizingVisual ? (
-            <PositionSizingVisual
-              alt={selectLocalizedText(question.visual.alt, language)}
-              language={language}
-              theme={theme}
-            />
-          ) : isRiskRewardVisual ? (
-            <RiskRewardVisual
-              alt={selectLocalizedText(question.visual.alt, language)}
-              language={language}
-              theme={theme}
-            />
-          ) : isStopOrderVisual ? (
-            <StopOrderVisual
-              alt={selectLocalizedText(question.visual.alt, language)}
-              language={language}
-              theme={theme}
-            />
-          ) : isDiversificationVisual ? (
-            <DiversificationVisual
-              alt={selectLocalizedText(question.visual.alt, language)}
-              language={language}
-              theme={theme}
-            />
-          ) : isFomoDecisionVisual ? (
-            <FomoDecisionVisual
-              alt={selectLocalizedText(question.visual.alt, language)}
-              language={language}
-              theme={theme}
-            />
-          ) : isOvertradingDecisionVisual ? (
-            <OvertradingDecisionVisual
-              alt={selectLocalizedText(question.visual.alt, language)}
-              language={language}
-              theme={theme}
-            />
-          ) : isConfirmationBiasVisual ? (
-            <ConfirmationBiasVisual
-              alt={selectLocalizedText(question.visual.alt, language)}
-              language={language}
-              theme={theme}
-            />
-          ) : isDecisionJournalVisual ? (
-            <DecisionJournalVisual
-              alt={selectLocalizedText(question.visual.alt, language)}
-              language={language}
-              theme={theme}
-            />
-          ) : isRiskBasicsVisual ? (
-            <RiskBasicsVisual
-              alt={selectLocalizedText(question.visual.alt, language)}
-              language={language}
-              theme={theme}
-            />
-          ) : isCandleAnatomyVisual ? (
-            <CandleAnatomyVisual
-              alt={selectLocalizedText(question.visual.alt, language)}
-              language={language}
-              theme={theme}
-            />
-          ) : (
-            <LearningVisual
-              assetRef={question.visual.assetRef}
-              alt={selectLocalizedText(question.visual.alt, language)}
-              language={language}
-              theme={theme}
-            />
-          )}
-        </View>
-      ) : null}
+          <View style={styles.progressRow}>
+            <Text style={styles.eyebrow}>{eyebrow ? selectLocalizedText(eyebrow, language) : language === 'tr' ? 'MİNİ QUIZ' : 'MINI QUIZ'}</Text>
+            <Text style={styles.progress}>{questionIndex + 1}/{quiz.questions.length}</Text>
+          </View>
+          <Text style={styles.question}>{selectLocalizedText(question.prompt, language)}</Text>
+          <View style={styles.options}>
+            {question.options.map((option) => {
+              const selected = option.id === selectedOptionId;
+              const correct = revealed && option.id === question.correctOptionId;
+              const incorrect = revealed && selected && !correct;
+              return (
+                <Pressable
+                  accessibilityRole="radio"
+                  accessibilityLabel={selectLocalizedText(option.label, language)}
+                  accessibilityState={{ disabled: revealed, checked: selected }}
+                  disabled={revealed}
+                  key={option.id}
+                  onPress={() => setSelectedOptionId(option.id)}
+                  style={[styles.option, selected && styles.selectedOption, correct && styles.correctOption, incorrect && styles.incorrectOption]}
+                >
+                  <View style={styles.optionContent}>
+                    <Text style={[styles.optionMark, correct && styles.correctMark, incorrect && styles.incorrectMark]}>
+                      {correct ? '✓' : incorrect ? '×' : selected ? '●' : '○'}
+                    </Text>
+                    <Text style={styles.optionText}>{selectLocalizedText(option.label, language)}</Text>
+                  </View>
+                </Pressable>
+              );
+            })}
+          </View>
+          {revealed ? (
+            <View style={[styles.explanation, selectedIsCorrect ? styles.explanationCorrect : styles.explanationIncorrect]}>
+              {selectedIsCorrect ? (
+                <>
+                  <Text style={[styles.feedbackTitle, styles.feedbackCorrect]}>{language === 'tr' ? '✓ Doğru' : '✓ Correct'}</Text>
+                  <Text style={styles.explanationText}>{language === 'tr' ? 'Neden: ' : 'Why: '}{selectLocalizedText(question.explanation, language)}</Text>
+                </>
+              ) : (
+                <>
+                  <Text style={[styles.feedbackLine, styles.feedbackIncorrect]}>
+                    {language === 'tr' ? '× Senin seçimin: ' : '× Your answer: '}
+                    <Text style={styles.feedbackValue}>{selectedOption ? selectLocalizedText(selectedOption.label, language) : '—'}</Text>
+                  </Text>
+                  <Text style={styles.feedbackLine}>
+                    {language === 'tr' ? '✓ Doğru cevap: ' : '✓ Correct answer: '}
+                    <Text style={styles.feedbackValue}>{correctOption ? selectLocalizedText(correctOption.label, language) : '—'}</Text>
+                  </Text>
+                  <Text style={styles.explanationText}>{language === 'tr' ? 'Neden: ' : 'Why: '}{selectLocalizedText(question.explanation, language)}</Text>
+                </>
+              )}
+            </View>
+          ) : null}
+          {revealed && question.visual ? (
+            <View style={styles.visualWrap}>
+              <Text style={styles.visualEyebrow}>{isConceptVisual ? language === 'tr' ? 'KAVRAMI GÖRSELLE PEKİŞTİR' : 'REINFORCE WITH THE VISUAL' : language === 'tr' ? 'GRAFİKLE PEKİŞTİR' : 'REINFORCE WITH THE CHART'}</Text>
+              {isPriceFormationVisual ? <PriceFormationVisual alt={selectLocalizedText(question.visual.alt, language)} language={language} theme={theme} />
+                : isLiquidityImpactVisual ? <LiquidityImpactVisual alt={selectLocalizedText(question.visual.alt, language)} language={language} theme={theme} />
+                : isBidAskSpreadVisual ? <BidAskSpreadVisual alt={selectLocalizedText(question.visual.alt, language)} language={language} theme={theme} />
+                : isOrderTypesVisual ? <OrderTypesVisual alt={selectLocalizedText(question.visual.alt, language)} language={language} theme={theme} />
+                : isSlippageExecutionVisual ? <SlippageExecutionVisual alt={selectLocalizedText(question.visual.alt, language)} language={language} theme={theme} />
+                : isTimeframeContextVisual ? <TimeframeContextVisual alt={selectLocalizedText(question.visual.alt, language)} language={language} theme={theme} />
+                : isTrendStructureVisual ? <TrendStructureVisual alt={selectLocalizedText(question.visual.alt, language)} language={language} theme={theme} />
+                : isSupportResistanceZoneVisual ? <SupportResistanceZoneVisual alt={selectLocalizedText(question.visual.alt, language)} language={language} theme={theme} />
+                : isBreakOfStructureVisual ? <BreakOfStructureVisual alt={selectLocalizedText(question.visual.alt, language)} language={language} theme={theme} />
+                : isChangeOfCharacterVisual ? <ChangeOfCharacterVisual alt={selectLocalizedText(question.visual.alt, language)} language={language} theme={theme} />
+                : isVolatilityRangeVisual ? <VolatilityRangeVisual alt={selectLocalizedText(question.visual.alt, language)} language={language} theme={theme} />
+                : isPositionSizingVisual ? <PositionSizingVisual alt={selectLocalizedText(question.visual.alt, language)} language={language} theme={theme} />
+                : isRiskRewardVisual ? <RiskRewardVisual alt={selectLocalizedText(question.visual.alt, language)} language={language} theme={theme} />
+                : isStopOrderVisual ? <StopOrderVisual alt={selectLocalizedText(question.visual.alt, language)} language={language} theme={theme} />
+                : isDiversificationVisual ? <DiversificationVisual alt={selectLocalizedText(question.visual.alt, language)} language={language} theme={theme} />
+                : isFomoDecisionVisual ? <FomoDecisionVisual alt={selectLocalizedText(question.visual.alt, language)} language={language} theme={theme} />
+                : isOvertradingDecisionVisual ? <OvertradingDecisionVisual alt={selectLocalizedText(question.visual.alt, language)} language={language} theme={theme} />
+                : isConfirmationBiasVisual ? <ConfirmationBiasVisual alt={selectLocalizedText(question.visual.alt, language)} language={language} theme={theme} />
+                : isDecisionJournalVisual ? <DecisionJournalVisual alt={selectLocalizedText(question.visual.alt, language)} language={language} theme={theme} />
+                : isRiskBasicsVisual ? <RiskBasicsVisual alt={selectLocalizedText(question.visual.alt, language)} language={language} theme={theme} />
+                : isCandleAnatomyVisual ? <CandleAnatomyVisual alt={selectLocalizedText(question.visual.alt, language)} language={language} theme={theme} />
+                : <LearningVisual assetRef={question.visual.assetRef} alt={selectLocalizedText(question.visual.alt, language)} language={language} theme={theme} />}
+            </View>
+          ) : null}
         </View>
       </ScrollView>
       <View style={styles.footer}>
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLabel={actionLabel}
-        accessibilityState={{ disabled: !selectedOptionId }}
-        disabled={!selectedOptionId}
-        onPress={revealed ? next : reveal}
-        style={[styles.button, !selectedOptionId && styles.disabled]}
-      >
-        <Text style={styles.buttonText}>{actionLabel}</Text>
-      </Pressable>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={actionLabel}
+          accessibilityState={{ disabled: !selectedOptionId }}
+          disabled={!selectedOptionId}
+          onPress={revealed ? next : reveal}
+          style={[styles.button, !selectedOptionId && styles.disabled]}
+        >
+          <Text style={styles.buttonText}>{actionLabel}</Text>
+        </Pressable>
       </View>
     </View>
   );
 }
 
-const createStyles = (theme: LearningTheme) =>
-  StyleSheet.create({
-    shell: { flex: 1, width: '100%' },
-    scrollContent: { flexGrow: 1, width: '100%', padding: theme.spacing.md },
-    container: {
-      width: '100%',
-      maxWidth: 760,
-      alignSelf: 'center',
-      gap: theme.spacing.lg,
-      padding: theme.spacing.lg,
-      backgroundColor: theme.colors.surface,
-      borderColor: theme.colors.border,
-      borderWidth: 1,
-      borderRadius: theme.radius.large,
-    },
-    progressRow: { flexDirection: 'row', justifyContent: 'space-between' },
-    eyebrow: { color: theme.colors.primary, fontSize: 12, fontWeight: '800' },
-    progress: { color: theme.colors.textMuted, fontSize: 13 },
-    question: { color: theme.colors.text, fontSize: 24, lineHeight: 32, fontWeight: '800' },
-    visualWrap: { gap: theme.spacing.xs },
-    visualEyebrow: { color: theme.colors.textMuted, fontSize: 10, fontWeight: '900', letterSpacing: 0.7 },
-    options: { gap: theme.spacing.sm },
-    option: {
-      minHeight: 52,
-      padding: theme.spacing.md,
-      borderColor: theme.colors.border,
-      borderWidth: 1,
-      borderRadius: theme.radius.medium,
-      backgroundColor: theme.colors.surfaceMuted,
-    },
-    optionContent: { flexDirection: 'row', alignItems: 'flex-start', gap: theme.spacing.sm },
-    optionMark: { width: 20, color: theme.colors.textMuted, fontSize: 16, lineHeight: 23, fontWeight: '900' },
-    correctMark: { color: theme.colors.success },
-    incorrectMark: { color: theme.colors.risk },
-    selectedOption: { borderColor: theme.colors.primary, borderWidth: 2 },
-    correctOption: { borderColor: theme.colors.success, borderWidth: 2 },
-    incorrectOption: { borderColor: theme.colors.risk, borderWidth: 2 },
-    optionText: { color: theme.colors.text, fontSize: 16, lineHeight: 23 },
-    explanation: {
-      padding: theme.spacing.md,
-      borderLeftColor: theme.colors.primary,
-      borderLeftWidth: 4,
-      backgroundColor: theme.colors.surfaceMuted,
-      borderRadius: theme.radius.small,
-      gap: theme.spacing.sm,
-    },
-    explanationCorrect: { borderLeftColor: theme.colors.success },
-    explanationIncorrect: { borderLeftColor: theme.colors.warning },
-    feedbackTitle: { fontSize: 14, fontWeight: '900' },
-    feedbackLine: { color: theme.colors.textMuted, fontSize: 14, lineHeight: 20, fontWeight: '700' },
-    feedbackValue: { color: theme.colors.text, fontWeight: '900' },
-    feedbackCorrect: { color: theme.colors.success },
-    feedbackIncorrect: { color: theme.colors.warning },
-    explanationText: { color: theme.colors.text, fontSize: 15, lineHeight: 22 },
-    footer: { paddingHorizontal: theme.spacing.md, paddingVertical: theme.spacing.sm, borderTopColor: theme.colors.border, borderTopWidth: 1, backgroundColor: theme.colors.background },
-    button: {
-      minHeight: 52,
-      width: '100%',
-      maxWidth: 760,
-      alignSelf: 'center',
-      alignItems: 'center',
-      justifyContent: 'center',
-      padding: theme.spacing.md,
-      borderRadius: theme.radius.medium,
-      backgroundColor: theme.colors.primary,
-    },
-    buttonText: { color: theme.colors.primaryText, fontSize: 16, fontWeight: '800' },
-    disabled: { opacity: 0.35 },
-  });
+const createStyles = (theme: LearningTheme) => StyleSheet.create({
+  shell: { flex: 1, width: '100%' },
+  scrollContent: { flexGrow: 1, width: '100%', padding: theme.spacing.md },
+  container: { width: '100%', maxWidth: 760, alignSelf: 'center', gap: theme.spacing.lg, padding: theme.spacing.lg, backgroundColor: theme.colors.surface, borderColor: theme.colors.border, borderWidth: 1, borderRadius: theme.radius.large },
+  progressRow: { flexDirection: 'row', justifyContent: 'space-between' },
+  eyebrow: { color: theme.colors.primary, fontSize: 12, fontWeight: '800' },
+  progress: { color: theme.colors.textMuted, fontSize: 13 },
+  question: { color: theme.colors.text, fontSize: 24, lineHeight: 32, fontWeight: '800' },
+  visualWrap: { gap: theme.spacing.xs },
+  visualEyebrow: { color: theme.colors.textMuted, fontSize: 10, fontWeight: '900', letterSpacing: 0.7 },
+  options: { gap: theme.spacing.sm },
+  option: { minHeight: 52, padding: theme.spacing.md, borderColor: theme.colors.border, borderWidth: 1, borderRadius: theme.radius.medium, backgroundColor: theme.colors.surfaceMuted },
+  optionContent: { flexDirection: 'row', alignItems: 'flex-start', gap: theme.spacing.sm },
+  optionMark: { width: 20, color: theme.colors.textMuted, fontSize: 16, lineHeight: 23, fontWeight: '900' },
+  correctMark: { color: theme.colors.success },
+  incorrectMark: { color: theme.colors.risk },
+  selectedOption: { borderColor: theme.colors.primary, borderWidth: 2 },
+  correctOption: { borderColor: theme.colors.success, borderWidth: 2 },
+  incorrectOption: { borderColor: theme.colors.risk, borderWidth: 2 },
+  optionText: { color: theme.colors.text, fontSize: 16, lineHeight: 23 },
+  explanation: { padding: theme.spacing.md, borderLeftColor: theme.colors.primary, borderLeftWidth: 4, backgroundColor: theme.colors.surfaceMuted, borderRadius: theme.radius.small, gap: theme.spacing.sm },
+  explanationCorrect: { borderLeftColor: theme.colors.success },
+  explanationIncorrect: { borderLeftColor: theme.colors.warning },
+  feedbackTitle: { fontSize: 14, fontWeight: '900' },
+  feedbackLine: { color: theme.colors.textMuted, fontSize: 14, lineHeight: 20, fontWeight: '700' },
+  feedbackValue: { color: theme.colors.text, fontWeight: '900' },
+  feedbackCorrect: { color: theme.colors.success },
+  feedbackIncorrect: { color: theme.colors.warning },
+  explanationText: { color: theme.colors.text, fontSize: 15, lineHeight: 22 },
+  footer: { paddingHorizontal: theme.spacing.md, paddingVertical: theme.spacing.sm, borderTopColor: theme.colors.border, borderTopWidth: 1, backgroundColor: theme.colors.background },
+  button: { minHeight: 52, width: '100%', maxWidth: 760, alignSelf: 'center', alignItems: 'center', justifyContent: 'center', padding: theme.spacing.md, borderRadius: theme.radius.medium, backgroundColor: theme.colors.primary },
+  buttonText: { color: theme.colors.primaryText, fontSize: 16, fontWeight: '800' },
+  disabled: { opacity: 0.35 },
+});
