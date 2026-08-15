@@ -63,6 +63,20 @@ async function buttonNames(page) {
   );
 }
 
+async function interactiveChoiceIndexes(page, excluded) {
+  const buttons = page.getByRole('button');
+  const indexes = [];
+  const count = await buttons.count();
+  for (let index = 0; index < count; index += 1) {
+    const button = buttons.nth(index);
+    const ariaLabel = (await button.getAttribute('aria-label'))?.trim();
+    const text = (await button.innerText()).trim().replace(/^[○●✓×]\s*/, '');
+    const label = ariaLabel || text;
+    if (label && !excluded.test(label)) indexes.push(index);
+  }
+  return indexes;
+}
+
 async function openTrackAndFindFirstLesson(page, trackTitle) {
   const before = new Set(await buttonNames(page));
   const escaped = escapeRegExp(trackTitle);
@@ -96,26 +110,23 @@ async function advanceLessonToTask(page, lessonName, prefix) {
   await page.screenshot({ path: `visual-qa/${prefix}-task-entry.png`, fullPage: true });
 }
 
-async function taskChoiceNames(page) {
-  const excluded = /^(Öğrenme akışından çık|Kontrol et|Tekrar dene|Quiz’e geç)$/i;
-  return (await buttonNames(page)).filter((name) => !excluded.test(name));
-}
-
 async function solveTask(page, prefix) {
-  const names = await taskChoiceNames(page);
-  if (names.length < 2 || names.length > 6) {
-    throw new Error(`${prefix}: unexpected task choice count ${names.length}: ${names.join(' | ')}`);
+  const excluded = /^(Öğrenme akışından çık|Kontrol et|Tekrar dene|Quiz’e geç)$/i;
+  const choiceIndexes = await interactiveChoiceIndexes(page, excluded);
+  if (choiceIndexes.length < 2 || choiceIndexes.length > 6) {
+    throw new Error(`${prefix}: unexpected task choice count ${choiceIndexes.length}`);
   }
 
   const combinations = [];
-  for (let mask = 1; mask < (1 << names.length); mask += 1) {
-    combinations.push(names.filter((_, index) => (mask & (1 << index)) !== 0));
+  for (let mask = 1; mask < (1 << choiceIndexes.length); mask += 1) {
+    combinations.push(choiceIndexes.filter((_, index) => (mask & (1 << index)) !== 0));
   }
   combinations.sort((a, b) => a.length - b.length);
 
   for (const combo of combinations) {
-    for (const choice of combo) {
-      await page.getByRole('button', { name: choice, exact: true }).click();
+    const buttons = page.getByRole('button');
+    for (const buttonIndex of combo) {
+      await buttons.nth(buttonIndex).click();
     }
     await page.getByRole('button', { name: 'Kontrol et', exact: true }).click();
     const continueButton = page.getByRole('button', { name: 'Quiz’e geç', exact: true });
@@ -136,18 +147,14 @@ async function solveTask(page, prefix) {
   throw new Error(`${prefix}: no task choice combination passed`);
 }
 
-async function quizOptionNames(page) {
-  const excluded = /^(Öğrenme akışından çık|Cevabı kontrol et|Sonraki soru|Sonucu gör)$/i;
-  return (await buttonNames(page)).filter((name) => !excluded.test(name));
-}
-
 async function completeQuiz(page, prefix, firstLessonName) {
   await page.getByText('MİNİ QUIZ', { exact: true }).waitFor();
+  const excluded = /^(Öğrenme akışından çık|Cevabı kontrol et|Sonraki soru|Sonucu gör)$/i;
   for (let question = 1; question <= 3; question += 1) {
     await page.getByText(`${question}/3`, { exact: true }).waitFor();
-    const options = await quizOptionNames(page);
-    if (options.length < 2) throw new Error(`${prefix}: question ${question} has too few options`);
-    await page.getByRole('button', { name: options[0], exact: true }).click();
+    const optionIndexes = await interactiveChoiceIndexes(page, excluded);
+    if (optionIndexes.length < 2) throw new Error(`${prefix}: question ${question} has too few options`);
+    await page.getByRole('button').nth(optionIndexes[0]).click();
     await page.getByRole('button', { name: 'Cevabı kontrol et', exact: true }).click();
     await page.getByText(/✓ Doğru|× Senin seçimin:/).waitFor();
     await assertNoHorizontalOverflow(page, `${prefix}-quiz-${question}`);
