@@ -55,6 +55,7 @@ jobs:
           node scripts/advancedHookQa.mjs
           node scripts/advancedContinuationQa.mjs
           node scripts/academyExpansionQa.mjs
+          node scripts/academyJourneyQa.mjs
           node scripts/postCoreQa.mjs
 
       - name: Upload visual QA screenshots
