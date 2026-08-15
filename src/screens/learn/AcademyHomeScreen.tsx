@@ -151,6 +151,7 @@ export function AcademyHomeScreen() {
             .filter((lesson) => lesson !== undefined);
           const completedCount = lessons.filter((lesson) => completedLessonIds.includes(lesson.id)).length;
           const active = track.status === 'active';
+          const trackComplete = active && lessons.length > 0 && completedCount === lessons.length;
           const progress = lessons.length > 0 ? completedCount / lessons.length : 0;
           const expanded = active && expandedTrackId === track.id;
           const trackTitle = selectLocalizedText(track.title, language);
@@ -233,7 +234,9 @@ export function AcademyHomeScreen() {
                     <Text style={styles.trackTitle}>{trackTitle}</Text>
                     <Text style={[styles.trackStatus, active ? styles.trackStatusActive : styles.trackStatusPlanned]}>
                       {active
-                        ? language === 'tr' ? 'AKTİF' : 'ACTIVE'
+                        ? trackComplete
+                          ? language === 'tr' ? 'TAMAMLANDI' : 'COMPLETE'
+                          : language === 'tr' ? 'AKTİF' : 'ACTIVE'
                         : language === 'tr' ? 'YAKINDA' : 'PLANNED'}
                     </Text>
                   </View>
@@ -253,7 +256,9 @@ export function AcademyHomeScreen() {
                         <Text style={styles.trackToggleText}>
                           {expanded
                             ? language === 'tr' ? 'Dersleri kapat' : 'Hide lessons'
-                            : language === 'tr' ? 'Dersleri gör' : 'View lessons'}
+                            : trackComplete
+                              ? language === 'tr' ? 'Tamamlanan dersleri gör' : 'View completed lessons'
+                              : language === 'tr' ? 'Dersleri gör' : 'View lessons'}
                         </Text>
                         <Text style={styles.trackToggleIcon}>{expanded ? '⌃' : '⌄'}</Text>
                       </View>
@@ -291,9 +296,20 @@ export function AcademyHomeScreen() {
                       </Text>
                       <Text style={styles.trackCompleteText}>
                         {language === 'tr'
-                          ? 'Bu alandaki tüm dersleri tamamladın.'
-                          : 'You completed every lesson in this subject.'}
+                          ? 'Bu alandaki tüm dersleri tamamladın. Academy doğrusal değil; istersen başka bir alana geçebilirsin.'
+                          : 'You completed every lesson in this subject. Academy is not linear; explore another subject whenever you want.'}
                       </Text>
+                      <Pressable
+                        accessibilityRole="button"
+                        accessibilityLabel={language === 'tr' ? 'Diğer Academy alanlarına göz at' : 'Explore other Academy subjects'}
+                        onPress={() => setExpandedTrackId(null)}
+                        style={({ pressed }) => [styles.trackCompleteAction, pressed && styles.trackCompleteActionPressed]}
+                      >
+                        <Text style={styles.trackCompleteActionText}>
+                          {language === 'tr' ? 'Diğer alanlara göz at' : 'Explore other subjects'}
+                        </Text>
+                        <Text style={styles.trackCompleteActionArrow}>›</Text>
+                      </Pressable>
                     </View>
                   )}
                   <View style={styles.lessonGroupHeader}>
@@ -394,9 +410,13 @@ const styles = StyleSheet.create({
   nextLessonTitle: { color: '#F8FAFC', fontSize: 15, lineHeight: 20, fontWeight: '900' },
   nextLessonMeta: { color: '#9BC7C6', fontSize: 11, fontWeight: '800' },
   nextLessonArrow: { color: '#5EEAD4', fontSize: 26, fontWeight: '600' },
-  trackCompleteCard: { gap: 4, marginTop: 14, marginBottom: 5, padding: 14, borderRadius: 16, borderWidth: 1, borderColor: '#2E706D', backgroundColor: '#0B252D' },
+  trackCompleteCard: { gap: 8, marginTop: 14, marginBottom: 5, padding: 14, borderRadius: 16, borderWidth: 1, borderColor: '#2E706D', backgroundColor: '#0B252D' },
   trackCompleteEyebrow: { color: '#5EEAD4', fontSize: 9, fontWeight: '900', letterSpacing: 0.8 },
   trackCompleteText: { color: '#B8D6D5', fontSize: 13, lineHeight: 18, fontWeight: '700' },
+  trackCompleteAction: { minHeight: 44, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 10, marginTop: 2, paddingHorizontal: 13, borderRadius: 13, borderWidth: 1, borderColor: '#2E706D', backgroundColor: '#0D3037' },
+  trackCompleteActionPressed: { backgroundColor: '#123B42' },
+  trackCompleteActionText: { color: '#5EEAD4', fontSize: 12, fontWeight: '900' },
+  trackCompleteActionArrow: { color: '#5EEAD4', fontSize: 21, fontWeight: '700' },
   lessonGroupHeader: { gap: 3, paddingTop: 13, paddingBottom: 8 },
   lessonGroupAdvanced: { marginTop: 8, paddingTop: 16, borderTopWidth: 1, borderTopColor: '#21394D' },
   lessonGroupEyebrow: { color: '#5EEAD4', fontSize: 9, fontWeight: '900', letterSpacing: 0.8 },
