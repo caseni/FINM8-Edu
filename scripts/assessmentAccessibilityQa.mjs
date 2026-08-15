@@ -28,23 +28,13 @@ async function advanceLessonToTask(page) {
   await page.getByText('GÖREV · 2/3', { exact: true }).waitFor();
 }
 
-async function markedAnswerButtons(page) {
-  const buttons = page.getByRole('button');
-  const result = [];
-  const count = await buttons.count();
+async function assertCleanAnswerLabels(page, role, stage) {
+  const answers = page.getByRole(role);
+  const count = await answers.count();
+  if (count < 2) throw new Error(`${stage}: fewer than two ${role} answer controls found`);
+
   for (let index = 0; index < count; index += 1) {
-    const button = buttons.nth(index);
-    const visible = (await button.innerText()).trim();
-    if (/^[○●✓×]\s+\S/.test(visible)) result.push(button);
-  }
-  return result;
-}
-
-async function assertCleanAnswerLabels(page, stage) {
-  const answers = await markedAnswerButtons(page);
-  if (answers.length < 2) throw new Error(`${stage}: fewer than two answer controls found`);
-
-  for (const answer of answers) {
+    const answer = answers.nth(index);
     const visible = (await answer.innerText()).trim();
     const expectedLabel = visible.replace(/^[○●✓×]\s+/, '').trim();
     const actualLabel = (await answer.getAttribute('aria-label'))?.trim();
@@ -55,16 +45,20 @@ async function assertCleanAnswerLabels(page, stage) {
     if (actualLabel !== expectedLabel) {
       throw new Error(`${stage}: aria-label mismatch -> expected "${expectedLabel}", got "${actualLabel}"`);
     }
+    const checked = await answer.getAttribute('aria-checked');
+    if (checked !== 'false') {
+      throw new Error(`${stage}: unselected ${role} should expose aria-checked=false (got ${checked})`);
+    }
   }
 
   return answers;
 }
 
-async function assertSelectedState(answer, stage) {
+async function assertCheckedState(answer, stage) {
   await answer.click();
-  const selected = await answer.getAttribute('aria-selected');
-  if (selected !== 'true') {
-    throw new Error(`${stage}: selected answer did not expose aria-selected=true (got ${selected})`);
+  const checked = await answer.getAttribute('aria-checked');
+  if (checked !== 'true') {
+    throw new Error(`${stage}: selected answer did not expose aria-checked=true (got ${checked})`);
   }
 }
 
@@ -94,17 +88,17 @@ async function checkAcademyAssessmentAccessibility(page) {
   const lessonName = await openAcademyFirstLesson(page);
   await advanceLessonToTask(page);
 
-  const taskAnswers = await assertCleanAnswerLabels(page, 'Academy task');
-  await assertSelectedState(taskAnswers[0], 'Academy task');
+  const taskAnswers = await assertCleanAnswerLabels(page, 'checkbox', 'Academy task');
+  await assertCheckedState(taskAnswers.nth(0), 'Academy task');
   await page.getByRole('button', { name: 'Kontrol et', exact: true }).click();
   const quizButton = page.getByRole('button', { name: 'Quiz’e geç', exact: true });
   await quizButton.waitFor();
   await quizButton.click();
   await page.getByText('MİNİ QUIZ', { exact: true }).waitFor();
 
-  const quizAnswers = await assertCleanAnswerLabels(page, 'Academy quiz');
-  await assertSelectedState(quizAnswers[0], 'Academy quiz');
-  console.log(`${lessonName}: Academy task + quiz accessibility labels/state PASS`);
+  const quizAnswers = await assertCleanAnswerLabels(page, 'radio', 'Academy quiz');
+  await assertCheckedState(quizAnswers.nth(0), 'Academy quiz');
+  console.log(`${lessonName}: Academy checkbox task + radio quiz accessibility PASS`);
 }
 
 async function checkBeginnerQuizAccessibility(page) {
@@ -115,21 +109,20 @@ async function checkBeginnerQuizAccessibility(page) {
   await page.getByRole('button', { name: new RegExp(beginnerLessonTitle, 'i') }).click();
   await advanceLessonToTask(page);
 
-  const beginnerTaskAnswer = page.getByRole('button', { name: beginnerCorrectTaskAnswer, exact: true });
+  const taskAnswers = await assertCleanAnswerLabels(page, 'checkbox', 'Beginner task');
+  const beginnerTaskAnswer = page.getByRole('checkbox', { name: beginnerCorrectTaskAnswer, exact: true });
   await beginnerTaskAnswer.waitFor();
-  await beginnerTaskAnswer.click();
-  if ((await beginnerTaskAnswer.getAttribute('aria-selected')) !== 'true') {
-    throw new Error('Beginner task: correct answer did not expose aria-selected=true');
-  }
+  await assertCheckedState(beginnerTaskAnswer, 'Beginner task');
+  if ((await taskAnswers.count()) < 2) throw new Error('Beginner task: insufficient semantic answer controls');
   await page.getByRole('button', { name: 'Kontrol et', exact: true }).click();
   const quizButton = page.getByRole('button', { name: 'Quiz’e geç', exact: true });
   await quizButton.waitFor();
   await quizButton.click();
   await page.getByText('MİNİ QUIZ', { exact: true }).waitFor();
 
-  const quizAnswers = await assertCleanAnswerLabels(page, 'Beginner quiz');
-  await assertSelectedState(quizAnswers[0], 'Beginner quiz');
-  console.log(`${beginnerLessonTitle}: Beginner quiz accessibility labels/state PASS`);
+  const quizAnswers = await assertCleanAnswerLabels(page, 'radio', 'Beginner quiz');
+  await assertCheckedState(quizAnswers.nth(0), 'Beginner quiz');
+  console.log(`${beginnerLessonTitle}: Beginner checkbox task + radio quiz accessibility PASS`);
 }
 
 const browser = await chromium.launch({ executablePath: process.env.CHROME_BIN, headless: true });
@@ -148,7 +141,7 @@ try {
   if (diagnostics.length > 0) {
     throw new Error(`Assessment accessibility diagnostics:\n${diagnostics.join('\n')}`);
   }
-  console.log('Assessment accessibility: Academy task + Academy quiz + Beginner quiz PASS');
+  console.log('Assessment accessibility: checkbox tasks + radio Academy/Beginner quizzes PASS');
 } finally {
   await browser.close();
 }
