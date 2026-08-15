@@ -119,10 +119,16 @@ export function BeginnerPracticalTaskPlayer({
               const isSelected = selected.includes(choice.id);
               const isExpected = checked && task.expectedEvidence.includes(choice.id);
               const isWrong = checked && isSelected && !isExpected;
+              const choiceLabel = selectLocalizedText(choice.label, language);
               return (
                 <Pressable
-                  accessibilityRole="button"
-                  accessibilityState={{ disabled: checked, selected: isSelected }}
+                  role="checkbox"
+                  aria-label={choiceLabel}
+                  aria-checked={isSelected}
+                  aria-disabled={checked}
+                  accessibilityRole="checkbox"
+                  accessibilityLabel={choiceLabel}
+                  accessibilityState={{ disabled: checked, checked: isSelected }}
                   key={choice.id}
                   onPress={() => toggle(choice.id)}
                   style={[
@@ -135,7 +141,7 @@ export function BeginnerPracticalTaskPlayer({
                   <Text style={[styles.choiceMark, isExpected && styles.choiceMarkCorrect, isWrong && styles.choiceMarkWrong]}>
                     {isExpected ? '✓' : isWrong ? '×' : isSelected ? '●' : '○'}
                   </Text>
-                  <Text style={styles.choiceText}>{selectLocalizedText(choice.label, language)}</Text>
+                  <Text style={styles.choiceText}>{choiceLabel}</Text>
                 </Pressable>
               );
             })}
