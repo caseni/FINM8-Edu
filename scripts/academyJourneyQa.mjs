@@ -63,17 +63,6 @@ async function buttonNames(page) {
   );
 }
 
-async function markedChoiceIndexes(page) {
-  const buttons = page.getByRole('button');
-  const indexes = [];
-  const count = await buttons.count();
-  for (let index = 0; index < count; index += 1) {
-    const text = (await buttons.nth(index).innerText()).trim();
-    if (/^[○●✓×]\s+\S/.test(text)) indexes.push(index);
-  }
-  return indexes;
-}
-
 async function openTrackAndFindFirstLesson(page, trackTitle) {
   const before = new Set(await buttonNames(page));
   const escaped = escapeRegExp(trackTitle);
@@ -108,8 +97,7 @@ async function advanceLessonToTask(page, lessonName, prefix) {
 }
 
 async function solveTask(page, prefix) {
-  const choiceIndexes = await markedChoiceIndexes(page);
-  const choiceCount = choiceIndexes.length;
+  const choiceCount = await page.getByRole('checkbox').count();
   if (choiceCount < 2 || choiceCount > 6) {
     throw new Error(`${prefix}: unexpected task choice count ${choiceCount}`);
   }
@@ -126,11 +114,10 @@ async function solveTask(page, prefix) {
 
   for (let attempt = 0; attempt < combinations.length; attempt += 1) {
     const combo = combinations[attempt];
-    const currentChoiceIndexes = await markedChoiceIndexes(page);
-    const buttons = page.getByRole('button');
+    const choices = page.getByRole('checkbox');
     console.log(`${prefix}: task attempt ${attempt + 1}/${combinations.length} choices=${combo.join(',')}`);
     for (const choiceIndex of combo) {
-      await buttons.nth(currentChoiceIndexes[choiceIndex]).click();
+      await choices.nth(choiceIndex).click();
     }
     const checkButton = page.getByRole('button', { name: 'Kontrol et', exact: true });
     await checkButton.waitFor();
@@ -161,9 +148,10 @@ async function completeQuiz(page, prefix, firstLessonName) {
   await page.getByText('MİNİ QUIZ', { exact: true }).waitFor();
   for (let question = 1; question <= 3; question += 1) {
     await page.getByText(`${question}/3`, { exact: true }).waitFor();
-    const optionIndexes = await markedChoiceIndexes(page);
-    if (optionIndexes.length < 2) throw new Error(`${prefix}: question ${question} has too few options`);
-    await page.getByRole('button').nth(optionIndexes[0]).click();
+    const options = page.getByRole('radio');
+    const optionCount = await options.count();
+    if (optionCount < 2) throw new Error(`${prefix}: question ${question} has too few options`);
+    await options.nth(0).click();
     await page.getByRole('button', { name: 'Cevabı kontrol et', exact: true }).click();
     await page.getByText(/✓ Doğru|× Senin seçimin:/).waitFor();
     await assertNoHorizontalOverflow(page, `${prefix}-quiz-${question}`);
