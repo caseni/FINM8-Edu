@@ -15,14 +15,7 @@ export interface BeginnerQuizPlayerProps {
   eyebrow?: LocalizedText;
 }
 
-export function BeginnerQuizPlayer({
-  quiz,
-  language,
-  reinforcementVisual,
-  theme = defaultLearningTheme,
-  onComplete,
-  eyebrow,
-}: BeginnerQuizPlayerProps) {
+export function BeginnerQuizPlayer({ quiz, language, reinforcementVisual, theme = defaultLearningTheme, onComplete, eyebrow }: BeginnerQuizPlayerProps) {
   const [questionIndex, setQuestionIndex] = useState(0);
   const [selectedOptionId, setSelectedOptionId] = useState<string>();
   const [revealed, setRevealed] = useState(false);
@@ -66,9 +59,7 @@ export function BeginnerQuizPlayer({
       <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled">
         <View style={styles.container}>
           <View style={styles.progressRow}>
-            <Text style={styles.eyebrow}>
-              {eyebrow ? selectLocalizedText(eyebrow, language) : language === 'tr' ? 'MİNİ QUIZ' : 'MINI QUIZ'}
-            </Text>
+            <Text style={styles.eyebrow}>{eyebrow ? selectLocalizedText(eyebrow, language) : language === 'tr' ? 'MİNİ QUIZ' : 'MINI QUIZ'}</Text>
             <Text style={styles.progress}>{questionIndex + 1}/{quiz.questions.length}</Text>
           </View>
 
@@ -79,25 +70,23 @@ export function BeginnerQuizPlayer({
               const selected = option.id === selectedOptionId;
               const correct = revealed && option.id === question.correctOptionId;
               const incorrect = revealed && selected && !correct;
+              const optionLabel = selectLocalizedText(option.label, language);
               return (
                 <Pressable
+                  role="radio"
+                  aria-label={optionLabel}
+                  aria-checked={selected}
+                  aria-disabled={revealed}
                   accessibilityRole="radio"
-                  accessibilityLabel={selectLocalizedText(option.label, language)}
+                  accessibilityLabel={optionLabel}
                   accessibilityState={{ checked: selected, disabled: revealed }}
                   disabled={revealed}
                   key={option.id}
                   onPress={() => setSelectedOptionId(option.id)}
-                  style={[
-                    styles.option,
-                    selected && styles.optionSelected,
-                    correct && styles.optionCorrect,
-                    incorrect && styles.optionWrong,
-                  ]}
+                  style={[styles.option, selected && styles.optionSelected, correct && styles.optionCorrect, incorrect && styles.optionWrong]}
                 >
-                  <Text style={[styles.optionMark, correct && styles.markCorrect, incorrect && styles.markWrong]}>
-                    {correct ? '✓' : incorrect ? '×' : selected ? '●' : '○'}
-                  </Text>
-                  <Text style={styles.optionText}>{selectLocalizedText(option.label, language)}</Text>
+                  <Text style={[styles.optionMark, correct && styles.markCorrect, incorrect && styles.markWrong]}>{correct ? '✓' : incorrect ? '×' : selected ? '●' : '○'}</Text>
+                  <Text style={styles.optionText}>{optionLabel}</Text>
                 </Pressable>
               );
             })}
@@ -106,37 +95,20 @@ export function BeginnerQuizPlayer({
           {revealed ? (
             <View style={[styles.explanationCard, selectedIsCorrect ? styles.explanationCorrect : styles.explanationWrong]} accessibilityRole="summary">
               <Text style={[styles.explanationTitle, selectedIsCorrect ? styles.titleCorrect : styles.titleWrong]}>
-                {selectedIsCorrect
-                  ? language === 'tr' ? '✓ Doğru' : '✓ Correct'
-                  : language === 'tr' ? 'Bu kez değil' : 'Not this time'}
+                {selectedIsCorrect ? language === 'tr' ? '✓ Doğru' : '✓ Correct' : language === 'tr' ? 'Bu kez değil' : 'Not this time'}
               </Text>
               {!selectedIsCorrect && selectedOption ? (
-                <Text style={styles.explanationLine}>
-                  {language === 'tr' ? 'Senin seçimin: ' : 'Your answer: '}
-                  <Text style={styles.explanationStrong}>{selectLocalizedText(selectedOption.label, language)}</Text>
-                </Text>
+                <Text style={styles.explanationLine}>{language === 'tr' ? 'Senin seçimin: ' : 'Your answer: '}<Text style={styles.explanationStrong}>{selectLocalizedText(selectedOption.label, language)}</Text></Text>
               ) : null}
               {!selectedIsCorrect && correctOption ? (
-                <Text style={styles.explanationLine}>
-                  {language === 'tr' ? 'Doğru cevap: ' : 'Correct answer: '}
-                  <Text style={styles.explanationStrong}>{selectLocalizedText(correctOption.label, language)}</Text>
-                </Text>
+                <Text style={styles.explanationLine}>{language === 'tr' ? 'Doğru cevap: ' : 'Correct answer: '}<Text style={styles.explanationStrong}>{selectLocalizedText(correctOption.label, language)}</Text></Text>
               ) : null}
-              <Text style={styles.explanationWhy}>
-                {language === 'tr' ? 'Neden: ' : 'Why: '}
-                {selectLocalizedText(question.explanation, language)}
-              </Text>
+              <Text style={styles.explanationWhy}>{language === 'tr' ? 'Neden: ' : 'Why: '}{selectLocalizedText(question.explanation, language)}</Text>
             </View>
           ) : null}
 
           {revealed && visual ? (
-            <LessonSupportingVisual
-              assetRef={visual.assetRef}
-              alt={selectLocalizedText(visual.alt, language)}
-              language={language}
-              role="concept"
-              theme={theme}
-            />
+            <LessonSupportingVisual assetRef={visual.assetRef} alt={selectLocalizedText(visual.alt, language)} language={language} role="concept" theme={theme} />
           ) : null}
         </View>
       </ScrollView>
