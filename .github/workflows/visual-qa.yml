@@ -57,6 +57,7 @@ jobs:
           node scripts/academyExpansionQa.mjs
           node scripts/academyJourneyQa.mjs
           node scripts/academyTrackCompletionQa.mjs
+          node scripts/academyLastLessonQa.mjs
           node scripts/assessmentAccessibilityQa.mjs
           node scripts/postCoreQa.mjs
 
