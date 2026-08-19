@@ -157,11 +157,13 @@ try {
     await seedCompletedLessons(page, lessonIds);
     await openAcademy(page);
 
-    const trackButton = page.getByRole('button', { name: new RegExp(`^${track.title} derslerini aç$`, 'i') });
-    await trackButton.click();
-    await page.getByText('12/12 ders', { exact: true }).first().waitFor();
-    await page.getByText('100%', { exact: true }).first().waitFor();
-    await page.getByText('TAMAMLANDI', { exact: true }).first().waitFor();
+    const collapsedTrackButton = page.getByRole('button', { name: new RegExp(`^${track.title} derslerini aç$`, 'i') });
+    await collapsedTrackButton.click();
+    const expandedTrackButton = page.getByRole('button', { name: new RegExp(`^${track.title} derslerini kapat$`, 'i') });
+    await expandedTrackButton.waitFor();
+    await expandedTrackButton.getByText('12/12 ders', { exact: true }).waitFor();
+    await expandedTrackButton.getByText('100%', { exact: true }).waitFor();
+    await expandedTrackButton.getByText('TAMAMLANDI', { exact: true }).waitFor();
     await page.getByText('OKUL TAMAMLANDI', { exact: true }).waitFor();
     await page.getByText(/Academy doğrusal değil/i).waitFor();
 
@@ -175,23 +177,21 @@ try {
     }
 
     await exploreOtherSubjects.click();
-    await page.getByRole('button', { name: new RegExp(`^${track.title} derslerini aç$`, 'i') }).waitFor();
+    await collapsedTrackButton.waitFor();
     if (await page.getByText('OKUL TAMAMLANDI', { exact: true }).count()) {
       throw new Error(`${track.title}: completed Academy school did not collapse after choosing other subjects.`);
     }
-    await page.getByText('TAMAMLANDI', { exact: true }).first().waitFor();
+    await collapsedTrackButton.getByText('TAMAMLANDI', { exact: true }).waitFor();
     await assertNoHorizontalOverflow(page, `academy-school-complete-${slug(track.title)}-collapsed`);
     console.log(`${track.title}: 12/12 -> TAMAMLANDI -> other subjects PASS`);
   }
 
   await seedCompletedLessons(page, allAcademyLessonIds);
   await openAcademy(page);
-  const completedLabels = page.getByText('TAMAMLANDI', { exact: true });
-  if (await completedLabels.count() !== tracks.length) {
-    throw new Error('Expected all ten Academy school cards to show TAMAMLANDI at 120/120 completion.');
-  }
-  for (let index = 0; index < tracks.length; index += 1) {
-    await completedLabels.nth(index).waitFor();
+  for (const track of tracks) {
+    const trackButton = page.getByRole('button', { name: new RegExp(`^${track.title} derslerini aç$`, 'i') });
+    await trackButton.waitFor();
+    await trackButton.getByText('TAMAMLANDI', { exact: true }).waitFor();
   }
   await assertNoHorizontalOverflow(page, 'academy-all-schools-complete');
   await page.screenshot({ path: 'visual-qa/academy-all-schools-complete.png', fullPage: true });
