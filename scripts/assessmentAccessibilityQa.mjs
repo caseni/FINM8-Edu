@@ -1,6 +1,7 @@
 import { chromium } from 'playwright-core';
 
 const baseUrl = 'http://127.0.0.1:4173/';
+const progressKey = '@finm8_edu_progress_v1';
 const academyTrackTitles = [
   'Ekonomiyi Anla',
   'Piyasaları Anla',
@@ -24,6 +25,13 @@ async function buttonNames(page) {
       .map((value) => value.trim())
       .filter(Boolean)
   );
+}
+
+async function resetProgress(page) {
+  await page.goto(baseUrl, { waitUntil: 'networkidle' });
+  await page.evaluate((key) => window.localStorage.removeItem(key), progressKey);
+  await page.reload({ waitUntil: 'networkidle' });
+  await page.getByText('Öğrenmeye Başla', { exact: true }).waitFor({ timeout: 10000 });
 }
 
 async function advanceLessonToTask(page) {
@@ -156,8 +164,7 @@ async function checkAcademyAssessmentAccessibility(page, academyTrackTitle) {
 }
 
 async function checkBeginnerQuizAccessibility(page) {
-  await page.goto(baseUrl, { waitUntil: 'networkidle' });
-  await page.getByText('Öğrenmeye Başla', { exact: true }).waitFor({ timeout: 10000 });
+  await resetProgress(page);
   await page.getByRole('button', { name: new RegExp(beginnerSectionTitle, 'i') }).first().click();
   await page.getByText('BAŞLANGIÇ · 6 KISA DERS', { exact: true }).waitFor();
   await page.getByRole('button', { name: new RegExp(beginnerLessonTitle, 'i') }).click();
