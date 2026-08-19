@@ -1,7 +1,18 @@
 import { chromium } from 'playwright-core';
 
 const baseUrl = 'http://127.0.0.1:4173/';
-const academyTrackTitle = 'Piyasaları Anla';
+const academyTrackTitles = [
+  'Ekonomiyi Anla',
+  'Piyasaları Anla',
+  'Grafikleri Derinleştir',
+  'Şirketleri Anla',
+  'Risk ve Portföy',
+  'Karar Psikolojisi',
+  'Yöntemler ve Planlar',
+  'Sistematik ve Sayısal Yaklaşımlar',
+  'İleri Grafik Yaklaşımları',
+  'Varlık Türlerini Anla',
+];
 const beginnerSectionTitle = 'Para ve Ekonomi';
 const beginnerLessonTitle = 'Aynı para neden zamanla daha az şey alır';
 const beginnerCorrectTaskAnswer = 'Paranın satın alma gücü azalmıştır';
@@ -62,7 +73,52 @@ async function assertCheckedState(answer, stage) {
   }
 }
 
-async function openAcademyFirstLesson(page) {
+async function solveCurrentTaskToQuiz(page, stage) {
+  const initialCheck = page.getByRole('button', { name: 'Kontrol et', exact: true });
+  await initialCheck.click();
+  const directContinue = page.getByRole('button', { name: 'Quiz’e geç', exact: true });
+  if (await directContinue.count()) {
+    await directContinue.click();
+    await page.getByText('MİNİ QUIZ', { exact: true }).waitFor();
+    return;
+  }
+
+  const firstRetry = page.getByRole('button', { name: 'Tekrar dene', exact: true });
+  if (!(await firstRetry.count())) throw new Error(`${stage}: task produced neither pass nor retry state`);
+  await firstRetry.click();
+
+  const choiceCount = await page.getByRole('checkbox').count();
+  const combinations = [];
+  for (let mask = 1; mask < (1 << choiceCount); mask += 1) {
+    const indexes = [];
+    for (let index = 0; index < choiceCount; index += 1) {
+      if ((mask & (1 << index)) !== 0) indexes.push(index);
+    }
+    combinations.push(indexes);
+  }
+  combinations.sort((a, b) => a.length - b.length);
+
+  for (const combo of combinations) {
+    const choices = page.getByRole('checkbox');
+    for (const choiceIndex of combo) {
+      await choices.nth(choiceIndex).click();
+    }
+    await page.getByRole('button', { name: 'Kontrol et', exact: true }).click();
+    const continueButton = page.getByRole('button', { name: 'Quiz’e geç', exact: true });
+    if (await continueButton.count()) {
+      await continueButton.click();
+      await page.getByText('MİNİ QUIZ', { exact: true }).waitFor();
+      return;
+    }
+    const retryButton = page.getByRole('button', { name: 'Tekrar dene', exact: true });
+    if (!(await retryButton.count())) throw new Error(`${stage}: task produced neither pass nor retry state`);
+    await retryButton.click();
+  }
+
+  throw new Error(`${stage}: no task answer combination reached the quiz`);
+}
+
+async function openAcademyFirstLesson(page, academyTrackTitle) {
   await page.goto(baseUrl, { waitUntil: 'networkidle' });
   await page.getByText('Öğrenmeye Başla', { exact: true }).waitFor({ timeout: 10000 });
   await page.getByRole('button', { name: /İleri konular/i }).click();
@@ -84,21 +140,19 @@ async function openAcademyFirstLesson(page) {
   return lessonName;
 }
 
-async function checkAcademyAssessmentAccessibility(page) {
-  const lessonName = await openAcademyFirstLesson(page);
+async function checkAcademyAssessmentAccessibility(page, academyTrackTitle) {
+  const lessonName = await openAcademyFirstLesson(page, academyTrackTitle);
   await advanceLessonToTask(page);
 
-  const taskAnswers = await assertCleanAnswerLabels(page, 'checkbox', 'Academy task');
-  await assertCheckedState(taskAnswers.nth(0), 'Academy task');
-  await page.getByRole('button', { name: 'Kontrol et', exact: true }).click();
-  const quizButton = page.getByRole('button', { name: 'Quiz’e geç', exact: true });
-  await quizButton.waitFor();
-  await quizButton.click();
-  await page.getByText('MİNİ QUIZ', { exact: true }).waitFor();
+  const taskStage = `${academyTrackTitle} Academy task`;
+  const taskAnswers = await assertCleanAnswerLabels(page, 'checkbox', taskStage);
+  await assertCheckedState(taskAnswers.nth(0), taskStage);
+  await solveCurrentTaskToQuiz(page, taskStage);
 
-  const quizAnswers = await assertCleanAnswerLabels(page, 'radio', 'Academy quiz');
-  await assertCheckedState(quizAnswers.nth(0), 'Academy quiz');
-  console.log(`${lessonName}: Academy checkbox task + radio quiz accessibility PASS`);
+  const quizStage = `${academyTrackTitle} Academy quiz`;
+  const quizAnswers = await assertCleanAnswerLabels(page, 'radio', quizStage);
+  await assertCheckedState(quizAnswers.nth(0), quizStage);
+  console.log(`${academyTrackTitle} · ${lessonName}: checkbox task + radio quiz accessibility PASS`);
 }
 
 async function checkBeginnerQuizAccessibility(page) {
@@ -114,11 +168,7 @@ async function checkBeginnerQuizAccessibility(page) {
   await beginnerTaskAnswer.waitFor();
   await assertCheckedState(beginnerTaskAnswer, 'Beginner task');
   if ((await taskAnswers.count()) < 2) throw new Error('Beginner task: insufficient semantic answer controls');
-  await page.getByRole('button', { name: 'Kontrol et', exact: true }).click();
-  const quizButton = page.getByRole('button', { name: 'Quiz’e geç', exact: true });
-  await quizButton.waitFor();
-  await quizButton.click();
-  await page.getByText('MİNİ QUIZ', { exact: true }).waitFor();
+  await solveCurrentTaskToQuiz(page, 'Beginner task');
 
   const quizAnswers = await assertCleanAnswerLabels(page, 'radio', 'Beginner quiz');
   await assertCheckedState(quizAnswers.nth(0), 'Beginner quiz');
@@ -135,13 +185,15 @@ try {
     if (response.status() >= 500) diagnostics.push(`[response:${response.status()}] ${response.url()}`);
   });
 
-  await checkAcademyAssessmentAccessibility(page);
+  for (const academyTrackTitle of academyTrackTitles) {
+    await checkAcademyAssessmentAccessibility(page, academyTrackTitle);
+  }
   await checkBeginnerQuizAccessibility(page);
 
   if (diagnostics.length > 0) {
     throw new Error(`Assessment accessibility diagnostics:\n${diagnostics.join('\n')}`);
   }
-  console.log('Assessment accessibility: checkbox tasks + radio Academy/Beginner quizzes PASS');
+  console.log('Assessment accessibility: 10 Academy schools + Beginner checkbox tasks and radio quizzes PASS');
 } finally {
   await browser.close();
 }
