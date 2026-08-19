@@ -5,9 +5,78 @@ import { chromium } from 'playwright-core';
 const baseUrl = 'http://127.0.0.1:4173/';
 const progressKey = '@finm8_edu_progress_v1';
 const root = process.cwd();
-const marketLessonFiles = [
-  'src/domain/learning/examples/academy/financialMarketsFoundationLessons.ts',
-  'src/domain/learning/examples/academy/financialMarketsExpansionLessons.ts',
+
+const tracks = [
+  {
+    title: 'Ekonomiyi Anla',
+    files: [
+      'src/domain/learning/examples/academy/economyFoundationsLessons.ts',
+      'src/domain/learning/examples/academy/economyExpansionLessons.ts',
+    ],
+  },
+  {
+    title: 'Piyasaları Anla',
+    files: [
+      'src/domain/learning/examples/academy/financialMarketsFoundationLessons.ts',
+      'src/domain/learning/examples/academy/financialMarketsExpansionLessons.ts',
+    ],
+  },
+  {
+    title: 'Grafikleri Derinleştir',
+    files: [
+      'src/domain/learning/examples/academy/technicalAnalysisFoundationLessons.ts',
+      'src/domain/learning/examples/academy/technicalAnalysisExpansionLessons.ts',
+    ],
+  },
+  {
+    title: 'Şirketleri Anla',
+    files: [
+      'src/domain/learning/examples/academy/fundamentalAnalysisFoundationLessons.ts',
+      'src/domain/learning/examples/academy/fundamentalAnalysisExpansionLessons.ts',
+    ],
+  },
+  {
+    title: 'Risk ve Portföy',
+    files: [
+      'src/domain/learning/examples/academy/riskPortfolioFoundationLessons.ts',
+      'src/domain/learning/examples/academy/riskPortfolioExpansionLessons.ts',
+    ],
+  },
+  {
+    title: 'Karar Psikolojisi',
+    files: [
+      'src/domain/learning/examples/academy/marketPsychologyFoundationLessons.ts',
+      'src/domain/learning/examples/academy/marketPsychologyExpansionLessons.ts',
+    ],
+  },
+  {
+    title: 'Yöntemler ve Planlar',
+    files: [
+      'src/domain/learning/examples/academy/strategyFoundationLessons.ts',
+      'src/domain/learning/examples/academy/strategyExpansionLessons.ts',
+    ],
+  },
+  {
+    title: 'Sistematik ve Sayısal Yaklaşımlar',
+    files: [
+      'src/domain/learning/examples/academy/algoQuantFoundationLessons.ts',
+      'src/domain/learning/examples/academy/algoQuantExpansionLessons.ts',
+    ],
+  },
+  {
+    title: 'İleri Grafik Yaklaşımları',
+    files: [
+      'src/domain/learning/examples/academy/smcIctFoundationLessons.ts',
+      'src/domain/learning/examples/academy/smcIctExpansionLessons.ts',
+    ],
+  },
+  {
+    title: 'Varlık Türlerini Anla',
+    files: [
+      'src/domain/learning/examples/academy/assetSchoolFoundationLessons.ts',
+      'src/domain/learning/examples/academy/assetSchoolExpansionLessons.ts',
+    ],
+  },
 ];
 
 function academyLessonIds(files) {
@@ -21,6 +90,16 @@ function academyLessonIds(files) {
   return Array.from(new Set(ids));
 }
 
+function slug(value) {
+  return value
+    .toLocaleLowerCase('tr-TR')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/ı/g, 'i')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+}
+
 async function assertNoHorizontalOverflow(page, label) {
   const overflow = await page.evaluate(() => ({
     viewport: document.documentElement.clientWidth,
@@ -31,9 +110,36 @@ async function assertNoHorizontalOverflow(page, label) {
   }
 }
 
-const marketLessonIds = academyLessonIds(marketLessonFiles);
-if (marketLessonIds.length !== 12) {
-  throw new Error(`Expected 12 Financial Markets Academy lessons, found ${marketLessonIds.length}`);
+async function seedCompletedLessons(page, lessonIds) {
+  await page.goto(baseUrl, { waitUntil: 'networkidle' });
+  await page.evaluate(({ key, ids }) => {
+    window.localStorage.removeItem(key);
+    window.localStorage.setItem(key, JSON.stringify({
+      version: 0,
+      state: {
+        completedLessonIds: ids,
+      },
+    }));
+  }, { key: progressKey, ids: lessonIds });
+  await page.reload({ waitUntil: 'networkidle' });
+}
+
+async function openAcademy(page) {
+  await page.getByText('Öğrenmeye Başla', { exact: true }).waitFor();
+  await page.getByRole('button', { name: /İleri konular/i }).click();
+  await page.getByText('Finansı konu konu derinleştir.', { exact: true }).waitFor();
+}
+
+for (const track of tracks) {
+  const lessonIds = academyLessonIds(track.files);
+  if (lessonIds.length !== 12) {
+    throw new Error(`Expected 12 Academy lessons for ${track.title}, found ${lessonIds.length}`);
+  }
+}
+
+const allAcademyLessonIds = Array.from(new Set(tracks.flatMap((track) => academyLessonIds(track.files))));
+if (allAcademyLessonIds.length !== 120) {
+  throw new Error(`Expected 120 Academy lessons across ten schools, found ${allAcademyLessonIds.length}`);
 }
 
 const browser = await chromium.launch({ executablePath: process.env.CHROME_BIN, headless: true });
@@ -46,54 +152,53 @@ try {
     if (response.status() >= 500) diagnostics.push(`[response:${response.status()}] ${response.url()}`);
   });
 
-  await page.goto(baseUrl, { waitUntil: 'networkidle' });
-  await page.evaluate(({ key, lessonIds }) => {
-    const existing = window.localStorage.getItem(key);
-    const persisted = existing ? JSON.parse(existing) : { state: {}, version: 0 };
-    const previous = Array.isArray(persisted.state?.completedLessonIds)
-      ? persisted.state.completedLessonIds
-      : [];
-    window.localStorage.setItem(key, JSON.stringify({
-      ...persisted,
-      version: persisted.version ?? 0,
-      state: {
-        ...(persisted.state ?? {}),
-        completedLessonIds: Array.from(new Set([...previous, ...lessonIds])),
-      },
-    }));
-  }, { key: progressKey, lessonIds: marketLessonIds });
-  await page.reload({ waitUntil: 'networkidle' });
+  for (const track of tracks) {
+    const lessonIds = academyLessonIds(track.files);
+    await seedCompletedLessons(page, lessonIds);
+    await openAcademy(page);
 
-  await page.getByText('Öğrenmeye Başla', { exact: true }).waitFor();
-  await page.getByRole('button', { name: /İleri konular/i }).click();
-  await page.getByText('Finansı konu konu derinleştir.', { exact: true }).waitFor();
+    const trackButton = page.getByRole('button', { name: new RegExp(`^${track.title} derslerini aç$`, 'i') });
+    await trackButton.click();
+    await page.getByText('12/12 ders', { exact: true }).waitFor();
+    await page.getByText('100%', { exact: true }).waitFor();
+    await page.getByText('TAMAMLANDI', { exact: true }).waitFor();
+    await page.getByText('OKUL TAMAMLANDI', { exact: true }).waitFor();
+    await page.getByText(/Academy doğrusal değil/i).waitFor();
 
-  const marketTrack = page.getByRole('button', { name: /^Piyasaları Anla derslerini aç$/i });
-  await marketTrack.click();
-  await page.getByText('12/12 ders', { exact: true }).waitFor();
-  await page.getByText('100%', { exact: true }).waitFor();
-  await page.getByText('TAMAMLANDI', { exact: true }).waitFor();
-  await page.getByText('OKUL TAMAMLANDI', { exact: true }).waitFor();
-  await page.getByText(/Academy doğrusal değil/i).waitFor();
-  const exploreOtherSubjects = page.getByRole('button', { name: 'Diğer Academy alanlarına göz at', exact: true });
-  await exploreOtherSubjects.waitFor();
-  await exploreOtherSubjects.scrollIntoViewIfNeeded();
-  await assertNoHorizontalOverflow(page, 'academy-school-complete-expanded');
-  await page.screenshot({ path: 'visual-qa/academy-school-complete-expanded.png', fullPage: true });
+    const exploreOtherSubjects = page.getByRole('button', { name: 'Diğer Academy alanlarına göz at', exact: true });
+    await exploreOtherSubjects.waitFor();
+    await exploreOtherSubjects.scrollIntoViewIfNeeded();
+    await assertNoHorizontalOverflow(page, `academy-school-complete-${slug(track.title)}-expanded`);
 
-  await exploreOtherSubjects.click();
-  await page.getByRole('button', { name: /^Piyasaları Anla derslerini aç$/i }).waitFor();
-  if (await page.getByText('OKUL TAMAMLANDI', { exact: true }).count()) {
-    throw new Error('Completed Academy school did not collapse after choosing other subjects.');
+    if (track.title === 'Piyasaları Anla') {
+      await page.screenshot({ path: 'visual-qa/academy-school-complete-expanded.png', fullPage: true });
+    }
+
+    await exploreOtherSubjects.click();
+    await page.getByRole('button', { name: new RegExp(`^${track.title} derslerini aç$`, 'i') }).waitFor();
+    if (await page.getByText('OKUL TAMAMLANDI', { exact: true }).count()) {
+      throw new Error(`${track.title}: completed Academy school did not collapse after choosing other subjects.`);
+    }
+    await page.getByText('TAMAMLANDI', { exact: true }).waitFor();
+    await assertNoHorizontalOverflow(page, `academy-school-complete-${slug(track.title)}-collapsed`);
+    console.log(`${track.title}: 12/12 -> TAMAMLANDI -> other subjects PASS`);
   }
-  await page.getByText('TAMAMLANDI', { exact: true }).waitFor();
-  await assertNoHorizontalOverflow(page, 'academy-school-complete-collapsed');
-  await page.screenshot({ path: 'visual-qa/academy-school-complete-collapsed.png', fullPage: true });
+
+  await seedCompletedLessons(page, allAcademyLessonIds);
+  await openAcademy(page);
+  for (const track of tracks) {
+    await page.getByText('TAMAMLANDI', { exact: true }).nth(tracks.indexOf(track)).waitFor();
+  }
+  if (await page.getByText('TAMAMLANDI', { exact: true }).count() !== tracks.length) {
+    throw new Error('Expected all ten Academy school cards to show TAMAMLANDI at 120/120 completion.');
+  }
+  await assertNoHorizontalOverflow(page, 'academy-all-schools-complete');
+  await page.screenshot({ path: 'visual-qa/academy-all-schools-complete.png', fullPage: true });
 
   if (diagnostics.length > 0) {
     throw new Error(`Academy school completion diagnostics:\n${diagnostics.join('\n')}`);
   }
-  console.log('Academy school completion: 12/12 -> TAMAMLANDI -> other subjects PASS');
+  console.log('Academy school completion: all 10 schools + 120/120 aggregate PASS');
 } finally {
   await browser.close();
 }
