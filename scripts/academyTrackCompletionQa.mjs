@@ -127,7 +127,7 @@ async function seedCompletedLessons(page, lessonIds) {
 async function openAcademy(page) {
   await page.getByText('Öğrenmeye Başla', { exact: true }).waitFor();
   await page.getByRole('button', { name: /İleri konular/i }).click();
-  await page.getByText('Finansı konu konu derinleştir.', { exact: true }).waitFor();
+  await page.getByText('Academy', { exact: true }).first().waitFor();
 }
 
 for (const track of tracks) {
@@ -188,6 +188,13 @@ try {
 
   await seedCompletedLessons(page, allAcademyLessonIds);
   await openAcademy(page);
+  await page.getByText('ACADEMY TAMAM', { exact: true }).waitFor();
+  await page.getByText('İleri öğrenme yolunu tamamladın.', { exact: true }).waitFor();
+  await page.getByText('120/120 ders · 10/10 okul', { exact: true }).waitFor();
+  await page.getByText('Tamamladığın okullar', { exact: true }).waitFor();
+  if (await page.getByText('NEREDEN DEVAM EDEBİLİRSİN?', { exact: true }).count()) {
+    throw new Error('120/120 Academy completion should hide the starter direction guide.');
+  }
   for (const track of tracks) {
     const trackButton = page.getByRole('button', { name: new RegExp(`^${track.title} derslerini aç$`, 'i') });
     await trackButton.waitFor();
@@ -199,7 +206,7 @@ try {
   if (diagnostics.length > 0) {
     throw new Error(`Academy school completion diagnostics:\n${diagnostics.join('\n')}`);
   }
-  console.log('Academy school completion: all 10 schools + 120/120 aggregate PASS');
+  console.log('Academy school completion: all 10 schools + 120/120 aggregate hero PASS');
 } finally {
   await browser.close();
 }
