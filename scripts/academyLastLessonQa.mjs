@@ -211,8 +211,10 @@ try {
     await academyReturn.click();
 
     await page.getByText('Finansı konu konu derinleştir.', { exact: true }).waitFor();
-    await page.getByText('12/12 ders', { exact: true }).first().waitFor();
-    await page.getByText('TAMAMLANDI', { exact: true }).first().waitFor();
+    const completedTrackButton = page.getByRole('button', { name: new RegExp(`^${track.title} derslerini kapat$`, 'i') });
+    await completedTrackButton.waitFor();
+    await completedTrackButton.getByText('12/12 ders', { exact: true }).waitFor();
+    await completedTrackButton.getByText('TAMAMLANDI', { exact: true }).waitFor();
     await page.getByText('OKUL TAMAMLANDI', { exact: true }).waitFor();
     await assertNoHorizontalOverflow(page, `academy-final-${slug(track.title)}`);
 
