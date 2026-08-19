@@ -46,6 +46,14 @@ export function AcademyHomeScreen() {
   );
   const beginnerLessonIds = BEGINNER_SECTION_IDS.flatMap((sectionId) => BEGINNER_SECTIONS[sectionId].lessonIds);
   const beginnerComplete = beginnerLessonIds.length > 0 && beginnerLessonIds.every((lessonId) => completedLessonIds.includes(lessonId));
+  const activeAcademyTrackIds = ACADEMY_TRACK_IDS.filter((trackId) => ACADEMY_TRACKS[trackId].status === 'active');
+  const academyLessonIds = activeAcademyTrackIds.flatMap((trackId) => [...ACADEMY_TRACKS[trackId].lessonIds]);
+  const academyCompletedLessonCount = academyLessonIds.filter((lessonId) => completedLessonIds.includes(lessonId)).length;
+  const academyCompletedTrackCount = activeAcademyTrackIds.filter((trackId) =>
+    ACADEMY_TRACKS[trackId].lessonIds.length > 0
+    && ACADEMY_TRACKS[trackId].lessonIds.every((lessonId) => completedLessonIds.includes(lessonId))
+  ).length;
+  const academyComplete = academyLessonIds.length > 0 && academyCompletedLessonCount === academyLessonIds.length;
 
   const openLesson = (lessonId: string) => {
     const checkpoint = lessonCheckpoints[lessonId];
@@ -80,27 +88,40 @@ export function AcademyHomeScreen() {
 
         <View style={styles.hero}>
           <Text style={styles.heroEyebrow}>
-            {beginnerComplete
-              ? language === 'tr' ? 'TEMEL TAMAM' : 'FOUNDATION COMPLETE'
-              : language === 'tr' ? 'CORE’UN ÜZERİNE İNŞA ET' : 'BUILD BEYOND CORE'}
+            {academyComplete
+              ? language === 'tr' ? 'ACADEMY TAMAM' : 'ACADEMY COMPLETE'
+              : beginnerComplete
+                ? language === 'tr' ? 'TEMEL TAMAM' : 'FOUNDATION COMPLETE'
+                : language === 'tr' ? 'CORE’UN ÜZERİNE İNŞA ET' : 'BUILD BEYOND CORE'}
           </Text>
           <Text style={styles.heroTitle}>
-            {beginnerComplete
-              ? language === 'tr' ? 'Şimdi yalnız ilgini seç.' : 'Now choose only what interests you.'
-              : language === 'tr' ? 'Finansı konu konu derinleştir.' : 'Go deeper, one subject at a time.'}
+            {academyComplete
+              ? language === 'tr' ? 'İleri öğrenme yolunu tamamladın.' : 'You completed the advanced learning path.'
+              : beginnerComplete
+                ? language === 'tr' ? 'Şimdi yalnız ilgini seç.' : 'Now choose only what interests you.'
+                : language === 'tr' ? 'Finansı konu konu derinleştir.' : 'Go deeper, one subject at a time.'}
           </Text>
           <Text style={styles.heroBody}>
-            {beginnerComplete
+            {academyComplete
               ? language === 'tr'
-                ? 'Dört temel alanı tamamladın. Burada her şeyi yapmak zorunda değilsin; merak ettiğin tek bir alandan devam etmen yeterli.'
-                : 'You completed the four foundation areas. You do not need to do everything here; continuing with one subject that interests you is enough.'
-              : language === 'tr'
-                ? 'Core günlük öğrenme yolun olarak kalır. Academy’de ekonomi, finansal piyasalar, teknik ve temel analiz, psikoloji ve sistematik yaklaşımları istediğin sırayla derinleştirebilirsin.'
-                : 'Core remains your daily learning path. Academy lets you go deeper into economics, financial markets, technical and fundamental analysis, psychology, and systematic approaches.'}
+                ? 'Academy’deki on okulun tüm derslerini tamamladın. İstersen tamamlanan okulları yeniden açıp belirli konulara dönebilir veya tekrarlarını sürdürebilirsin.'
+                : 'You completed every lesson across all ten Academy schools. You can reopen completed schools to revisit specific topics or keep using your reviews.'
+              : beginnerComplete
+                ? language === 'tr'
+                  ? 'Dört temel alanı tamamladın. Burada her şeyi yapmak zorunda değilsin; merak ettiğin tek bir alandan devam etmen yeterli.'
+                  : 'You completed the four foundation areas. You do not need to do everything here; continuing with one subject that interests you is enough.'
+                : language === 'tr'
+                  ? 'Core günlük öğrenme yolun olarak kalır. Academy’de ekonomi, finansal piyasalar, teknik ve temel analiz, psikoloji ve sistematik yaklaşımları istediğin sırayla derinleştirebilirsin.'
+                  : 'Core remains your daily learning path. Academy lets you go deeper into economics, financial markets, technical and fundamental analysis, psychology, and systematic approaches.'}
           </Text>
+          {academyComplete ? (
+            <Text style={styles.heroCompletionMeta}>
+              {academyCompletedLessonCount}/{academyLessonIds.length} {language === 'tr' ? 'ders' : 'lessons'} · {academyCompletedTrackCount}/{activeAcademyTrackIds.length} {language === 'tr' ? 'okul' : 'schools'}
+            </Text>
+          ) : null}
         </View>
 
-        {beginnerComplete ? (
+        {beginnerComplete && !academyComplete ? (
           <View style={styles.starterGuide}>
             <Text style={styles.starterEyebrow}>{language === 'tr' ? 'NEREDEN DEVAM EDEBİLİRSİN?' : 'WHERE CAN YOU GO NEXT?'}</Text>
             <Text style={styles.starterTitle}>{language === 'tr' ? 'Dört sade seçenekten birini seç.' : 'Choose one of four simple directions.'}</Text>
@@ -132,15 +153,25 @@ export function AcademyHomeScreen() {
         ) : null}
 
         <View style={styles.sectionHeading}>
-          <Text style={styles.sectionTitle}>{language === 'tr' ? (beginnerComplete ? 'Tüm ileri alanlar' : 'İlgini seç') : (beginnerComplete ? 'All deeper subjects' : 'Choose your subject')}</Text>
+          <Text style={styles.sectionTitle}>
+            {academyComplete
+              ? language === 'tr' ? 'Tamamladığın okullar' : 'Completed schools'
+              : language === 'tr'
+                ? beginnerComplete ? 'Tüm ileri alanlar' : 'İlgini seç'
+                : beginnerComplete ? 'All deeper subjects' : 'Choose your subject'}
+          </Text>
           <Text style={styles.sectionBody}>
-            {language === 'tr'
-              ? beginnerComplete
-                ? 'Yukarıdaki dört yoldan başlayabilir veya aşağıdaki diğer ileri alanlara göz atabilirsin.'
-                : 'Bir okulu aç, derslerini incele. Hepsini aynı anda bitirmen gerekmez.'
-              : beginnerComplete
-                ? 'Start with one of the four directions above, or explore the other advanced subjects below.'
-                : 'Open one school to explore its lessons. You do not need to complete everything at once.'}
+            {academyComplete
+              ? language === 'tr'
+                ? 'On okulun tamamı bitti. İstediğin okulu yeniden açıp belirli bir derse veya konuya dönebilirsin.'
+                : 'All ten schools are complete. Reopen any school whenever you want to revisit a lesson or topic.'
+              : language === 'tr'
+                ? beginnerComplete
+                  ? 'Yukarıdaki dört yoldan başlayabilir veya aşağıdaki diğer ileri alanlara göz atabilirsin.'
+                  : 'Bir okulu aç, derslerini incele. Hepsini aynı anda bitirmen gerekmez.'
+                : beginnerComplete
+                  ? 'Start with one of the four directions above, or explore the other advanced subjects below.'
+                  : 'Open one school to explore its lessons. You do not need to complete everything at once.'}
           </Text>
         </View>
 
@@ -366,6 +397,7 @@ const styles = StyleSheet.create({
   heroEyebrow: { color: '#5EEAD4', fontSize: 10, fontWeight: '900', letterSpacing: 0.8 },
   heroTitle: { color: '#F8FAFC', fontSize: 23, lineHeight: 30, fontWeight: '900' },
   heroBody: { color: '#B8D6D5', fontSize: 14, lineHeight: 21 },
+  heroCompletionMeta: { color: '#5EEAD4', fontSize: 12, lineHeight: 18, fontWeight: '900' },
   starterGuide: { gap: 8, padding: 18, borderRadius: 20, borderWidth: 1, borderColor: '#2B5F63', backgroundColor: '#0A2028' },
   starterEyebrow: { color: '#5EEAD4', fontSize: 10, fontWeight: '900', letterSpacing: 0.8 },
   starterTitle: { color: '#F8FAFC', fontSize: 18, lineHeight: 24, fontWeight: '900' },
