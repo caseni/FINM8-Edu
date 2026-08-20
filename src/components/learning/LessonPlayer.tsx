@@ -25,6 +25,7 @@ import {
   type LearningTheme,
 } from '../../theme/learningTheme';
 import { LEARNING_STAGE_LABELS } from '../../domain/learning/personalization';
+import { DesktopPremiumLessonBlockRenderer } from './DesktopPremiumLessonBlockRenderer';
 import { PremiumLessonBlockRenderer } from './PremiumLessonBlockRenderer';
 import { LessonSupportingVisual } from './LessonSupportingVisual';
 
@@ -59,7 +60,8 @@ export function LessonPlayer({
   onStepChange,
 }: LessonPlayerProps) {
   const { width } = useWindowDimensions();
-  const styles = createStyles(theme, width >= 900);
+  const wide = width >= 900;
+  const styles = createStyles(theme, wide);
   const visibleBlocks = useMemo(
     () =>
       lesson.contentBlocks
@@ -215,14 +217,25 @@ export function LessonPlayer({
               ) : null}
             </View>
           ) : currentBlock ? (
-            <PremiumLessonBlockRenderer
-              block={currentBlock}
-              language={language}
-              presentationMode={presentationMode}
-              theme={theme}
-              renderVisual={renderVisual}
-              supportingVisual={lessonVisual}
-            />
+            wide ? (
+              <DesktopPremiumLessonBlockRenderer
+                block={currentBlock}
+                language={language}
+                presentationMode={presentationMode}
+                theme={theme}
+                renderVisual={renderVisual}
+                supportingVisual={lessonVisual}
+              />
+            ) : (
+              <PremiumLessonBlockRenderer
+                block={currentBlock}
+                language={language}
+                presentationMode={presentationMode}
+                theme={theme}
+                renderVisual={renderVisual}
+                supportingVisual={lessonVisual}
+              />
+            )
           ) : null}
         </View>
       </ScrollView>
@@ -282,7 +295,7 @@ const createStyles = (theme: LearningTheme, wide: boolean) =>
       flexDirection: 'row',
       alignItems: 'center',
       gap: theme.spacing.md,
-      paddingHorizontal: wide ? 22 : theme.spacing.md,
+      paddingHorizontal: wide ? 28 : theme.spacing.md,
       paddingVertical: theme.spacing.sm,
       borderBottomColor: theme.colors.border,
       borderBottomWidth: 1,
@@ -304,21 +317,21 @@ const createStyles = (theme: LearningTheme, wide: boolean) =>
     content: {
       flexGrow: 1,
       width: '100%',
-      maxWidth: wide ? 860 : 760,
+      maxWidth: wide ? 1080 : 760,
       alignSelf: 'center',
-      paddingHorizontal: wide ? 24 : theme.spacing.md,
-      paddingTop: wide ? 18 : theme.spacing.sm,
+      paddingHorizontal: wide ? 28 : theme.spacing.md,
+      paddingTop: wide ? 22 : theme.spacing.sm,
       paddingBottom: theme.spacing.md,
-      gap: wide ? 12 : theme.spacing.sm,
+      gap: wide ? 14 : theme.spacing.sm,
     },
     metaRow: { flexDirection: 'row', flexWrap: 'wrap', gap: theme.spacing.sm },
     duration: { color: theme.colors.textMuted, fontSize: wide ? 13 : 12 },
     contextLabel: { color: theme.colors.textMuted, fontSize: wide ? 13 : 12 },
-    lessonTitle: { color: theme.colors.text, fontSize: wide ? 24 : 21, lineHeight: wide ? 32 : 28, fontWeight: '900' },
+    lessonTitle: { color: theme.colors.text, fontSize: wide ? 28 : 21, lineHeight: wide ? 36 : 28, fontWeight: '900' },
     slide: {
       width: '100%',
       justifyContent: 'flex-start',
-      padding: wide ? 22 : theme.spacing.md,
+      padding: wide ? 26 : theme.spacing.md,
       backgroundColor: theme.colors.surface,
       borderColor: theme.colors.border,
       borderWidth: 1,
@@ -326,37 +339,37 @@ const createStyles = (theme: LearningTheme, wide: boolean) =>
     },
     visualSlide: { justifyContent: 'flex-start' },
     takeaway: { gap: wide ? 18 : theme.spacing.md },
-    takeawayEyebrow: { color: theme.colors.primary, fontSize: 11, lineHeight: 15, fontWeight: '900', letterSpacing: 0.8 },
-    takeawayText: { color: theme.colors.text, fontSize: wide ? 28 : 23, fontWeight: '900', lineHeight: wide ? 38 : 31 },
+    takeawayEyebrow: { color: theme.colors.primary, fontSize: wide ? 12 : 11, lineHeight: 16, fontWeight: '900', letterSpacing: 0.8 },
+    takeawayText: { color: theme.colors.text, fontSize: wide ? 30 : 23, fontWeight: '900', lineHeight: wide ? 40 : 31 },
     takeawayVisual: { marginTop: 2 },
     compactSafety: {
-      gap: theme.spacing.xs,
+      gap: wide ? 7 : theme.spacing.xs,
       marginTop: 2,
-      paddingTop: theme.spacing.sm,
+      paddingTop: wide ? 12 : theme.spacing.sm,
       borderTopColor: theme.colors.border,
       borderTopWidth: 1,
     },
     compactSafetyLabel: {
       color: theme.colors.risk,
-      fontSize: 10,
+      fontSize: wide ? 11 : 10,
       fontWeight: '900',
       letterSpacing: 0.8,
     },
     compactSafetyText: {
       color: theme.colors.textMuted,
-      fontSize: wide ? 14 : 13,
-      lineHeight: wide ? 21 : 19,
+      fontSize: wide ? 15 : 13,
+      lineHeight: wide ? 23 : 19,
     },
     footer: {
-      paddingHorizontal: wide ? 22 : theme.spacing.md,
-      paddingVertical: wide ? 12 : theme.spacing.md,
+      paddingHorizontal: wide ? 28 : theme.spacing.md,
+      paddingVertical: wide ? 14 : theme.spacing.md,
       borderTopColor: theme.colors.border,
       borderTopWidth: 1,
       backgroundColor: theme.colors.background,
     },
     footerActions: {
       width: '100%',
-      maxWidth: wide ? 860 : 760,
+      maxWidth: wide ? 1080 : 760,
       alignSelf: 'center',
       flexDirection: 'row',
       gap: theme.spacing.md,
