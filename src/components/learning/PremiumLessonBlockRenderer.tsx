@@ -22,11 +22,43 @@ export interface PremiumLessonBlockRendererProps {
   supportingVisual?: SupportingVisual;
 }
 
-const MARKET_EXAMPLES: readonly {
-  match: string;
-  tr: string;
-  en: string;
-}[] = [
+type LessonExample = {
+  readonly match: string;
+  readonly tr: string;
+  readonly en: string;
+};
+
+const BEGINNER_EXAMPLES: readonly LessonExample[] = [
+  {
+    match: 'enflasyon-satin-alma-gucu',
+    tr: 'Geçen yıl aynı bütçeyle 5 temel ürün alabiliyorken bugün 4 ürün alabiliyorsan, para miktarın değişmese bile satın alma gücün azalmıştır.',
+    en: 'If the same budget bought five basic items last year but buys four today, your purchasing power has fallen even though the amount of money is unchanged.',
+  },
+  {
+    match: 'faiz-orani-ne-anlatir',
+    tr: '100.000 TL kredi için faiz yükseldiğinde, aynı vade ve diğer koşullar sabitken toplam geri ödeme genellikle artar. Faiz, borçlanmanın fiyatı gibi düşünülebilir.',
+    en: 'For a TRY 100,000 loan, a higher rate generally means a higher total repayment when the term and other conditions stay the same. Interest can be thought of as the price of borrowing.',
+  },
+  {
+    match: 'merkez-bankasi-ne-yapar',
+    tr: 'Merkez bankası marketteki ekmek fiyatını tek tek belirlemez; faiz ve para koşullarını etkileyerek kredi, harcama ve fiyatlama davranışlarının genel ortamını değiştirir.',
+    en: 'A central bank does not set the price of bread item by item; by influencing interest rates and monetary conditions it changes the wider environment for credit, spending, and pricing.',
+  },
+  {
+    match: 'faiz-karari-ekonomiye-nasil-yansir',
+    tr: 'Bir faiz kararı bugün açıklansa bile konut kredileri, şirket yatırımları ve tüketici harcamaları aynı dakika değişmez. Etki haftalar ve aylar boyunca farklı kanallardan yayılabilir.',
+    en: 'Even if a rate decision is announced today, mortgages, business investment, and consumer spending do not all change instantly. The effect can spread through different channels over weeks and months.',
+  },
+  {
+    match: 'gsyh-buyume-ne-anlatir',
+    tr: 'Bir ekonomide üretim ve hizmetlerin toplamı geçen döneme göre artıyorsa büyüme vardır; fakat bu tek başına herkesin gelirinin aynı oranda arttığı anlamına gelmez.',
+    en: 'If total production and services rise from the previous period, the economy has grown; that does not mean every person’s income rose by the same rate.',
+  },
+  {
+    match: 'ekonomik-dongu-resesyon',
+    tr: 'Talep zayıfladığında şirketler daha az satış yapabilir, işe alımlar yavaşlayabilir ve yatırım ertelenebilir. Ekonomik döngü bu değişimlerin birlikte nasıl hareket ettiğini anlatır.',
+    en: 'When demand weakens, companies may sell less, hiring can slow, and investment can be postponed. The business cycle describes how these changes can move together.',
+  },
   {
     match: 'fiyat-piyasada-nasil-olusur',
     tr: 'Bir alıcı 100 TL ödemeye, bir satıcı da 100 TL’ye satmaya razı olduğunda işlem 100 TL’den gerçekleşebilir. Sonraki alıcı 101 TL ödemeye razıysa yeni eşleşme daha yukarıda oluşabilir.',
@@ -57,6 +89,66 @@ const MARKET_EXAMPLES: readonly {
     tr: 'Ekranda 100,00 TL görürken hızlı piyasada emrin 100,15 TL’den gerçekleşebilir. Aradaki 0,15 TL fark kaymadır; ekrandaki fiyat gerçekleşme garantisi değildir.',
     en: 'You may see 100.00 on screen but execute at 100.15 in a fast market. The 0.15 difference is slippage; the displayed price is not an execution guarantee.',
   },
+  {
+    match: 'bir-mum-bize-ne-soyler',
+    tr: 'Bir günlük mum 100’den açılıp 106’yı görüp 102’den kapandıysa, yalnız kapanışı değil gün içindeki en yüksek ve en düşük seviyeleri de tek bakışta okuyabilirsin.',
+    en: 'If a daily candle opens at 100, trades as high as 106, and closes at 102, you can read more than the close: the day’s high and low are visible too.',
+  },
+  {
+    match: 'zaman-dilimi-neyi-degistirir',
+    tr: '15 dakikalık grafikte düşüş gibi görünen birkaç mum, günlük grafikte güçlü bir yükselişin küçük geri çekilmesi olabilir. Zaman dilimi bağlamı değiştirir.',
+    en: 'A few falling candles on a 15-minute chart may be only a small pullback inside a strong daily uptrend. Timeframe changes context.',
+  },
+  {
+    match: 'trend-yon-mu-yapi-mi',
+    tr: 'Fiyat 100 → 108 → 104 → 112 şeklinde ilerliyorsa yalnız “yukarı gidiyor” demek yerine daha yüksek tepe ve dip yapısına bakmak trendi daha sağlam okutur.',
+    en: 'If price moves 100 → 108 → 104 → 112, looking at higher highs and higher lows gives a stronger trend read than simply saying “it is going up.”',
+  },
+  {
+    match: 'destek-direnc-bolgedir',
+    tr: 'Fiyat birkaç kez 99–101 aralığında tepki verdiyse bunu tam 100,00 çizgisi yerine yaklaşık bir bölge olarak düşünmek daha gerçekçidir.',
+    en: 'If price reacts several times around 99–101, treating it as a zone rather than an exact 100.00 line is usually more realistic.',
+  },
+  {
+    match: 'momentum-ne-anlatir',
+    tr: 'Fiyat yükselmeye devam ederken her yeni yükseliş daha küçük ve yavaş oluyorsa yön hâlâ yukarı olabilir ama momentum zayıflıyor olabilir.',
+    en: 'Price can still be rising while each new push becomes smaller and slower; direction may remain up even as momentum weakens.',
+  },
+  {
+    match: 'hareketli-ortalama-ne-yapar',
+    tr: '20 günlük ortalama son 20 kapanışı yumuşatır. Bugünkü ani hareketi gecikmeli yansıttığı için hareketli ortalama fiyatı tahmin eden bir çizgi değil, geçmişi özetleyen bir filtredir.',
+    en: 'A 20-day average smooths the last 20 closes. Because it reacts with a lag, it is a filter summarizing past price, not a line that predicts the next price.',
+  },
+  {
+    match: 'risk-belirsizlik-kayip',
+    tr: '10.000 TL’lik bir işlemde “ne kadar kazanırım?” kadar “yanlışsam ne kadar kaybederim?” sorusu da kararın parçasıdır. Risk, yalnız kötü sonuç değil belirsiz sonuç aralığıdır.',
+    en: 'In a TRY 10,000 trade, “how much can I lose if I am wrong?” matters as much as “how much can I make?” Risk is uncertainty around outcomes, not just a bad outcome.',
+  },
+  {
+    match: 'volatilite-once-risktir',
+    tr: 'Bir varlık normalde günde %1 hareket ederken başka biri %5 oynuyorsa, aynı büyüklükte pozisyon ikinci varlıkta çok daha büyük parasal dalgalanma yaratabilir.',
+    en: 'If one asset typically moves 1% a day and another 5%, the same position size can create much larger money swings in the second asset.',
+  },
+  {
+    match: 'pozisyon-buyuklugu-once-gelir',
+    tr: 'Portföyün 100.000 TL ve bir işlemde en fazla 1.000 TL kaybetmek istiyorsan, stop mesafesi büyüdükçe alabileceğin pozisyon miktarı küçülmelidir.',
+    en: 'If your portfolio is TRY 100,000 and you want to risk at most TRY 1,000 on one trade, a wider stop distance should mean a smaller position size.',
+  },
+  {
+    match: 'risk-getiri-tek-basina-yetmez',
+    tr: '1 TL risk edip 3 TL hedeflemek kulağa iyi gelebilir; fakat hedefe ulaşma olasılığı çok düşükse yalnız 1:3 oranına bakmak karar vermek için yeterli değildir.',
+    en: 'Risking 1 to target 3 can sound attractive, but if the probability of reaching the target is very low, the 1:3 ratio alone is not enough for a decision.',
+  },
+  {
+    match: 'stop-emri-garanti-midir',
+    tr: 'Stop seviyen 95 TL olsa bile sert bir haber sonrası ilk ulaşılabilir işlem 93 TL’de oluşabilir. Stop tetikler; gerçekleşme fiyatını her koşulda garanti etmez.',
+    en: 'Even with a stop at 95, a sharp news move may make the first available execution 93. A stop triggers an order; it does not guarantee the exact fill price in every condition.',
+  },
+  {
+    match: 'cok-varlik-cesitlendirme-degildir',
+    tr: 'Beş farklı banka hissesi almak beş ayrı isim taşır ama hepsi aynı sektör riskine bağlı olabilir. Çeşitlendirme, isim sayısından çok risk kaynaklarını ayırmakla ilgilidir.',
+    en: 'Owning five different bank shares gives you five names, but they can still share the same sector risk. Diversification is about separating risk sources, not just counting holdings.',
+  },
 ];
 
 function roleForBlock(block: Exclude<ContentBlock, VisualBlock>): LessonSupportingVisualRole {
@@ -80,7 +172,7 @@ function labelForBlock(block: Exclude<ContentBlock, VisualBlock>, language: Lear
 }
 
 function exampleForAsset(assetRef: string, language: LearningLanguage): string | undefined {
-  const match = MARKET_EXAMPLES.find((entry) => assetRef.includes(entry.match));
+  const match = BEGINNER_EXAMPLES.find((entry) => assetRef.includes(entry.match));
   return match ? match[language] : undefined;
 }
 
