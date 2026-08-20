@@ -142,7 +142,7 @@ async function openAcademyFoundation(page, path) {
 
 async function walkAcademyFoundationLesson(page, path, lessonName, lessonIndex) {
   await openAcademyFoundation(page, path);
-  const escapedLessonName = lessonName.replace(/[.*+?^${}()|[\]\\]/g, '\\  await page.getByRole('button', { name: lessonName, exact: true }).click();');
+  const escapedLessonName = lessonName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   await page.getByRole('button', { name: new RegExp(`^${escapedLessonName}(?:$| ·)`, 'i') }).click();
   await page.getByText(/Adım 1\//).waitFor();
   const stepMatch = (await page.getByText(/Adım 1\//).innerText()).match(/\/(\d+)/);
