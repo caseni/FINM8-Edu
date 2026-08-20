@@ -1,0 +1,228 @@
+import React from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import { selectAudienceCopy, type LearningLanguage } from '../../domain/learning/presentation';
+import type { ContentBlock, PresentationMode } from '../../domain/learning/types';
+import { defaultLearningTheme, type LearningTheme } from '../../theme/learningTheme';
+import { LessonSupportingVisual, type LessonSupportingVisualRole } from './LessonSupportingVisual';
+import { PremiumLessonBlockRenderer } from './PremiumLessonBlockRenderer';
+
+type VisualBlock = Extract<ContentBlock, { kind: 'visual' }>;
+
+interface SupportingVisual {
+  readonly assetRef: string;
+  readonly alt: string;
+}
+
+export interface DesktopPremiumLessonBlockRendererProps {
+  block: ContentBlock;
+  language: LearningLanguage;
+  presentationMode: PresentationMode;
+  theme?: LearningTheme;
+  renderVisual?: (block: VisualBlock) => React.ReactNode;
+  supportingVisual?: SupportingVisual;
+}
+
+function roleForBlock(block: Exclude<ContentBlock, VisualBlock>): LessonSupportingVisualRole {
+  if (block.kind === 'prompt') return 'hook';
+  if (block.kind === 'misconception') return 'misconception';
+  if (block.kind === 'callout') {
+    if (block.tone === 'risk') return 'risk';
+    if (block.tone === 'evidence') return 'practice';
+  }
+  return 'concept';
+}
+
+function labelForBlock(block: Exclude<ContentBlock, VisualBlock>, language: LearningLanguage): string | undefined {
+  const tr = language === 'tr';
+  if (block.kind === 'prompt') return tr ? 'BİR DÜŞÜN' : 'THINK FIRST';
+  if (block.kind === 'explanation') return tr ? 'KISA MANTIK' : 'CORE IDEA';
+  if (block.kind === 'misconception') return tr ? 'YAYGIN HATA' : 'COMMON MISTAKE';
+  if (block.kind === 'callout' && block.tone === 'risk') return tr ? 'DİKKAT' : 'WATCH OUT';
+  if (block.kind === 'callout' && block.tone === 'evidence') return tr ? 'PRATİK NOT' : 'PRACTICAL NOTE';
+  return undefined;
+}
+
+export function DesktopPremiumLessonBlockRenderer({
+  block,
+  language,
+  presentationMode,
+  theme = defaultLearningTheme,
+  renderVisual,
+  supportingVisual,
+}: DesktopPremiumLessonBlockRendererProps) {
+  const styles = createStyles(theme);
+
+  if (block.kind === 'visual') {
+    return (
+      <PremiumLessonBlockRenderer
+        block={block}
+        language={language}
+        presentationMode={presentationMode}
+        theme={theme}
+        renderVisual={renderVisual}
+        supportingVisual={supportingVisual}
+      />
+    );
+  }
+
+  const role = roleForBlock(block);
+  const label = labelForBlock(block, language);
+  const showVisual = Boolean(supportingVisual);
+  const toneStyle = block.kind === 'misconception'
+    ? styles.warningCopy
+    : block.kind === 'callout' && block.tone === 'risk'
+      ? styles.riskCopy
+      : block.kind === 'callout' && block.tone === 'evidence'
+        ? styles.evidenceCopy
+        : undefined;
+
+  if (block.kind === 'bullet_list') {
+    return (
+      <View style={[styles.row, !showVisual && styles.singleColumn]}>
+        <View style={styles.copyPane}>
+          {block.title ? (
+            <Text style={styles.sectionTitle}>
+              {selectAudienceCopy(block.title, presentationMode, language)}
+            </Text>
+          ) : null}
+          <View style={styles.bulletList}>
+            {block.items.map((item, index) => (
+              <View key={`${block.id}.${index}`} style={styles.bulletRow}>
+                <View style={styles.bulletDot} />
+                <Text style={styles.body}>{selectAudienceCopy(item, presentationMode, language)}</Text>
+              </View>
+            ))}
+          </View>
+        </View>
+        {supportingVisual ? (
+          <View style={styles.visualPane}>
+            <LessonSupportingVisual
+              assetRef={supportingVisual.assetRef}
+              alt={supportingVisual.alt}
+              language={language}
+              role={role}
+              theme={theme}
+            />
+          </View>
+        ) : null}
+      </View>
+    );
+  }
+
+  const copy = selectAudienceCopy(block.copy, presentationMode, language);
+
+  return (
+    <View style={[styles.row, !showVisual && styles.singleColumn]}>
+      <View style={[styles.copyPane, toneStyle]}>
+        {label ? (
+          <Text style={[
+            styles.eyebrow,
+            role === 'misconception' && styles.eyebrowWarning,
+            role === 'risk' && styles.eyebrowRisk,
+            role === 'practice' && styles.eyebrowPractice,
+          ]}>
+            {label}
+          </Text>
+        ) : null}
+        <Text style={block.kind === 'prompt' ? styles.prompt : styles.body}>{copy}</Text>
+      </View>
+      {supportingVisual ? (
+        <View style={styles.visualPane}>
+          <LessonSupportingVisual
+            assetRef={supportingVisual.assetRef}
+            alt={supportingVisual.alt}
+            language={language}
+            role={role}
+            theme={theme}
+          />
+        </View>
+      ) : null}
+    </View>
+  );
+}
+
+const createStyles = (theme: LearningTheme) => StyleSheet.create({
+  row: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'stretch',
+    gap: 28,
+  },
+  singleColumn: {
+    flexDirection: 'column',
+  },
+  copyPane: {
+    flex: 0.92,
+    minWidth: 0,
+    justifyContent: 'center',
+    gap: 14,
+    paddingVertical: 8,
+  },
+  visualPane: {
+    flex: 1.18,
+    minWidth: 0,
+    justifyContent: 'center',
+  },
+  eyebrow: {
+    color: theme.colors.primary,
+    fontSize: 11,
+    lineHeight: 15,
+    fontWeight: '900',
+    letterSpacing: 0.9,
+  },
+  eyebrowWarning: { color: theme.colors.warning },
+  eyebrowRisk: { color: theme.colors.risk },
+  eyebrowPractice: { color: theme.colors.success },
+  prompt: {
+    color: theme.colors.text,
+    fontSize: 32,
+    lineHeight: 41,
+    fontWeight: '900',
+  },
+  body: {
+    color: theme.colors.text,
+    fontSize: 20,
+    lineHeight: 31,
+    fontWeight: '500',
+  },
+  sectionTitle: {
+    color: theme.colors.text,
+    fontSize: 23,
+    lineHeight: 31,
+    fontWeight: '800',
+  },
+  bulletList: { gap: 12 },
+  bulletRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 10,
+  },
+  bulletDot: {
+    width: 7,
+    height: 7,
+    marginTop: 12,
+    borderRadius: 4,
+    backgroundColor: theme.colors.primary,
+  },
+  warningCopy: {
+    padding: 18,
+    borderRadius: theme.radius.medium,
+    borderLeftWidth: 3,
+    borderLeftColor: theme.colors.warning,
+    backgroundColor: theme.colors.surfaceMuted,
+  },
+  riskCopy: {
+    padding: 18,
+    borderRadius: theme.radius.medium,
+    borderLeftWidth: 3,
+    borderLeftColor: theme.colors.risk,
+    backgroundColor: theme.colors.surfaceMuted,
+  },
+  evidenceCopy: {
+    padding: 18,
+    borderRadius: theme.radius.medium,
+    borderLeftWidth: 3,
+    borderLeftColor: theme.colors.success,
+    backgroundColor: theme.colors.surfaceMuted,
+  },
+});
