@@ -5,6 +5,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  useWindowDimensions,
   View,
 } from 'react-native';
 import {
@@ -24,7 +25,7 @@ import {
   type LearningTheme,
 } from '../../theme/learningTheme';
 import { LEARNING_STAGE_LABELS } from '../../domain/learning/personalization';
-import { LessonBlockRenderer } from './LessonBlockRenderer';
+import { PremiumLessonBlockRenderer } from './PremiumLessonBlockRenderer';
 import { LessonSupportingVisual } from './LessonSupportingVisual';
 
 type VisualBlock = Extract<ContentBlock, { kind: 'visual' }>;
@@ -57,7 +58,8 @@ export function LessonPlayer({
   initialStepIndex = 0,
   onStepChange,
 }: LessonPlayerProps) {
-  const styles = createStyles(theme);
+  const { width } = useWindowDimensions();
+  const styles = createStyles(theme, width >= 900);
   const visibleBlocks = useMemo(
     () =>
       lesson.contentBlocks
@@ -148,11 +150,11 @@ export function LessonPlayer({
         </Pressable>
         <View style={styles.progressGroup}>
           <View style={styles.progressCopy}>
-            <Text style={styles.flowLabel}>{language === 'tr' ? 'DERS · 1/3' : 'LESSON · 1/3'}</Text>
+            <Text style={styles.flowLabel}>{language === 'tr' ? 'DERS' : 'LESSON'}</Text>
             <Text style={styles.stepText}>
               {language === 'tr'
-                ? `Adım ${stepIndex + 1}/${totalSteps}`
-                : `Step ${stepIndex + 1}/${totalSteps}`}
+                ? `${stepIndex + 1}/${totalSteps} adım`
+                : `${stepIndex + 1}/${totalSteps} steps`}
             </Text>
           </View>
           <View
@@ -188,13 +190,15 @@ export function LessonPlayer({
                 {selectLocalizedText(lesson.takeaway, language)}
               </Text>
               {lessonVisual ? (
-                <LessonSupportingVisual
-                  assetRef={lessonVisual.assetRef}
-                  alt={lessonVisual.alt}
-                  language={language}
-                  role="summary"
-                  theme={theme}
-                />
+                <View style={styles.takeawayVisual}>
+                  <LessonSupportingVisual
+                    assetRef={lessonVisual.assetRef}
+                    alt={lessonVisual.alt}
+                    language={language}
+                    role="summary"
+                    theme={theme}
+                  />
+                </View>
               ) : null}
               {safetyBlock ? (
                 <View
@@ -202,7 +206,7 @@ export function LessonPlayer({
                   style={styles.compactSafety}
                 >
                   <Text style={styles.compactSafetyLabel}>
-                    {language === 'tr' ? 'GÜVENLİK NOTU' : 'SAFETY NOTE'}
+                    {language === 'tr' ? 'DİKKAT' : 'WATCH OUT'}
                   </Text>
                   <Text style={styles.compactSafetyText}>
                     {selectAudienceCopy(safetyBlock.copy, presentationMode, language)}
@@ -211,7 +215,7 @@ export function LessonPlayer({
               ) : null}
             </View>
           ) : currentBlock ? (
-            <LessonBlockRenderer
+            <PremiumLessonBlockRenderer
               block={currentBlock}
               language={language}
               presentationMode={presentationMode}
@@ -271,14 +275,14 @@ export function LessonPlayer({
   );
 }
 
-const createStyles = (theme: LearningTheme) =>
+const createStyles = (theme: LearningTheme, wide: boolean) =>
   StyleSheet.create({
     safeArea: { flex: 1, backgroundColor: theme.colors.background },
     header: {
       flexDirection: 'row',
       alignItems: 'center',
       gap: theme.spacing.md,
-      paddingHorizontal: theme.spacing.md,
+      paddingHorizontal: wide ? 22 : theme.spacing.md,
       paddingVertical: theme.spacing.sm,
       borderBottomColor: theme.colors.border,
       borderBottomWidth: 1,
@@ -287,48 +291,47 @@ const createStyles = (theme: LearningTheme) =>
     exitText: { color: theme.colors.textMuted, fontSize: 28 },
     progressGroup: { flex: 1, gap: theme.spacing.xs },
     progressCopy: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: theme.spacing.sm },
-    flowLabel: { color: theme.colors.primary, fontSize: 11, fontWeight: '800', letterSpacing: 0.7 },
+    flowLabel: { color: theme.colors.primary, fontSize: 11, fontWeight: '900', letterSpacing: 0.8 },
     progressTrack: {
       flex: 1,
-      height: 6,
+      height: 5,
       overflow: 'hidden',
       backgroundColor: theme.colors.surfaceMuted,
       borderRadius: theme.radius.small,
     },
-    progressFill: { height: 6, backgroundColor: theme.colors.primary },
+    progressFill: { height: 5, backgroundColor: theme.colors.primary },
     stepText: { color: theme.colors.textMuted, fontSize: 12, fontWeight: '700' },
     content: {
       flexGrow: 1,
       width: '100%',
-      maxWidth: 760,
+      maxWidth: wide ? 860 : 760,
       alignSelf: 'center',
-      paddingHorizontal: theme.spacing.md,
-      paddingTop: theme.spacing.sm,
+      paddingHorizontal: wide ? 24 : theme.spacing.md,
+      paddingTop: wide ? 18 : theme.spacing.sm,
       paddingBottom: theme.spacing.md,
-      gap: theme.spacing.sm,
+      gap: wide ? 12 : theme.spacing.sm,
     },
     metaRow: { flexDirection: 'row', flexWrap: 'wrap', gap: theme.spacing.sm },
-    duration: { color: theme.colors.textMuted, fontSize: 12 },
-    contextLabel: { color: theme.colors.textMuted, fontSize: 12 },
-    lessonTitle: { color: theme.colors.text, fontSize: 21, lineHeight: 28, fontWeight: '800' },
+    duration: { color: theme.colors.textMuted, fontSize: wide ? 13 : 12 },
+    contextLabel: { color: theme.colors.textMuted, fontSize: wide ? 13 : 12 },
+    lessonTitle: { color: theme.colors.text, fontSize: wide ? 24 : 21, lineHeight: wide ? 32 : 28, fontWeight: '850' },
     slide: {
       width: '100%',
       justifyContent: 'flex-start',
-      padding: theme.spacing.md,
+      padding: wide ? 22 : theme.spacing.md,
       backgroundColor: theme.colors.surface,
       borderColor: theme.colors.border,
       borderWidth: 1,
       borderRadius: theme.radius.large,
     },
-    visualSlide: {
-      justifyContent: 'flex-start',
-    },
-    takeaway: { gap: theme.spacing.md },
-    takeawayEyebrow: { color: theme.colors.primary, fontSize: 12, fontWeight: '800' },
-    takeawayText: { color: theme.colors.text, fontSize: 25, fontWeight: '800', lineHeight: 34 },
+    visualSlide: { justifyContent: 'flex-start' },
+    takeaway: { gap: wide ? 18 : theme.spacing.md },
+    takeawayEyebrow: { color: theme.colors.primary, fontSize: 11, lineHeight: 15, fontWeight: '900', letterSpacing: 0.8 },
+    takeawayText: { color: theme.colors.text, fontSize: wide ? 28 : 23, fontWeight: '850', lineHeight: wide ? 38 : 31 },
+    takeawayVisual: { marginTop: 2 },
     compactSafety: {
       gap: theme.spacing.xs,
-      marginTop: theme.spacing.xs,
+      marginTop: 2,
       paddingTop: theme.spacing.sm,
       borderTopColor: theme.colors.border,
       borderTopWidth: 1,
@@ -336,23 +339,24 @@ const createStyles = (theme: LearningTheme) =>
     compactSafetyLabel: {
       color: theme.colors.risk,
       fontSize: 10,
-      fontWeight: '800',
-      letterSpacing: 0.7,
+      fontWeight: '900',
+      letterSpacing: 0.8,
     },
     compactSafetyText: {
       color: theme.colors.textMuted,
-      fontSize: 13,
-      lineHeight: 19,
+      fontSize: wide ? 14 : 13,
+      lineHeight: wide ? 21 : 19,
     },
     footer: {
-      padding: theme.spacing.md,
+      paddingHorizontal: wide ? 22 : theme.spacing.md,
+      paddingVertical: wide ? 12 : theme.spacing.md,
       borderTopColor: theme.colors.border,
       borderTopWidth: 1,
       backgroundColor: theme.colors.background,
     },
     footerActions: {
       width: '100%',
-      maxWidth: 760,
+      maxWidth: wide ? 860 : 760,
       alignSelf: 'center',
       flexDirection: 'row',
       gap: theme.spacing.md,
@@ -366,7 +370,7 @@ const createStyles = (theme: LearningTheme) =>
       padding: theme.spacing.md,
       minHeight: 52,
     },
-    primaryText: { color: theme.colors.primaryText, fontWeight: '800', fontSize: 16 },
+    primaryText: { color: theme.colors.primaryText, fontWeight: '900', fontSize: 16 },
     secondaryButton: {
       alignItems: 'center',
       justifyContent: 'center',
@@ -377,5 +381,5 @@ const createStyles = (theme: LearningTheme) =>
       minWidth: 100,
       minHeight: 52,
     },
-    secondaryText: { color: theme.colors.text, fontWeight: '700' },
+    secondaryText: { color: theme.colors.text, fontWeight: '800' },
   });
