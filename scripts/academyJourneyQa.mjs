@@ -124,28 +124,21 @@ async function solveTask(page, prefix) {
     throw new Error(`${prefix}: unexpected task choice count ${choiceCount}`);
   }
 
-  const helper = page.getByText(/\d+ doğru kanıtı seç\./).first();
-  await helper.waitFor();
-  const expectedMatch = (await helper.innerText()).match(/(\d+) doğru kanıtı seç\./);
-  const expectedCount = Number(expectedMatch?.[1] ?? 0);
-  if (!Number.isFinite(expectedCount) || expectedCount < 1 || expectedCount > choiceCount) {
-    throw new Error(`${prefix}: invalid expected evidence count ${expectedCount}`);
-  }
-
   const combinations = [];
   for (let mask = 1; mask < (1 << choiceCount); mask += 1) {
     const indexes = [];
     for (let index = 0; index < choiceCount; index += 1) {
       if ((mask & (1 << index)) !== 0) indexes.push(index);
     }
-    if (indexes.length === expectedCount) combinations.push(indexes);
+    combinations.push(indexes);
   }
+  combinations.sort((a, b) => a.length - b.length);
 
   for (let attempt = 0; attempt < combinations.length; attempt += 1) {
     const combo = combinations[attempt];
     await waitForTaskReady(page, choiceCount);
     const choices = page.getByRole('checkbox');
-    console.log(`${prefix}: task attempt ${attempt + 1}/${combinations.length} expected=${expectedCount} choices=${combo.join(',')}`);
+    console.log(`${prefix}: task attempt ${attempt + 1}/${combinations.length} choices=${combo.join(',')}`);
     for (const choiceIndex of combo) {
       await choices.nth(choiceIndex).click();
     }
