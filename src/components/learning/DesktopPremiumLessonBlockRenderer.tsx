@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { selectAudienceCopy, type LearningLanguage } from '../../domain/learning/presentation';
 import type { ContentBlock, PresentationMode } from '../../domain/learning/types';
 import { defaultLearningTheme, type LearningTheme } from '../../theme/learningTheme';
+import { LessonBlockRenderer } from './LessonBlockRenderer';
 import { LessonSupportingVisual, type LessonSupportingVisualRole } from './LessonSupportingVisual';
 import { PremiumLessonBlockRenderer } from './PremiumLessonBlockRenderer';
 
@@ -42,6 +43,13 @@ function labelForBlock(block: Exclude<ContentBlock, VisualBlock>, language: Lear
   return undefined;
 }
 
+function conciseDesktopExample(assetRef: string, language: LearningLanguage): string | undefined {
+  if (!assetRef.includes('fiyat-piyasada-nasil-olusur')) return undefined;
+  return language === 'tr'
+    ? 'Alıcı ve satıcı 100 TL’de buluşursa işlem 100 TL’den gerçekleşir.'
+    : 'If buyer and seller meet at 100, the trade can execute at 100.';
+}
+
 export function DesktopPremiumLessonBlockRenderer({
   block,
   language,
@@ -53,6 +61,26 @@ export function DesktopPremiumLessonBlockRenderer({
   const styles = createStyles(theme);
 
   if (block.kind === 'visual') {
+    const conciseExample = conciseDesktopExample(block.assetRef, language);
+    if (conciseExample) {
+      return (
+        <View style={styles.visualStep}>
+          <LessonBlockRenderer
+            block={block}
+            language={language}
+            presentationMode={presentationMode}
+            theme={theme}
+            renderVisual={renderVisual}
+            supportingVisual={supportingVisual}
+          />
+          <View style={styles.exampleCard}>
+            <Text style={styles.exampleEyebrow}>{language === 'tr' ? 'MİNİ ÖRNEK' : 'MINI EXAMPLE'}</Text>
+            <Text style={styles.exampleText}>{conciseExample}</Text>
+          </View>
+        </View>
+      );
+    }
+
     return (
       <PremiumLessonBlockRenderer
         block={block}
@@ -163,6 +191,7 @@ const createStyles = (theme: LearningTheme) => StyleSheet.create({
     minWidth: 0,
     justifyContent: 'center',
   },
+  visualStep: { gap: 12 },
   eyebrow: {
     color: theme.colors.primary,
     fontSize: 11,
@@ -203,6 +232,28 @@ const createStyles = (theme: LearningTheme) => StyleSheet.create({
     marginTop: 12,
     borderRadius: 4,
     backgroundColor: theme.colors.primary,
+  },
+  exampleCard: {
+    gap: 6,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderRadius: theme.radius.medium,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+    backgroundColor: theme.colors.surfaceMuted,
+  },
+  exampleEyebrow: {
+    color: theme.colors.primary,
+    fontSize: 10,
+    lineHeight: 14,
+    fontWeight: '900',
+    letterSpacing: 0.8,
+  },
+  exampleText: {
+    color: theme.colors.text,
+    fontSize: 16,
+    lineHeight: 23,
+    fontWeight: '500',
   },
   warningCopy: {
     padding: 18,
