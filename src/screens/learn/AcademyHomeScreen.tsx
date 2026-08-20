@@ -56,6 +56,25 @@ export function AcademyHomeScreen() {
     && ACADEMY_TRACKS[trackId].lessonIds.every((lessonId) => completedLessonIds.includes(lessonId))
   ).length;
   const academyComplete = academyLessonIds.length > 0 && academyCompletedLessonCount === academyLessonIds.length;
+  const academyResumeCheckpoint = Object.values(lessonCheckpoints)
+    .filter((checkpoint) => (
+      academyLessonIds.includes(checkpoint.lessonId)
+      && !completedLessonIds.includes(checkpoint.lessonId)
+    ))
+    .sort((left, right) => right.updatedAt.localeCompare(left.updatedAt))[0];
+  const academyResumeLesson = academyResumeCheckpoint
+    ? lessonsById.get(academyResumeCheckpoint.lessonId)
+    : undefined;
+  const academyResumeTrack = academyResumeLesson
+    ? activeAcademyTrackIds
+      .map((trackId) => ACADEMY_TRACKS[trackId])
+      .find((track) => track.lessonIds.includes(academyResumeLesson.id))
+    : undefined;
+  const academyResumeActionLabel = academyResumeCheckpoint?.stage === 'task'
+    ? language === 'tr' ? 'Göreve devam et' : 'Resume task'
+    : academyResumeCheckpoint?.stage === 'quiz'
+      ? language === 'tr' ? 'Quiz’e devam et' : 'Resume quiz'
+      : language === 'tr' ? 'Derse devam et' : 'Resume lesson';
 
   const openStarterTrack = (trackId: AcademyTrackId) => {
     setExpandedTrackId(trackId);
@@ -134,6 +153,29 @@ export function AcademyHomeScreen() {
             </Text>
           ) : null}
         </View>
+
+        {academyResumeLesson && academyResumeTrack && academyResumeCheckpoint ? (
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={`${academyResumeActionLabel}: ${selectLocalizedText(academyResumeLesson.title, language)} · ${selectLocalizedText(academyResumeTrack.title, language)}`}
+            onPress={() => openLesson(academyResumeLesson.id)}
+            style={({ pressed }) => [styles.academyResumeCard, pressed && styles.academyResumeCardPressed]}
+          >
+            <View style={styles.academyResumeCopy}>
+              <Text style={styles.academyResumeEyebrow}>
+                {language === 'tr' ? 'KALDIĞIN YER' : 'CONTINUE HERE'}
+              </Text>
+              <Text style={styles.academyResumeTrack}>
+                {selectLocalizedText(academyResumeTrack.title, language)}
+              </Text>
+              <Text style={styles.academyResumeTitle}>
+                {selectLocalizedText(academyResumeLesson.title, language)}
+              </Text>
+              <Text style={styles.academyResumeAction}>{academyResumeActionLabel}</Text>
+            </View>
+            <Text style={styles.academyResumeArrow}>›</Text>
+          </Pressable>
+        ) : null}
 
         {beginnerComplete && !academyComplete ? (
           <View style={styles.starterGuide}>
@@ -420,6 +462,14 @@ const styles = StyleSheet.create({
   heroTitle: { color: '#F8FAFC', fontSize: 23, lineHeight: 30, fontWeight: '900' },
   heroBody: { color: '#B8D6D5', fontSize: 14, lineHeight: 21 },
   heroCompletionMeta: { color: '#5EEAD4', fontSize: 12, lineHeight: 18, fontWeight: '900' },
+  academyResumeCard: { minHeight: 104, flexDirection: 'row', alignItems: 'center', gap: 12, padding: 17, borderRadius: 20, borderWidth: 1, borderColor: '#2E706D', backgroundColor: '#0B252D' },
+  academyResumeCardPressed: { backgroundColor: '#12343D' },
+  academyResumeCopy: { flex: 1, gap: 3 },
+  academyResumeEyebrow: { color: '#5EEAD4', fontSize: 9, fontWeight: '900', letterSpacing: 0.8 },
+  academyResumeTrack: { color: '#91B9BA', fontSize: 11, lineHeight: 16, fontWeight: '800' },
+  academyResumeTitle: { color: '#F8FAFC', fontSize: 16, lineHeight: 22, fontWeight: '900' },
+  academyResumeAction: { color: '#5EEAD4', fontSize: 12, lineHeight: 17, fontWeight: '900' },
+  academyResumeArrow: { color: '#5EEAD4', fontSize: 28, fontWeight: '600' },
   starterGuide: { gap: 8, padding: 18, borderRadius: 20, borderWidth: 1, borderColor: '#2B5F63', backgroundColor: '#0A2028' },
   starterEyebrow: { color: '#5EEAD4', fontSize: 10, fontWeight: '900', letterSpacing: 0.8 },
   starterTitle: { color: '#F8FAFC', fontSize: 18, lineHeight: 24, fontWeight: '900' },

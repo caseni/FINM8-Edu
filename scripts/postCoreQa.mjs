@@ -94,6 +94,14 @@ async function seedCompletedBeginnerPath(page) {
       state: {
         ...(persisted.state ?? {}),
         completedLessonIds: lessonIds,
+        lessonCheckpoints: {
+          'lesson.markets.exchanges.001': {
+            lessonId: 'lesson.markets.exchanges.001',
+            stage: 'lesson',
+            stepIndex: 0,
+            updatedAt: '2026-08-20T05:00:00.000Z',
+          },
+        },
       },
     }));
   }, { key: progressKey, lessonIds: beginnerLessonIds });
@@ -191,7 +199,11 @@ try {
     await page.getByText(option, { exact: true }).waitFor();
   }
   await assertNoHorizontalOverflow(page, 'post-core-academy');
+  const academyResume = page.getByRole('button', { name: /Derse devam et: Borsa ne işe yarar\? · Piyasaları Anla/i });
+  await academyResume.waitFor();
   await page.screenshot({ path: 'visual-qa/post-core-academy.png', fullPage: true });
+  await academyResume.click();
+  await page.getByText(/Adım 1\//).waitFor();
 
   for (const path of academyFoundationPaths) {
     await openAcademyFoundation(page, path);
