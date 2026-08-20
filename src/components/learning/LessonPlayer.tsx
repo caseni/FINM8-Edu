@@ -153,8 +153,8 @@ export function LessonPlayer({
             <Text style={styles.flowLabel}>{language === 'tr' ? 'DERS' : 'LESSON'}</Text>
             <Text style={styles.stepText}>
               {language === 'tr'
-                ? `${stepIndex + 1}/${totalSteps} adım`
-                : `${stepIndex + 1}/${totalSteps} steps`}
+                ? `Adım ${stepIndex + 1}/${totalSteps}`
+                : `Step ${stepIndex + 1}/${totalSteps}`}
             </Text>
           </View>
           <View
