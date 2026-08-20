@@ -32,7 +32,7 @@ const academyFoundationPaths = [
   {
     key: 'market',
     trackTitle: 'Piyasaları Anla',
-    starterLabel: /Piyasaları daha iyi anla/i,
+    starterLabel: /^Piyasaları daha iyi anla:/i,
     lessons: [
       'Borsa ne işe yarar?',
       'Endeks neyi gösterir?',
@@ -45,7 +45,7 @@ const academyFoundationPaths = [
   {
     key: 'technical',
     trackTitle: 'Grafikleri Derinleştir',
-    starterLabel: /Grafikleri derinleştir/i,
+    starterLabel: /^Grafikleri derinleştir:/i,
     lessons: [
       'Fiyat bir seviyeyi aşınca neye bakmalısın?',
       'Fiyat seviyeyi aşıp geri dönerse ne olmuş olabilir?',
@@ -58,7 +58,7 @@ const academyFoundationPaths = [
   {
     key: 'fundamental',
     trackTitle: 'Şirketleri Anla',
-    starterLabel: /Şirketleri anlamaya başla/i,
+    starterLabel: /^Şirketleri anlamaya başla:/i,
     lessons: [
       'Bir şirketi anlamak için neden tek sayı yetmez?',
       'Satış artarken kâr neden düşebilir?',
@@ -71,7 +71,7 @@ const academyFoundationPaths = [
   {
     key: 'risk',
     trackTitle: 'Risk ve Portföy',
-    starterLabel: /Risk ve portföyü güçlendir/i,
+    starterLabel: /^Risk ve portföyü güçlendir:/i,
     lessons: [
       'İki yatırım hep birlikte hareket ediyorsa gerçekten farklı mı?',
       'Portföy yol boyunca ne kadar düşmüş olabilir?',
