@@ -85,57 +85,51 @@ export default function App() {
           )}
         </View>
       )}
-      {bootReady && saveStatus !== 'idle' ? (
-        saveStatus === 'error' ? (
-          <View
-            accessibilityLiveRegion="assertive"
-            style={styles.saveErrorLayer}
-          >
-            <View style={styles.saveNoticeError}>
-              <Text style={styles.saveNoticeText}>
-                {language === 'en'
-                  ? 'Could not save on this device. Try again before closing the app.'
-                  : 'Bu cihaza kaydedilemedi. Uygulamayı kapatmadan yeniden dene.'}
+
+      {bootReady && saveStatus === 'error' ? (
+        <View
+          accessibilityLiveRegion="assertive"
+          style={styles.saveErrorLayer}
+        >
+          <View style={styles.saveNoticeError}>
+            <Text style={styles.saveNoticeText}>
+              {language === 'en'
+                ? 'Could not save on this device. Try again before closing the app.'
+                : 'Bu cihaza kaydedilemedi. Uygulamayı kapatmadan yeniden dene.'}
+            </Text>
+            <Pressable
+              accessibilityRole="button"
+              onPress={retryLatestProgressSave}
+              style={({ pressed }) => [
+                styles.saveRetryButton,
+                pressed && styles.buttonPressed,
+              ]}
+            >
+              <Text style={styles.saveRetryText}>
+                {language === 'en' ? 'Try again' : 'Yeniden dene'}
               </Text>
-              <Pressable
-                accessibilityRole="button"
-                onPress={retryLatestProgressSave}
-                style={({ pressed }) => [
-                  styles.saveRetryButton,
-                  pressed && styles.buttonPressed,
-                ]}
-              >
-                <Text style={styles.saveRetryText}>
-                  {language === 'en' ? 'Try again' : 'Yeniden dene'}
-                </Text>
-              </Pressable>
-            </View>
+            </Pressable>
           </View>
-        ) : (
-          <View
-            accessibilityLiveRegion="polite"
-            pointerEvents="none"
-            style={styles.saveStatusLayer}
-          >
-            <View style={styles.saveNoticeCompact}>
-              <View
-                accessibilityElementsHidden
-                importantForAccessibility="no-hide-descendants"
-                style={styles.saveStatusDot}
-              />
-              <Text style={styles.saveNoticeCompactText}>
-                {saveStatus === 'saving'
-                  ? language === 'en'
-                    ? 'Saving on this device…'
-                    : 'Bu cihaza kaydediliyor…'
-                  : language === 'en'
-                    ? 'Saved on this device'
-                    : 'Bu cihazda kaydedildi'}
-              </Text>
-            </View>
+        </View>
+      ) : bootReady && saveStatus === 'saving' ? (
+        <View
+          accessibilityLiveRegion="polite"
+          pointerEvents="none"
+          style={styles.saveStatusLayer}
+        >
+          <View style={styles.saveNoticeCompact}>
+            <View
+              accessibilityElementsHidden
+              importantForAccessibility="no-hide-descendants"
+              style={styles.saveStatusDot}
+            />
+            <Text style={styles.saveNoticeCompactText}>
+              {language === 'en' ? 'Saving…' : 'Kaydediliyor…'}
+            </Text>
           </View>
-        )
+        </View>
       ) : null}
+
       <StatusBar style="light" />
     </GestureHandlerRootView>
   );
@@ -200,30 +194,30 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
   saveNoticeCompact: {
-    minHeight: 34,
-    maxWidth: 260,
+    minHeight: 30,
+    maxWidth: 180,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 7,
-    paddingHorizontal: 12,
-    paddingVertical: 7,
+    gap: 6,
+    paddingHorizontal: 11,
+    paddingVertical: 6,
     borderRadius: 999,
     borderWidth: 1,
     borderColor: '#245750',
     backgroundColor: '#0A2827',
   },
   saveStatusDot: {
-    width: 7,
-    height: 7,
+    width: 6,
+    height: 6,
     borderRadius: 999,
     backgroundColor: '#2DD4BF',
   },
   saveNoticeCompactText: {
     flexShrink: 1,
     color: '#C5EDE8',
-    fontSize: 12,
-    lineHeight: 16,
+    fontSize: 11,
+    lineHeight: 15,
     fontWeight: '700',
     textAlign: 'center',
   },
