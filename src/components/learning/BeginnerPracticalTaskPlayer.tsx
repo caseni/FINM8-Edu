@@ -1,5 +1,5 @@
 import React, { useMemo, useRef, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import {
   selectAudienceCopy,
   selectLocalizedText,
@@ -32,10 +32,12 @@ export function BeginnerPracticalTaskPlayer({
   completionLabel,
   eyebrow,
 }: BeginnerPracticalTaskPlayerProps) {
+  const { width } = useWindowDimensions();
+  const wide = width >= 900;
   const [selected, setSelected] = useState<string[]>([]);
   const [checked, setChecked] = useState(false);
   const completionLocked = useRef(false);
-  const styles = useMemo(() => createStyles(theme), [theme]);
+  const styles = useMemo(() => createStyles(theme, wide), [theme, wide]);
   const choices = task.choices ?? [];
   const expected = [...task.expectedEvidence].sort();
   const actual = [...selected].sort();
@@ -86,24 +88,16 @@ export function BeginnerPracticalTaskPlayer({
 
           {!checked ? (
             <View style={styles.recallPanel} accessibilityRole="summary">
-              <Text style={styles.recallMark}>?</Text>
+              <View style={styles.recallAccent} />
               <View style={styles.recallCopy}>
-                <Text style={styles.recallTitle}>{language === 'tr' ? 'KENDİN DÜŞÜN' : 'THINK IT THROUGH'}</Text>
+                <Text style={styles.recallTitle}>{language === 'tr' ? 'ÖNCE SEN ÇÖZ' : 'SOLVE IT FIRST'}</Text>
                 <Text style={styles.recallText}>
                   {language === 'tr'
-                    ? 'Dersin cevabını burada göstermiyoruz. Senaryoyu okuyup en güçlü seçeneği kendin işaretle.'
-                    : 'The lesson answer is hidden here. Read the scenario and choose the strongest option yourself.'}
+                    ? 'Cevabı kendin seç. Görsel açıklama, kontrol ettikten sonra açılacak.'
+                    : 'Choose your answer first. The visual explanation opens after you check it.'}
                 </Text>
               </View>
             </View>
-          ) : reinforcementVisual ? (
-            <LessonSupportingVisual
-              assetRef={reinforcementVisual.assetRef}
-              alt={selectLocalizedText(reinforcementVisual.alt, language)}
-              language={language}
-              role="summary"
-              theme={theme}
-            />
           ) : null}
 
           <Text style={styles.helper}>
@@ -148,19 +142,32 @@ export function BeginnerPracticalTaskPlayer({
           </View>
 
           {checked ? (
-            <View style={[styles.feedbackCard, passed ? styles.feedbackPassed : styles.feedbackRetry]} accessibilityRole="summary">
-              <Text style={[styles.feedbackTitle, passed ? styles.feedbackTitlePassed : styles.feedbackTitleRetry]}>
-                {passed
-                  ? language === 'tr' ? 'Doğru. Seçimin senaryodaki kanıtlarla uyumlu.' : 'Correct. Your selection matches the evidence in the scenario.'
-                  : language === 'tr' ? 'Henüz değil. Senaryodaki ipuçlarını birlikte değerlendir.' : 'Not yet. Evaluate the clues in the scenario together.'}
-              </Text>
-              <Text style={styles.feedbackText}>
-                {passed
-                  ? takeawayText
-                  : language === 'tr'
-                    ? `İpucu: ${takeawayText}`
-                    : `Hint: ${takeawayText}`}
-              </Text>
+            <View style={styles.feedbackGroup}>
+              <View style={[styles.feedbackCard, passed ? styles.feedbackPassed : styles.feedbackRetry]} accessibilityRole="summary">
+                <Text style={[styles.feedbackTitle, passed ? styles.feedbackTitlePassed : styles.feedbackTitleRetry]}>
+                  {passed
+                    ? language === 'tr' ? 'Doğru. Seçimin senaryodaki kanıtlarla uyumlu.' : 'Correct. Your selection matches the evidence in the scenario.'
+                    : language === 'tr' ? 'Henüz değil. Senaryodaki ipuçlarını birlikte değerlendir.' : 'Not yet. Evaluate the clues in the scenario together.'}
+                </Text>
+                <Text style={styles.feedbackText}>
+                  {passed
+                    ? takeawayText
+                    : language === 'tr'
+                      ? `İpucu: ${takeawayText}`
+                      : `Hint: ${takeawayText}`}
+                </Text>
+              </View>
+              {reinforcementVisual ? (
+                <View style={styles.feedbackVisual}>
+                  <LessonSupportingVisual
+                    assetRef={reinforcementVisual.assetRef}
+                    alt={selectLocalizedText(reinforcementVisual.alt, language)}
+                    language={language}
+                    role="summary"
+                    theme={theme}
+                  />
+                </View>
+              ) : null}
             </View>
           ) : null}
         </View>
@@ -182,36 +189,68 @@ export function BeginnerPracticalTaskPlayer({
   );
 }
 
-const createStyles = (theme: LearningTheme) => StyleSheet.create({
+const createStyles = (theme: LearningTheme, wide: boolean) => StyleSheet.create({
   shell: { flex: 1, width: '100%' },
-  scrollContent: { flexGrow: 1, width: '100%', padding: theme.spacing.md },
-  container: { width: '100%', maxWidth: 760, alignSelf: 'center', gap: theme.spacing.md, padding: theme.spacing.lg, backgroundColor: theme.colors.surface, borderRadius: theme.radius.large, borderWidth: 1, borderColor: theme.colors.border },
+  scrollContent: { flexGrow: 1, width: '100%', padding: wide ? 24 : theme.spacing.md },
+  container: {
+    width: '100%',
+    maxWidth: wide ? 920 : 760,
+    alignSelf: 'center',
+    gap: wide ? 18 : theme.spacing.md,
+    padding: wide ? 24 : theme.spacing.lg,
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.radius.large,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+  },
   eyebrow: { color: theme.colors.primary, fontSize: 11, fontWeight: '900', letterSpacing: 0.8 },
-  prompt: { color: theme.colors.text, fontSize: 23, lineHeight: 31, fontWeight: '800' },
-  recallPanel: { minHeight: 112, flexDirection: 'row', alignItems: 'center', gap: theme.spacing.md, padding: theme.spacing.lg, backgroundColor: theme.colors.background, borderRadius: theme.radius.medium, borderWidth: 1, borderColor: theme.colors.primary },
-  recallMark: { width: 44, color: theme.colors.primary, fontSize: 38, lineHeight: 44, fontWeight: '900', textAlign: 'center' },
-  recallCopy: { flex: 1, gap: 5 },
-  recallTitle: { color: theme.colors.text, fontSize: 12, fontWeight: '900', letterSpacing: 0.6 },
-  recallText: { color: theme.colors.textMuted, fontSize: 13, lineHeight: 19 },
+  prompt: { color: theme.colors.text, fontSize: wide ? 27 : 23, lineHeight: wide ? 36 : 31, fontWeight: '800' },
+  recallPanel: {
+    minHeight: wide ? 76 : 70,
+    flexDirection: 'row',
+    alignItems: 'stretch',
+    gap: 12,
+    padding: wide ? 16 : 14,
+    backgroundColor: theme.colors.background,
+    borderRadius: theme.radius.medium,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+  },
+  recallAccent: { width: 3, borderRadius: 2, backgroundColor: theme.colors.primary },
+  recallCopy: { flex: 1, justifyContent: 'center', gap: 5 },
+  recallTitle: { color: theme.colors.primary, fontSize: 11, fontWeight: '900', letterSpacing: 0.7 },
+  recallText: { color: theme.colors.textMuted, fontSize: wide ? 14 : 13, lineHeight: wide ? 21 : 19 },
   helper: { color: theme.colors.textMuted, fontSize: 12, fontWeight: '700' },
   choices: { gap: theme.spacing.sm },
-  choice: { minHeight: 58, flexDirection: 'row', alignItems: 'center', gap: theme.spacing.sm, padding: theme.spacing.md, borderRadius: theme.radius.medium, borderWidth: 1, borderColor: theme.colors.border, backgroundColor: theme.colors.background },
+  choice: {
+    minHeight: wide ? 62 : 58,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: theme.spacing.sm,
+    padding: theme.spacing.md,
+    borderRadius: theme.radius.medium,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+    backgroundColor: theme.colors.background,
+  },
   choiceSelected: { borderColor: theme.colors.primary, backgroundColor: theme.colors.surfaceMuted },
   choiceCorrect: { borderColor: theme.colors.success, backgroundColor: theme.colors.surfaceMuted },
   choiceWrong: { borderColor: theme.colors.risk, backgroundColor: theme.colors.surfaceMuted },
   choiceMark: { width: 22, color: theme.colors.textMuted, fontSize: 16, fontWeight: '900' },
   choiceMarkCorrect: { color: theme.colors.success },
   choiceMarkWrong: { color: theme.colors.risk },
-  choiceText: { flex: 1, color: theme.colors.text, fontSize: 15, lineHeight: 21, fontWeight: '700' },
-  feedbackCard: { gap: 5, padding: theme.spacing.md, borderRadius: theme.radius.medium, borderWidth: 1, backgroundColor: theme.colors.surfaceMuted },
+  choiceText: { flex: 1, color: theme.colors.text, fontSize: wide ? 16 : 15, lineHeight: wide ? 23 : 21, fontWeight: '700' },
+  feedbackGroup: { gap: 12 },
+  feedbackCard: { gap: 6, padding: wide ? 18 : theme.spacing.md, borderRadius: theme.radius.medium, borderWidth: 1, backgroundColor: theme.colors.surfaceMuted },
   feedbackPassed: { borderColor: theme.colors.success },
   feedbackRetry: { borderColor: theme.colors.warning },
-  feedbackTitle: { fontSize: 14, fontWeight: '900' },
+  feedbackTitle: { fontSize: wide ? 15 : 14, fontWeight: '900' },
   feedbackTitlePassed: { color: theme.colors.success },
   feedbackTitleRetry: { color: theme.colors.warning },
-  feedbackText: { color: theme.colors.text, fontSize: 14, lineHeight: 20, fontWeight: '600' },
-  footer: { paddingHorizontal: theme.spacing.md, paddingVertical: theme.spacing.sm, borderTopWidth: 1, borderTopColor: theme.colors.border, backgroundColor: theme.colors.background },
-  button: { alignSelf: 'center', width: '100%', maxWidth: 760, minHeight: 52, alignItems: 'center', justifyContent: 'center', padding: theme.spacing.md, borderRadius: theme.radius.medium, backgroundColor: theme.colors.primary },
+  feedbackText: { color: theme.colors.text, fontSize: wide ? 15 : 14, lineHeight: wide ? 22 : 20, fontWeight: '500' },
+  feedbackVisual: { width: '100%' },
+  footer: { paddingHorizontal: wide ? 24 : theme.spacing.md, paddingVertical: theme.spacing.sm, borderTopWidth: 1, borderTopColor: theme.colors.border, backgroundColor: theme.colors.background },
+  button: { alignSelf: 'center', width: '100%', maxWidth: wide ? 920 : 760, minHeight: 52, alignItems: 'center', justifyContent: 'center', padding: theme.spacing.md, borderRadius: theme.radius.medium, backgroundColor: theme.colors.primary },
   buttonText: { color: theme.colors.primaryText, fontSize: 15, fontWeight: '900' },
   disabled: { opacity: 0.4 },
 });
