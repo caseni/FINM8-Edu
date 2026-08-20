@@ -314,7 +314,7 @@ const createStyles = (theme: LearningTheme, wide: boolean) =>
     metaRow: { flexDirection: 'row', flexWrap: 'wrap', gap: theme.spacing.sm },
     duration: { color: theme.colors.textMuted, fontSize: wide ? 13 : 12 },
     contextLabel: { color: theme.colors.textMuted, fontSize: wide ? 13 : 12 },
-    lessonTitle: { color: theme.colors.text, fontSize: wide ? 24 : 21, lineHeight: wide ? 32 : 28, fontWeight: '850' },
+    lessonTitle: { color: theme.colors.text, fontSize: wide ? 24 : 21, lineHeight: wide ? 32 : 28, fontWeight: '900' },
     slide: {
       width: '100%',
       justifyContent: 'flex-start',
@@ -327,7 +327,7 @@ const createStyles = (theme: LearningTheme, wide: boolean) =>
     visualSlide: { justifyContent: 'flex-start' },
     takeaway: { gap: wide ? 18 : theme.spacing.md },
     takeawayEyebrow: { color: theme.colors.primary, fontSize: 11, lineHeight: 15, fontWeight: '900', letterSpacing: 0.8 },
-    takeawayText: { color: theme.colors.text, fontSize: wide ? 28 : 23, fontWeight: '850', lineHeight: wide ? 38 : 31 },
+    takeawayText: { color: theme.colors.text, fontSize: wide ? 28 : 23, fontWeight: '900', lineHeight: wide ? 38 : 31 },
     takeawayVisual: { marginTop: 2 },
     compactSafety: {
       gap: theme.spacing.xs,
