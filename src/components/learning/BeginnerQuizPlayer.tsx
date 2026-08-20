@@ -1,5 +1,5 @@
 import React, { useMemo, useRef, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { selectLocalizedText, type LearningLanguage } from '../../domain/learning/presentation';
 import { scoreQuiz, type QuizResult, type QuizSubmission } from '../../domain/learning/progressionEngine';
 import type { LocalizedText, Quiz } from '../../domain/learning/types';
@@ -16,12 +16,14 @@ export interface BeginnerQuizPlayerProps {
 }
 
 export function BeginnerQuizPlayer({ quiz, language, reinforcementVisual, theme = defaultLearningTheme, onComplete, eyebrow }: BeginnerQuizPlayerProps) {
+  const { width } = useWindowDimensions();
+  const wide = width >= 900;
   const [questionIndex, setQuestionIndex] = useState(0);
   const [selectedOptionId, setSelectedOptionId] = useState<string>();
   const [revealed, setRevealed] = useState(false);
   const [submissions, setSubmissions] = useState<QuizSubmission[]>([]);
   const advancingRef = useRef(false);
-  const styles = useMemo(() => createStyles(theme), [theme]);
+  const styles = useMemo(() => createStyles(theme, wide), [theme, wide]);
   const question = quiz.questions[questionIndex];
   const selectedIsCorrect = selectedOptionId === question.correctOptionId;
   const selectedOption = question.options.find((option) => option.id === selectedOptionId);
@@ -93,22 +95,31 @@ export function BeginnerQuizPlayer({ quiz, language, reinforcementVisual, theme 
           </View>
 
           {revealed ? (
-            <View style={[styles.explanationCard, selectedIsCorrect ? styles.explanationCorrect : styles.explanationWrong]} accessibilityRole="summary">
-              <Text style={[styles.explanationTitle, selectedIsCorrect ? styles.titleCorrect : styles.titleWrong]}>
-                {selectedIsCorrect ? language === 'tr' ? '✓ Doğru' : '✓ Correct' : language === 'tr' ? 'Bu kez değil' : 'Not this time'}
-              </Text>
-              {!selectedIsCorrect && selectedOption ? (
-                <Text style={styles.explanationLine}>{language === 'tr' ? 'Senin seçimin: ' : 'Your answer: '}<Text style={styles.explanationStrong}>{selectLocalizedText(selectedOption.label, language)}</Text></Text>
+            <View style={styles.feedbackGroup}>
+              <View style={[styles.explanationCard, selectedIsCorrect ? styles.explanationCorrect : styles.explanationWrong]} accessibilityRole="summary">
+                <Text style={[styles.explanationTitle, selectedIsCorrect ? styles.titleCorrect : styles.titleWrong]}>
+                  {selectedIsCorrect ? language === 'tr' ? '✓ Doğru' : '✓ Correct' : language === 'tr' ? 'Bu kez değil' : 'Not this time'}
+                </Text>
+                {!selectedIsCorrect && selectedOption ? (
+                  <Text style={styles.explanationLine}>{language === 'tr' ? 'Senin seçimin: ' : 'Your answer: '}<Text style={styles.explanationStrong}>{selectLocalizedText(selectedOption.label, language)}</Text></Text>
+                ) : null}
+                {!selectedIsCorrect && correctOption ? (
+                  <Text style={styles.explanationLine}>{language === 'tr' ? 'Doğru cevap: ' : 'Correct answer: '}<Text style={styles.explanationStrong}>{selectLocalizedText(correctOption.label, language)}</Text></Text>
+                ) : null}
+                <Text style={styles.explanationWhy}>{language === 'tr' ? 'Neden: ' : 'Why: '}{selectLocalizedText(question.explanation, language)}</Text>
+              </View>
+              {visual ? (
+                <View style={styles.feedbackVisual}>
+                  <LessonSupportingVisual
+                    assetRef={visual.assetRef}
+                    alt={selectLocalizedText(visual.alt, language)}
+                    language={language}
+                    role="concept"
+                    theme={theme}
+                  />
+                </View>
               ) : null}
-              {!selectedIsCorrect && correctOption ? (
-                <Text style={styles.explanationLine}>{language === 'tr' ? 'Doğru cevap: ' : 'Correct answer: '}<Text style={styles.explanationStrong}>{selectLocalizedText(correctOption.label, language)}</Text></Text>
-              ) : null}
-              <Text style={styles.explanationWhy}>{language === 'tr' ? 'Neden: ' : 'Why: '}{selectLocalizedText(question.explanation, language)}</Text>
             </View>
-          ) : null}
-
-          {revealed && visual ? (
-            <LessonSupportingVisual assetRef={visual.assetRef} alt={selectLocalizedText(visual.alt, language)} language={language} role="concept" theme={theme} />
           ) : null}
         </View>
       </ScrollView>
@@ -129,34 +140,56 @@ export function BeginnerQuizPlayer({ quiz, language, reinforcementVisual, theme 
   );
 }
 
-const createStyles = (theme: LearningTheme) => StyleSheet.create({
+const createStyles = (theme: LearningTheme, wide: boolean) => StyleSheet.create({
   shell: { flex: 1, width: '100%' },
-  scrollContent: { flexGrow: 1, width: '100%', padding: theme.spacing.md },
-  container: { width: '100%', maxWidth: 760, alignSelf: 'center', gap: theme.spacing.md, padding: theme.spacing.lg, backgroundColor: theme.colors.surface, borderRadius: theme.radius.large, borderWidth: 1, borderColor: theme.colors.border },
+  scrollContent: { flexGrow: 1, width: '100%', padding: wide ? 24 : theme.spacing.md },
+  container: {
+    width: '100%',
+    maxWidth: wide ? 920 : 760,
+    alignSelf: 'center',
+    gap: wide ? 18 : theme.spacing.md,
+    padding: wide ? 24 : theme.spacing.lg,
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.radius.large,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+  },
   progressRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   eyebrow: { color: theme.colors.primary, fontSize: 11, fontWeight: '900', letterSpacing: 0.8 },
   progress: { color: theme.colors.textMuted, fontSize: 12, fontWeight: '800' },
-  question: { color: theme.colors.text, fontSize: 23, lineHeight: 31, fontWeight: '800' },
+  question: { color: theme.colors.text, fontSize: wide ? 27 : 23, lineHeight: wide ? 36 : 31, fontWeight: '800' },
   options: { gap: theme.spacing.sm },
-  option: { minHeight: 58, flexDirection: 'row', alignItems: 'center', gap: theme.spacing.sm, padding: theme.spacing.md, borderRadius: theme.radius.medium, borderWidth: 1, borderColor: theme.colors.border, backgroundColor: theme.colors.background },
+  option: {
+    minHeight: wide ? 62 : 58,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: theme.spacing.sm,
+    padding: theme.spacing.md,
+    borderRadius: theme.radius.medium,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+    backgroundColor: theme.colors.background,
+  },
   optionSelected: { borderColor: theme.colors.primary, backgroundColor: theme.colors.surfaceMuted },
   optionCorrect: { borderColor: theme.colors.success, backgroundColor: theme.colors.surfaceMuted },
   optionWrong: { borderColor: theme.colors.risk, backgroundColor: theme.colors.surfaceMuted },
   optionMark: { width: 22, color: theme.colors.textMuted, fontSize: 16, fontWeight: '900' },
   markCorrect: { color: theme.colors.success },
   markWrong: { color: theme.colors.risk },
-  optionText: { flex: 1, color: theme.colors.text, fontSize: 15, lineHeight: 21, fontWeight: '700' },
-  explanationCard: { gap: 7, padding: theme.spacing.md, borderRadius: theme.radius.medium, borderWidth: 1, backgroundColor: theme.colors.surfaceMuted },
+  optionText: { flex: 1, color: theme.colors.text, fontSize: wide ? 16 : 15, lineHeight: wide ? 23 : 21, fontWeight: '700' },
+  feedbackGroup: { gap: 12 },
+  explanationCard: { gap: 7, padding: wide ? 18 : theme.spacing.md, borderRadius: theme.radius.medium, borderWidth: 1, backgroundColor: theme.colors.surfaceMuted },
   explanationCorrect: { borderColor: theme.colors.success },
   explanationWrong: { borderColor: theme.colors.warning },
-  explanationTitle: { fontSize: 14, fontWeight: '900' },
+  explanationTitle: { fontSize: wide ? 15 : 14, fontWeight: '900' },
   titleCorrect: { color: theme.colors.success },
   titleWrong: { color: theme.colors.warning },
-  explanationLine: { color: theme.colors.textMuted, fontSize: 13, lineHeight: 19 },
+  explanationLine: { color: theme.colors.textMuted, fontSize: wide ? 14 : 13, lineHeight: wide ? 21 : 19 },
   explanationStrong: { color: theme.colors.text, fontWeight: '800' },
-  explanationWhy: { color: theme.colors.text, fontSize: 14, lineHeight: 20, fontWeight: '600' },
-  footer: { paddingHorizontal: theme.spacing.md, paddingVertical: theme.spacing.sm, borderTopWidth: 1, borderTopColor: theme.colors.border, backgroundColor: theme.colors.background },
-  button: { alignSelf: 'center', width: '100%', maxWidth: 760, minHeight: 52, alignItems: 'center', justifyContent: 'center', padding: theme.spacing.md, borderRadius: theme.radius.medium, backgroundColor: theme.colors.primary },
+  explanationWhy: { color: theme.colors.text, fontSize: wide ? 15 : 14, lineHeight: wide ? 22 : 20, fontWeight: '500' },
+  feedbackVisual: { width: '100%' },
+  footer: { paddingHorizontal: wide ? 24 : theme.spacing.md, paddingVertical: theme.spacing.sm, borderTopWidth: 1, borderTopColor: theme.colors.border, backgroundColor: theme.colors.background },
+  button: { alignSelf: 'center', width: '100%', maxWidth: wide ? 920 : 760, minHeight: 52, alignItems: 'center', justifyContent: 'center', padding: theme.spacing.md, borderRadius: theme.radius.medium, backgroundColor: theme.colors.primary },
   buttonText: { color: theme.colors.primaryText, fontSize: 15, fontWeight: '900' },
   disabled: { opacity: 0.4 },
 });
