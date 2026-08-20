@@ -19,6 +19,8 @@ const BEGINNER_LESSON_IDS = new Set(
   Object.values(BEGINNER_SECTIONS).flatMap((section) => [...section.lessonIds])
 );
 
+const ACADEMY_FOUNDATION_LESSON_COUNT = 6;
+
 export function LessonQuizScreen({ route, navigation }: Props) {
   const lesson = getMicroLessonById(route.params.lessonId);
   const rawLanguage = useLanguageStore((state) => state.language);
@@ -58,6 +60,7 @@ export function LessonQuizScreen({ route, navigation }: Props) {
   const nextAcademyLessonId = academyTrack && academyLessonIndex >= 0
     ? academyTrack.lessonIds[academyLessonIndex + 1]
     : undefined;
+  const reachedAcademyFoundationBoundary = academyLessonIndex === ACADEMY_FOUNDATION_LESSON_COUNT - 1;
 
   const handleComplete = (_previewResult: QuizResult, submissions: readonly { questionId: string; selectedOptionId: string }[]) => {
     if (route.params.review) {
@@ -86,7 +89,8 @@ export function LessonQuizScreen({ route, navigation }: Props) {
       openedFromAcademy &&
       !route.params.review &&
       !isSpacedReview &&
-      nextAcademyLessonId
+      nextAcademyLessonId &&
+      !reachedAcademyFoundationBoundary
     );
     const primaryLabel = result.passed
       ? route.params.review
@@ -142,7 +146,13 @@ export function LessonQuizScreen({ route, navigation }: Props) {
             <Text style={styles.takeawayText}>
               {selectLocalizedText(lesson.takeaway, language)}
             </Text>
-            {!result.passed ? (
+            {result.passed && reachedAcademyFoundationBoundary ? (
+              <Text style={styles.takeawayHint}>
+                {language === 'tr'
+                  ? 'Bu okulun temel 6 dersini tamamladın. Daha teknik ikinci katman isteğe bağlı; Academy’ye dönüp hazır olduğunda devam edebilirsin.'
+                  : 'You completed this school’s six foundation lessons. The more technical second layer is optional; return to Academy and continue when you are ready.'}
+              </Text>
+            ) : !result.passed ? (
               <Text style={styles.takeawayHint}>
                 {isSpacedReview
                   ? language === 'tr' ? 'Bu ana fikri hatırla, sonra tekrarı yeniden dene.' : 'Keep this main idea in mind, then retry the review.'
