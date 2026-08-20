@@ -52,6 +52,7 @@ jobs:
         run: |
           mkdir -p visual-qa
           node scripts/visualQa.mjs
+          node scripts/beginnerDesktopLessonQa.mjs
           node scripts/advancedHookQa.mjs
           node scripts/advancedContinuationQa.mjs
           node scripts/academyExpansionQa.mjs
