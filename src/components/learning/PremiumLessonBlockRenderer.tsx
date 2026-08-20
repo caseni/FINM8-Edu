@@ -185,7 +185,7 @@ const createStyles = (theme: LearningTheme, wide: boolean) => StyleSheet.create(
     color: theme.colors.text,
     fontSize: wide ? 30 : 24,
     lineHeight: wide ? 39 : 32,
-    fontWeight: '850',
+    fontWeight: '900',
   },
   body: {
     color: theme.colors.text,
