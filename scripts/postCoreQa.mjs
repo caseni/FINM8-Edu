@@ -31,6 +31,7 @@ const beginnerLessonIds = [
 const academyFoundationPaths = [
   {
     key: 'market',
+    trackTitle: 'Piyasaları Anla',
     starterLabel: /Piyasaları daha iyi anla/i,
     lessons: [
       'Borsa ne işe yarar?',
@@ -43,6 +44,7 @@ const academyFoundationPaths = [
   },
   {
     key: 'technical',
+    trackTitle: 'Grafikleri Derinleştir',
     starterLabel: /Grafikleri derinleştir/i,
     lessons: [
       'Fiyat bir seviyeyi aşınca neye bakmalısın?',
@@ -55,6 +57,7 @@ const academyFoundationPaths = [
   },
   {
     key: 'fundamental',
+    trackTitle: 'Şirketleri Anla',
     starterLabel: /Şirketleri anlamaya başla/i,
     lessons: [
       'Bir şirketi anlamak için neden tek sayı yetmez?',
@@ -67,6 +70,7 @@ const academyFoundationPaths = [
   },
   {
     key: 'risk',
+    trackTitle: 'Risk ve Portföy',
     starterLabel: /Risk ve portföyü güçlendir/i,
     lessons: [
       'İki yatırım hep birlikte hareket ediyorsa gerçekten farklı mı?',
@@ -117,6 +121,13 @@ async function openCompletedAcademy(page) {
 async function openAcademyFoundation(page, path) {
   await openCompletedAcademy(page);
   await page.getByRole('button', { name: path.starterLabel }).first().click();
+  const expandedTrack = page.getByRole('button', { name: `${path.trackTitle} derslerini kapat` });
+  await expandedTrack.waitFor();
+  await page.waitForTimeout(250);
+  const expandedTrackBox = await expandedTrack.boundingBox();
+  if (!expandedTrackBox || expandedTrackBox.y < 0 || expandedTrackBox.y >= 844) {
+    throw new Error(`Starter direction did not bring ${path.trackTitle} into the mobile viewport.`);
+  }
   await page.getByText('ÖNCE BUNLARLA BAŞLA', { exact: true }).waitFor();
   await page.getByText('SONRA DERİNLEŞ', { exact: true }).waitFor();
 }

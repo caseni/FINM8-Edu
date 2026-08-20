@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -39,6 +39,8 @@ export function AcademyHomeScreen() {
   const completedLessonIds = useLearningProgressStore((state) => state.completedLessonIds);
   const lessonCheckpoints = useLearningProgressStore((state) => state.lessonCheckpoints);
   const [expandedTrackId, setExpandedTrackId] = useState<string | null>(null);
+  const scrollViewRef = useRef<ScrollView>(null);
+  const trackOffsetsRef = useRef<Partial<Record<AcademyTrackId, number>>>({});
 
   const lessonsById = useMemo(
     () => new Map(MICRO_LESSON_CATALOG.map((lesson) => [lesson.id, lesson] as const)),
@@ -55,6 +57,18 @@ export function AcademyHomeScreen() {
   ).length;
   const academyComplete = academyLessonIds.length > 0 && academyCompletedLessonCount === academyLessonIds.length;
 
+  const openStarterTrack = (trackId: AcademyTrackId) => {
+    setExpandedTrackId(trackId);
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const targetOffset = trackOffsetsRef.current[trackId];
+        if (targetOffset !== undefined) {
+          scrollViewRef.current?.scrollTo({ y: Math.max(0, targetOffset - 12), animated: true });
+        }
+      });
+    });
+  };
+
   const openLesson = (lessonId: string) => {
     const checkpoint = lessonCheckpoints[lessonId];
     if (checkpoint?.stage === 'task') {
@@ -70,7 +84,7 @@ export function AcademyHomeScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <ScrollView contentContainerStyle={styles.content}>
+      <ScrollView ref={scrollViewRef} contentContainerStyle={styles.content}>
         <View style={styles.topBar}>
           <Pressable
             accessibilityRole="button"
@@ -137,7 +151,9 @@ export function AcademyHomeScreen() {
                   <Pressable
                     key={trackId}
                     accessibilityRole="button"
-                    onPress={() => setExpandedTrackId(trackId)}
+                    accessibilityLabel={`${STARTER_TRACK_LABELS[trackId][language]}: ${selectLocalizedText(track.title, language)}`}
+                    accessibilityHint={language === 'tr' ? 'İlgili Academy okulunu açar ve ekrana getirir' : 'Opens the matching Academy school and brings it into view'}
+                    onPress={() => openStarterTrack(trackId)}
                     style={({ pressed }) => [styles.starterOption, pressed && styles.starterOptionPressed]}
                   >
                     <View style={styles.starterOptionCopy}>
@@ -238,7 +254,13 @@ export function AcademyHomeScreen() {
           });
 
           return (
-            <View key={track.id} style={[styles.trackCard, !active && styles.trackCardPlanned]}>
+            <View
+              key={track.id}
+              onLayout={(event) => {
+                trackOffsetsRef.current[track.id] = event.nativeEvent.layout.y;
+              }}
+              style={[styles.trackCard, !active && styles.trackCardPlanned]}
+            >
               <Pressable
                 accessibilityRole={active ? 'button' : undefined}
                 accessibilityLabel={
