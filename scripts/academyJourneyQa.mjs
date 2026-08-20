@@ -96,6 +96,28 @@ async function advanceLessonToTask(page, lessonName, prefix) {
   await page.screenshot({ path: `visual-qa/${prefix}-task-entry.png`, fullPage: true });
 }
 
+async function waitForTaskReady(page, expectedChoiceCount) {
+  await page.waitForFunction((count) => {
+    const choices = [...document.querySelectorAll('[role="checkbox"]')];
+    const check = [...document.querySelectorAll('button')].find(
+      (button) => button.getAttribute('aria-label') === 'Kontrol et'
+    );
+    return choices.length === count
+      && choices.every((choice) => choice.getAttribute('aria-disabled') !== 'true')
+      && Boolean(check)
+      && check.disabled === true;
+  }, expectedChoiceCount);
+}
+
+async function waitForTaskSelection(page) {
+  await page.waitForFunction(() => {
+    const check = [...document.querySelectorAll('button')].find(
+      (button) => button.getAttribute('aria-label') === 'Kontrol et'
+    );
+    return Boolean(check) && check.disabled === false;
+  });
+}
+
 async function solveTask(page, prefix) {
   const choiceCount = await page.getByRole('checkbox').count();
   if (choiceCount < 2 || choiceCount > 6) {
@@ -114,16 +136,14 @@ async function solveTask(page, prefix) {
 
   for (let attempt = 0; attempt < combinations.length; attempt += 1) {
     const combo = combinations[attempt];
+    await waitForTaskReady(page, choiceCount);
     const choices = page.getByRole('checkbox');
     console.log(`${prefix}: task attempt ${attempt + 1}/${combinations.length} choices=${combo.join(',')}`);
     for (const choiceIndex of combo) {
       await choices.nth(choiceIndex).click();
     }
+    await waitForTaskSelection(page);
     const checkButton = page.getByRole('button', { name: 'Kontrol et', exact: true });
-    await checkButton.waitFor();
-    if (await checkButton.isDisabled()) {
-      throw new Error(`${prefix}: task answer controls did not create a selectable response`);
-    }
     await checkButton.click();
     const continueButton = page.getByRole('button', { name: 'Quiz’e geç', exact: true });
     if (await continueButton.count()) {
@@ -138,7 +158,6 @@ async function solveTask(page, prefix) {
       throw new Error(`${prefix}: task produced neither pass nor retry state`);
     }
     await retryButton.click();
-    await page.getByRole('button', { name: 'Kontrol et', exact: true }).waitFor();
   }
 
   throw new Error(`${prefix}: no task choice combination passed`);
