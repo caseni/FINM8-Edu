@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "principles": {
+    "uiMockupsAreAssets": false,
+    "codeDrawnVisualsCountAsComplete": false,
+    "practiceCanBeExampleOnly": true,
+    "imageMustTeachOrClarify": true
+  },
+  "lessons": [
+    {
+      "slug": "fiyat-piyasada-nasil-olusur",
+      "roles": ["hook", "concept", "practice", "misconception", "summary"],
+      "exampleOnlyRoles": [],
+      "status": "integrated"
+    },
+    {
+      "slug": "piyasa-araclari-ayni-degildir",
+      "roles": ["hook", "concept", "misconception", "summary"],
+      "exampleOnlyRoles": ["practice"],
+      "status": "planned"
+    },
+    {
+      "slug": "likidite-neden-onemlidir",
+      "roles": ["hook", "concept", "practice", "misconception", "summary"],
+      "exampleOnlyRoles": [],
+      "status": "planned"
+    },
+    {
+      "slug": "bid-ask-spread-nedir",
+      "roles": ["hook", "concept", "practice", "misconception", "summary"],
+      "exampleOnlyRoles": [],
+      "status": "planned"
+    },
+    {
+      "slug": "piyasa-limit-stop-emirleri",
+      "roles": ["hook", "concept", "practice", "misconception", "summary"],
+      "exampleOnlyRoles": [],
+      "status": "planned"
+    },
+    {
+      "slug": "gerceklesme-fiyati-kayma",
+      "roles": ["hook", "concept", "practice", "misconception", "summary"],
+      "exampleOnlyRoles": [],
+      "status": "planned"
+    }
+  ]
+}
