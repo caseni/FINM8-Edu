@@ -7,6 +7,10 @@ const registries = [
   'src/components/learning/AcademyEditorialImageVisual.tsx',
 ];
 
+const TOTAL_BEGINNER_LESSONS = 24;
+const TOTAL_ACADEMY_LESSONS = 120;
+const TOTAL_ACTIVE_LESSONS = TOTAL_BEGINNER_LESSONS + TOTAL_ACADEMY_LESSONS;
+
 const entries = [];
 const issues = [];
 
@@ -33,14 +37,21 @@ for (const entry of entries) {
   seen.add(key);
 }
 
-const beginner = entries.filter((entry) => entry.registryPath.includes('BeginnerEditorial')).length;
-const academy = entries.filter((entry) => entry.registryPath.includes('AcademyEditorial')).length;
-const uniqueLessons = new Set(entries.map((entry) => entry.lessonMatch)).size;
+const beginnerEntries = entries.filter((entry) => entry.registryPath.includes('BeginnerEditorial'));
+const academyEntries = entries.filter((entry) => entry.registryPath.includes('AcademyEditorial'));
+const beginnerLessons = new Set(beginnerEntries.map((entry) => entry.lessonMatch));
+const academyLessons = new Set(academyEntries.map((entry) => entry.lessonMatch));
+const uniqueLessons = new Set(entries.map((entry) => entry.lessonMatch));
+
+const percentage = (count, total) => `${((count / total) * 100).toFixed(1)}%`;
 
 console.log(`Real editorial image mappings: ${entries.length}`);
-console.log(`- Beginner mappings: ${beginner}`);
-console.log(`- Academy mappings: ${academy}`);
-console.log(`- Lessons with at least one real image: ${uniqueLessons}`);
+console.log(`- Beginner mappings: ${beginnerEntries.length}`);
+console.log(`- Academy mappings: ${academyEntries.length}`);
+console.log(`- Beginner lessons with real image: ${beginnerLessons.size}/${TOTAL_BEGINNER_LESSONS} (${percentage(beginnerLessons.size, TOTAL_BEGINNER_LESSONS)})`);
+console.log(`- Academy lessons with real image: ${academyLessons.size}/${TOTAL_ACADEMY_LESSONS} (${percentage(academyLessons.size, TOTAL_ACADEMY_LESSONS)})`);
+console.log(`- Active lessons with at least one real image: ${uniqueLessons.size}/${TOTAL_ACTIVE_LESSONS} (${percentage(uniqueLessons.size, TOTAL_ACTIVE_LESSONS)})`);
+console.log(`- Remaining lessons still relying only on generated/code fallback: ${TOTAL_ACTIVE_LESSONS - uniqueLessons.size}`);
 
 if (issues.length > 0) {
   console.error('\nEditorial image asset audit failed:');
