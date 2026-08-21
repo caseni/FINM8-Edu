@@ -46,5 +46,8 @@ jobs:
       - name: Academy visual routing audit
         run: node scripts/academyVisualRoutingAudit.mjs
 
+      - name: Real editorial image asset audit
+        run: node scripts/editorialImageCoverage.mjs
+
       - name: Build web bundle
         run: npm run build:web
