@@ -24,6 +24,21 @@ Code-drawn visual components are temporary fallback only and do not count as com
 - Do not bake the application UI into an image.
 - Do not turn every image into the same template.
 - Some images should explain information not already written in the slide; some can be primarily visual.
+- A role may intentionally remain example-only when an extra image would repeat information or make the lesson heavier.
+
+## Current measurable coverage
+
+The executable rollout plan covers **24/24 beginner lessons**. Current real-asset state:
+
+- beginner real-image mappings: **5**
+- Academy real-image mappings: **8**
+- total real-image mappings: **13**
+- beginner lessons with at least one real image: **1/24**
+- Academy lessons with at least one real image: **8/120**
+- active lessons with at least one real image: **9/144**
+- beginner planned real-image roles physically integrated: **5/115**
+
+The remaining code-drawn visuals are fallback, not completion evidence.
 
 ## Completed real-image integrations
 
@@ -31,13 +46,13 @@ Code-drawn visual components are temporary fallback only and do not count as com
 
 **Fiyat piyasada nasıl oluşur?**
 
-- hook → `price-formation-hook.webp`
-- concept → `price-formation-concept.webp`
-- practice → `price-formation-practice.webp`
-- misconception → `price-formation-misconception.webp`
-- summary → `price-formation-summary.webp`
+- hook → `assets/learning/beginner/markets/price-formation-hook.webp`
+- concept → `assets/learning/beginner/markets/price-formation-concept.webp`
+- practice → `assets/learning/beginner/markets/price-formation-practice.webp`
+- misconception → `assets/learning/beginner/markets/price-formation-misconception.webp`
+- summary → `assets/learning/beginner/markets/price-formation-summary.webp`
 
-Status: **5/5 roles integrated and rendered in the interactive lesson.**
+Status: **5/5 planned real-image roles integrated and rendered in the interactive lesson.**
 
 ### Academy — existing generated hook assets
 
@@ -52,22 +67,87 @@ Status: **5/5 roles integrated and rendered in the interactive lesson.**
 
 Status: **8 Academy real-image mappings already active.**
 
-## Sequential rollout queue
+## Next exact integration — `piyasa-araclari-ayni-degildir`
 
-### Beginner first
+This lesson deliberately uses **four image roles, not five**.
 
-1. `piyasa-araclari-ayni-degildir`
-2. `likidite-neden-onemlidir`
-3. `bid-ask-spread-nedir`
-4. `piyasa-limit-stop-emirleri`
-5. `gerceklesme-fiyati-kayma`
-6. Para ve Ekonomi — 6 lessons
-7. Grafikleri Korkmadan Oku — 6 lessons
-8. Riskten Korun — 6 lessons
+### hook
+
+Expected asset:
+
+`assets/learning/beginner/markets/asset-classes-hook.webp`
+
+Teaching job: distinguish stock, bond, FX and commodity at a glance without turning the image into a text-heavy table.
+
+### concept
+
+Expected asset:
+
+`assets/learning/beginner/markets/asset-classes-concept.webp`
+
+Teaching job: show what the learner is economically buying:
+
+- stock → ownership in a company
+- bond → lending to an issuer
+- FX → relative value between two currencies
+- commodity → exposure to a physical/raw product
+
+The slide copy should stay shorter than the image explanation rather than repeat every visual detail.
+
+### practice — example only
+
+No real image is required for this role.
+
+Existing practical example:
+
+> Buying a BIST share means company ownership; buying gold is exposure to another asset type, not company ownership.
+
+This is intentionally kept as a short real-world example so the lesson does not become an icon grid on every step.
+
+### misconception
+
+Expected asset:
+
+`assets/learning/beginner/markets/asset-classes-misconception.webp`
+
+Teaching job: visually demonstrate **similar-looking charts ≠ same instrument / same risk**.
+
+### summary
+
+Expected asset:
+
+`assets/learning/beginner/markets/asset-classes-summary.webp`
+
+Teaching job: a calm four-part memory visual with almost no explanatory text baked into the artwork.
+
+The lesson stays `planned` until all four files physically exist, are registered in `BeginnerEditorialImageVisual.tsx`, render in the interactive lesson and pass Visual QA. Do not add static `require()` entries before the files exist.
+
+## Remaining Piyasalar queue
+
+After asset classes:
+
+1. `likidite-neden-onemlidir` — hook / concept / practice / misconception / summary
+2. `bid-ask-spread-nedir` — hook / concept / practice / misconception / summary
+3. `piyasa-limit-stop-emirleri` — hook / concept / practice / misconception / summary
+4. `gerceklesme-fiyati-kayma` — hook / concept / practice / misconception / summary
+
+Each asset is produced as a standalone teaching image, added to the repository, then registered to the exact lesson role. No UI screenshot/mockup is an accepted lesson asset.
+
+## Remaining beginner rollout
+
+The canonical role plan for all 24 beginner lessons is in:
+
+`docs/BEGINNER_EDITORIAL_IMAGE_PLAN.json`
+
+After Piyasalar:
+
+1. Para ve Ekonomi — 6 lessons
+2. Grafikleri Korkmadan Oku — 6 lessons
+3. Riskten Korun — 6 lessons
 
 For every lesson, choose images by teaching role rather than forcing five identical-looking assets.
 
-### Academy after beginner
+## Academy after beginner
 
 Continue school by school. Existing real hook assets stay in place; replace code-drawn fallback steps with standalone generated assets only when the new asset teaches the lesson more clearly.
 
@@ -86,7 +166,15 @@ Recommended school order:
 
 ## CI protection
 
-`scripts/editorialImageCoverage.mjs` verifies that every registered real editorial image points to a real repository asset and that a lesson/role pair is not registered twice.
+`scripts/editorialImageCoverage.mjs` now verifies:
+
+- every registered real editorial image points to a physical repository asset,
+- no lesson/role pair is registered twice,
+- the beginner rollout plan declares exactly 24 lessons,
+- rollout lesson slugs are unique,
+- roles and statuses use supported values,
+- a lesson marked `integrated` cannot be missing a planned real-image role,
+- beginner real-image mappings cannot exist outside the declared rollout plan.
 
 The Quality workflow runs this audit on every PR update.
 
