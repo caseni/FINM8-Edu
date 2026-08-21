@@ -6,6 +6,7 @@ const registries = [
   'src/components/learning/BeginnerEditorialImageVisual.tsx',
   'src/components/learning/AcademyEditorialImageVisual.tsx',
 ];
+const beginnerPlanPath = path.join(root, 'docs/BEGINNER_EDITORIAL_IMAGE_PLAN.json');
 
 const TOTAL_BEGINNER_LESSONS = 24;
 const TOTAL_ACADEMY_LESSONS = 120;
@@ -37,6 +38,34 @@ for (const entry of entries) {
   seen.add(key);
 }
 
+const beginnerPlan = JSON.parse(fs.readFileSync(beginnerPlanPath, 'utf8'));
+const plannedRoleKeys = new Set();
+let plannedRoleCount = 0;
+let completedPlannedRoleCount = 0;
+let integratedLessonCount = 0;
+
+for (const lesson of beginnerPlan.lessons) {
+  const roles = Array.isArray(lesson.roles) ? lesson.roles : [];
+  if (lesson.status === 'integrated') integratedLessonCount += 1;
+
+  for (const role of roles) {
+    const key = `${lesson.slug}::${role}`;
+    plannedRoleKeys.add(key);
+    plannedRoleCount += 1;
+    if (seen.has(key)) completedPlannedRoleCount += 1;
+    if (lesson.status === 'integrated' && !seen.has(key)) {
+      issues.push(`Integrated lesson is missing planned real image: ${lesson.slug} · ${role}`);
+    }
+  }
+}
+
+const unplannedBeginnerMappings = entries.filter(
+  (entry) => entry.registryPath.includes('BeginnerEditorial') && !plannedRoleKeys.has(`${entry.lessonMatch}::${entry.role}`),
+);
+for (const entry of unplannedBeginnerMappings) {
+  issues.push(`Beginner real-image mapping is not declared in rollout plan: ${entry.lessonMatch} · ${entry.role}`);
+}
+
 const beginnerEntries = entries.filter((entry) => entry.registryPath.includes('BeginnerEditorial'));
 const academyEntries = entries.filter((entry) => entry.registryPath.includes('AcademyEditorial'));
 const beginnerLessons = new Set(beginnerEntries.map((entry) => entry.lessonMatch));
@@ -52,6 +81,17 @@ console.log(`- Beginner lessons with real image: ${beginnerLessons.size}/${TOTAL
 console.log(`- Academy lessons with real image: ${academyLessons.size}/${TOTAL_ACADEMY_LESSONS} (${percentage(academyLessons.size, TOTAL_ACADEMY_LESSONS)})`);
 console.log(`- Active lessons with at least one real image: ${uniqueLessons.size}/${TOTAL_ACTIVE_LESSONS} (${percentage(uniqueLessons.size, TOTAL_ACTIVE_LESSONS)})`);
 console.log(`- Remaining lessons still relying only on generated/code fallback: ${TOTAL_ACTIVE_LESSONS - uniqueLessons.size}`);
+console.log(`- Beginner rollout plan: ${completedPlannedRoleCount}/${plannedRoleCount} planned real-image roles physically integrated`);
+console.log(`- Beginner lessons marked integrated in rollout plan: ${integratedLessonCount}/${beginnerPlan.lessons.length}`);
+
+for (const lesson of beginnerPlan.lessons) {
+  const missingRoles = lesson.roles.filter((role) => !seen.has(`${lesson.slug}::${role}`));
+  if (missingRoles.length > 0) {
+    console.log(`  · ${lesson.slug}: waiting for ${missingRoles.join(', ')}`);
+  } else {
+    console.log(`  · ${lesson.slug}: real-image roles complete`);
+  }
+}
 
 if (issues.length > 0) {
   console.error('\nEditorial image asset audit failed:');
