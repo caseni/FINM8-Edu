@@ -13,6 +13,7 @@ const TOTAL_ACADEMY_LESSONS = 120;
 const TOTAL_ACTIVE_LESSONS = TOTAL_BEGINNER_LESSONS + TOTAL_ACADEMY_LESSONS;
 const VALID_ROLES = new Set(['hook', 'concept', 'practice', 'misconception', 'risk', 'summary']);
 const VALID_STATUSES = new Set(['planned', 'integrated']);
+const IMAGE_EXTENSIONS = ['webp', 'png', 'jpg', 'jpeg'];
 
 const entries = [];
 const issues = [];
@@ -34,10 +35,12 @@ for (const registryPath of registries) {
 }
 
 const seen = new Set();
+const entryByKey = new Map();
 for (const entry of entries) {
   const key = `${entry.lessonMatch}::${entry.role}`;
   if (seen.has(key)) issues.push(`Duplicate editorial mapping: ${entry.lessonMatch} · ${entry.role}`);
   seen.add(key);
+  entryByKey.set(key, entry);
 }
 
 const beginnerPlan = JSON.parse(fs.readFileSync(beginnerPlanPath, 'utf8'));
@@ -50,6 +53,7 @@ const planSlugs = new Set();
 let plannedRoleCount = 0;
 let completedPlannedRoleCount = 0;
 let integratedLessonCount = 0;
+let physicalPlannedAssetCount = 0;
 
 for (const lesson of beginnerPlan.lessons ?? []) {
   if (!lesson?.slug || typeof lesson.slug !== 'string') {
@@ -61,6 +65,12 @@ for (const lesson of beginnerPlan.lessons ?? []) {
 
   if (!VALID_STATUSES.has(lesson.status)) {
     issues.push(`Invalid rollout status for ${lesson.slug}: ${lesson.status}`);
+  }
+  if (!lesson.assetDir || typeof lesson.assetDir !== 'string') {
+    issues.push(`Missing assetDir in beginner editorial rollout plan: ${lesson.slug}`);
+  }
+  if (!lesson.assetPrefix || typeof lesson.assetPrefix !== 'string') {
+    issues.push(`Missing assetPrefix in beginner editorial rollout plan: ${lesson.slug}`);
   }
 
   const roles = Array.isArray(lesson.roles) ? lesson.roles : [];
@@ -79,8 +89,34 @@ for (const lesson of beginnerPlan.lessons ?? []) {
     const key = `${lesson.slug}::${role}`;
     plannedRoleKeys.add(key);
     plannedRoleCount += 1;
-    if (seen.has(key)) completedPlannedRoleCount += 1;
-    if (lesson.status === 'integrated' && !seen.has(key)) {
+
+    const candidateAssets = IMAGE_EXTENSIONS.map((extension) =>
+      `${lesson.assetDir}/${lesson.assetPrefix}-${role}.${extension}`,
+    );
+    const existingCandidateAssets = candidateAssets.filter((asset) => fs.existsSync(path.join(root, asset)));
+    const registeredEntry = entryByKey.get(key);
+
+    if (existingCandidateAssets.length > 1) {
+      issues.push(`Multiple physical assets exist for one beginner role: ${lesson.slug} · ${role} -> ${existingCandidateAssets.join(', ')}`);
+    }
+
+    const physicalAsset = existingCandidateAssets[0];
+    if (physicalAsset) physicalPlannedAssetCount += 1;
+
+    if (physicalAsset && !registeredEntry) {
+      issues.push(`Physical beginner asset is not registered to its slide: ${lesson.slug} · ${role} -> ${physicalAsset}`);
+    }
+
+    if (registeredEntry) {
+      completedPlannedRoleCount += 1;
+      if (!physicalAsset) {
+        issues.push(`Registered beginner mapping does not use the planned physical filename: ${lesson.slug} · ${role} -> ${registeredEntry.asset}`);
+      } else if (registeredEntry.asset !== physicalAsset) {
+        issues.push(`Registered beginner mapping points to the wrong planned asset: ${lesson.slug} · ${role} -> ${registeredEntry.asset}; expected ${physicalAsset}`);
+      }
+    }
+
+    if (lesson.status === 'integrated' && !registeredEntry) {
       issues.push(`Integrated lesson is missing planned real image: ${lesson.slug} · ${role}`);
     }
   }
@@ -114,6 +150,7 @@ console.log(`- Active lessons with at least one real image: ${uniqueLessons.size
 console.log(`- Remaining lessons still relying only on generated/code fallback: ${TOTAL_ACTIVE_LESSONS - uniqueLessons.size}`);
 console.log(`- Beginner rollout plan coverage: ${planSlugs.size}/${TOTAL_BEGINNER_LESSONS} lessons declared`);
 console.log(`- Beginner rollout plan: ${completedPlannedRoleCount}/${plannedRoleCount} planned real-image roles physically integrated`);
+console.log(`- Physical beginner assets matching planned filenames: ${physicalPlannedAssetCount}/${plannedRoleCount}`);
 console.log(`- Beginner lessons marked integrated in rollout plan: ${integratedLessonCount}/${planSlugs.size}`);
 
 for (const lesson of beginnerPlan.lessons ?? []) {
