@@ -1,12 +1,49 @@
 {
-  "version": 1,
+  "version": 2,
   "principles": {
     "uiMockupsAreAssets": false,
     "codeDrawnVisualsCountAsComplete": false,
     "practiceCanBeExampleOnly": true,
-    "imageMustTeachOrClarify": true
+    "imageMustTeachOrClarify": true,
+    "notEveryRoleNeedsAnImage": true
   },
   "lessons": [
+    {
+      "slug": "enflasyon-satin-alma-gucu",
+      "roles": ["hook", "concept", "practice", "misconception", "summary"],
+      "exampleOnlyRoles": [],
+      "status": "planned"
+    },
+    {
+      "slug": "faiz-orani-ne-anlatir",
+      "roles": ["hook", "concept", "practice", "summary"],
+      "exampleOnlyRoles": ["misconception"],
+      "status": "planned"
+    },
+    {
+      "slug": "merkez-bankasi-ne-yapar",
+      "roles": ["hook", "concept", "misconception", "summary"],
+      "exampleOnlyRoles": ["practice"],
+      "status": "planned"
+    },
+    {
+      "slug": "faiz-karari-ekonomiye-nasil-yansir",
+      "roles": ["hook", "concept", "practice", "summary"],
+      "exampleOnlyRoles": ["misconception"],
+      "status": "planned"
+    },
+    {
+      "slug": "gsyh-buyume-ne-anlatir",
+      "roles": ["hook", "concept", "misconception", "summary"],
+      "exampleOnlyRoles": ["practice"],
+      "status": "planned"
+    },
+    {
+      "slug": "ekonomik-dongu-resesyon",
+      "roles": ["hook", "concept", "practice", "misconception", "summary"],
+      "exampleOnlyRoles": [],
+      "status": "planned"
+    },
     {
       "slug": "fiyat-piyasada-nasil-olusur",
       "roles": ["hook", "concept", "practice", "misconception", "summary"],
@@ -39,6 +76,78 @@
     },
     {
       "slug": "gerceklesme-fiyati-kayma",
+      "roles": ["hook", "concept", "practice", "misconception", "summary"],
+      "exampleOnlyRoles": [],
+      "status": "planned"
+    },
+    {
+      "slug": "bir-mum-bize-ne-soyler",
+      "roles": ["hook", "concept", "practice", "misconception", "summary"],
+      "exampleOnlyRoles": [],
+      "status": "planned"
+    },
+    {
+      "slug": "zaman-dilimi-neyi-degistirir",
+      "roles": ["hook", "concept", "practice", "misconception", "summary"],
+      "exampleOnlyRoles": [],
+      "status": "planned"
+    },
+    {
+      "slug": "trend-yon-mu-yapi-mi",
+      "roles": ["hook", "concept", "practice", "misconception", "summary"],
+      "exampleOnlyRoles": [],
+      "status": "planned"
+    },
+    {
+      "slug": "destek-direnc-bolgedir",
+      "roles": ["hook", "concept", "practice", "misconception", "summary"],
+      "exampleOnlyRoles": [],
+      "status": "planned"
+    },
+    {
+      "slug": "momentum-ne-anlatir",
+      "roles": ["hook", "concept", "practice", "misconception", "summary"],
+      "exampleOnlyRoles": [],
+      "status": "planned"
+    },
+    {
+      "slug": "hareketli-ortalama-ne-yapar",
+      "roles": ["hook", "concept", "practice", "misconception", "summary"],
+      "exampleOnlyRoles": [],
+      "status": "planned"
+    },
+    {
+      "slug": "risk-belirsizlik-kayip",
+      "roles": ["hook", "concept", "practice", "misconception", "summary"],
+      "exampleOnlyRoles": [],
+      "status": "planned"
+    },
+    {
+      "slug": "volatilite-once-risktir",
+      "roles": ["hook", "concept", "practice", "misconception", "summary"],
+      "exampleOnlyRoles": [],
+      "status": "planned"
+    },
+    {
+      "slug": "pozisyon-buyuklugu-once-gelir",
+      "roles": ["hook", "concept", "practice", "misconception", "summary"],
+      "exampleOnlyRoles": [],
+      "status": "planned"
+    },
+    {
+      "slug": "risk-getiri-tek-basina-yetmez",
+      "roles": ["hook", "concept", "practice", "misconception", "summary"],
+      "exampleOnlyRoles": [],
+      "status": "planned"
+    },
+    {
+      "slug": "stop-emri-garanti-midir",
+      "roles": ["hook", "concept", "practice", "misconception", "summary"],
+      "exampleOnlyRoles": [],
+      "status": "planned"
+    },
+    {
+      "slug": "cok-varlik-cesitlendirme-degildir",
       "roles": ["hook", "concept", "practice", "misconception", "summary"],
       "exampleOnlyRoles": [],
       "status": "planned"
