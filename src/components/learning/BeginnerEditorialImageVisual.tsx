@@ -10,6 +10,7 @@ type BeginnerEditorialImageEntry = {
   aspectRatio?: number;
   resizeMode?: ImageResizeMode;
   backgroundColor?: string;
+  maxWidth?: number;
 };
 
 /**
@@ -43,6 +44,7 @@ const beginnerEditorialImages: readonly BeginnerEditorialImageEntry[] = [
     aspectRatio: 1,
     resizeMode: 'contain',
     backgroundColor: '#F4EFE4',
+    maxWidth: 590,
   },
   {
     match: 'fiyat-piyasada-nasil-olusur',
@@ -58,6 +60,7 @@ const beginnerEditorialImages: readonly BeginnerEditorialImageEntry[] = [
     source: require('../../../assets/learning/beginner/markets/price-formation-summary.webp'),
     aspectRatio: 1,
     resizeMode: 'contain',
+    maxWidth: 500,
   },
 ] as const;
 
@@ -93,6 +96,7 @@ export function BeginnerEditorialImageVisual({
         {
           aspectRatio: entry.aspectRatio ?? 1,
           backgroundColor: entry.backgroundColor ?? '#071521',
+          maxWidth: entry.maxWidth,
         },
       ]}
       accessibilityRole="image"
@@ -110,6 +114,7 @@ export function BeginnerEditorialImageVisual({
 const createStyles = (theme: LearningTheme) => StyleSheet.create({
   shell: {
     width: '100%',
+    alignSelf: 'center',
     overflow: 'hidden',
     borderRadius: 18,
     borderWidth: 1,
