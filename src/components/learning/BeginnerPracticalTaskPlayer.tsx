@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import {
   selectAudienceCopy,
@@ -37,11 +37,23 @@ export function BeginnerPracticalTaskPlayer({
   const [selected, setSelected] = useState<string[]>([]);
   const [checked, setChecked] = useState(false);
   const completionLocked = useRef(false);
+  const scrollRef = useRef<ScrollView | null>(null);
   const styles = useMemo(() => createStyles(theme, wide), [theme, wide]);
   const choices = task.choices ?? [];
   const expected = [...task.expectedEvidence].sort();
   const actual = [...selected].sort();
   const passed = actual.length === expected.length && actual.every((value, index) => value === expected[index]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (checked) {
+        scrollRef.current?.scrollToEnd({ animated: true });
+      } else {
+        scrollRef.current?.scrollTo({ y: 0, animated: true });
+      }
+    }, 90);
+    return () => clearTimeout(timer);
+  }, [checked]);
 
   const toggle = (choiceId: string) => {
     if (checked) return;
@@ -77,7 +89,11 @@ export function BeginnerPracticalTaskPlayer({
 
   return (
     <View style={styles.shell}>
-      <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled">
+      <ScrollView
+        ref={scrollRef}
+        contentContainerStyle={styles.scrollContent}
+        keyboardShouldPersistTaps="handled"
+      >
         <View style={styles.container}>
           <Text style={styles.eyebrow}>
             {eyebrow
@@ -191,7 +207,12 @@ export function BeginnerPracticalTaskPlayer({
 
 const createStyles = (theme: LearningTheme, wide: boolean) => StyleSheet.create({
   shell: { flex: 1, width: '100%' },
-  scrollContent: { flexGrow: 1, width: '100%', padding: wide ? 24 : theme.spacing.md },
+  scrollContent: {
+    flexGrow: 1,
+    width: '100%',
+    padding: wide ? 24 : theme.spacing.md,
+    paddingBottom: wide ? 36 : 28,
+  },
   container: {
     width: '100%',
     maxWidth: wide ? 920 : 760,
