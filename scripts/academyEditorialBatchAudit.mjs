@@ -9,6 +9,9 @@ const extensions = ['webp', 'png', 'jpg', 'jpeg'];
 const validStatuses = new Set(['planned', 'integrated']);
 const validBatchStatuses = new Set(['planned', 'active', 'integrated']);
 const validRoles = new Set(['hook', 'concept', 'practice', 'misconception', 'risk', 'summary']);
+const EXPECTED_V1_BATCHES = 10;
+const EXPECTED_V1_FOUNDATION_HOOKS = 60;
+const EXPECTED_V1_SCHOOLS = 10;
 const issues = [];
 
 function filesRecursively(dir, predicate) {
@@ -48,6 +51,7 @@ if (!Array.isArray(plan.batches)) issues.push('Academy editorial batch plan must
 
 const plannedKeys = new Set();
 const batchIds = new Set();
+const schools = new Set();
 const batchProgress = [];
 let plannedCount = 0;
 let integratedCount = 0;
@@ -61,6 +65,8 @@ for (const batch of plan.batches ?? []) {
   }
   if (batchIds.has(batch.id)) issues.push(`Duplicate Academy editorial batch id: ${batch.id}`);
   batchIds.add(batch.id);
+  if (!batch.school || typeof batch.school !== 'string') issues.push(`Academy editorial batch is missing school: ${batch.id}`);
+  else schools.add(batch.school);
   if (!validBatchStatuses.has(batch.status)) issues.push(`Invalid Academy editorial batch status for ${batch.id}: ${batch.status}`);
 
   let batchIntegrated = 0;
@@ -114,10 +120,28 @@ for (const batch of plan.batches ?? []) {
   });
 }
 
+if (plan.version === 1) {
+  if (batchIds.size !== EXPECTED_V1_BATCHES) {
+    issues.push(`Academy editorial v1 must cover exactly ${EXPECTED_V1_BATCHES} foundation batches; found ${batchIds.size}`);
+  }
+  if (schools.size !== EXPECTED_V1_SCHOOLS) {
+    issues.push(`Academy editorial v1 must cover exactly ${EXPECTED_V1_SCHOOLS} schools; found ${schools.size}`);
+  }
+  if (plannedCount !== EXPECTED_V1_FOUNDATION_HOOKS) {
+    issues.push(`Academy editorial v1 must cover exactly ${EXPECTED_V1_FOUNDATION_HOOKS} foundation hook items; found ${plannedCount}`);
+  }
+  for (const batch of plan.batches ?? []) {
+    for (const lesson of batch.lessons ?? []) {
+      if (lesson.role !== 'hook') issues.push(`Academy editorial v1 is hook-first only; found ${lesson.slug} · ${lesson.role}`);
+    }
+  }
+}
+
 console.log('FINM8 EDU Academy editorial batch audit');
 console.log(`academy catalog slugs: ${catalogSlugs.size}`);
 console.log(`academy editorial batches: ${batchIds.size}`);
-console.log(`planned batch lesson/roles: ${plannedCount}`);
+console.log(`academy schools covered by foundation hook plan: ${schools.size}/${EXPECTED_V1_SCHOOLS}`);
+console.log(`planned foundation hook lesson/roles: ${plannedCount}/${EXPECTED_V1_FOUNDATION_HOOKS}`);
 console.log(`items marked integrated: ${integratedCount}`);
 console.log(`planned physical assets present: ${physicallyPresentCount}/${plannedCount}`);
 console.log(`planned assets correctly mapped to slides: ${correctlyMappedCount}/${plannedCount}`);
