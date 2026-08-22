@@ -25,6 +25,7 @@ import {
   type LearningTheme,
 } from '../../theme/learningTheme';
 import { LEARNING_STAGE_LABELS } from '../../domain/learning/personalization';
+import { BeginnerInstrumentExplanationStep } from './BeginnerInstrumentExplanationStep';
 import { DesktopPremiumLessonBlockRenderer } from './DesktopPremiumLessonBlockRenderer';
 import { PremiumLessonBlockRenderer } from './PremiumLessonBlockRenderer';
 import { LessonSupportingVisual } from './LessonSupportingVisual';
@@ -61,7 +62,8 @@ export function LessonPlayer({
 }: LessonPlayerProps) {
   const { width } = useWindowDimensions();
   const wide = width >= 900;
-  const styles = createStyles(theme, wide);
+  const narrow = width < 380;
+  const styles = createStyles(theme, wide, narrow);
   const visibleBlocks = useMemo(
     () =>
       lesson.contentBlocks
@@ -114,6 +116,10 @@ export function LessonPlayer({
   const isTakeaway = stepIndex === blocks.length;
   const currentBlock = isTakeaway ? undefined : blocks[stepIndex];
   const isVisualOnlyStep = currentBlock?.kind === 'visual';
+  const isInstrumentExplanation = Boolean(
+    currentBlock?.kind === 'explanation'
+      && lessonVisual?.assetRef.includes('piyasa-araclari-ayni-degildir')
+  );
   const totalSteps = blocks.length + 1;
   const progress = (stepIndex + 1) / totalSteps;
 
@@ -217,7 +223,14 @@ export function LessonPlayer({
               ) : null}
             </View>
           ) : currentBlock ? (
-            wide ? (
+            isInstrumentExplanation && lessonVisual ? (
+              <BeginnerInstrumentExplanationStep
+                language={language}
+                assetRef={lessonVisual.assetRef}
+                alt={lessonVisual.alt}
+                theme={theme}
+              />
+            ) : wide ? (
               <DesktopPremiumLessonBlockRenderer
                 block={currentBlock}
                 language={language}
@@ -288,14 +301,14 @@ export function LessonPlayer({
   );
 }
 
-const createStyles = (theme: LearningTheme, wide: boolean) =>
+const createStyles = (theme: LearningTheme, wide: boolean, narrow: boolean) =>
   StyleSheet.create({
     safeArea: { flex: 1, backgroundColor: theme.colors.background },
     header: {
       flexDirection: 'row',
       alignItems: 'center',
-      gap: theme.spacing.md,
-      paddingHorizontal: wide ? 28 : theme.spacing.md,
+      gap: narrow ? 10 : theme.spacing.md,
+      paddingHorizontal: wide ? 28 : narrow ? 12 : theme.spacing.md,
       paddingVertical: theme.spacing.sm,
       borderBottomColor: theme.colors.border,
       borderBottomWidth: 1,
@@ -319,7 +332,7 @@ const createStyles = (theme: LearningTheme, wide: boolean) =>
       width: '100%',
       maxWidth: wide ? 1080 : 760,
       alignSelf: 'center',
-      paddingHorizontal: wide ? 28 : theme.spacing.md,
+      paddingHorizontal: wide ? 28 : narrow ? 12 : theme.spacing.md,
       paddingTop: wide ? 22 : theme.spacing.sm,
       paddingBottom: theme.spacing.md,
       gap: wide ? 14 : theme.spacing.sm,
@@ -327,11 +340,11 @@ const createStyles = (theme: LearningTheme, wide: boolean) =>
     metaRow: { flexDirection: 'row', flexWrap: 'wrap', gap: theme.spacing.sm },
     duration: { color: theme.colors.textMuted, fontSize: wide ? 13 : 12 },
     contextLabel: { color: theme.colors.textMuted, fontSize: wide ? 13 : 12 },
-    lessonTitle: { color: theme.colors.text, fontSize: wide ? 28 : 21, lineHeight: wide ? 36 : 28, fontWeight: '900' },
+    lessonTitle: { color: theme.colors.text, fontSize: wide ? 28 : narrow ? 20 : 21, lineHeight: wide ? 36 : narrow ? 27 : 28, fontWeight: '900' },
     slide: {
       width: '100%',
       justifyContent: 'flex-start',
-      padding: wide ? 26 : theme.spacing.md,
+      padding: wide ? 26 : narrow ? 14 : theme.spacing.md,
       backgroundColor: theme.colors.surface,
       borderColor: theme.colors.border,
       borderWidth: 1,
@@ -340,7 +353,7 @@ const createStyles = (theme: LearningTheme, wide: boolean) =>
     visualSlide: { justifyContent: 'flex-start' },
     takeaway: { gap: wide ? 18 : theme.spacing.md },
     takeawayEyebrow: { color: theme.colors.primary, fontSize: wide ? 12 : 11, lineHeight: 16, fontWeight: '900', letterSpacing: 0.8 },
-    takeawayText: { color: theme.colors.text, fontSize: wide ? 30 : 23, fontWeight: '900', lineHeight: wide ? 40 : 31 },
+    takeawayText: { color: theme.colors.text, fontSize: wide ? 30 : narrow ? 22 : 23, fontWeight: '900', lineHeight: wide ? 40 : narrow ? 30 : 31 },
     takeawayVisual: { marginTop: 2 },
     compactSafety: {
       gap: wide ? 7 : theme.spacing.xs,
@@ -361,8 +374,8 @@ const createStyles = (theme: LearningTheme, wide: boolean) =>
       lineHeight: wide ? 23 : 19,
     },
     footer: {
-      paddingHorizontal: wide ? 28 : theme.spacing.md,
-      paddingVertical: wide ? 14 : theme.spacing.md,
+      paddingHorizontal: wide ? 28 : narrow ? 12 : theme.spacing.md,
+      paddingVertical: wide ? 14 : narrow ? 10 : theme.spacing.md,
       borderTopColor: theme.colors.border,
       borderTopWidth: 1,
       backgroundColor: theme.colors.background,
@@ -372,7 +385,7 @@ const createStyles = (theme: LearningTheme, wide: boolean) =>
       maxWidth: wide ? 1080 : 760,
       alignSelf: 'center',
       flexDirection: 'row',
-      gap: theme.spacing.md,
+      gap: narrow ? 8 : theme.spacing.md,
     },
     primaryButton: {
       flex: 1,
@@ -380,18 +393,18 @@ const createStyles = (theme: LearningTheme, wide: boolean) =>
       justifyContent: 'center',
       borderRadius: theme.radius.medium,
       backgroundColor: theme.colors.primary,
-      padding: theme.spacing.md,
+      padding: narrow ? 11 : theme.spacing.md,
       minHeight: 52,
     },
-    primaryText: { color: theme.colors.primaryText, fontWeight: '900', fontSize: 16 },
+    primaryText: { color: theme.colors.primaryText, fontWeight: '900', fontSize: narrow ? 15 : 16 },
     secondaryButton: {
       alignItems: 'center',
       justifyContent: 'center',
       borderRadius: theme.radius.medium,
       borderColor: theme.colors.border,
       borderWidth: 1,
-      padding: theme.spacing.md,
-      minWidth: 100,
+      padding: narrow ? 10 : theme.spacing.md,
+      minWidth: narrow ? 86 : 100,
       minHeight: 52,
     },
     secondaryText: { color: theme.colors.text, fontWeight: '800' },
