@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, type ImageSourcePropType, StyleSheet, View } from 'react-native';
+import { Image, type ImageResizeMode, type ImageSourcePropType, StyleSheet, View } from 'react-native';
 import { defaultLearningTheme, type LearningTheme } from '../../theme/learningTheme';
 import type { LessonSupportingVisualRole } from './LessonSupportingVisual';
 
@@ -10,6 +10,10 @@ import type { LessonSupportingVisualRole } from './LessonSupportingVisual';
  * inside individual lesson visual components. Matching stays lesson-specific,
  * while role keeps the same lesson free to use a different image for hook,
  * practice, misconception, risk or summary later.
+ *
+ * Editorial/photo-like scenes normally use `cover`. Teaching diagrams may use
+ * `contain` so labels, relationships and edge content are never cropped by the
+ * lesson card.
  */
 type AcademyEditorialImageEntry = {
   match: string;
@@ -17,6 +21,8 @@ type AcademyEditorialImageEntry = {
   source: ImageSourcePropType;
   aspectRatio?: number;
   overlayOpacity?: number;
+  resizeMode?: ImageResizeMode;
+  backgroundColor?: string;
 };
 
 const academyEditorialImages: readonly AcademyEditorialImageEntry[] = [
@@ -105,11 +111,21 @@ export function AcademyEditorialImageVisual({
   const styles = createStyles(theme);
   return (
     <View
-      style={[styles.shell, { aspectRatio: entry.aspectRatio ?? 16 / 9 }]}
+      style={[
+        styles.shell,
+        {
+          aspectRatio: entry.aspectRatio ?? 16 / 9,
+          backgroundColor: entry.backgroundColor ?? theme.colors.surface,
+        },
+      ]}
       accessibilityRole="image"
       accessibilityLabel={alt}
     >
-      <Image source={entry.source} resizeMode="cover" style={styles.image} />
+      <Image
+        source={entry.source}
+        resizeMode={entry.resizeMode ?? 'cover'}
+        style={styles.image}
+      />
       {entry.overlayOpacity ? (
         <View pointerEvents="none" style={[styles.overlay, { opacity: entry.overlayOpacity }]} />
       ) : null}
@@ -124,7 +140,6 @@ const createStyles = (theme: LearningTheme) => StyleSheet.create({
     borderRadius: 18,
     borderWidth: 1,
     borderColor: theme.colors.border,
-    backgroundColor: theme.colors.surface,
   },
   image: {
     width: '100%',
