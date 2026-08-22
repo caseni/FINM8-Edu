@@ -7,6 +7,7 @@ const registryPath = path.join(root, 'src/components/learning/AcademyEditorialIm
 const academyDir = path.join(root, 'src/domain/learning/examples/academy');
 const extensions = ['webp', 'png', 'jpg', 'jpeg'];
 const validStatuses = new Set(['planned', 'integrated']);
+const validBatchStatuses = new Set(['planned', 'active', 'integrated']);
 const validRoles = new Set(['hook', 'concept', 'practice', 'misconception', 'risk', 'summary']);
 const issues = [];
 
@@ -46,6 +47,8 @@ const plan = JSON.parse(fs.readFileSync(planPath, 'utf8'));
 if (!Array.isArray(plan.batches)) issues.push('Academy editorial batch plan must contain a batches array');
 
 const plannedKeys = new Set();
+const batchIds = new Set();
+const batchProgress = [];
 let plannedCount = 0;
 let integratedCount = 0;
 let physicallyPresentCount = 0;
@@ -56,6 +59,12 @@ for (const batch of plan.batches ?? []) {
     issues.push('Academy editorial batch is missing id or lessons array');
     continue;
   }
+  if (batchIds.has(batch.id)) issues.push(`Duplicate Academy editorial batch id: ${batch.id}`);
+  batchIds.add(batch.id);
+  if (!validBatchStatuses.has(batch.status)) issues.push(`Invalid Academy editorial batch status for ${batch.id}: ${batch.status}`);
+
+  let batchIntegrated = 0;
+  let batchMapped = 0;
 
   for (const lesson of batch.lessons) {
     const { slug, role, assetDir, assetPrefix, status } = lesson ?? {};
@@ -68,7 +77,10 @@ for (const batch of plan.batches ?? []) {
     if (plannedKeys.has(key)) issues.push(`Duplicate Academy batch lesson/role: ${key}`);
     plannedKeys.add(key);
     plannedCount += 1;
-    if (status === 'integrated') integratedCount += 1;
+    if (status === 'integrated') {
+      integratedCount += 1;
+      batchIntegrated += 1;
+    }
 
     const candidates = extensions.map((ext) => `${assetDir}/${assetPrefix}-${role}.${ext}`);
     const existing = candidates.filter((relative) => fs.existsSync(path.join(root, relative)));
@@ -77,7 +89,10 @@ for (const batch of plan.batches ?? []) {
     if (physical) physicallyPresentCount += 1;
 
     const mapped = registryEntries.get(key);
-    if (mapped && physical && mapped === physical) correctlyMappedCount += 1;
+    if (mapped && physical && mapped === physical) {
+      correctlyMappedCount += 1;
+      batchMapped += 1;
+    }
 
     if (status === 'integrated' && !physical) issues.push(`Integrated Academy item has no physical asset: ${key}`);
     if (status === 'integrated' && !mapped) issues.push(`Integrated Academy item has no registry mapping: ${key}`);
@@ -85,15 +100,32 @@ for (const batch of plan.batches ?? []) {
     if (mapped && !physical) issues.push(`Academy batch registry mapping has no planned physical asset: ${key} -> ${mapped}`);
     if (mapped && physical && mapped !== physical) issues.push(`Academy batch mapping points to wrong asset: ${key} -> ${mapped}; expected ${physical}`);
   }
+
+  if (batch.status === 'integrated' && batchIntegrated !== batch.lessons.length) {
+    issues.push(`Academy batch marked integrated but contains non-integrated items: ${batch.id}`);
+  }
+
+  batchProgress.push({
+    id: batch.id,
+    school: batch.school ?? 'unknown',
+    total: batch.lessons.length,
+    integrated: batchIntegrated,
+    mapped: batchMapped,
+  });
 }
 
 console.log('FINM8 EDU Academy editorial batch audit');
 console.log(`academy catalog slugs: ${catalogSlugs.size}`);
+console.log(`academy editorial batches: ${batchIds.size}`);
 console.log(`planned batch lesson/roles: ${plannedCount}`);
 console.log(`items marked integrated: ${integratedCount}`);
 console.log(`planned physical assets present: ${physicallyPresentCount}/${plannedCount}`);
 console.log(`planned assets correctly mapped to slides: ${correctlyMappedCount}/${plannedCount}`);
 console.log(`remaining planned Academy items: ${plannedCount - correctlyMappedCount}`);
+console.log('batch progress:');
+for (const batch of batchProgress) {
+  console.log(`- ${batch.id} [${batch.school}]: mapped ${batch.mapped}/${batch.total}; marked integrated ${batch.integrated}/${batch.total}`);
+}
 
 if (issues.length > 0) {
   console.error('\nAcademy editorial batch audit failed:');
