@@ -20,7 +20,8 @@ export function BeginnerInstrumentExplanationStep({
 }: BeginnerInstrumentExplanationStepProps) {
   const { width } = useWindowDimensions();
   const wide = width >= 900;
-  const styles = createStyles(theme, wide);
+  const narrow = width < 380;
+  const styles = createStyles(theme, wide, narrow);
   const tr = language === 'tr';
 
   return (
@@ -48,35 +49,39 @@ export function BeginnerInstrumentExplanationStep({
   );
 }
 
-const createStyles = (theme: LearningTheme, wide: boolean) => StyleSheet.create({
+const createStyles = (theme: LearningTheme, wide: boolean, narrow: boolean) => StyleSheet.create({
   layout: {
     width: '100%',
     flexDirection: wide ? 'row' : 'column',
     alignItems: 'stretch',
-    gap: wide ? 26 : 16,
+    gap: wide ? 26 : narrow ? 13 : 16,
   },
   copyPane: {
     flex: wide ? 0.95 : undefined,
+    width: '100%',
     minWidth: 0,
     justifyContent: 'center',
-    gap: wide ? 14 : 11,
+    gap: wide ? 14 : narrow ? 9 : 11,
   },
   visualPane: {
     flex: wide ? 1.05 : undefined,
+    width: '100%',
+    maxWidth: wide ? undefined : 430,
     minWidth: 0,
+    alignSelf: 'center',
     justifyContent: 'center',
   },
   eyebrow: {
     color: theme.colors.primary,
-    fontSize: 11,
-    lineHeight: 15,
+    fontSize: narrow ? 10 : 11,
+    lineHeight: narrow ? 14 : 15,
     fontWeight: '900',
     letterSpacing: 0.9,
   },
   intro: {
     color: theme.colors.text,
-    fontSize: wide ? 19 : 16,
-    lineHeight: wide ? 28 : 24,
+    fontSize: wide ? 19 : narrow ? 15 : 16,
+    lineHeight: wide ? 28 : narrow ? 22 : 24,
     fontWeight: '600',
   },
 });
