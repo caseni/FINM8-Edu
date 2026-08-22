@@ -20,6 +20,7 @@ import { AcademyTechnicalPremiumHookVisual, isAcademyTechnicalPremiumHookAsset }
 import { AlgoQuantSlideVisual, isAlgoQuantSlideAsset } from './AlgoQuantSlideVisual';
 import { AssetSchoolSlideVisual, isAssetSchoolSlideAsset } from './AssetSchoolSlideVisual';
 import { BehaviorEvidenceSlideVisual, isBehaviorEvidenceSlideAsset } from './BehaviorEvidenceSlideVisual';
+import { BeginnerAppliedChartStoryVisual, isBeginnerAppliedChartStoryAsset } from './BeginnerAppliedChartStoryVisual';
 import { BeginnerChartStoryVisual, isBeginnerChartStoryAsset } from './BeginnerChartStoryVisual';
 import { BeginnerCoreChartStoryVisual, isBeginnerCoreChartStoryAsset } from './BeginnerCoreChartStoryVisual';
 import { BeginnerEconomyStoryVisual, isBeginnerEconomyStoryAsset } from './BeginnerEconomyStoryVisual';
@@ -71,6 +72,7 @@ export function LessonSupportingVisual({ assetRef, alt, language, role, theme = 
   const isBeginnerEconomy = isBeginnerEconomyStoryAsset(assetRef);
   const isBeginnerRisk = isBeginnerRiskStoryAsset(assetRef);
   const isBeginnerCoreChart = isBeginnerCoreChartStoryAsset(assetRef);
+  const isBeginnerAppliedChart = isBeginnerAppliedChartStoryAsset(assetRef);
   const isBeginnerChart = isBeginnerChartStoryAsset(assetRef);
   const isBeginnerMarket = isBeginnerMarketStoryAsset(assetRef);
   const isAcademyMarketFoundation = isAcademyMarketsStoryAsset(assetRef);
@@ -78,7 +80,7 @@ export function LessonSupportingVisual({ assetRef, alt, language, role, theme = 
   const isAcademyRiskPortfolioFoundation = isAcademyRiskPortfolioStoryAsset(assetRef);
   const isEconomy = isEconomySlideAsset(assetRef);
   const emphasizeCleanPractice = role === 'practice' && (hasCoreExpansionCleanVisual || hasFoundationCleanVisual || hasAdvancedCleanVisual);
-  const hideEditorialLabel = hasEditorialImage || hasPremiumHook || hasEconomyPremiumHook || hasTechnicalPremiumHook || hasSmcPremiumHook || hasQuantPremiumHook || hasStrategyPremiumHook || hasPsychologyPremiumHook || hasAssetPremiumHook || hasCoreExpansionCleanVisual || hasFoundationCleanVisual || hasAdvancedCleanVisual || isBeginnerEconomy || isBeginnerRisk || isBeginnerCoreChart || isBeginnerChart || isBeginnerMarket || isAcademyMarketFoundation || isAcademyFundamentalFoundation || isAcademyRiskPortfolioFoundation || isEconomy;
+  const hideEditorialLabel = hasEditorialImage || hasPremiumHook || hasEconomyPremiumHook || hasTechnicalPremiumHook || hasSmcPremiumHook || hasQuantPremiumHook || hasStrategyPremiumHook || hasPsychologyPremiumHook || hasAssetPremiumHook || hasCoreExpansionCleanVisual || hasFoundationCleanVisual || hasAdvancedCleanVisual || isBeginnerEconomy || isBeginnerRisk || isBeginnerCoreChart || isBeginnerAppliedChart || isBeginnerChart || isBeginnerMarket || isAcademyMarketFoundation || isAcademyFundamentalFoundation || isAcademyRiskPortfolioFoundation || isEconomy;
   const visual = hasEditorialImage ? <AcademyEditorialImageVisual assetRef={assetRef} alt={alt} role={role} theme={theme} />
     : hasPremiumHook ? <AcademyPremiumHookVisual assetRef={assetRef} alt={alt} theme={theme} />
     : hasEconomyPremiumHook ? <AcademyEconomyPremiumHookVisual assetRef={assetRef} alt={alt} theme={theme} />
@@ -94,6 +96,7 @@ export function LessonSupportingVisual({ assetRef, alt, language, role, theme = 
     : isBeginnerEconomy ? <BeginnerEconomyStoryVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
     : isBeginnerRisk ? <BeginnerRiskStoryVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
     : isBeginnerCoreChart ? <BeginnerCoreChartStoryVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
+    : isBeginnerAppliedChart ? <BeginnerAppliedChartStoryVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
     : isBeginnerChart ? <BeginnerChartStoryVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
     : isBeginnerMarket ? <BeginnerMarketStoryVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
     : isAcademyMarketFoundation ? <AcademyMarketsStoryVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
