@@ -54,11 +54,57 @@ async function assertNoHorizontalOverflow(page, label) {
   }
 }
 
+async function instrumentCardBoxes(page, label) {
+  const cardLabels = [
+    'HİSSE: Şirkette ortaklık',
+    'TAHVİL: Bir kuruma borç verme',
+    'DÖVİZ: İki paranın göreli değeri',
+    'EMTİA: Altın, petrol gibi ürünler',
+  ];
+  const boxes = [];
+  for (const cardLabel of cardLabels) {
+    const card = page.locator(`[aria-label="${cardLabel}"]`).first();
+    await card.waitFor();
+    const box = await card.boundingBox();
+    if (!box) throw new Error(`${label}: instrument card ${cardLabel} has no measurable box`);
+    boxes.push(box);
+  }
+  return boxes;
+}
+
+async function assertInstrumentCardGrid(page, viewport, label) {
+  const boxes = await instrumentCardBoxes(page, label);
+  const [stock, bond, fx, commodity] = boxes;
+  const rowTolerance = 8;
+  const minCardWidth = viewport.sizeClass === 'mobile' ? 120 : 160;
+
+  for (const box of boxes) {
+    if (box.width < minCardWidth) {
+      throw new Error(`${label}: instrument meaning card too narrow at ${box.width.toFixed(1)}px`);
+    }
+    if (box.x < -1 || box.x + box.width > viewport.width + 1) {
+      throw new Error(`${label}: instrument meaning card escapes viewport`);
+    }
+  }
+
+  if (Math.abs(stock.y - bond.y) > rowTolerance || Math.abs(fx.y - commodity.y) > rowTolerance) {
+    throw new Error(`${label}: instrument meaning cards must remain a stable two-column grid`);
+  }
+  if (fx.y <= stock.y + stock.height - 2 || commodity.y <= bond.y + bond.height - 2) {
+    throw new Error(`${label}: second instrument-card row overlaps the first row`);
+  }
+  if (bond.x <= stock.x + stock.width || commodity.x <= fx.x + fx.width) {
+    throw new Error(`${label}: instrument-card columns overlap`);
+  }
+}
+
 async function assertInstrumentComposition(page, viewport, visualBox, label) {
   const meaning = page.getByText('Şirkette ortaklık', { exact: true }).first();
   await meaning.waitFor();
   const meaningBox = await meaning.boundingBox();
   if (!meaningBox) throw new Error(`${label}: instrument meaning card has no measurable box`);
+
+  await assertInstrumentCardGrid(page, viewport, label);
 
   if (viewport.sizeClass === 'mobile') {
     if (visualBox.y <= meaningBox.y + meaningBox.height) {
