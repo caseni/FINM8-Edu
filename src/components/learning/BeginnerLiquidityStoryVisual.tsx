@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import { StyleSheet, Text, useWindowDimensions, View, type DimensionValue } from 'react-native';
 import type { LearningLanguage } from '../../domain/learning/presentation';
 import { defaultLearningTheme, type LearningTheme } from '../../theme/learningTheme';
 import type { LessonSupportingVisualRole } from './LessonSupportingVisual';
@@ -158,7 +158,7 @@ function DepthCard({
   liquid: boolean;
   styles: ReturnType<typeof createStyles>;
 }) {
-  const levels = liquid
+  const levels: readonly { price: string; width: DimensionValue }[] = liquid
     ? [{ price: '100,0', width: '92%' }, { price: '99,9', width: '78%' }, { price: '99,8', width: '70%' }]
     : [{ price: '100,0', width: '34%' }, { price: '99,4', width: '24%' }, { price: '98,8', width: '18%' }];
 
