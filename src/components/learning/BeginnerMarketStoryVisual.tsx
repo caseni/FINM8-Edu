@@ -6,6 +6,7 @@ import { BeginnerInstrumentMisconceptionVisual } from './BeginnerInstrumentMisco
 import { BeginnerInstrumentStoryVisual } from './BeginnerInstrumentStoryVisual';
 import { BeginnerLiquidityStoryVisual } from './BeginnerLiquidityStoryVisual';
 import { BeginnerOrderTypesStoryVisual } from './BeginnerOrderTypesStoryVisual';
+import { BeginnerSlippageStoryVisual } from './BeginnerSlippageStoryVisual';
 import {
   BeginnerMarketStoryVisual as BeginnerMarketStoryVisualLegacy,
   isBeginnerMarketStoryAsset,
@@ -100,6 +101,19 @@ export function BeginnerMarketStoryVisual(props: Props) {
     return (
       <ResponsiveVisualFrame wide={wide}>
         <BeginnerOrderTypesStoryVisual
+          alt={props.alt}
+          language={props.language}
+          role={props.role}
+          theme={props.theme}
+        />
+      </ResponsiveVisualFrame>
+    );
+  }
+
+  if (props.assetRef.includes('gerceklesme-fiyati-kayma')) {
+    return (
+      <ResponsiveVisualFrame wide={wide}>
+        <BeginnerSlippageStoryVisual
           alt={props.alt}
           language={props.language}
           role={props.role}
