@@ -2,7 +2,9 @@ import React, { useEffect } from 'react';
 import { Text, View } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { LessonPlayer } from '../../components/learning';
+import { BeginnerAppliedChartStoryVisual, isBeginnerAppliedChartStoryAsset } from '../../components/learning/BeginnerAppliedChartStoryVisual';
 import { BeginnerChartStoryVisual } from '../../components/learning/BeginnerChartStoryVisual';
+import { BeginnerCoreChartStoryVisual, isBeginnerCoreChartStoryAsset } from '../../components/learning/BeginnerCoreChartStoryVisual';
 import { BeginnerEconomyStoryVisual } from '../../components/learning/BeginnerEconomyStoryVisual';
 import { BeginnerMarketStoryVisual } from '../../components/learning/BeginnerMarketStoryVisual';
 import { BeginnerRiskStoryVisual } from '../../components/learning/BeginnerRiskStoryVisual';
@@ -105,14 +107,37 @@ export function MicroLessonScreen({ route, navigation }: Props) {
                 />
               )
             : useBeginnerChartVisual
-              ? (block) => (
-                  <BeginnerChartStoryVisual
-                    assetRef={block.assetRef}
-                    alt={selectLocalizedText(block.alt, language)}
-                    language={language}
-                    role="practice"
-                  />
-                )
+              ? (block) => {
+                  const alt = selectLocalizedText(block.alt, language);
+                  if (isBeginnerCoreChartStoryAsset(block.assetRef)) {
+                    return (
+                      <BeginnerCoreChartStoryVisual
+                        assetRef={block.assetRef}
+                        alt={alt}
+                        language={language}
+                        role="practice"
+                      />
+                    );
+                  }
+                  if (isBeginnerAppliedChartStoryAsset(block.assetRef)) {
+                    return (
+                      <BeginnerAppliedChartStoryVisual
+                        assetRef={block.assetRef}
+                        alt={alt}
+                        language={language}
+                        role="practice"
+                      />
+                    );
+                  }
+                  return (
+                    <BeginnerChartStoryVisual
+                      assetRef={block.assetRef}
+                      alt={alt}
+                      language={language}
+                      role="practice"
+                    />
+                  );
+                }
               : useBeginnerMarketVisual
                 ? (block) => (
                     <BeginnerMarketStoryVisual
