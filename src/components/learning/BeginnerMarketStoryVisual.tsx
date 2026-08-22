@@ -5,6 +5,7 @@ import { BeginnerEditorialImageVisual, hasBeginnerEditorialImage } from './Begin
 import { BeginnerInstrumentMisconceptionVisual } from './BeginnerInstrumentMisconceptionVisual';
 import { BeginnerInstrumentStoryVisual } from './BeginnerInstrumentStoryVisual';
 import { BeginnerLiquidityStoryVisual } from './BeginnerLiquidityStoryVisual';
+import { BeginnerOrderTypesStoryVisual } from './BeginnerOrderTypesStoryVisual';
 import {
   BeginnerMarketStoryVisual as BeginnerMarketStoryVisualLegacy,
   isBeginnerMarketStoryAsset,
@@ -86,6 +87,19 @@ export function BeginnerMarketStoryVisual(props: Props) {
     return (
       <ResponsiveVisualFrame wide={wide}>
         <BeginnerBidAskStoryVisual
+          alt={props.alt}
+          language={props.language}
+          role={props.role}
+          theme={props.theme}
+        />
+      </ResponsiveVisualFrame>
+    );
+  }
+
+  if (props.assetRef.includes('piyasa-limit-stop-emirleri')) {
+    return (
+      <ResponsiveVisualFrame wide={wide}>
+        <BeginnerOrderTypesStoryVisual
           alt={props.alt}
           language={props.language}
           role={props.role}
