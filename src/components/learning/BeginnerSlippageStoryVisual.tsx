@@ -16,7 +16,7 @@ type Styles = ReturnType<typeof createStyles>;
 export function BeginnerSlippageStoryVisual({ alt, language, role, theme = defaultLearningTheme }: BeginnerSlippageStoryVisualProps) {
   const { width } = useWindowDimensions();
   const wide = width >= 900;
-  const narrow = width < 380;
+  const narrow = width < 420;
   const styles = createStyles(theme, wide, narrow);
   const tr = language === 'tr';
 
