@@ -52,5 +52,8 @@ jobs:
       - name: Academy editorial batch audit
         run: node scripts/academyEditorialBatchAudit.mjs
 
+      - name: Academy expansion editorial audit
+        run: node scripts/academyExpansionEditorialBatchAudit.mjs
+
       - name: Build web bundle
         run: npm run build:web
