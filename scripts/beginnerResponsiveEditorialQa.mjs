@@ -54,6 +54,21 @@ async function assertNoHorizontalOverflow(page, label) {
   }
 }
 
+async function assertInstrumentComposition(page, viewport, visualBox, label) {
+  const meaning = page.getByText('Şirkette ortaklık', { exact: true }).first();
+  await meaning.waitFor();
+  const meaningBox = await meaning.boundingBox();
+  if (!meaningBox) throw new Error(`${label}: instrument meaning card has no measurable box`);
+
+  if (viewport.sizeClass === 'mobile') {
+    if (visualBox.y <= meaningBox.y + meaningBox.height) {
+      throw new Error(`${label}: mobile visual must sit below the meaning cards`);
+    }
+  } else if (visualBox.x <= meaningBox.x + meaningBox.width) {
+    throw new Error(`${label}: desktop visual must sit to the right of the meaning cards`);
+  }
+}
+
 const browser = await chromium.launch({ executablePath: process.env.CHROME_BIN, headless: true });
 try {
   for (const viewport of viewports) {
@@ -83,6 +98,9 @@ try {
         }
         if (box.height > viewport.height * lesson.maxHeightRatio) {
           throw new Error(`${label}: lesson visual consumes too much viewport height (${box.height.toFixed(1)}px)`);
+        }
+        if (lesson.key === 'market-instruments' && step === 2) {
+          await assertInstrumentComposition(page, viewport, box, label);
         }
 
         if (step === 2 || step === 3 || step === totalSteps) {
