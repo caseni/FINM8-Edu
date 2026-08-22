@@ -6,48 +6,12 @@
       "school": "markets",
       "status": "active",
       "lessons": [
-        {
-          "slug": "borsa-ve-islem-yeri-nedir",
-          "role": "hook",
-          "assetDir": "assets/learning/academy/markets",
-          "assetPrefix": "markets-exchange",
-          "status": "integrated"
-        },
-        {
-          "slug": "borsa-endeksi-ne-anlatir",
-          "role": "hook",
-          "assetDir": "assets/learning/academy/markets",
-          "assetPrefix": "markets-index",
-          "status": "integrated"
-        },
-        {
-          "slug": "etf-nedir-nasil-calisir",
-          "role": "hook",
-          "assetDir": "assets/learning/academy/markets",
-          "assetPrefix": "markets-etf",
-          "status": "planned"
-        },
-        {
-          "slug": "tahvil-fiyati-ve-getirisi",
-          "role": "hook",
-          "assetDir": "assets/learning/academy/markets",
-          "assetPrefix": "markets-bond",
-          "status": "planned"
-        },
-        {
-          "slug": "forex-piyasasi-nasil-calisir",
-          "role": "hook",
-          "assetDir": "assets/learning/academy/markets",
-          "assetPrefix": "markets-forex",
-          "status": "planned"
-        },
-        {
-          "slug": "emtia-piyasalari-nasil-calisir",
-          "role": "hook",
-          "assetDir": "assets/learning/academy/markets",
-          "assetPrefix": "markets-commodity",
-          "status": "planned"
-        }
+        { "slug": "borsa-ve-islem-yeri-nedir", "role": "hook", "assetDir": "assets/learning/academy/markets", "assetPrefix": "markets-exchange", "status": "integrated" },
+        { "slug": "borsa-endeksi-ne-anlatir", "role": "hook", "assetDir": "assets/learning/academy/markets", "assetPrefix": "markets-index", "status": "integrated" },
+        { "slug": "etf-nedir-nasil-calisir", "role": "hook", "assetDir": "assets/learning/academy/markets", "assetPrefix": "markets-etf", "status": "planned" },
+        { "slug": "tahvil-fiyati-ve-getirisi", "role": "hook", "assetDir": "assets/learning/academy/markets", "assetPrefix": "markets-bond", "status": "planned" },
+        { "slug": "forex-piyasasi-nasil-calisir", "role": "hook", "assetDir": "assets/learning/academy/markets", "assetPrefix": "markets-forex", "status": "planned" },
+        { "slug": "emtia-piyasalari-nasil-calisir", "role": "hook", "assetDir": "assets/learning/academy/markets", "assetPrefix": "markets-commodity", "status": "planned" }
       ]
     },
     {
@@ -55,48 +19,12 @@
       "school": "fundamental",
       "status": "integrated",
       "lessons": [
-        {
-          "slug": "finansal-tablolar-birlikte-ne-anlatir",
-          "role": "hook",
-          "assetDir": "assets/learning/academy/fundamental",
-          "assetPrefix": "fundamental-statements-profit-cash",
-          "status": "integrated"
-        },
-        {
-          "slug": "gelir-tablosu-nasil-okunur",
-          "role": "hook",
-          "assetDir": "assets/learning/academy/fundamental",
-          "assetPrefix": "fundamental-income-sales-costs",
-          "status": "integrated"
-        },
-        {
-          "slug": "bilanco-ne-anlatir",
-          "role": "hook",
-          "assetDir": "assets/learning/academy/fundamental",
-          "assetPrefix": "fundamental-balance-sheet",
-          "status": "integrated"
-        },
-        {
-          "slug": "nakit-akisi-neden-farklidir",
-          "role": "hook",
-          "assetDir": "assets/learning/academy/fundamental",
-          "assetPrefix": "fundamental-cash-flow",
-          "status": "integrated"
-        },
-        {
-          "slug": "marjlar-ne-anlatir",
-          "role": "hook",
-          "assetDir": "assets/learning/academy/fundamental",
-          "assetPrefix": "fundamental-profitability",
-          "status": "integrated"
-        },
-        {
-          "slug": "borc-ve-likidite-nasil-okunur",
-          "role": "hook",
-          "assetDir": "assets/learning/academy/fundamental",
-          "assetPrefix": "fundamental-debt-liquidity",
-          "status": "integrated"
-        }
+        { "slug": "finansal-tablolar-birlikte-ne-anlatir", "role": "hook", "assetDir": "assets/learning/academy/fundamental", "assetPrefix": "fundamental-statements-profit-cash", "status": "integrated" },
+        { "slug": "gelir-tablosu-nasil-okunur", "role": "hook", "assetDir": "assets/learning/academy/fundamental", "assetPrefix": "fundamental-income-sales-costs", "status": "integrated" },
+        { "slug": "bilanco-ne-anlatir", "role": "hook", "assetDir": "assets/learning/academy/fundamental", "assetPrefix": "fundamental-balance-sheet", "status": "integrated" },
+        { "slug": "nakit-akisi-neden-farklidir", "role": "hook", "assetDir": "assets/learning/academy/fundamental", "assetPrefix": "fundamental-cash-flow", "status": "integrated" },
+        { "slug": "marjlar-ne-anlatir", "role": "hook", "assetDir": "assets/learning/academy/fundamental", "assetPrefix": "fundamental-profitability", "status": "integrated" },
+        { "slug": "borc-ve-likidite-nasil-okunur", "role": "hook", "assetDir": "assets/learning/academy/fundamental", "assetPrefix": "fundamental-debt-liquidity", "status": "integrated" }
       ]
     },
     {
@@ -104,48 +32,25 @@
       "school": "risk-portfolio",
       "status": "planned",
       "lessons": [
-        {
-          "slug": "korelasyon-ne-anlatir",
-          "role": "hook",
-          "assetDir": "assets/learning/academy/risk-portfolio",
-          "assetPrefix": "risk-correlation",
-          "status": "planned"
-        },
-        {
-          "slug": "drawdown-nedir",
-          "role": "hook",
-          "assetDir": "assets/learning/academy/risk-portfolio",
-          "assetPrefix": "risk-drawdown",
-          "status": "planned"
-        },
-        {
-          "slug": "kaldirac-riski-nasil-buyutur",
-          "role": "hook",
-          "assetDir": "assets/learning/academy/risk-portfolio",
-          "assetPrefix": "risk-leverage",
-          "status": "planned"
-        },
-        {
-          "slug": "yogunlasma-riski-nedir",
-          "role": "hook",
-          "assetDir": "assets/learning/academy/risk-portfolio",
-          "assetPrefix": "risk-concentration",
-          "status": "planned"
-        },
-        {
-          "slug": "risk-butcesi-nedir",
-          "role": "hook",
-          "assetDir": "assets/learning/academy/risk-portfolio",
-          "assetPrefix": "risk-budget",
-          "status": "planned"
-        },
-        {
-          "slug": "portfoy-nasil-kurulur",
-          "role": "hook",
-          "assetDir": "assets/learning/academy/risk-portfolio",
-          "assetPrefix": "risk-portfolio-construction",
-          "status": "planned"
-        }
+        { "slug": "korelasyon-ne-anlatir", "role": "hook", "assetDir": "assets/learning/academy/risk-portfolio", "assetPrefix": "risk-correlation", "status": "planned" },
+        { "slug": "drawdown-nedir", "role": "hook", "assetDir": "assets/learning/academy/risk-portfolio", "assetPrefix": "risk-drawdown", "status": "planned" },
+        { "slug": "kaldirac-riski-nasil-buyutur", "role": "hook", "assetDir": "assets/learning/academy/risk-portfolio", "assetPrefix": "risk-leverage", "status": "planned" },
+        { "slug": "yogunlasma-riski-nedir", "role": "hook", "assetDir": "assets/learning/academy/risk-portfolio", "assetPrefix": "risk-concentration", "status": "planned" },
+        { "slug": "risk-butcesi-nedir", "role": "hook", "assetDir": "assets/learning/academy/risk-portfolio", "assetPrefix": "risk-budget", "status": "planned" },
+        { "slug": "portfoy-nasil-kurulur", "role": "hook", "assetDir": "assets/learning/academy/risk-portfolio", "assetPrefix": "risk-portfolio-construction", "status": "planned" }
+      ]
+    },
+    {
+      "id": "academy-technical-foundation-hooks",
+      "school": "technical",
+      "status": "planned",
+      "lessons": [
+        { "slug": "breakout-ne-zaman-anlamli", "role": "hook", "assetDir": "assets/learning/academy/technical", "assetPrefix": "technical-breakout", "status": "planned" },
+        { "slug": "false-breakout-nasil-okunur", "role": "hook", "assetDir": "assets/learning/academy/technical", "assetPrefix": "technical-false-breakout", "status": "planned" },
+        { "slug": "pullback-trend-donusu-degildir", "role": "hook", "assetDir": "assets/learning/academy/technical", "assetPrefix": "technical-pullback", "status": "planned" },
+        { "slug": "range-konsolidasyon-nasil-okunur", "role": "hook", "assetDir": "assets/learning/academy/technical", "assetPrefix": "technical-range", "status": "planned" },
+        { "slug": "momentum-ne-anlatir", "role": "hook", "assetDir": "assets/learning/academy/technical", "assetPrefix": "technical-momentum", "status": "planned" },
+        { "slug": "hareketli-ortalama-ne-yapar", "role": "hook", "assetDir": "assets/learning/academy/technical", "assetPrefix": "technical-moving-average", "status": "planned" }
       ]
     }
   ]
