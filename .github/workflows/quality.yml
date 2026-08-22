@@ -49,5 +49,8 @@ jobs:
       - name: Real editorial image asset audit
         run: node scripts/editorialImageCoverage.mjs
 
+      - name: Academy editorial batch audit
+        run: node scripts/academyEditorialBatchAudit.mjs
+
       - name: Build web bundle
         run: npm run build:web
