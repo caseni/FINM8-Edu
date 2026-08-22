@@ -52,6 +52,19 @@
         { "slug": "momentum-ne-anlatir", "role": "hook", "assetDir": "assets/learning/academy/technical", "assetPrefix": "technical-momentum", "status": "planned" },
         { "slug": "hareketli-ortalama-ne-yapar", "role": "hook", "assetDir": "assets/learning/academy/technical", "assetPrefix": "technical-moving-average", "status": "planned" }
       ]
+    },
+    {
+      "id": "academy-economy-foundation-hooks",
+      "school": "economy",
+      "status": "planned",
+      "lessons": [
+        { "slug": "enflasyon-satin-alma-gucu", "role": "hook", "assetDir": "assets/learning/academy/economy", "assetPrefix": "economy-inflation", "status": "planned" },
+        { "slug": "faiz-orani-ne-anlatir", "role": "hook", "assetDir": "assets/learning/academy/economy", "assetPrefix": "economy-interest-rate", "status": "planned" },
+        { "slug": "merkez-bankasi-ne-yapar", "role": "hook", "assetDir": "assets/learning/academy/economy", "assetPrefix": "economy-central-bank", "status": "planned" },
+        { "slug": "faiz-karari-ekonomiye-nasil-yansir", "role": "hook", "assetDir": "assets/learning/academy/economy", "assetPrefix": "economy-monetary-policy", "status": "planned" },
+        { "slug": "gsyh-buyume-ne-anlatir", "role": "hook", "assetDir": "assets/learning/academy/economy", "assetPrefix": "economy-growth", "status": "planned" },
+        { "slug": "ekonomik-dongu-resesyon", "role": "hook", "assetDir": "assets/learning/academy/economy", "assetPrefix": "economy-business-cycle", "status": "planned" }
+      ]
     }
   ]
 }
