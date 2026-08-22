@@ -7,6 +7,8 @@ const registries = [
   'src/components/learning/AcademyEditorialImageVisual.tsx',
 ];
 const beginnerPlanPath = path.join(root, 'docs/BEGINNER_EDITORIAL_IMAGE_PLAN.json');
+const academyLessonDir = path.join(root, 'src/domain/learning/examples/academy');
+const academyAssetDir = path.join(root, 'assets/learning/academy');
 
 const TOTAL_BEGINNER_LESSONS = 24;
 const TOTAL_ACADEMY_LESSONS = 120;
@@ -17,6 +19,17 @@ const IMAGE_EXTENSIONS = ['webp', 'png', 'jpg', 'jpeg'];
 
 const entries = [];
 const issues = [];
+
+function filesRecursively(dir, predicate) {
+  if (!fs.existsSync(dir)) return [];
+  const result = [];
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) result.push(...filesRecursively(full, predicate));
+    else if (predicate(full)) result.push(full);
+  }
+  return result;
+}
 
 for (const registryPath of registries) {
   const absoluteRegistry = path.join(root, registryPath);
@@ -133,8 +146,49 @@ for (const entry of unplannedBeginnerMappings) {
   issues.push(`Beginner real-image mapping is not declared in rollout plan: ${entry.lessonMatch} · ${entry.role}`);
 }
 
-const beginnerEntries = entries.filter((entry) => entry.registryPath.includes('BeginnerEditorial'));
+const academyLessonFiles = filesRecursively(
+  academyLessonDir,
+  (file) => /Lessons\.ts$/.test(file) && !/Sources\.ts$/.test(file),
+);
+const academyCatalogSlugs = new Set();
+for (const file of academyLessonFiles) {
+  const source = fs.readFileSync(file, 'utf8');
+  const slugPattern = /\bslug:\s*['"]([^'"]+)['"]/g;
+  let match;
+  while ((match = slugPattern.exec(source)) !== null) {
+    const slug = match[1];
+    if (academyCatalogSlugs.has(slug)) issues.push(`Duplicate Academy lesson slug in catalog: ${slug}`);
+    academyCatalogSlugs.add(slug);
+  }
+}
+if (academyCatalogSlugs.size !== TOTAL_ACADEMY_LESSONS) {
+  issues.push(`Academy editorial audit expected ${TOTAL_ACADEMY_LESSONS} catalog slugs; found ${academyCatalogSlugs.size}`);
+}
+
 const academyEntries = entries.filter((entry) => entry.registryPath.includes('AcademyEditorial'));
+for (const entry of academyEntries) {
+  if (!academyCatalogSlugs.has(entry.lessonMatch)) {
+    issues.push(`Academy real-image mapping does not match a canonical lesson slug: ${entry.lessonMatch} · ${entry.role}`);
+  }
+}
+
+const academyPhysicalAssets = filesRecursively(
+  academyAssetDir,
+  (file) => IMAGE_EXTENSIONS.includes(path.extname(file).slice(1).toLowerCase()),
+).map((file) => path.relative(root, file).replaceAll('\\', '/'));
+const academyRegisteredAssets = new Set(academyEntries.map((entry) => entry.asset));
+for (const asset of academyPhysicalAssets) {
+  if (!academyRegisteredAssets.has(asset)) {
+    issues.push(`Physical Academy asset is not registered to a slide role: ${asset}`);
+  }
+}
+for (const asset of academyRegisteredAssets) {
+  if (!academyPhysicalAssets.includes(asset)) {
+    issues.push(`Academy registry points outside the Academy physical asset inventory: ${asset}`);
+  }
+}
+
+const beginnerEntries = entries.filter((entry) => entry.registryPath.includes('BeginnerEditorial'));
 const beginnerLessons = new Set(beginnerEntries.map((entry) => entry.lessonMatch));
 const academyLessons = new Set(academyEntries.map((entry) => entry.lessonMatch));
 const uniqueLessons = new Set(entries.map((entry) => entry.lessonMatch));
@@ -146,6 +200,8 @@ console.log(`- Beginner mappings: ${beginnerEntries.length}`);
 console.log(`- Academy mappings: ${academyEntries.length}`);
 console.log(`- Beginner lessons with real image: ${beginnerLessons.size}/${TOTAL_BEGINNER_LESSONS} (${percentage(beginnerLessons.size, TOTAL_BEGINNER_LESSONS)})`);
 console.log(`- Academy lessons with real image: ${academyLessons.size}/${TOTAL_ACADEMY_LESSONS} (${percentage(academyLessons.size, TOTAL_ACADEMY_LESSONS)})`);
+console.log(`- Academy physical editorial assets: ${academyPhysicalAssets.length}`);
+console.log(`- Academy physical assets registered to slides: ${academyRegisteredAssets.size}/${academyPhysicalAssets.length}`);
 console.log(`- Active lessons with at least one real image: ${uniqueLessons.size}/${TOTAL_ACTIVE_LESSONS} (${percentage(uniqueLessons.size, TOTAL_ACTIVE_LESSONS)})`);
 console.log(`- Remaining lessons still relying only on generated/code fallback: ${TOTAL_ACTIVE_LESSONS - uniqueLessons.size}`);
 console.log(`- Beginner rollout plan coverage: ${planSlugs.size}/${TOTAL_BEGINNER_LESSONS} lessons declared`);
@@ -160,6 +216,11 @@ for (const lesson of beginnerPlan.lessons ?? []) {
   } else {
     console.log(`  · ${lesson.slug}: real-image roles complete`);
   }
+}
+
+if (academyLessons.size > 0) {
+  console.log('- Academy lessons with real editorial images:');
+  for (const slug of [...academyLessons].sort()) console.log(`  · ${slug}`);
 }
 
 if (issues.length > 0) {
