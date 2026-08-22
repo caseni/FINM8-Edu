@@ -2,8 +2,9 @@ import { chromium } from 'playwright-core';
 
 const baseUrl = 'http://127.0.0.1:4173/';
 const viewports = [
-  { name: 'mobile', width: 390, height: 844, minVisualWidth: 240 },
-  { name: 'desktop', width: 1440, height: 900, minVisualWidth: 300 },
+  { name: 'mobile-360', sizeClass: 'mobile', width: 360, height: 800, minVisualWidth: 220 },
+  { name: 'mobile-390', sizeClass: 'mobile', width: 390, height: 844, minVisualWidth: 240 },
+  { name: 'desktop', sizeClass: 'desktop', width: 1440, height: 900, minVisualWidth: 300 },
 ];
 const lessons = [
   {
@@ -74,7 +75,7 @@ try {
         if (box.width < viewport.minVisualWidth) {
           throw new Error(`${label}: lesson visual too small at ${box.width.toFixed(1)}px`);
         }
-        if (box.width > lesson.maxWidth[viewport.name] + 1) {
+        if (box.width > lesson.maxWidth[viewport.sizeClass] + 1) {
           throw new Error(`${label}: lesson visual too wide at ${box.width.toFixed(1)}px`);
         }
         if (box.x < -1 || box.x + box.width > viewport.width + 1) {
@@ -84,7 +85,7 @@ try {
           throw new Error(`${label}: lesson visual consumes too much viewport height (${box.height.toFixed(1)}px)`);
         }
 
-        if (step === 3 || step === totalSteps) {
+        if (step === 2 || step === 3 || step === totalSteps) {
           await page.screenshot({
             path: `visual-qa/${label}.png`,
             fullPage: true,
