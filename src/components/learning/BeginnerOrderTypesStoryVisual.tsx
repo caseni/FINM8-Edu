@@ -150,7 +150,7 @@ function Summary({ tr, styles }: { tr: boolean; styles: Styles }) {
 }
 
 const createStyles = (theme: LearningTheme, wide: boolean, narrow: boolean) => StyleSheet.create({
-  shell: { width: '100%', minHeight: wide ? 300 : narrow ? 242 : 260, justifyContent: 'center', padding: wide ? 20 : narrow ? 12 : 14, borderRadius: wide ? 18 : 16, borderWidth: 1, borderColor: theme.colors.border, backgroundColor: '#081726', overflow: 'hidden' },
+  shell: { width: '100%', minHeight: wide ? 300 : narrow ? 242 : 260, justifyContent: 'center', padding: wide ? 20 : narrow ? 10 : 14, borderRadius: wide ? 18 : 16, borderWidth: 1, borderColor: theme.colors.border, backgroundColor: '#081726', overflow: 'hidden' },
   scene: { width: '100%', gap: wide ? 17 : narrow ? 10 : 12 },
   heading: { gap: 5 },
   title: { color: theme.colors.text, fontSize: wide ? 20 : narrow ? 15 : 17, lineHeight: wide ? 28 : narrow ? 21 : 24, fontWeight: '900' },
@@ -188,7 +188,7 @@ const createStyles = (theme: LearningTheme, wide: boolean, narrow: boolean) => S
   limitPracticeLine: { position: 'absolute', left: 0, right: 0, height: 3, backgroundColor: '#5BAA9F' },
   stopPracticeLine: { position: 'absolute', left: 0, right: 0, height: 3, backgroundColor: '#B48663' },
   levelTag: { position: 'absolute', right: 0, top: -14, color: theme.colors.text, fontSize: narrow ? 7 : 8, fontWeight: '900' },
-  twoPanel: { flexDirection: 'row', gap: narrow ? 7 : 9 },
+  twoPanel: { flexDirection: 'row', gap: narrow ? 6 : 9 },
   misPanel: { flex: 1, minWidth: 0, minHeight: wide ? 158 : narrow ? 120 : 134, alignItems: 'center', justifyContent: 'center', gap: 9, padding: narrow ? 8 : 10, borderRadius: 14, borderWidth: 1, borderColor: '#4C5965', backgroundColor: '#11202D' },
   unfilledTrack: { width: '78%', height: 42, position: 'relative', justifyContent: 'center' },
   orderDotFar: { position: 'absolute', left: '8%', width: 13, height: 13, borderRadius: 7, backgroundColor: '#5BAA9F' },
