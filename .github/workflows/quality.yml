@@ -55,5 +55,8 @@ jobs:
       - name: Academy expansion editorial audit
         run: node scripts/academyExpansionEditorialBatchAudit.mjs
 
+      - name: Unified real-image rollout status audit
+        run: node scripts/editorialImageRolloutStatus.mjs
+
       - name: Build web bundle
         run: npm run build:web
