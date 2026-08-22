@@ -1,0 +1,103 @@
+{
+  "version": 1,
+  "batches": [
+    {
+      "id": "academy-markets-foundation-hooks",
+      "school": "markets",
+      "status": "active",
+      "lessons": [
+        {
+          "slug": "borsa-ve-islem-yeri-nedir",
+          "role": "hook",
+          "assetDir": "assets/learning/academy/markets",
+          "assetPrefix": "markets-exchange",
+          "status": "integrated"
+        },
+        {
+          "slug": "borsa-endeksi-ne-anlatir",
+          "role": "hook",
+          "assetDir": "assets/learning/academy/markets",
+          "assetPrefix": "markets-index",
+          "status": "integrated"
+        },
+        {
+          "slug": "etf-nedir-nasil-calisir",
+          "role": "hook",
+          "assetDir": "assets/learning/academy/markets",
+          "assetPrefix": "markets-etf",
+          "status": "planned"
+        },
+        {
+          "slug": "tahvil-fiyati-ve-getirisi",
+          "role": "hook",
+          "assetDir": "assets/learning/academy/markets",
+          "assetPrefix": "markets-bond",
+          "status": "planned"
+        },
+        {
+          "slug": "forex-piyasasi-nasil-calisir",
+          "role": "hook",
+          "assetDir": "assets/learning/academy/markets",
+          "assetPrefix": "markets-forex",
+          "status": "planned"
+        },
+        {
+          "slug": "emtia-piyasalari-nasil-calisir",
+          "role": "hook",
+          "assetDir": "assets/learning/academy/markets",
+          "assetPrefix": "markets-commodity",
+          "status": "planned"
+        }
+      ]
+    },
+    {
+      "id": "academy-fundamental-existing-hooks",
+      "school": "fundamental",
+      "status": "integrated",
+      "lessons": [
+        {
+          "slug": "finansal-tablolar-birlikte-ne-anlatir",
+          "role": "hook",
+          "assetDir": "assets/learning/academy/fundamental",
+          "assetPrefix": "fundamental-statements-profit-cash",
+          "status": "integrated"
+        },
+        {
+          "slug": "gelir-tablosu-nasil-okunur",
+          "role": "hook",
+          "assetDir": "assets/learning/academy/fundamental",
+          "assetPrefix": "fundamental-income-sales-costs",
+          "status": "integrated"
+        },
+        {
+          "slug": "bilanco-ne-anlatir",
+          "role": "hook",
+          "assetDir": "assets/learning/academy/fundamental",
+          "assetPrefix": "fundamental-balance-sheet",
+          "status": "integrated"
+        },
+        {
+          "slug": "nakit-akisi-neden-farklidir",
+          "role": "hook",
+          "assetDir": "assets/learning/academy/fundamental",
+          "assetPrefix": "fundamental-cash-flow",
+          "status": "integrated"
+        },
+        {
+          "slug": "marjlar-ne-anlatir",
+          "role": "hook",
+          "assetDir": "assets/learning/academy/fundamental",
+          "assetPrefix": "fundamental-profitability",
+          "status": "integrated"
+        },
+        {
+          "slug": "borc-ve-likidite-nasil-okunur",
+          "role": "hook",
+          "assetDir": "assets/learning/academy/fundamental",
+          "assetPrefix": "fundamental-debt-liquidity",
+          "status": "integrated"
+        }
+      ]
+    }
+  ]
+}
