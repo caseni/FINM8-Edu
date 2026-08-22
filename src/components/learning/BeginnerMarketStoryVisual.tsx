@@ -1,6 +1,7 @@
 import React from 'react';
 import { useWindowDimensions, View } from 'react-native';
 import { BeginnerEditorialImageVisual, hasBeginnerEditorialImage } from './BeginnerEditorialImageVisual';
+import { BeginnerInstrumentMisconceptionVisual } from './BeginnerInstrumentMisconceptionVisual';
 import { BeginnerInstrumentStoryVisual } from './BeginnerInstrumentStoryVisual';
 import { BeginnerLiquidityStoryVisual } from './BeginnerLiquidityStoryVisual';
 import {
@@ -29,6 +30,15 @@ export function BeginnerMarketStoryVisual(props: Props) {
 
   if (props.assetRef.includes('piyasa-araclari-ayni-degildir')) {
     if (props.role === 'practice') return null;
+    if (props.role === 'misconception') {
+      return (
+        <BeginnerInstrumentMisconceptionVisual
+          alt={props.alt}
+          language={props.language}
+          theme={props.theme}
+        />
+      );
+    }
 
     return (
       <BeginnerInstrumentStoryVisual
