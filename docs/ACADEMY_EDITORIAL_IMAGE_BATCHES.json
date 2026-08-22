@@ -98,6 +98,55 @@
           "status": "integrated"
         }
       ]
+    },
+    {
+      "id": "academy-risk-portfolio-foundation-hooks",
+      "school": "risk-portfolio",
+      "status": "planned",
+      "lessons": [
+        {
+          "slug": "korelasyon-ne-anlatir",
+          "role": "hook",
+          "assetDir": "assets/learning/academy/risk-portfolio",
+          "assetPrefix": "risk-correlation",
+          "status": "planned"
+        },
+        {
+          "slug": "drawdown-nedir",
+          "role": "hook",
+          "assetDir": "assets/learning/academy/risk-portfolio",
+          "assetPrefix": "risk-drawdown",
+          "status": "planned"
+        },
+        {
+          "slug": "kaldirac-riski-nasil-buyutur",
+          "role": "hook",
+          "assetDir": "assets/learning/academy/risk-portfolio",
+          "assetPrefix": "risk-leverage",
+          "status": "planned"
+        },
+        {
+          "slug": "yogunlasma-riski-nedir",
+          "role": "hook",
+          "assetDir": "assets/learning/academy/risk-portfolio",
+          "assetPrefix": "risk-concentration",
+          "status": "planned"
+        },
+        {
+          "slug": "risk-butcesi-nedir",
+          "role": "hook",
+          "assetDir": "assets/learning/academy/risk-portfolio",
+          "assetPrefix": "risk-budget",
+          "status": "planned"
+        },
+        {
+          "slug": "portfoy-nasil-kurulur",
+          "role": "hook",
+          "assetDir": "assets/learning/academy/risk-portfolio",
+          "assetPrefix": "risk-portfolio-construction",
+          "status": "planned"
+        }
+      ]
     }
   ]
 }
