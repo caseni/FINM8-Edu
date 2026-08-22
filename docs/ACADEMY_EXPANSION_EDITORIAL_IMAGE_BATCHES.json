@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "scope": "academy-expansion-hook-first",
+  "batches": [
+    {
+      "id": "academy-markets-expansion-hooks",
+      "school": "markets",
+      "status": "planned",
+      "lessons": [
+        { "slug": "kripto-piyasasi-nasil-farklidir", "role": "hook", "assetDir": "assets/learning/academy/markets-expansion", "assetPrefix": "markets-crypto", "status": "planned" },
+        { "slug": "piyasa-seanslari-neden-onemlidir", "role": "hook", "assetDir": "assets/learning/academy/markets-expansion", "assetPrefix": "markets-sessions", "status": "planned" },
+        { "slug": "islem-hacmi-ne-anlatir", "role": "hook", "assetDir": "assets/learning/academy/markets-expansion", "assetPrefix": "markets-volume", "status": "planned" },
+        { "slug": "market-maker-ne-yapar", "role": "hook", "assetDir": "assets/learning/academy/markets-expansion", "assetPrefix": "markets-market-maker", "status": "planned" },
+        { "slug": "birincil-ve-ikincil-piyasa", "role": "hook", "assetDir": "assets/learning/academy/markets-expansion", "assetPrefix": "markets-primary-secondary", "status": "planned" },
+        { "slug": "turev-urun-nedir", "role": "hook", "assetDir": "assets/learning/academy/markets-expansion", "assetPrefix": "markets-derivatives", "status": "planned" }
+      ]
+    },
+    {
+      "id": "academy-fundamental-expansion-hooks",
+      "school": "fundamental",
+      "status": "planned",
+      "lessons": [
+        { "slug": "buyume-kalitesi-nasil-okunur", "role": "hook", "assetDir": "assets/learning/academy/fundamental-expansion", "assetPrefix": "fundamental-growth-quality", "status": "planned" },
+        { "slug": "hisse-basina-metrikler-neden-onemlidir", "role": "hook", "assetDir": "assets/learning/academy/fundamental-expansion", "assetPrefix": "fundamental-per-share", "status": "planned" },
+        { "slug": "degerleme-carpanlari-nasil-okunur", "role": "hook", "assetDir": "assets/learning/academy/fundamental-expansion", "assetPrefix": "fundamental-valuation-multiples", "status": "planned" },
+        { "slug": "dcf-mantigi-nedir", "role": "hook", "assetDir": "assets/learning/academy/fundamental-expansion", "assetPrefix": "fundamental-dcf", "status": "planned" },
+        { "slug": "benzer-sirket-karsilastirmasi-nasil-yapilir", "role": "hook", "assetDir": "assets/learning/academy/fundamental-expansion", "assetPrefix": "fundamental-peer-comparison", "status": "planned" },
+        { "slug": "temel-analizin-sinirlari", "role": "hook", "assetDir": "assets/learning/academy/fundamental-expansion", "assetPrefix": "fundamental-analysis-limits", "status": "planned" }
+      ]
+    }
+  ]
+}
