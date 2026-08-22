@@ -31,6 +31,12 @@ const lessons = [
     maxWidth: { mobile: 360, desktop: 700 },
     maxHeightRatio: 0.72,
   },
+  {
+    key: 'order-types',
+    title: 'Emir verirken aslında ne seçiyorsun',
+    maxWidth: { mobile: 360, desktop: 700 },
+    maxHeightRatio: 0.72,
+  },
 ];
 
 async function openMarketLesson(page, lessonTitle) {
@@ -166,6 +172,31 @@ async function assertResponsivePair(page, viewport, leftLabel, rightLabel, label
   }
 }
 
+async function assertThreeAcross(page, viewport, labels, label) {
+  const boxes = [];
+  for (const itemLabel of labels) {
+    const node = page.locator(`[aria-label="${itemLabel}"]`).first();
+    await node.waitFor();
+    const box = await node.boundingBox();
+    if (!box) throw new Error(`${label}: ${itemLabel} has no measurable box`);
+    boxes.push(box);
+  }
+
+  const minWidth = viewport.sizeClass === 'mobile' ? 72 : 145;
+  for (const box of boxes) {
+    if (box.width < minWidth) throw new Error(`${label}: three-way card too narrow at ${box.width.toFixed(1)}px`);
+    if (box.x < -1 || box.x + box.width > viewport.width + 1) throw new Error(`${label}: three-way card escapes viewport`);
+  }
+  if (Math.max(...boxes.map((box) => box.y)) - Math.min(...boxes.map((box) => box.y)) > 8) {
+    throw new Error(`${label}: three-way comparison must remain on one row`);
+  }
+  for (let index = 1; index < boxes.length; index += 1) {
+    if (boxes[index].x <= boxes[index - 1].x + boxes[index - 1].width) {
+      throw new Error(`${label}: three-way cards overlap`);
+    }
+  }
+}
+
 async function assertLiquidityComposition(page, viewport, step, label) {
   if (step === 1) {
     await assertResponsivePair(page, viewport, 'likidite-senaryo-kalabalik', 'likidite-senaryo-sig', label);
@@ -202,6 +233,28 @@ async function assertBidAskComposition(page, viewport, step, label) {
     if (currentQuotesBox.y <= lastTradeBox.y + lastTradeBox.height) {
       throw new Error(`${label}: current quotes must remain visually separate below last trade`);
     }
+  }
+}
+
+async function assertOrderTypesComposition(page, viewport, step, label) {
+  if (step === 1) {
+    await assertThreeAcross(page, viewport, ['order-market-path', 'order-limit-boundary', 'order-stop-trigger'], label);
+  }
+  if (step === 2) {
+    await assertThreeAcross(page, viewport, ['order-concept-market', 'order-concept-limit', 'order-concept-stop'], label);
+  }
+  if (step === 3) {
+    const limit = page.locator('[aria-label="order-practice-limit"]').first();
+    const stop = page.locator('[aria-label="order-practice-stop"]').first();
+    await limit.waitFor();
+    await stop.waitFor();
+    const limitBox = await limit.boundingBox();
+    const stopBox = await stop.boundingBox();
+    if (!limitBox || !stopBox) throw new Error(`${label}: order practice levels are not measurable`);
+    if (stopBox.y <= limitBox.y + 20) throw new Error(`${label}: stop trigger must remain visibly below limit boundary`);
+  }
+  if (step === 4) {
+    await assertResponsivePair(page, viewport, 'order-limit-no-fill', 'order-stop-not-exact-fill', label);
   }
 }
 
@@ -248,6 +301,9 @@ try {
           }
           if (lesson.key === 'bid-ask') {
             await assertBidAskComposition(page, viewport, step, label);
+          }
+          if (lesson.key === 'order-types') {
+            await assertOrderTypesComposition(page, viewport, step, label);
           }
         }
 
