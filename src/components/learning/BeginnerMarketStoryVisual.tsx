@@ -13,6 +13,20 @@ export { isBeginnerMarketStoryAsset };
 
 type Props = React.ComponentProps<typeof BeginnerMarketStoryVisualLegacy>;
 
+function ResponsiveVisualFrame({ wide, children }: { wide: boolean; children: React.ReactNode }) {
+  return (
+    <View
+      style={{
+        width: '100%',
+        maxWidth: wide ? 680 : undefined,
+        alignSelf: 'center',
+      }}
+    >
+      {children}
+    </View>
+  );
+}
+
 export function BeginnerMarketStoryVisual(props: Props) {
   const { width } = useWindowDimensions();
   const wide = width >= 900;
@@ -32,32 +46,38 @@ export function BeginnerMarketStoryVisual(props: Props) {
     if (props.role === 'practice') return null;
     if (props.role === 'misconception') {
       return (
-        <BeginnerInstrumentMisconceptionVisual
-          alt={props.alt}
-          language={props.language}
-          theme={props.theme}
-        />
+        <ResponsiveVisualFrame wide={wide}>
+          <BeginnerInstrumentMisconceptionVisual
+            alt={props.alt}
+            language={props.language}
+            theme={props.theme}
+          />
+        </ResponsiveVisualFrame>
       );
     }
 
     return (
-      <BeginnerInstrumentStoryVisual
-        alt={props.alt}
-        language={props.language}
-        role={props.role}
-        theme={props.theme}
-      />
+      <ResponsiveVisualFrame wide={wide}>
+        <BeginnerInstrumentStoryVisual
+          alt={props.alt}
+          language={props.language}
+          role={props.role}
+          theme={props.theme}
+        />
+      </ResponsiveVisualFrame>
     );
   }
 
   if (props.assetRef.includes('likidite-neden-onemlidir')) {
     return (
-      <BeginnerLiquidityStoryVisual
-        alt={props.alt}
-        language={props.language}
-        role={props.role}
-        theme={props.theme}
-      />
+      <ResponsiveVisualFrame wide={wide}>
+        <BeginnerLiquidityStoryVisual
+          alt={props.alt}
+          language={props.language}
+          role={props.role}
+          theme={props.theme}
+        />
+      </ResponsiveVisualFrame>
     );
   }
 
