@@ -53,6 +53,7 @@ jobs:
           mkdir -p visual-qa
           node scripts/visualQa.mjs
           node scripts/beginnerDesktopLessonQa.mjs
+          node scripts/beginnerTaskFeedbackQa.mjs
           node scripts/beginnerDesktopAssessmentQa.mjs
           node scripts/academyDesktopLessonQa.mjs
           node scripts/advancedHookQa.mjs
