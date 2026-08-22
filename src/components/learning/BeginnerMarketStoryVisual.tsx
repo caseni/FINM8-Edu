@@ -27,6 +27,8 @@ export function BeginnerMarketStoryVisual(props: Props) {
   }
 
   if (props.assetRef.includes('piyasa-araclari-ayni-degildir')) {
+    if (props.role === 'practice') return null;
+
     return (
       <BeginnerInstrumentStoryVisual
         alt={props.alt}
