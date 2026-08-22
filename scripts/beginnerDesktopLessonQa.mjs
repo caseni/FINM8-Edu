@@ -12,6 +12,41 @@ async function assertNoHorizontalOverflow(page, label) {
   }
 }
 
+async function assertLessonVisualClearsBottomCta(page, label) {
+  const geometry = await page.evaluate(() => {
+    const visibleRects = (selector) => [...document.querySelectorAll(selector)]
+      .map((node) => {
+        const rect = node.getBoundingClientRect();
+        const style = window.getComputedStyle(node);
+        return {
+          top: rect.top,
+          bottom: rect.bottom,
+          width: rect.width,
+          height: rect.height,
+          area: rect.width * rect.height,
+          visible: style.display !== 'none' && style.visibility !== 'hidden' && rect.width > 0 && rect.height > 0,
+        };
+      })
+      .filter((item) => item.visible);
+
+    const visual = visibleRects('[role="img"]')
+      .filter((item) => item.width >= 180 && item.height >= 140)
+      .sort((a, b) => b.area - a.area)[0];
+
+    const bottomCta = visibleRects('button, [role="button"]')
+      .filter((item) => item.width >= window.innerWidth * 0.35 && item.top >= window.innerHeight * 0.55)
+      .sort((a, b) => b.width - a.width || b.top - a.top)[0];
+
+    return visual && bottomCta
+      ? { visualBottom: visual.bottom, ctaTop: bottomCta.top, gap: bottomCta.top - visual.bottom }
+      : null;
+  });
+
+  if (geometry && geometry.gap < 8) {
+    throw new Error(`${label}: lesson visual overlaps bottom CTA (gap ${geometry.gap.toFixed(1)}px)`);
+  }
+}
+
 async function openPriceFormationLesson(page) {
   await page.goto(baseUrl, { waitUntil: 'networkidle' });
   await page.getByText('Öğrenmeye Başla', { exact: true }).waitFor({ timeout: 10000 });
@@ -39,6 +74,7 @@ try {
   for (let step = 1; step <= totalSteps; step += 1) {
     const label = `beginner-desktop-price-formation-step-${String(step).padStart(2, '0')}`;
     await assertNoHorizontalOverflow(page, label);
+    await assertLessonVisualClearsBottomCta(page, label);
     await page.screenshot({ path: `visual-qa/${label}.png`, fullPage: true });
     if (step < totalSteps) {
       await page.getByRole('button', { name: /Sonraki adıma geç/i }).click();
