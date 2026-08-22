@@ -177,12 +177,12 @@ function SummaryScene({ tr, styles }: { tr: boolean; styles: Styles }) {
 }
 
 const createStyles = (theme: LearningTheme, wide: boolean, narrow: boolean) => StyleSheet.create({
-  shell: { width: '100%', minHeight: wide ? 300 : narrow ? 236 : 256, justifyContent: 'center', padding: wide ? 20 : narrow ? 10 : 14, overflow: 'hidden', borderRadius: wide ? 18 : 16, borderWidth: 1, borderColor: theme.colors.border, backgroundColor: '#081726' },
+  shell: { width: '100%', minHeight: wide ? 300 : narrow ? 236 : 256, justifyContent: 'center', padding: wide ? 20 : narrow ? 6 : 14, overflow: 'hidden', borderRadius: wide ? 18 : 16, borderWidth: 1, borderColor: theme.colors.border, backgroundColor: '#081726' },
   scene: { width: '100%', gap: wide ? 17 : narrow ? 9 : 12 },
   heading: { gap: 5 },
   headingTitle: { color: theme.colors.text, fontSize: wide ? 20 : narrow ? 15 : 17, lineHeight: wide ? 28 : narrow ? 21 : 24, fontWeight: '900' },
   headingBody: { color: theme.colors.textMuted, fontSize: wide ? 12 : narrow ? 9 : 10, lineHeight: wide ? 18 : narrow ? 13 : 15 },
-  quoteRow: { flexDirection: 'row', alignItems: 'stretch', gap: narrow ? 4 : 8 },
+  quoteRow: { flexDirection: 'row', alignItems: 'stretch', gap: narrow ? 2 : 8 },
   quoteCard: { flex: 1, minWidth: 0, minHeight: wide ? 154 : narrow ? 110 : 132, alignItems: 'center', justifyContent: 'center', gap: narrow ? 4 : 7, padding: narrow ? 6 : 9, borderRadius: 14, borderWidth: 1 },
   bidCard: { borderColor: '#2E716B', backgroundColor: '#0C2B31' },
   askCard: { borderColor: '#725851', backgroundColor: '#2A2025' },
@@ -196,8 +196,8 @@ const createStyles = (theme: LearningTheme, wide: boolean, narrow: boolean) => S
   quoteHint: { color: theme.colors.textMuted, fontSize: narrow ? 7 : 9, lineHeight: narrow ? 10 : 13, textAlign: 'center' },
   bidText: { color: '#68C4B8' },
   askText: { color: '#D29A86' },
-  gap: { width: wide ? 76 : narrow ? 30 : 54, alignItems: 'center', justifyContent: 'center', gap: narrow ? 2 : 4 },
-  gapCompact: { width: wide ? 68 : narrow ? 28 : 48 },
+  gap: { width: wide ? 76 : narrow ? 45 : 54, alignItems: 'center', justifyContent: 'center', gap: narrow ? 2 : 4 },
+  gapCompact: { width: wide ? 68 : narrow ? 45 : 48 },
   gapValue: { color: theme.colors.text, fontSize: wide ? 16 : narrow ? 9 : 12, fontWeight: '900' },
   gapLine: { width: '86%', height: 2, borderRadius: 2, backgroundColor: '#667E8D' },
   gapName: { color: theme.colors.primary, fontSize: narrow ? 6 : 8, fontWeight: '900', letterSpacing: 0.35 },
