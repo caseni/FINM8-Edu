@@ -115,6 +115,15 @@ async function assertInstrumentComposition(page, viewport, visualBox, label) {
   }
 }
 
+async function assertTextLedInstrumentPractice(page, label) {
+  await page.getByText('MİNİ ÖRNEK', { exact: true }).waitFor();
+  await page.getByText(/Bir BIST hissesini almak şirkete ortaklık anlamına gelir/i).waitFor();
+  const visibleImages = page.locator('[role="img"]:visible');
+  if (await visibleImages.count()) {
+    throw new Error(`${label}: instrument practice should stay text-led without a redundant lesson image`);
+  }
+}
+
 const browser = await chromium.launch({ executablePath: process.env.CHROME_BIN, headless: true });
 try {
   for (const viewport of viewports) {
@@ -130,23 +139,29 @@ try {
 
       for (let step = 1; step <= totalSteps; step += 1) {
         const label = `responsive-${viewport.name}-${lesson.key}-step-${step}`;
+        const textLedInstrumentPractice = lesson.key === 'market-instruments' && step === 3;
         await assertNoHorizontalOverflow(page, label);
-        const box = await largestVisibleImageBox(page);
-        if (!box) throw new Error(`${label}: no visible lesson visual found`);
-        if (box.width < viewport.minVisualWidth) {
-          throw new Error(`${label}: lesson visual too small at ${box.width.toFixed(1)}px`);
-        }
-        if (box.width > lesson.maxWidth[viewport.sizeClass] + 1) {
-          throw new Error(`${label}: lesson visual too wide at ${box.width.toFixed(1)}px`);
-        }
-        if (box.x < -1 || box.x + box.width > viewport.width + 1) {
-          throw new Error(`${label}: lesson visual escapes viewport (${box.x.toFixed(1)}..${(box.x + box.width).toFixed(1)})`);
-        }
-        if (box.height > viewport.height * lesson.maxHeightRatio) {
-          throw new Error(`${label}: lesson visual consumes too much viewport height (${box.height.toFixed(1)}px)`);
-        }
-        if (lesson.key === 'market-instruments' && step === 2) {
-          await assertInstrumentComposition(page, viewport, box, label);
+
+        if (textLedInstrumentPractice) {
+          await assertTextLedInstrumentPractice(page, label);
+        } else {
+          const box = await largestVisibleImageBox(page);
+          if (!box) throw new Error(`${label}: no visible lesson visual found`);
+          if (box.width < viewport.minVisualWidth) {
+            throw new Error(`${label}: lesson visual too small at ${box.width.toFixed(1)}px`);
+          }
+          if (box.width > lesson.maxWidth[viewport.sizeClass] + 1) {
+            throw new Error(`${label}: lesson visual too wide at ${box.width.toFixed(1)}px`);
+          }
+          if (box.x < -1 || box.x + box.width > viewport.width + 1) {
+            throw new Error(`${label}: lesson visual escapes viewport (${box.x.toFixed(1)}..${(box.x + box.width).toFixed(1)})`);
+          }
+          if (box.height > viewport.height * lesson.maxHeightRatio) {
+            throw new Error(`${label}: lesson visual consumes too much viewport height (${box.height.toFixed(1)}px)`);
+          }
+          if (lesson.key === 'market-instruments' && step === 2) {
+            await assertInstrumentComposition(page, viewport, box, label);
+          }
         }
 
         if (step === 2 || step === 3 || step === totalSteps) {
