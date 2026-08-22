@@ -14,7 +14,8 @@ export function BeginnerInstrumentMeaningMap({
 }: BeginnerInstrumentMeaningMapProps) {
   const { width } = useWindowDimensions();
   const compact = width < 900;
-  const styles = createStyles(theme, compact);
+  const narrow = width < 380;
+  const styles = createStyles(theme, compact, narrow);
   const tr = language === 'tr';
   const items = [
     { title: tr ? 'HİSSE' : 'STOCK', meaning: tr ? 'Şirkette ortaklık' : 'Company ownership' },
@@ -26,7 +27,11 @@ export function BeginnerInstrumentMeaningMap({
   return (
     <View style={styles.grid} accessibilityRole="summary">
       {items.map((item) => (
-        <View key={item.title} style={styles.card}>
+        <View
+          key={item.title}
+          style={styles.card}
+          accessibilityLabel={`${item.title}: ${item.meaning}`}
+        >
           <Text style={styles.title}>{item.title}</Text>
           <Text style={styles.meaning}>{item.meaning}</Text>
         </View>
@@ -35,20 +40,20 @@ export function BeginnerInstrumentMeaningMap({
   );
 }
 
-const createStyles = (theme: LearningTheme, compact: boolean) => StyleSheet.create({
+const createStyles = (theme: LearningTheme, compact: boolean, narrow: boolean) => StyleSheet.create({
   grid: {
     width: '100%',
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: compact ? 8 : 10,
+    gap: compact ? (narrow ? 7 : 8) : 10,
   },
   card: {
-    width: compact ? '48.5%' : '48%',
-    minHeight: compact ? 72 : 82,
+    width: narrow ? '48.2%' : compact ? '48.5%' : '48%',
+    minHeight: narrow ? 68 : compact ? 72 : 82,
     justifyContent: 'center',
-    gap: 5,
-    paddingHorizontal: compact ? 11 : 13,
-    paddingVertical: compact ? 10 : 12,
+    gap: narrow ? 4 : 5,
+    paddingHorizontal: narrow ? 9 : compact ? 11 : 13,
+    paddingVertical: narrow ? 9 : compact ? 10 : 12,
     borderRadius: theme.radius.medium,
     borderWidth: 1,
     borderColor: theme.colors.border,
@@ -56,15 +61,15 @@ const createStyles = (theme: LearningTheme, compact: boolean) => StyleSheet.crea
   },
   title: {
     color: theme.colors.primary,
-    fontSize: compact ? 10 : 11,
-    lineHeight: compact ? 14 : 15,
+    fontSize: narrow ? 9 : compact ? 10 : 11,
+    lineHeight: narrow ? 13 : compact ? 14 : 15,
     fontWeight: '900',
-    letterSpacing: 0.6,
+    letterSpacing: narrow ? 0.45 : 0.6,
   },
   meaning: {
     color: theme.colors.text,
-    fontSize: compact ? 13 : 14,
-    lineHeight: compact ? 18 : 20,
+    fontSize: narrow ? 12 : compact ? 13 : 14,
+    lineHeight: narrow ? 17 : compact ? 18 : 20,
     fontWeight: '700',
   },
 });
