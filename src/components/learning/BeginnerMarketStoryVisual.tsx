@@ -1,4 +1,5 @@
 import React from 'react';
+import { useWindowDimensions, View } from 'react-native';
 import { BeginnerEditorialImageVisual, hasBeginnerEditorialImage } from './BeginnerEditorialImageVisual';
 import {
   BeginnerMarketStoryVisual as BeginnerMarketStoryVisualLegacy,
@@ -10,6 +11,9 @@ export { isBeginnerMarketStoryAsset };
 type Props = React.ComponentProps<typeof BeginnerMarketStoryVisualLegacy>;
 
 export function BeginnerMarketStoryVisual(props: Props) {
+  const { width } = useWindowDimensions();
+  const wide = width >= 900;
+
   if (hasBeginnerEditorialImage(props.assetRef, props.role)) {
     return (
       <BeginnerEditorialImageVisual
@@ -21,5 +25,15 @@ export function BeginnerMarketStoryVisual(props: Props) {
     );
   }
 
-  return <BeginnerMarketStoryVisualLegacy {...props} />;
+  return (
+    <View
+      style={{
+        width: '100%',
+        maxWidth: wide ? (props.role === 'practice' ? 680 : 540) : undefined,
+        alignSelf: 'center',
+      }}
+    >
+      <BeginnerMarketStoryVisualLegacy {...props} />
+    </View>
+  );
 }
