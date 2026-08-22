@@ -65,6 +65,32 @@
         { "slug": "gsyh-buyume-ne-anlatir", "role": "hook", "assetDir": "assets/learning/academy/economy", "assetPrefix": "economy-growth", "status": "planned" },
         { "slug": "ekonomik-dongu-resesyon", "role": "hook", "assetDir": "assets/learning/academy/economy", "assetPrefix": "economy-business-cycle", "status": "planned" }
       ]
+    },
+    {
+      "id": "academy-psychology-foundation-hooks",
+      "school": "market-psychology",
+      "status": "planned",
+      "lessons": [
+        { "slug": "kayip-korkusu-karari-nasil-bozar", "role": "hook", "assetDir": "assets/learning/academy/market-psychology", "assetPrefix": "psychology-loss-aversion", "status": "planned" },
+        { "slug": "ilk-fiyata-capalanmak", "role": "hook", "assetDir": "assets/learning/academy/market-psychology", "assetPrefix": "psychology-anchoring", "status": "planned" },
+        { "slug": "son-olay-her-sey-midir", "role": "hook", "assetDir": "assets/learning/academy/market-psychology", "assetPrefix": "psychology-recency", "status": "planned" },
+        { "slug": "asiri-guven-nasil-fark-edilir", "role": "hook", "assetDir": "assets/learning/academy/market-psychology", "assetPrefix": "psychology-overconfidence", "status": "planned" },
+        { "slug": "revenge-trading-nedir", "role": "hook", "assetDir": "assets/learning/academy/market-psychology", "assetPrefix": "psychology-revenge-trading", "status": "planned" },
+        { "slug": "iyi-sonuc-iyi-karar-midir", "role": "hook", "assetDir": "assets/learning/academy/market-psychology", "assetPrefix": "psychology-outcome-bias", "status": "planned" }
+      ]
+    },
+    {
+      "id": "academy-strategy-foundation-hooks",
+      "school": "strategy",
+      "status": "planned",
+      "lessons": [
+        { "slug": "strateji-amaci-ve-zaman-ufku", "role": "hook", "assetDir": "assets/learning/academy/strategy", "assetPrefix": "strategy-horizon-objective", "status": "planned" },
+        { "slug": "trend-following-nasil-dusunur", "role": "hook", "assetDir": "assets/learning/academy/strategy", "assetPrefix": "strategy-trend-following", "status": "planned" },
+        { "slug": "mean-reversion-ne-varsayar", "role": "hook", "assetDir": "assets/learning/academy/strategy", "assetPrefix": "strategy-mean-reversion", "status": "planned" },
+        { "slug": "breakout-stratejisi-ne-yapar", "role": "hook", "assetDir": "assets/learning/academy/strategy", "assetPrefix": "strategy-breakout", "status": "planned" },
+        { "slug": "momentum-stratejisi-ne-yapar", "role": "hook", "assetDir": "assets/learning/academy/strategy", "assetPrefix": "strategy-momentum", "status": "planned" },
+        { "slug": "swing-ve-position-farki", "role": "hook", "assetDir": "assets/learning/academy/strategy", "assetPrefix": "strategy-swing-position", "status": "planned" }
+      ]
     }
   ]
 }
