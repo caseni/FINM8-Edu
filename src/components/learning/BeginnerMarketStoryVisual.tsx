@@ -2,6 +2,7 @@ import React from 'react';
 import { useWindowDimensions, View } from 'react-native';
 import { BeginnerEditorialImageVisual, hasBeginnerEditorialImage } from './BeginnerEditorialImageVisual';
 import { BeginnerInstrumentStoryVisual } from './BeginnerInstrumentStoryVisual';
+import { BeginnerLiquidityStoryVisual } from './BeginnerLiquidityStoryVisual';
 import {
   BeginnerMarketStoryVisual as BeginnerMarketStoryVisualLegacy,
   isBeginnerMarketStoryAsset,
@@ -31,6 +32,17 @@ export function BeginnerMarketStoryVisual(props: Props) {
 
     return (
       <BeginnerInstrumentStoryVisual
+        alt={props.alt}
+        language={props.language}
+        role={props.role}
+        theme={props.theme}
+      />
+    );
+  }
+
+  if (props.assetRef.includes('likidite-neden-onemlidir')) {
+    return (
+      <BeginnerLiquidityStoryVisual
         alt={props.alt}
         language={props.language}
         role={props.role}
