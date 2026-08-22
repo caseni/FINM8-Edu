@@ -1,5 +1,6 @@
 import React from 'react';
 import { useWindowDimensions, View } from 'react-native';
+import { BeginnerBidAskStoryVisual } from './BeginnerBidAskStoryVisual';
 import { BeginnerEditorialImageVisual, hasBeginnerEditorialImage } from './BeginnerEditorialImageVisual';
 import { BeginnerInstrumentMisconceptionVisual } from './BeginnerInstrumentMisconceptionVisual';
 import { BeginnerInstrumentStoryVisual } from './BeginnerInstrumentStoryVisual';
@@ -72,6 +73,19 @@ export function BeginnerMarketStoryVisual(props: Props) {
     return (
       <ResponsiveVisualFrame wide={wide}>
         <BeginnerLiquidityStoryVisual
+          alt={props.alt}
+          language={props.language}
+          role={props.role}
+          theme={props.theme}
+        />
+      </ResponsiveVisualFrame>
+    );
+  }
+
+  if (props.assetRef.includes('bid-ask-spread-nedir')) {
+    return (
+      <ResponsiveVisualFrame wide={wide}>
+        <BeginnerBidAskStoryVisual
           alt={props.alt}
           language={props.language}
           role={props.role}
