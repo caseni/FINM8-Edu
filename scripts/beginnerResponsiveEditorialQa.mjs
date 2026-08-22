@@ -19,6 +19,12 @@ const lessons = [
     maxWidth: { mobile: 360, desktop: 700 },
     maxHeightRatio: 0.72,
   },
+  {
+    key: 'liquidity',
+    title: 'Neden bazen alıp satmak kolay, bazen zor',
+    maxWidth: { mobile: 360, desktop: 700 },
+    maxHeightRatio: 0.72,
+  },
 ];
 
 async function openMarketLesson(page, lessonTitle) {
@@ -124,6 +130,45 @@ async function assertTextLedInstrumentPractice(page, label) {
   }
 }
 
+async function pairedBoxes(page, leftLabel, rightLabel, label) {
+  const left = page.locator(`[aria-label="${leftLabel}"]`).first();
+  const right = page.locator(`[aria-label="${rightLabel}"]`).first();
+  await left.waitFor();
+  await right.waitFor();
+  const leftBox = await left.boundingBox();
+  const rightBox = await right.boundingBox();
+  if (!leftBox || !rightBox) throw new Error(`${label}: comparison cards have no measurable boxes`);
+  return [leftBox, rightBox];
+}
+
+async function assertResponsivePair(page, viewport, leftLabel, rightLabel, label) {
+  const [leftBox, rightBox] = await pairedBoxes(page, leftLabel, rightLabel, label);
+  const minCardWidth = viewport.sizeClass === 'mobile' ? 120 : 180;
+  for (const box of [leftBox, rightBox]) {
+    if (box.width < minCardWidth) {
+      throw new Error(`${label}: comparison card too narrow at ${box.width.toFixed(1)}px`);
+    }
+    if (box.x < -1 || box.x + box.width > viewport.width + 1) {
+      throw new Error(`${label}: comparison card escapes viewport`);
+    }
+  }
+  if (Math.abs(leftBox.y - rightBox.y) > 8) {
+    throw new Error(`${label}: comparison cards must remain aligned in one row`);
+  }
+  if (rightBox.x <= leftBox.x + leftBox.width) {
+    throw new Error(`${label}: comparison cards overlap`);
+  }
+}
+
+async function assertLiquidityComposition(page, viewport, step, label) {
+  if (step === 1) {
+    await assertResponsivePair(page, viewport, 'likidite-senaryo-kalabalik', 'likidite-senaryo-sig', label);
+  }
+  if (step === 3) {
+    await assertResponsivePair(page, viewport, 'likidite-kucuk-emir', 'likidite-buyuk-emir', label);
+  }
+}
+
 const browser = await chromium.launch({ executablePath: process.env.CHROME_BIN, headless: true });
 try {
   for (const viewport of viewports) {
@@ -161,6 +206,9 @@ try {
           }
           if (lesson.key === 'market-instruments' && step === 2) {
             await assertInstrumentComposition(page, viewport, box, label);
+          }
+          if (lesson.key === 'liquidity') {
+            await assertLiquidityComposition(page, viewport, step, label);
           }
         }
 
