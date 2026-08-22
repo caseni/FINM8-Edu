@@ -37,6 +37,12 @@ const lessons = [
     maxWidth: { mobile: 360, desktop: 700 },
     maxHeightRatio: 0.72,
   },
+  {
+    key: 'slippage',
+    title: 'Ekrandaki fiyat neden işlem fiyatın olmayabilir',
+    maxWidth: { mobile: 360, desktop: 700 },
+    maxHeightRatio: 0.72,
+  },
 ];
 
 async function openMarketLesson(page, lessonTitle) {
@@ -258,6 +264,33 @@ async function assertOrderTypesComposition(page, viewport, step, label) {
   }
 }
 
+async function assertSlippageComposition(page, viewport, step, label) {
+  if (step === 1) {
+    await assertResponsivePair(page, viewport, 'slippage-hook-screen', 'slippage-hook-fill', label);
+    const process = page.locator('[aria-label="slippage-execution-process"]').first();
+    await process.waitFor();
+    const processBox = await process.boundingBox();
+    if (!processBox || processBox.width < (viewport.sizeClass === 'mobile' ? 70 : 140)) {
+      throw new Error(`${label}: execution process is too compressed`);
+    }
+  }
+  if (step === 2) {
+    await assertResponsivePair(page, viewport, 'slippage-concept-expected', 'slippage-concept-actual', label);
+    const depth = page.locator('[aria-label="slippage-concept-depth"]').first();
+    await depth.waitFor();
+    const depthBox = await depth.boundingBox();
+    if (!depthBox || depthBox.width < (viewport.sizeClass === 'mobile' ? 95 : 170)) {
+      throw new Error(`${label}: available price levels are too compressed`);
+    }
+  }
+  if (step === 3) {
+    await assertResponsivePair(page, viewport, 'slippage-practice-expected', 'slippage-practice-actual', label);
+  }
+  if (step === 4) {
+    await assertResponsivePair(page, viewport, 'slippage-misconception-screen', 'slippage-misconception-market', label);
+  }
+}
+
 const browser = await chromium.launch({ executablePath: process.env.CHROME_BIN, headless: true });
 try {
   for (const viewport of viewports) {
@@ -304,6 +337,9 @@ try {
           }
           if (lesson.key === 'order-types') {
             await assertOrderTypesComposition(page, viewport, step, label);
+          }
+          if (lesson.key === 'slippage') {
+            await assertSlippageComposition(page, viewport, step, label);
           }
         }
 
