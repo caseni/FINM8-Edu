@@ -21,7 +21,7 @@ export function BeginnerBidAskStoryVisual({
 }: BeginnerBidAskStoryVisualProps) {
   const { width } = useWindowDimensions();
   const wide = width >= 900;
-  const narrow = width < 380;
+  const narrow = width < 420;
   const styles = createStyles(theme, wide, narrow);
   const tr = language === 'tr';
 
