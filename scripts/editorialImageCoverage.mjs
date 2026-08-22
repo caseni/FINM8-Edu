@@ -7,6 +7,7 @@ const registries = [
   'src/components/learning/AcademyEditorialImageVisual.tsx',
 ];
 const beginnerPlanPath = path.join(root, 'docs/BEGINNER_EDITORIAL_IMAGE_PLAN.json');
+const academyBatchPlanPath = path.join(root, 'docs/ACADEMY_EDITORIAL_IMAGE_BATCHES.json');
 const academyLessonDir = path.join(root, 'src/domain/learning/examples/academy');
 const academyAssetDir = path.join(root, 'assets/learning/academy');
 
@@ -29,6 +30,12 @@ function filesRecursively(dir, predicate) {
     else if (predicate(full)) result.push(full);
   }
   return result;
+}
+
+function physicalCandidates(assetDir, assetPrefix, role) {
+  return IMAGE_EXTENSIONS
+    .map((extension) => `${assetDir}/${assetPrefix}-${role}.${extension}`)
+    .filter((asset) => fs.existsSync(path.join(root, asset)));
 }
 
 for (const registryPath of registries) {
@@ -103,10 +110,7 @@ for (const lesson of beginnerPlan.lessons ?? []) {
     plannedRoleKeys.add(key);
     plannedRoleCount += 1;
 
-    const candidateAssets = IMAGE_EXTENSIONS.map((extension) =>
-      `${lesson.assetDir}/${lesson.assetPrefix}-${role}.${extension}`,
-    );
-    const existingCandidateAssets = candidateAssets.filter((asset) => fs.existsSync(path.join(root, asset)));
+    const existingCandidateAssets = physicalCandidates(lesson.assetDir, lesson.assetPrefix, role);
     const registeredEntry = entryByKey.get(key);
 
     if (existingCandidateAssets.length > 1) {
@@ -172,6 +176,71 @@ for (const entry of academyEntries) {
   }
 }
 
+const academyBatchPlan = JSON.parse(fs.readFileSync(academyBatchPlanPath, 'utf8'));
+if (!Array.isArray(academyBatchPlan.batches)) {
+  issues.push('Academy editorial batch plan must contain a batches array');
+}
+
+const academyPlannedKeys = new Set();
+let academyPlannedCount = 0;
+let academyPlannedIntegratedCount = 0;
+let academyPlannedPhysicalCount = 0;
+for (const batch of academyBatchPlan.batches ?? []) {
+  if (!batch?.id || typeof batch.id !== 'string') issues.push('Academy editorial batch is missing a valid id');
+  if (!Array.isArray(batch.lessons)) {
+    issues.push(`Academy editorial batch ${batch.id ?? '<unknown>'} must contain a lessons array`);
+    continue;
+  }
+
+  for (const lesson of batch.lessons) {
+    const { slug, role, assetDir, assetPrefix, status } = lesson ?? {};
+    if (!slug || typeof slug !== 'string') {
+      issues.push(`Academy batch ${batch.id} contains a lesson without a valid slug`);
+      continue;
+    }
+    if (!academyCatalogSlugs.has(slug)) issues.push(`Academy batch lesson is not in canonical catalog: ${slug}`);
+    if (!VALID_ROLES.has(role)) issues.push(`Invalid Academy editorial role for ${slug}: ${role}`);
+    if (!VALID_STATUSES.has(status)) issues.push(`Invalid Academy rollout status for ${slug}: ${status}`);
+    if (!assetDir || typeof assetDir !== 'string') issues.push(`Missing Academy assetDir for ${slug}`);
+    if (!assetPrefix || typeof assetPrefix !== 'string') issues.push(`Missing Academy assetPrefix for ${slug}`);
+
+    const key = `${slug}::${role}`;
+    if (academyPlannedKeys.has(key)) issues.push(`Duplicate Academy lesson/role in batch plan: ${slug} · ${role}`);
+    academyPlannedKeys.add(key);
+    academyPlannedCount += 1;
+
+    const existingCandidateAssets = physicalCandidates(assetDir, assetPrefix, role);
+    if (existingCandidateAssets.length > 1) {
+      issues.push(`Multiple physical assets exist for one Academy planned role: ${slug} · ${role} -> ${existingCandidateAssets.join(', ')}`);
+    }
+    const physicalAsset = existingCandidateAssets[0];
+    const registeredEntry = entryByKey.get(key);
+    if (physicalAsset) academyPlannedPhysicalCount += 1;
+
+    if (physicalAsset && !registeredEntry) {
+      issues.push(`Physical Academy planned asset is not registered to its slide: ${slug} · ${role} -> ${physicalAsset}`);
+    }
+    if (registeredEntry) {
+      academyPlannedIntegratedCount += 1;
+      if (!physicalAsset) {
+        issues.push(`Academy registry mapping does not use the planned physical filename: ${slug} · ${role} -> ${registeredEntry.asset}`);
+      } else if (registeredEntry.asset !== physicalAsset) {
+        issues.push(`Academy registry mapping points to the wrong planned asset: ${slug} · ${role} -> ${registeredEntry.asset}; expected ${physicalAsset}`);
+      }
+    }
+    if (status === 'integrated' && !registeredEntry) {
+      issues.push(`Academy lesson marked integrated is missing its planned mapping: ${slug} · ${role}`);
+    }
+  }
+}
+
+const unplannedAcademyMappings = academyEntries.filter(
+  (entry) => !academyPlannedKeys.has(`${entry.lessonMatch}::${entry.role}`),
+);
+for (const entry of unplannedAcademyMappings) {
+  issues.push(`Academy real-image mapping is not declared in a rollout batch: ${entry.lessonMatch} · ${entry.role}`);
+}
+
 const academyPhysicalAssets = filesRecursively(
   academyAssetDir,
   (file) => IMAGE_EXTENSIONS.includes(path.extname(file).slice(1).toLowerCase()),
@@ -202,6 +271,8 @@ console.log(`- Beginner lessons with real image: ${beginnerLessons.size}/${TOTAL
 console.log(`- Academy lessons with real image: ${academyLessons.size}/${TOTAL_ACADEMY_LESSONS} (${percentage(academyLessons.size, TOTAL_ACADEMY_LESSONS)})`);
 console.log(`- Academy physical editorial assets: ${academyPhysicalAssets.length}`);
 console.log(`- Academy physical assets registered to slides: ${academyRegisteredAssets.size}/${academyPhysicalAssets.length}`);
+console.log(`- Academy active batch roles integrated: ${academyPlannedIntegratedCount}/${academyPlannedCount}`);
+console.log(`- Academy active batch physical assets present: ${academyPlannedPhysicalCount}/${academyPlannedCount}`);
 console.log(`- Active lessons with at least one real image: ${uniqueLessons.size}/${TOTAL_ACTIVE_LESSONS} (${percentage(uniqueLessons.size, TOTAL_ACTIVE_LESSONS)})`);
 console.log(`- Remaining lessons still relying only on generated/code fallback: ${TOTAL_ACTIVE_LESSONS - uniqueLessons.size}`);
 console.log(`- Beginner rollout plan coverage: ${planSlugs.size}/${TOTAL_BEGINNER_LESSONS} lessons declared`);
