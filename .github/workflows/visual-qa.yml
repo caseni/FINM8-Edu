@@ -61,16 +61,6 @@ jobs:
           node scripts/beginnerTaskFeedbackQa.mjs
           node scripts/beginnerDesktopAssessmentQa.mjs
           node scripts/academyDesktopLessonQa.mjs
-          node scripts/academyEconomyResponsiveQa.mjs
-          node scripts/academyMarketsResponsiveQa.mjs
-          node scripts/academyTrackResponsiveQa.mjs Grafikleri Derinleştir
-          node scripts/academyTrackResponsiveQa.mjs Şirketleri Anla
-          node scripts/academyTrackResponsiveQa.mjs Risk ve Portföy
-          node scripts/academyTrackResponsiveQa.mjs Karar Psikolojisi
-          node scripts/academyTrackResponsiveQa.mjs Yöntemler ve Planlar
-          node scripts/academyTrackResponsiveQa.mjs Sistematik ve Sayısal Yaklaşımlar
-          node scripts/academyTrackResponsiveQa.mjs İleri Grafik Yaklaşımları
-          node scripts/academyTrackResponsiveQa.mjs Varlık Türlerini Anla
           node scripts/advancedHookQa.mjs
           node scripts/advancedContinuationQa.mjs
           node scripts/academyExpansionQa.mjs
@@ -86,5 +76,68 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: finm8-edu-visual-qa
+          path: visual-qa/*.png
+          if-no-files-found: warn
+
+  academy-responsive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install app dependencies
+        run: npm ci
+
+      - name: Build web export
+        run: npm run build:web
+
+      - name: Install ephemeral Playwright core
+        run: |
+          npm install --no-save --package-lock=false playwright-core@1.55.0
+          CHROME_BIN="$(command -v google-chrome || command -v chromium || command -v chromium-browser || true)"
+          if [ -z "$CHROME_BIN" ]; then
+            echo "No system Chrome/Chromium found on runner."
+            exit 1
+          fi
+          echo "CHROME_BIN=$CHROME_BIN" >> "$GITHUB_ENV"
+          echo "Using system browser: $CHROME_BIN"
+
+      - name: Serve web export
+        run: |
+          python3 -m http.server 4173 --directory dist > /tmp/finm8-academy-responsive-server.log 2>&1 &
+          for i in {1..30}; do
+            if curl -fsS http://127.0.0.1:4173/ > /dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/finm8-academy-responsive-server.log
+          exit 1
+
+      - name: Validate all Academy lessons at 360, 390, and desktop
+        run: |
+          mkdir -p visual-qa
+          node scripts/academyEconomyResponsiveQa.mjs
+          node scripts/academyMarketsResponsiveQa.mjs
+          node scripts/academyTrackResponsiveQa.mjs Grafikleri Derinleştir
+          node scripts/academyTrackResponsiveQa.mjs Şirketleri Anla
+          node scripts/academyTrackResponsiveQa.mjs Risk ve Portföy
+          node scripts/academyTrackResponsiveQa.mjs Karar Psikolojisi
+          node scripts/academyTrackResponsiveQa.mjs Yöntemler ve Planlar
+          node scripts/academyTrackResponsiveQa.mjs Sistematik ve Sayısal Yaklaşımlar
+          node scripts/academyTrackResponsiveQa.mjs İleri Grafik Yaklaşımları
+          node scripts/academyTrackResponsiveQa.mjs Varlık Türlerini Anla
+
+      - name: Upload Academy responsive screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: finm8-edu-academy-responsive-qa
           path: visual-qa/*.png
           if-no-files-found: warn
