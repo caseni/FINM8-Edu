@@ -205,7 +205,7 @@ try {
     await solveTask(page, `${track.title} final lesson`);
     await completeQuizPassed(page, `${track.title} final lesson`);
 
-    await page.getByText('OKUL TAMAMLANDI', { exact: true }).waitFor();
+    await page.getByText('OKUL TAMAMLANDI', { exact: true }).first().waitFor();
     await page.getByText('Okulu tamamladın', { exact: true }).waitFor();
     await page.getByText(`${track.title} · 12/12 ders`, { exact: true }).waitFor();
     await page.getByText(/Bu okulun 12 dersini tamamladın/i).waitFor();
