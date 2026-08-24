@@ -114,11 +114,26 @@ export function LessonQuizScreen({ route, navigation }: Props) {
       !route.params.review &&
       !isSpacedReview
     );
-    const academyCompletionAccessibilityLabel = showAcademyTrackCompletion && academyTrackTitle
+    const lessonTitle = selectLocalizedText(lesson.title, language);
+    const resultAccessibilityLabel = showAcademyTrackCompletion && academyTrackTitle
       ? language === 'tr'
         ? `${academyTrackTitle} okulu tamamlandı. 12/12 ders. Quiz skoru yüzde ${result.score}.`
         : `${academyTrackTitle} school complete. 12 of 12 lessons. Quiz score ${result.score} percent.`
-      : undefined;
+      : result.passed
+        ? isSpacedReview
+          ? language === 'tr'
+            ? `${lessonTitle}. Tekrar tamamlandı. Skor yüzde ${result.score}. ${result.correctAnswers}/${result.totalQuestions} doğru cevap.`
+            : `${lessonTitle}. Review completed. Score ${result.score} percent. ${result.correctAnswers} of ${result.totalQuestions} correct.`
+          : language === 'tr'
+            ? `${lessonTitle}. Quiz tamamlandı. Skor yüzde ${result.score}. ${result.correctAnswers}/${result.totalQuestions} doğru cevap.`
+            : `${lessonTitle}. Quiz completed. Score ${result.score} percent. ${result.correctAnswers} of ${result.totalQuestions} correct.`
+        : isSpacedReview
+          ? language === 'tr'
+            ? `${lessonTitle}. Tekrar henüz tamamlanmadı. Skor yüzde ${result.score}. ${result.correctAnswers}/${result.totalQuestions} doğru cevap. Geçme eşiği yüzde ${lesson.quiz.passingScore}.`
+            : `${lessonTitle}. Review not passed yet. Score ${result.score} percent. ${result.correctAnswers} of ${result.totalQuestions} correct. Passing score ${lesson.quiz.passingScore} percent.`
+          : language === 'tr'
+            ? `${lessonTitle}. Quiz henüz tamamlanmadı. Skor yüzde ${result.score}. ${result.correctAnswers}/${result.totalQuestions} doğru cevap. Geçme eşiği yüzde ${lesson.quiz.passingScore}.`
+            : `${lessonTitle}. Quiz not passed yet. Score ${result.score} percent. ${result.correctAnswers} of ${result.totalQuestions} correct. Passing score ${lesson.quiz.passingScore} percent.`;
     const primaryLabel = result.passed
       ? route.params.review
         ? language === 'tr' ? 'Review merkezine dön' : 'Return to review center'
@@ -161,8 +176,8 @@ export function LessonQuizScreen({ route, navigation }: Props) {
           <View
             style={styles.resultCard}
             accessibilityRole="summary"
-            accessibilityLabel={academyCompletionAccessibilityLabel}
-            accessibilityLiveRegion={showAcademyTrackCompletion ? 'polite' : 'none'}
+            accessibilityLabel={resultAccessibilityLabel}
+            accessibilityLiveRegion="polite"
           >
             <Text style={styles.resultEyebrow}>
               {showAcademyTrackCompletion
