@@ -81,12 +81,17 @@ export function MicroLessonScreen({ route, navigation }: Props) {
   const useBeginnerMarketVisual = !openedFromAcademy && BEGINNER_MARKET_LESSON_IDS.has(lesson.id);
   const useBeginnerChartVisual = !openedFromAcademy && BEGINNER_CHART_LESSON_IDS.has(lesson.id);
   const useBeginnerRiskVisual = !openedFromAcademy && BEGINNER_RISK_LESSON_IDS.has(lesson.id);
-  const lessonForPlayer = useBeginnerChartVisual
+  const beginnerVisualMarker = useBeginnerEconomyVisual
+    ? '#beginner-economy'
+    : useBeginnerChartVisual
+      ? '#beginner-chart'
+      : undefined;
+  const lessonForPlayer = beginnerVisualMarker
     ? {
         ...lesson,
         contentBlocks: lesson.contentBlocks.map((block) =>
-          block.kind === 'visual' && !block.assetRef.includes('#beginner-chart')
-            ? { ...block, assetRef: `${block.assetRef}#beginner-chart` }
+          block.kind === 'visual' && !block.assetRef.includes(beginnerVisualMarker)
+            ? { ...block, assetRef: `${block.assetRef}${beginnerVisualMarker}` }
             : block
         ),
       }
