@@ -79,10 +79,12 @@ export function LessonSupportingVisual({ assetRef, alt, language, role, theme = 
   const isAcademyFundamentalFoundation = isAcademyFundamentalStoryAsset(assetRef);
   const isAcademyRiskPortfolioFoundation = isAcademyRiskPortfolioStoryAsset(assetRef);
   const isEconomy = isEconomySlideAsset(assetRef);
+  const preferBeginnerEconomy = assetRef.includes('#beginner-economy');
   const preferBeginnerChart = assetRef.includes('#beginner-chart');
-  const emphasizeCleanPractice = !preferBeginnerChart && role === 'practice' && (hasCoreExpansionCleanVisual || hasFoundationCleanVisual || hasAdvancedCleanVisual);
+  const emphasizeCleanPractice = !preferBeginnerEconomy && !preferBeginnerChart && role === 'practice' && (hasCoreExpansionCleanVisual || hasFoundationCleanVisual || hasAdvancedCleanVisual);
   const hideEditorialLabel = hasEditorialImage || hasPremiumHook || hasEconomyPremiumHook || hasTechnicalPremiumHook || hasSmcPremiumHook || hasQuantPremiumHook || hasStrategyPremiumHook || hasPsychologyPremiumHook || hasAssetPremiumHook || hasCoreExpansionCleanVisual || hasFoundationCleanVisual || hasAdvancedCleanVisual || isBeginnerEconomy || isBeginnerRisk || isBeginnerCoreChart || isBeginnerAppliedChart || isBeginnerChart || isBeginnerMarket || isAcademyMarketFoundation || isAcademyFundamentalFoundation || isAcademyRiskPortfolioFoundation || isEconomy;
-  const visual = preferBeginnerChart && isBeginnerCoreChart ? <BeginnerCoreChartStoryVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
+  const visual = preferBeginnerEconomy && isBeginnerEconomy ? <BeginnerEconomyStoryVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
+    : preferBeginnerChart && isBeginnerCoreChart ? <BeginnerCoreChartStoryVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
     : preferBeginnerChart && isBeginnerAppliedChart ? <BeginnerAppliedChartStoryVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
     : preferBeginnerChart && isBeginnerChart ? <BeginnerChartStoryVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
     : hasEditorialImage ? <AcademyEditorialImageVisual assetRef={assetRef} alt={alt} role={role} theme={theme} />
