@@ -17,10 +17,12 @@ const landingPath = 'src/screens/learn/LearnLandingScreen.tsx';
 const beginnerSectionPath = 'src/screens/learn/BeginnerSectionScreen.tsx';
 const reviewPath = 'src/screens/learn/LearningReviewScreen.tsx';
 const challengePath = 'src/screens/learn/LearningChallengeScreen.tsx';
+const lessonQuizPath = 'src/screens/learn/LessonQuizScreen.tsx';
 const landing = read(landingPath);
 const beginnerSection = read(beginnerSectionPath);
 const review = read(reviewPath);
 const challenge = read(challengePath);
+const lessonQuiz = read(lessonQuizPath);
 
 for (const [expected, label] of [
   ['const sectionAccessibilityLabel = language === \'tr\'', 'Beginner landing contextual status'],
@@ -68,6 +70,19 @@ for (const [expected, label] of [
   requireSource(challenge, expected, label);
 }
 
+for (const [expected, label] of [
+  ['const resultAccessibilityLabel = showAcademyTrackCompletion', 'Lesson quiz result summary label'],
+  ['accessibilityLabel={resultAccessibilityLabel}', 'Lesson quiz result label binding'],
+  ['accessibilityLiveRegion="polite"', 'Lesson quiz live result announcement'],
+  ['Quiz tamamlandı. Skor yüzde', 'Lesson quiz passed summary'],
+  ['Quiz henüz tamamlanmadı. Skor yüzde', 'Lesson quiz failed summary'],
+  ['Tekrar tamamlandı. Skor yüzde', 'Lesson review passed summary'],
+  ['Tekrar henüz tamamlanmadı. Skor yüzde', 'Lesson review failed summary'],
+  ['Geçme eşiği yüzde ${lesson.quiz.passingScore}', 'Lesson quiz passing threshold context'],
+]) {
+  requireSource(lessonQuiz, expected, label);
+}
+
 const contextualReviewActions = (review.match(/accessibilityLabel=\{language === 'tr' \? `\$\{lessonTitle\}/g) ?? []).length;
 if (contextualReviewActions < 3) {
   throw new Error(`Review lesson controls: expected at least 3 contextual action labels, found ${contextualReviewActions}`);
@@ -83,3 +98,4 @@ console.log('  Beginner landing: named progress cards + completion summary + dis
 console.log('  Beginner section: named lesson states + progress/completion summaries + contextual next action');
 console.log('  Review Center: contextual lesson actions + expanded/selected states + named back control');
 console.log('  Challenge: named actions + disabled state + live result summary + 44/52px touch targets');
+console.log('  Lesson quiz: live passed/failed quiz and spaced-review result summaries with score context');
