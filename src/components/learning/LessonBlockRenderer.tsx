@@ -115,7 +115,9 @@ export function LessonBlockRenderer({
     const isTrendStructureVisual = block.assetRef.includes('trend-yon-mu-yapi-mi');
     const isSupportResistanceZoneVisual = block.assetRef.includes('destek-direnc-bolgedir');
     const isBreakOfStructureVisual = block.assetRef.includes('bos-starter');
-    const isChangeOfCharacterVisual = block.assetRef.includes('choch');
+    const isChangeOfCharacterVisual =
+      block.assetRef.includes('choch-degisim-ihtimali') ||
+      block.assetRef.includes('edu://charts/choch-001');
     const isVolatilityRangeVisual = block.assetRef.includes('volatilite-once-risktir');
     const isPositionSizingVisual = block.assetRef.includes('pozisyon-buyuklugu-once-gelir');
     const isRiskRewardVisual = block.assetRef.includes('risk-getiri-tek-basina-yetmez');
