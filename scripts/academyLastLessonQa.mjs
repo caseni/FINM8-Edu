@@ -147,7 +147,9 @@ async function completeQuizPassed(page, stage) {
       await page.getByRole('button', { name: question === 3 ? 'Sonucu gör' : 'Sonraki soru', exact: true }).click();
     }
 
-    const passed = (await page.getByText('Quiz tamamlandı', { exact: true }).count()) > 0;
+    const passed =
+      (await page.getByText('Quiz tamamlandı', { exact: true }).count()) > 0 ||
+      (await page.getByText('Okulu tamamladın', { exact: true }).count()) > 0;
     if (passed) return;
 
     if (attempt === 0) {
@@ -203,11 +205,22 @@ try {
     await solveTask(page, `${track.title} final lesson`);
     await completeQuizPassed(page, `${track.title} final lesson`);
 
+    await page.getByText('OKUL TAMAMLANDI', { exact: true }).waitFor();
+    await page.getByText('Okulu tamamladın', { exact: true }).waitFor();
+    await page.getByText(`${track.title} · 12/12 ders`, { exact: true }).waitFor();
+    await page.getByText(/Bu okulun 12 dersini tamamladın/i).waitFor();
+    await assertNoHorizontalOverflow(page, `academy-final-result-${slug(track.title)}`);
+
     if (await page.getByRole('button', { name: 'Sıradaki derse geç', exact: true }).count()) {
       throw new Error(`${track.title}: final lesson incorrectly offers a next lesson`);
     }
     const academyReturn = page.getByRole('button', { name: 'Academy’ye dön', exact: true });
     await academyReturn.waitFor();
+
+    if (track.title === 'Piyasaları Anla') {
+      await page.screenshot({ path: 'visual-qa/academy-final-lesson-result.png', fullPage: true });
+    }
+
     await academyReturn.click();
 
     await page.getByText('Finansı konu konu derinleştir.', { exact: true }).waitFor();
@@ -221,7 +234,7 @@ try {
     if (track.title === 'Piyasaları Anla') {
       await page.screenshot({ path: 'visual-qa/academy-final-lesson-complete.png', fullPage: true });
     }
-    console.log(`${track.title}: lesson 12 -> passed quiz -> Academy -> 12/12 TAMAMLANDI PASS`);
+    console.log(`${track.title}: lesson 12 -> school-complete result -> Academy -> 12/12 TAMAMLANDI PASS`);
   }
 
   if (diagnostics.length > 0) {
