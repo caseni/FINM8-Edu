@@ -176,6 +176,20 @@ async function assertNoHorizontalOverflow(page, label) {
   }
 }
 
+async function waitForVisibleExactText(page, text, stage, timeoutMs = 10000) {
+  const matches = page.getByText(text, { exact: true });
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    const count = await matches.count();
+    for (let index = 0; index < count; index += 1) {
+      const candidate = matches.nth(index);
+      if (await candidate.isVisible()) return candidate;
+    }
+    await page.waitForTimeout(100);
+  }
+  throw new Error(`${stage}: no visible exact text "${text}"`);
+}
+
 for (const track of tracks) {
   const ids = lessonIds(track.files);
   if (ids.length !== 12) throw new Error(`${track.title}: expected 12 lessons, found ${ids.length}`);
@@ -205,7 +219,7 @@ try {
     await solveTask(page, `${track.title} final lesson`);
     await completeQuizPassed(page, `${track.title} final lesson`);
 
-    await page.getByText('OKUL TAMAMLANDI', { exact: true }).first().waitFor();
+    await waitForVisibleExactText(page, 'OKUL TAMAMLANDI', `${track.title} final result`);
     await page.getByText('Okulu tamamladın', { exact: true }).waitFor();
     await page.getByText(`${track.title} · 12/12 ders`, { exact: true }).waitFor();
     await page.getByText(/Bu okulun 12 dersini tamamladın/i).waitFor();
@@ -228,7 +242,7 @@ try {
     await completedTrackButton.waitFor();
     await completedTrackButton.getByText('12/12 ders', { exact: true }).waitFor();
     await completedTrackButton.getByText('TAMAMLANDI', { exact: true }).waitFor();
-    await page.getByText('OKUL TAMAMLANDI', { exact: true }).waitFor();
+    await waitForVisibleExactText(page, 'OKUL TAMAMLANDI', `${track.title} Academy completion card`);
     await assertNoHorizontalOverflow(page, `academy-final-${slug(track.title)}`);
 
     if (track.title === 'Piyasaları Anla') {
