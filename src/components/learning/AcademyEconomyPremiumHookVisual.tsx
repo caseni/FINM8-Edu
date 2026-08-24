@@ -145,9 +145,10 @@ function Policy({ s }: { s: S }) {
 }
 
 function Growth({ s }: { s: S }) {
+  const heights = ['35%', '52%', '72%', '92%'] as const;
   return (
     <View style={s.growthScene}>
-      <View style={s.growthBars}>{[0.35, 0.52, 0.72, 0.92].map((height, i) => <View key={i} style={[s.growthBar, { height: `${height * 100}%` }, i === 3 && s.growthBarAccent]} />)}</View>
+      <View style={s.growthBars}>{heights.map((height, i) => <View key={i} style={[s.growthBar, { height }, i === 3 && s.growthBarAccent]} />)}</View>
       <View style={s.growthConnector}><View style={s.growthLine} /><View style={s.growthHead} /></View>
       <View style={s.sectors}>{[0, 1, 2].map((i) => <View key={i} style={[s.sector, i === 1 && s.sectorAccent]}><View style={[s.sectorCore, i === 1 && s.sectorCoreAccent]} /></View>)}</View>
     </View>
@@ -155,7 +156,7 @@ function Growth({ s }: { s: S }) {
 }
 
 function Cycle({ s }: { s: S }) {
-  const heights = ['35%', '68%', '46%', '78%', '42%', '64%'];
+  const heights = ['35%', '68%', '46%', '78%', '42%', '64%'] as const;
   return (
     <View style={s.cycleScene}>
       <View style={s.cycleBase} />
