@@ -14,21 +14,33 @@ function requireSource(source, expected, label) {
 }
 
 const landingPath = 'src/screens/learn/LearnLandingScreen.tsx';
+const beginnerSectionPath = 'src/screens/learn/BeginnerSectionScreen.tsx';
 const reviewPath = 'src/screens/learn/LearningReviewScreen.tsx';
 const challengePath = 'src/screens/learn/LearningChallengeScreen.tsx';
 const landing = read(landingPath);
+const beginnerSection = read(beginnerSectionPath);
 const review = read(reviewPath);
 const challenge = read(challengePath);
 
 for (const [expected, label] of [
-  ['const sectionAccessibilityLabel = language === \'tr\'', 'Beginner section contextual status'],
-  ['`${sectionTitle}. ${status}. ${completedCount}/${section.lessonIds.length} ders, yüzde ${progressPercent}.`', 'Beginner section progress label'],
-  ['accessibilityLabel={sectionAccessibilityLabel}', 'Beginner section card label'],
-  ['accessibilityState={active ? undefined : { disabled: true }}', 'Beginner section disabled state'],
-  ['Temel okuryazarlık yolu tamamlandı. 24/24 ders tamamlandı.', 'Beginner completion summary'],
-  ['İleri öğrenme yoluna geç', 'Beginner completion action'],
+  ['const sectionAccessibilityLabel = language === \'tr\'', 'Beginner landing contextual status'],
+  ['`${sectionTitle}. ${status}. ${completedCount}/${section.lessonIds.length} ders, yüzde ${progressPercent}.`', 'Beginner landing progress label'],
+  ['accessibilityLabel={sectionAccessibilityLabel}', 'Beginner landing card label'],
+  ['accessibilityState={active ? undefined : { disabled: true }}', 'Beginner landing disabled state'],
+  ['Temel okuryazarlık yolu tamamlandı. 24/24 ders tamamlandı.', 'Beginner landing completion summary'],
+  ['İleri öğrenme yoluna geç', 'Beginner landing completion action'],
 ]) {
   requireSource(landing, expected, label);
+}
+
+for (const [expected, label] of [
+  ['const sectionProgressAccessibilityLabel = language === \'tr\'', 'Beginner section progress summary'],
+  ['accessibilityLabel={sectionProgressAccessibilityLabel}', 'Beginner section hero summary'],
+  ['accessibilityLabel={`${lessonTitle}. ${lessonState}.`}', 'Beginner lesson contextual state'],
+  ['`${sectionTitle} bölümü tamamlandı. 6/6 ders.`', 'Beginner section completion summary'],
+  ['`Sıradaki bölüme geç: ${nextSection.title.tr}`', 'Beginner next-section action context'],
+]) {
+  requireSource(beginnerSection, expected, label);
 }
 
 for (const [expected, label] of [
@@ -68,5 +80,6 @@ if (challengeButtonRoles < 3) {
 
 console.log('Learning auxiliary accessibility audit PASS');
 console.log('  Beginner landing: named progress cards + completion summary + disabled state');
+console.log('  Beginner section: named lesson states + progress/completion summaries + contextual next action');
 console.log('  Review Center: contextual lesson actions + expanded/selected states + named back control');
 console.log('  Challenge: named actions + disabled state + live result summary + 44/52px touch targets');
