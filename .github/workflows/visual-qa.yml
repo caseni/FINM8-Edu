@@ -54,6 +54,7 @@ jobs:
           node scripts/visualQa.mjs
           node scripts/beginnerDesktopLessonQa.mjs
           node scripts/beginnerResponsiveEditorialQa.mjs
+          node scripts/beginnerEconomyResponsiveQa.mjs
           node scripts/beginnerCoreChartResponsiveQa.mjs
           node scripts/beginnerAppliedChartResponsiveQa.mjs
           node scripts/beginnerRiskResponsiveQa.mjs
