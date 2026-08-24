@@ -22,13 +22,17 @@ const lessons = [
   { key: 'real-nominal', title: 'Reel ve nominal farkı nedir?' },
 ];
 
+function escapedRegex(value) {
+  return new RegExp(value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
+}
+
 async function openLesson(page, title) {
   await page.goto(baseUrl, { waitUntil: 'networkidle' });
   await page.getByText('Öğrenmeye Başla', { exact: true }).waitFor({ timeout: 10000 });
   await page.getByRole('button', { name: /İleri konular/i }).click();
   await page.getByText('Finansı konu konu derinleştir.', { exact: true }).waitFor();
   await page.getByRole('button', { name: /^Ekonomiyi Anla derslerini aç$/i }).click();
-  await page.getByRole('button', { name: title, exact: true }).click();
+  await page.getByRole('button', { name: escapedRegex(title) }).first().click();
   await page.getByText(/Adım 1\//).waitFor();
 }
 
