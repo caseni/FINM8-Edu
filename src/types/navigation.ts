@@ -20,8 +20,17 @@ export type RootStackParamList = {
     currentQuizReview?: CurrentQuizReviewRouteContext;
     source?: LessonPresentationSource;
   };
-  PracticalTask: { lessonId: string; review?: boolean };
-  LessonQuiz: { lessonId: string; review?: boolean; spacedReview?: boolean };
+  PracticalTask: {
+    lessonId: string;
+    review?: boolean;
+    source?: LessonPresentationSource;
+  };
+  LessonQuiz: {
+    lessonId: string;
+    review?: boolean;
+    spacedReview?: boolean;
+    source?: LessonPresentationSource;
+  };
   LearningChallenge: { challengeId: string; review?: boolean };
   LearningReview: undefined;
   LegacyCatalog: undefined;
@@ -46,8 +55,17 @@ export type MainStackParamList = {
     currentQuizReview?: CurrentQuizReviewRouteContext;
     source?: LessonPresentationSource;
   };
-  PracticalTask: { lessonId: string; review?: boolean };
-  LessonQuiz: { lessonId: string; review?: boolean; spacedReview?: boolean };
+  PracticalTask: {
+    lessonId: string;
+    review?: boolean;
+    source?: LessonPresentationSource;
+  };
+  LessonQuiz: {
+    lessonId: string;
+    review?: boolean;
+    spacedReview?: boolean;
+    source?: LessonPresentationSource;
+  };
   LearningChallenge: { challengeId: string; review?: boolean };
   LearningReview: undefined;
   LegacyCatalog: undefined;
