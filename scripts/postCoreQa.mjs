@@ -122,7 +122,7 @@ async function assertNoHorizontalOverflow(page, label) {
 async function openCompletedAcademy(page) {
   await page.goto(baseUrl, { waitUntil: 'networkidle' });
   await page.getByText('24 / 24 TAMAMLANDI', { exact: true }).waitFor();
-  await page.getByRole('button', { name: 'İleri yola geç' }).click();
+  await page.getByRole('button', { name: 'İleri öğrenme yoluna geç' }).click();
   await page.getByText('Şimdi yalnız ilgini seç.', { exact: true }).waitFor();
 }
 
@@ -179,7 +179,7 @@ try {
   await page.getByRole('button', { name: /Para ve Ekonomi/i }).first().click();
   await page.getByText('Bu bölümü tamamladın.', { exact: true }).waitFor();
   await page.getByText(/Sıradaki bölüm: Piyasalar Nasıl Çalışır/).waitFor();
-  await page.getByRole('button', { name: 'Sıradaki bölüme geç' }).click();
+  await page.getByRole('button', { name: /^Sıradaki bölüme geç:/i }).click();
   await page.getByRole('button', { name: /Bir fiyat nasıl ortaya çıkar/i }).waitFor();
   await page.getByText('Bu bölümü tamamladın.', { exact: true }).waitFor();
 
@@ -188,7 +188,7 @@ try {
   await page.getByText('Temel yolun burada tamamlandı.', { exact: true }).waitFor();
   await assertNoHorizontalOverflow(page, 'post-core-risk-complete');
   await page.screenshot({ path: 'visual-qa/post-core-risk-complete.png', fullPage: true });
-  await page.getByRole('button', { name: 'İleri yolları gör' }).click();
+  await page.getByRole('button', { name: 'İleri öğrenme yollarını gör' }).click();
 
   await page.getByText('Şimdi yalnız ilgini seç.', { exact: true }).waitFor();
   for (const option of [
