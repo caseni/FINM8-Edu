@@ -65,6 +65,7 @@ jobs:
           node scripts/academyMarketsResponsiveQa.mjs
           node scripts/academyTrackResponsiveQa.mjs Grafikleri Derinleştir
           node scripts/academyTrackResponsiveQa.mjs Şirketleri Anla
+          node scripts/academyTrackResponsiveQa.mjs Risk ve Portföy
           node scripts/advancedHookQa.mjs
           node scripts/advancedContinuationQa.mjs
           node scripts/academyExpansionQa.mjs
