@@ -13,10 +13,23 @@ function requireSource(source, expected, label) {
   }
 }
 
+const landingPath = 'src/screens/learn/LearnLandingScreen.tsx';
 const reviewPath = 'src/screens/learn/LearningReviewScreen.tsx';
 const challengePath = 'src/screens/learn/LearningChallengeScreen.tsx';
+const landing = read(landingPath);
 const review = read(reviewPath);
 const challenge = read(challengePath);
+
+for (const [expected, label] of [
+  ['const sectionAccessibilityLabel = language === \'tr\'', 'Beginner section contextual status'],
+  ['`${sectionTitle}. ${status}. ${completedCount}/${section.lessonIds.length} ders, yüzde ${progressPercent}.`', 'Beginner section progress label'],
+  ['accessibilityLabel={sectionAccessibilityLabel}', 'Beginner section card label'],
+  ['accessibilityState={active ? undefined : { disabled: true }}', 'Beginner section disabled state'],
+  ['Temel okuryazarlık yolu tamamlandı. 24/24 ders tamamlandı.', 'Beginner completion summary'],
+  ['İleri öğrenme yoluna geç', 'Beginner completion action'],
+]) {
+  requireSource(landing, expected, label);
+}
 
 for (const [expected, label] of [
   ['accessibilityLabel={language === \'tr\' ? \'M8 Learn’e dön\' : \'Return to M8 Learn\'}', 'Review back control'],
@@ -54,5 +67,6 @@ if (challengeButtonRoles < 3) {
 }
 
 console.log('Learning auxiliary accessibility audit PASS');
+console.log('  Beginner landing: named progress cards + completion summary + disabled state');
 console.log('  Review Center: contextual lesson actions + expanded/selected states + named back control');
 console.log('  Challenge: named actions + disabled state + live result summary + 44/52px touch targets');
