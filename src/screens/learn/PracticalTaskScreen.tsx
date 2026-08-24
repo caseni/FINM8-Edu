@@ -54,7 +54,7 @@ export function PracticalTaskScreen({ route, navigation }: Props) {
       }
       passPracticalTask(lesson, new Date().toISOString());
       saveLessonCheckpoint(lesson.id, 'quiz');
-      navigation.replace('LessonQuiz', { lessonId: lesson.id });
+      navigation.replace('LessonQuiz', { lessonId: lesson.id, source: route.params.source });
     },
   };
 
