@@ -137,7 +137,7 @@ export function LessonSupportingVisual({ assetRef, alt, language, role, theme = 
 }
 
 const createStyles = (theme: LearningTheme) => StyleSheet.create({
-  wrapper: { gap: theme.spacing.sm, marginTop: theme.spacing.xs },
+  wrapper: { width: '100%', maxWidth: 700, alignSelf: 'center', gap: theme.spacing.sm, marginTop: theme.spacing.xs },
   practiceFrame: { minHeight: 300, alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
   practiceScale: { width: '90%', transform: [{ scale: 1.1 }] },
   eyebrow: { color: theme.colors.textMuted, fontSize: 10, fontWeight: '900', letterSpacing: 0.8 },
