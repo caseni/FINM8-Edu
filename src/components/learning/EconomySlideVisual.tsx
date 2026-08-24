@@ -270,6 +270,9 @@ function SlowRow({ label, width, styles }: { label: string; width: `${number}%`;
 
 const createStyles = (theme: LearningTheme) => StyleSheet.create({
   shell: {
+    width: '100%',
+    maxWidth: 680,
+    alignSelf: 'center',
     overflow: 'hidden',
     borderRadius: 22,
     borderWidth: 1,
