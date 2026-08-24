@@ -61,12 +61,17 @@ export function BeginnerSectionScreen() {
     .filter((lesson) => lesson !== undefined);
   const completedCount = lessons.filter((lesson) => completedLessonIds.includes(lesson.id)).length;
   const progress = lessons.length ? completedCount / lessons.length : 0;
+  const progressPercent = Math.round(progress * 100);
   const sectionComplete = lessons.length > 0 && completedCount === lessons.length;
   const sectionIndex = BEGINNER_SECTION_IDS.indexOf(section.id);
   const nextSectionId = sectionIndex >= 0 && sectionIndex < BEGINNER_SECTION_IDS.length - 1
     ? BEGINNER_SECTION_IDS[sectionIndex + 1]
     : undefined;
   const nextSection = nextSectionId ? BEGINNER_SECTIONS[nextSectionId] : undefined;
+  const sectionTitle = selectLocalizedText(section.title, language);
+  const sectionProgressAccessibilityLabel = language === 'tr'
+    ? `${sectionTitle}. ${completedCount}/${lessons.length} ders tamamlandı, yüzde ${progressPercent}.`
+    : `${sectionTitle}. ${completedCount} of ${lessons.length} lessons completed, ${progressPercent} percent.`;
 
   const openLesson = (lessonId: string) => {
     const checkpoint = lessonCheckpoints[lessonId];
@@ -103,11 +108,11 @@ export function BeginnerSectionScreen() {
           </Pressable>
           <View style={styles.headingCopy}>
             <Text style={styles.brand}>FINM8 EDU</Text>
-            <Text style={styles.title}>{selectLocalizedText(section.title, language)}</Text>
+            <Text style={styles.title}>{sectionTitle}</Text>
           </View>
         </View>
 
-        <View style={styles.hero}>
+        <View style={styles.hero} accessibilityRole="summary" accessibilityLabel={sectionProgressAccessibilityLabel}>
           <Text style={styles.heroEyebrow}>{language === 'tr' ? 'BAŞLANGIÇ · 6 KISA DERS' : 'BEGINNER · 6 SHORT LESSONS'}</Text>
           <Text style={styles.heroTitle}>{sectionComplete
             ? language === 'tr' ? 'Bu bölümü tamamladın.' : 'You completed this section.'
@@ -116,7 +121,7 @@ export function BeginnerSectionScreen() {
           <Text style={styles.heroBody}>{selectLocalizedText(section.description, language)}</Text>
           <View style={styles.progressMeta}>
             <Text style={styles.progressText}>{completedCount}/{lessons.length} {language === 'tr' ? 'ders tamamlandı' : 'lessons completed'}</Text>
-            <Text style={styles.progressText}>{Math.round(progress * 100)}%</Text>
+            <Text style={styles.progressText}>{progressPercent}%</Text>
           </View>
           <View style={styles.progressTrack}><View style={[styles.progressFill, { width: `${progress * 100}%` }]} /></View>
         </View>
@@ -137,10 +142,17 @@ export function BeginnerSectionScreen() {
             const completed = completedLessonIds.includes(lesson.id);
             const checkpoint = lessonCheckpoints[lesson.id];
             const resume = checkpoint && !completed;
+            const lessonTitle = selectLocalizedText(lesson.title, language);
+            const lessonState = resume
+              ? language === 'tr' ? 'Kaldığın yerden devam et' : 'Continue where you left off'
+              : completed
+                ? language === 'tr' ? 'Tamamlandı' : 'Complete'
+                : `${lesson.estimatedMinutes} ${language === 'tr' ? 'dk' : 'min'}`;
             return (
               <Pressable
                 key={lesson.id}
                 accessibilityRole="button"
+                accessibilityLabel={`${lessonTitle}. ${lessonState}.`}
                 onPress={() => openLesson(lesson.id)}
                 style={({ pressed }) => [styles.lessonCard, completed && styles.lessonCardComplete, pressed && styles.lessonCardPressed]}
               >
@@ -148,14 +160,8 @@ export function BeginnerSectionScreen() {
                   <Text style={styles.lessonNumberText}>{completed ? '✓' : index + 1}</Text>
                 </View>
                 <View style={styles.lessonCopy}>
-                  <Text style={styles.lessonTitle}>{selectLocalizedText(lesson.title, language)}</Text>
-                  <Text style={styles.lessonMeta}>
-                    {resume
-                      ? language === 'tr' ? 'Kaldığın yerden devam et' : 'Continue where you left off'
-                      : completed
-                        ? language === 'tr' ? 'Tamamlandı' : 'Complete'
-                        : `${lesson.estimatedMinutes} ${language === 'tr' ? 'dk' : 'min'}`}
-                  </Text>
+                  <Text style={styles.lessonTitle}>{lessonTitle}</Text>
+                  <Text style={styles.lessonMeta}>{lessonState}</Text>
                 </View>
                 <Text style={styles.openText}>›</Text>
               </Pressable>
@@ -164,7 +170,13 @@ export function BeginnerSectionScreen() {
         </View>
 
         {sectionComplete ? (
-          <View style={styles.completionCard}>
+          <View
+            style={styles.completionCard}
+            accessibilityRole="summary"
+            accessibilityLabel={language === 'tr'
+              ? `${sectionTitle} bölümü tamamlandı. 6/6 ders.`
+              : `${sectionTitle} section complete. 6 of 6 lessons.`}
+          >
             <Text style={styles.completionEyebrow}>{language === 'tr' ? 'BÖLÜM TAMAMLANDI' : 'SECTION COMPLETE'}</Text>
             <Text style={styles.completionTitle}>
               {nextSection
@@ -182,6 +194,9 @@ export function BeginnerSectionScreen() {
             </Text>
             <Pressable
               accessibilityRole="button"
+              accessibilityLabel={nextSection
+                ? language === 'tr' ? `Sıradaki bölüme geç: ${nextSection.title.tr}` : `Continue to next section: ${nextSection.title.en}`
+                : language === 'tr' ? 'İleri öğrenme yollarını gör' : 'See deeper learning paths'}
               onPress={continueAfterSection}
               style={({ pressed }) => [styles.nextButton, pressed && styles.nextButtonPressed]}
             >
@@ -243,5 +258,5 @@ const styles = StyleSheet.create({
   nextButtonText: { color: '#05211F', fontSize: 12, fontWeight: '900' },
   footerNote: { gap: 5, padding: 17, borderRadius: 17, borderWidth: 1, borderColor: '#1E4550', backgroundColor: '#0A2228' },
   footerTitle: { color: '#5EEAD4', fontSize: 14, fontWeight: '900' },
-  footerBody: { color: '#A7BAC8', fontSize: 12, lineHeight: 18 },
+  footerBody: { color: '#9DB2BF', fontSize: 12, lineHeight: 18 },
 });
