@@ -73,6 +73,33 @@ const duplicateSlugs = Array.from(
   }, new Map()),
 ).filter(([, count]) => count > 1);
 
+// Visual content blocks are rendered by LessonBlockRenderer before they can fall back
+// to LessonSupportingVisual. Keep legacy substring routes from accidentally hijacking
+// a modern Academy visual (for example `includes('choch')` matching an MSS/CHoCH slug).
+const legacyRendererPath = path.join(visualDir, 'LessonBlockRenderer.tsx');
+const legacyRendererSource = fs.readFileSync(legacyRendererPath, 'utf8');
+const legacyRouteTokens = Array.from(
+  legacyRendererSource.matchAll(/block\.assetRef\.includes\(['"]([^'"]+)['"]\)/g),
+  (match) => match[1],
+);
+const legacyRendererCollisions = [];
+for (const lesson of lessons) {
+  const academyAssetRefs = [
+    lesson.slug,
+    `edu://wave1/${lesson.slug}`,
+    `edu://academy/${lesson.slug}`,
+  ];
+  for (const token of legacyRouteTokens) {
+    if (academyAssetRefs.some((assetRef) => assetRef.includes(token))) {
+      legacyRendererCollisions.push({
+        slug: lesson.slug,
+        token,
+        file: lesson.file,
+      });
+    }
+  }
+}
+
 console.log('FINM8 EDU Academy visual routing audit');
 console.log(`academy lesson slugs: ${lessons.length}`);
 console.log(`topic-routed lesson slugs: ${routed.matched.length}/${lessons.length}`);
@@ -80,6 +107,7 @@ console.log(`generic visual fallback candidates: ${routed.unmatched.length}`);
 console.log(`modern clean visual coverage: ${modern.matched.length}/${lessons.length}`);
 console.log(`legacy-only visual candidates: ${modern.unmatched.length}`);
 console.log(`duplicate academy slugs: ${duplicateSlugs.length}`);
+console.log(`legacy renderer Academy collisions: ${legacyRendererCollisions.length}`);
 console.log(`product catalog composition: 24 beginner + ${lessons.length} Academy = ${24 + lessons.length}`);
 
 if (routed.unmatched.length > 0) {
@@ -97,6 +125,13 @@ if (duplicateSlugs.length > 0) {
   for (const [slug, count] of duplicateSlugs) console.log(`- ${slug}: ${count}`);
 }
 
+if (legacyRendererCollisions.length > 0) {
+  console.log('Academy lessons intercepted by legacy visual substring routes:');
+  for (const item of legacyRendererCollisions) {
+    console.log(`- ${item.slug} <- includes('${item.token}') (${item.file})`);
+  }
+}
+
 if (lessons.length !== expectedAcademyLessonCount) {
   throw new Error(`Academy lesson catalog drifted: expected ${expectedAcademyLessonCount} slugs, found ${lessons.length}`);
 }
@@ -108,6 +143,9 @@ if (routed.unmatched.length > 0) {
 }
 if (modern.unmatched.length > 0) {
   throw new Error(`Academy visual routing audit found ${modern.unmatched.length} legacy-only visual candidate(s)`);
+}
+if (legacyRendererCollisions.length > 0) {
+  throw new Error(`Academy visual routing audit found ${legacyRendererCollisions.length} legacy renderer collision(s)`);
 }
 
 console.log('academy visual routing blockers: 0');
