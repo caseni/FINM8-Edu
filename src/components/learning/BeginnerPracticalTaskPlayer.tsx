@@ -86,6 +86,13 @@ export function BeginnerPracticalTaskPlayer({
       : language === 'tr' ? 'Tekrar dene' : 'Try again';
 
   const takeawayText = selectLocalizedText(takeaway, language);
+  const feedbackAccessibilityLabel = passed
+    ? language === 'tr'
+      ? `Doğru. Seçimin senaryodaki kanıtlarla uyumlu. ${takeawayText}`
+      : `Correct. Your selection matches the evidence in the scenario. ${takeawayText}`
+    : language === 'tr'
+      ? `Henüz değil. Senaryodaki ipuçlarını birlikte değerlendir. İpucu: ${takeawayText}`
+      : `Not yet. Evaluate the clues in the scenario together. Hint: ${takeawayText}`;
 
   return (
     <View style={styles.shell}>
@@ -159,7 +166,12 @@ export function BeginnerPracticalTaskPlayer({
 
           {checked ? (
             <View style={styles.feedbackGroup}>
-              <View style={[styles.feedbackCard, passed ? styles.feedbackPassed : styles.feedbackRetry]} accessibilityRole="summary">
+              <View
+                style={[styles.feedbackCard, passed ? styles.feedbackPassed : styles.feedbackRetry]}
+                accessibilityRole="summary"
+                accessibilityLabel={feedbackAccessibilityLabel}
+                accessibilityLiveRegion="polite"
+              >
                 <Text style={[styles.feedbackTitle, passed ? styles.feedbackTitlePassed : styles.feedbackTitleRetry]}>
                   {passed
                     ? language === 'tr' ? 'Doğru. Seçimin senaryodaki kanıtlarla uyumlu.' : 'Correct. Your selection matches the evidence in the scenario.'
