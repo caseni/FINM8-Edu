@@ -35,7 +35,7 @@ export function LessonQuizScreen({ route, navigation }: Props) {
   const isSpacedReview = route.params.spacedReview === true;
   const navigationState = navigation.getState();
   const previousRoute = navigationState.routes[navigationState.index - 1];
-  const openedFromAcademy = previousRoute?.name === 'Academy';
+  const openedFromAcademy = route.params.source === 'academy' || previousRoute?.name === 'Academy';
 
   useEffect(() => {
     if (lesson && !route.params.review && !isSpacedReview) saveLessonCheckpoint(lesson.id, 'quiz');
@@ -49,6 +49,16 @@ export function LessonQuizScreen({ route, navigation }: Props) {
     navigation.navigate('Home');
   };
 
+  const returnToAcademy = () => {
+    if (previousRoute?.name === 'Academy' && navigation.canGoBack()) {
+      navigation.goBack();
+      return;
+    }
+    navigation.navigate('Academy');
+  };
+
+  const returnToLearningEntry = openedFromAcademy ? returnToAcademy : returnToEntry;
+
   if (!lesson) return <SafeAreaView style={styles.safeArea}><Text style={styles.title}>Ders bulunamadı.</Text></SafeAreaView>;
 
   const beginner = BEGINNER_LESSON_IDS.has(lesson.id);
@@ -61,6 +71,12 @@ export function LessonQuizScreen({ route, navigation }: Props) {
     ? academyTrack.lessonIds[academyLessonIndex + 1]
     : undefined;
   const reachedAcademyFoundationBoundary = academyLessonIndex === ACADEMY_FOUNDATION_LESSON_COUNT - 1;
+  const completedAcademyTrack = Boolean(
+    academyTrack &&
+    academyLessonIndex >= 0 &&
+    academyLessonIndex === academyTrack.lessonIds.length - 1
+  );
+  const academyTrackTitle = academyTrack ? selectLocalizedText(academyTrack.title, language) : undefined;
 
   const handleComplete = (_previewResult: QuizResult, submissions: readonly { questionId: string; selectedOptionId: string }[]) => {
     if (route.params.review) {
@@ -92,6 +108,12 @@ export function LessonQuizScreen({ route, navigation }: Props) {
       nextAcademyLessonId &&
       !reachedAcademyFoundationBoundary
     );
+    const showAcademyTrackCompletion = Boolean(
+      result.passed &&
+      completedAcademyTrack &&
+      !route.params.review &&
+      !isSpacedReview
+    );
     const primaryLabel = result.passed
       ? route.params.review
         ? language === 'tr' ? 'Review merkezine dön' : 'Return to review center'
@@ -120,7 +142,7 @@ export function LessonQuizScreen({ route, navigation }: Props) {
         navigation.replace('MicroLesson', { lessonId: nextAcademyLessonId, source: 'academy' });
         return;
       }
-      returnToEntry();
+      returnToLearningEntry();
     };
 
     return (
@@ -128,15 +150,31 @@ export function LessonQuizScreen({ route, navigation }: Props) {
         <LearningFlowHeader
           language={language}
           stage={3}
-          onExit={returnToEntry}
+          onExit={returnToLearningEntry}
         />
         <ScrollView contentContainerStyle={styles.resultWrap}>
-          <View style={styles.resultCard}>
-            <Text style={styles.resultEyebrow}>{language === 'tr' ? 'DERS AKIŞI · 3/3' : 'LEARNING FLOW · 3/3'}</Text>
+          <View style={styles.resultCard} accessibilityRole="summary">
+            <Text style={styles.resultEyebrow}>
+              {showAcademyTrackCompletion
+                ? language === 'tr' ? 'OKUL TAMAMLANDI' : 'SCHOOL COMPLETE'
+                : language === 'tr' ? 'DERS AKIŞI · 3/3' : 'LEARNING FLOW · 3/3'}
+            </Text>
             <Text style={styles.resultEmoji}>{result.passed ? '✓' : '↻'}</Text>
-            <Text style={styles.title}>{result.passed ? (isSpacedReview ? (language === 'tr' ? 'Tekrar tamamlandı' : 'Review completed') : (language === 'tr' ? 'Quiz tamamlandı' : 'Quiz completed')) : (language === 'tr' ? 'Kısa bir tekrar iyi olur' : 'A short review will help')}</Text>
+            <Text style={styles.title}>
+              {showAcademyTrackCompletion
+                ? language === 'tr' ? 'Okulu tamamladın' : 'You completed the school'
+                : result.passed
+                  ? isSpacedReview
+                    ? language === 'tr' ? 'Tekrar tamamlandı' : 'Review completed'
+                    : language === 'tr' ? 'Quiz tamamlandı' : 'Quiz completed'
+                  : language === 'tr' ? 'Kısa bir tekrar iyi olur' : 'A short review will help'}
+            </Text>
             <Text style={styles.score}>%{result.score}</Text>
-            <Text style={styles.body}>{result.correctAnswers}/{result.totalQuestions} {language === 'tr' ? 'doğru cevap' : 'correct answers'}</Text>
+            <Text style={styles.body}>
+              {showAcademyTrackCompletion && academyTrackTitle
+                ? `${academyTrackTitle} · ${academyTrack?.lessonIds.length ?? 12}/12 ${language === 'tr' ? 'ders' : 'lessons'}`
+                : `${result.correctAnswers}/${result.totalQuestions} ${language === 'tr' ? 'doğru cevap' : 'correct answers'}`}
+            </Text>
             {newBadgeTitle ? <Text style={styles.badgeNotice}>◆ {language === 'tr' ? 'Yeni badge' : 'New badge'}: {newBadgeTitle}</Text> : null}
           </View>
           <View accessibilityRole="summary" style={styles.takeawayCard}>
@@ -146,7 +184,13 @@ export function LessonQuizScreen({ route, navigation }: Props) {
             <Text style={styles.takeawayText}>
               {selectLocalizedText(lesson.takeaway, language)}
             </Text>
-            {result.passed && reachedAcademyFoundationBoundary ? (
+            {showAcademyTrackCompletion ? (
+              <Text style={styles.takeawayHint}>
+                {language === 'tr'
+                  ? 'Bu okulun 12 dersini tamamladın. Academy’ye dönüp başka bir alana geçebilir veya bu konulara daha sonra tekrar dönebilirsin.'
+                  : 'You completed all 12 lessons in this school. Return to Academy to explore another subject or revisit these topics later.'}
+              </Text>
+            ) : result.passed && reachedAcademyFoundationBoundary ? (
               <Text style={styles.takeawayHint}>
                 {language === 'tr'
                   ? 'Bu okulun temel 6 dersini tamamladın. Daha teknik ikinci katman isteğe bağlı; Academy’ye dönüp hazır olduğunda devam edebilirsin.'
@@ -175,7 +219,7 @@ export function LessonQuizScreen({ route, navigation }: Props) {
               accessibilityRole="button"
               accessibilityLabel={secondaryLabel}
               style={styles.secondaryButton}
-              onPress={returnToEntry}
+              onPress={returnToLearningEntry}
             >
               <Text style={styles.secondaryButtonText}>{secondaryLabel}</Text>
             </Pressable>
@@ -192,7 +236,7 @@ export function LessonQuizScreen({ route, navigation }: Props) {
       <LearningFlowHeader
         language={language}
         stage={3}
-        onExit={returnToEntry}
+        onExit={returnToLearningEntry}
       />
       {beginner ? (
         <BeginnerQuizPlayer
@@ -224,7 +268,7 @@ const styles = StyleSheet.create({
   resultEmoji: { color: '#2DD4BF', fontSize: 44, fontWeight: '900' },
   title: { color: '#F8FAFC', fontSize: 25, fontWeight: '900', textAlign: 'center' },
   score: { color: '#2DD4BF', fontSize: 42, fontWeight: '900' },
-  body: { color: '#9FB0C3', fontSize: 15 },
+  body: { color: '#9FB0C3', fontSize: 15, textAlign: 'center' },
   badgeNotice: { color: '#FBBF24', fontSize: 15, fontWeight: '800', textAlign: 'center' },
   takeawayCard: { alignSelf: 'center', width: '100%', maxWidth: 520, padding: 18, borderRadius: 18, backgroundColor: '#0C1928', borderWidth: 1, borderColor: '#294057', gap: 7 },
   takeawayEyebrow: { color: '#2DD4BF', fontSize: 11, fontWeight: '900', letterSpacing: 0.8 },
