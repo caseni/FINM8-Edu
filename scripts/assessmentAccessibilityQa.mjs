@@ -17,6 +17,7 @@ const academyTrackTitles = [
 const beginnerSectionTitle = 'Para ve Ekonomi';
 const beginnerLessonTitle = 'Aynı para neden zamanla daha az şey alır';
 const beginnerCorrectTaskAnswer = 'Paranın satın alma gücü azalmıştır';
+const beginnerCorrectQuizOptionIndexes = [1, 0, 0];
 
 async function buttonNames(page) {
   return page.getByRole('button').evaluateAll((buttons) =>
@@ -126,6 +127,30 @@ async function solveCurrentTaskToQuiz(page, stage) {
   throw new Error(`${stage}: no task answer combination reached the quiz`);
 }
 
+async function solveBeginnerQuizToResult(page) {
+  for (let questionIndex = 0; questionIndex < beginnerCorrectQuizOptionIndexes.length; questionIndex += 1) {
+    const radios = page.getByRole('radio');
+    const target = radios.nth(beginnerCorrectQuizOptionIndexes[questionIndex]);
+    if ((await target.getAttribute('aria-checked')) !== 'true') {
+      await target.click();
+    }
+    await page.getByRole('button', { name: 'Cevabı kontrol et', exact: true }).click();
+    const actionLabel = questionIndex === beginnerCorrectQuizOptionIndexes.length - 1
+      ? 'Sonucu gör'
+      : 'Sonraki soru';
+    await page.getByRole('button', { name: actionLabel, exact: true }).click();
+  }
+
+  const resultSummary = page.getByRole('summary', {
+    name: new RegExp(`${beginnerLessonTitle}.*Quiz tamamlandı.*Skor yüzde 100.*3/3 doğru cevap`, 'i'),
+  });
+  await resultSummary.waitFor();
+  const live = await resultSummary.getAttribute('aria-live');
+  if (live !== 'polite') {
+    throw new Error(`Beginner quiz result should expose aria-live=polite (got ${live})`);
+  }
+}
+
 async function openAcademyFirstLesson(page, academyTrackTitle) {
   await page.goto(baseUrl, { waitUntil: 'networkidle' });
   await page.getByText('Öğrenmeye Başla', { exact: true }).waitFor({ timeout: 10000 });
@@ -179,7 +204,8 @@ async function checkBeginnerQuizAccessibility(page) {
 
   const quizAnswers = await assertCleanAnswerLabels(page, 'radio', 'Beginner quiz');
   await assertCheckedState(quizAnswers.nth(0), 'Beginner quiz');
-  console.log(`${beginnerLessonTitle}: Beginner checkbox task + radio quiz accessibility PASS`);
+  await solveBeginnerQuizToResult(page);
+  console.log(`${beginnerLessonTitle}: Beginner checkbox task + radio quiz + live result accessibility PASS`);
 }
 
 const browser = await chromium.launch({ executablePath: process.env.CHROME_BIN, headless: true });
@@ -200,7 +226,7 @@ try {
   if (diagnostics.length > 0) {
     throw new Error(`Assessment accessibility diagnostics:\n${diagnostics.join('\n')}`);
   }
-  console.log('Assessment accessibility: 10 Academy schools + Beginner checkbox tasks and radio quizzes PASS');
+  console.log('Assessment accessibility: 10 Academy schools + Beginner checkbox tasks/radio quizzes + live quiz result PASS');
 } finally {
   await browser.close();
 }
