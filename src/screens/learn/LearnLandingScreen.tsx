@@ -51,7 +51,13 @@ export function LearnLandingScreen() {
         </View>
 
         {beginnerComplete ? (
-          <View style={styles.completionCard}>
+          <View
+            style={styles.completionCard}
+            accessibilityRole="summary"
+            accessibilityLabel={language === 'tr'
+              ? 'Temel okuryazarlık yolu tamamlandı. 24/24 ders tamamlandı.'
+              : 'Foundation literacy path complete. 24 of 24 lessons completed.'}
+          >
             <Text style={styles.completionEyebrow}>{language === 'tr' ? '24 / 24 TAMAMLANDI' : '24 / 24 COMPLETE'}</Text>
             <Text style={styles.completionTitle}>{language === 'tr' ? 'Temel okuryazarlık yolun tamamlandı.' : 'Your foundation path is complete.'}</Text>
             <Text style={styles.completionBody}>
@@ -61,6 +67,7 @@ export function LearnLandingScreen() {
             </Text>
             <Pressable
               accessibilityRole="button"
+              accessibilityLabel={language === 'tr' ? 'İleri öğrenme yoluna geç' : 'Choose a deeper learning path'}
               onPress={() => navigation.navigate('Academy')}
               style={({ pressed }) => [styles.completionButton, pressed && styles.completionButtonPressed]}
             >
@@ -75,6 +82,7 @@ export function LearnLandingScreen() {
             const active = section.status === 'active';
             const completedCount = section.lessonIds.filter((lessonId) => completedLessonIds.includes(lessonId)).length;
             const progress = section.lessonIds.length ? completedCount / section.lessonIds.length : 0;
+            const progressPercent = Math.round(progress * 100);
             const completed = section.lessonIds.length > 0 && completedCount === section.lessonIds.length;
             const started = completedCount > 0;
             const status = completed
@@ -82,11 +90,19 @@ export function LearnLandingScreen() {
               : started
                 ? language === 'tr' ? 'DEVAM' : 'CONTINUE'
                 : language === 'tr' ? 'BAŞLA' : 'START';
+            const sectionTitle = selectLocalizedText(section.title, language);
+            const sectionAccessibilityLabel = language === 'tr'
+              ? `${sectionTitle}. ${status}. ${completedCount}/${section.lessonIds.length} ders, yüzde ${progressPercent}.`
+              : `${sectionTitle}. ${status}. ${completedCount} of ${section.lessonIds.length} lessons, ${progressPercent} percent.`;
 
             return (
               <Pressable
                 key={section.id}
-                accessibilityRole={active ? 'button' : undefined}
+                accessibilityRole="button"
+                accessibilityLabel={sectionAccessibilityLabel}
+                accessibilityHint={active
+                  ? language === 'tr' ? 'Bölümü açar.' : 'Opens this section.'
+                  : language === 'tr' ? 'Bu bölüm henüz kullanıma açık değil.' : 'This section is not available yet.'}
                 accessibilityState={active ? undefined : { disabled: true }}
                 disabled={!active}
                 onPress={() => navigation.navigate('BeginnerSection', { sectionId: section.id })}
@@ -103,7 +119,7 @@ export function LearnLandingScreen() {
                 </View>
                 <View style={styles.sectionCopy}>
                   <View style={styles.sectionTitleRow}>
-                    <Text style={styles.cardTitle}>{selectLocalizedText(section.title, language)}</Text>
+                    <Text style={styles.cardTitle}>{sectionTitle}</Text>
                     <Text style={[styles.status, active ? styles.statusActive : styles.statusNext]}>{status}</Text>
                   </View>
                   <Text style={styles.cardDescription}>{selectLocalizedText(section.description, language)}</Text>
@@ -111,7 +127,7 @@ export function LearnLandingScreen() {
                     <>
                       <View style={styles.progressMeta}>
                         <Text style={styles.progressText}>{completedCount}/{section.lessonIds.length} {language === 'tr' ? 'ders' : 'lessons'}</Text>
-                        <Text style={styles.progressText}>{Math.round(progress * 100)}%</Text>
+                        <Text style={styles.progressText}>{progressPercent}%</Text>
                       </View>
                       <View style={styles.progressTrack}><View style={[styles.progressFill, { width: `${progress * 100}%` }]} /></View>
                     </>
@@ -135,6 +151,7 @@ export function LearnLandingScreen() {
             </View>
             <Pressable
               accessibilityRole="button"
+              accessibilityLabel={language === 'tr' ? 'İleri konuları aç' : 'Open advanced topics'}
               onPress={() => navigation.navigate('Academy')}
               style={({ pressed }) => [styles.advancedButton, pressed && styles.advancedButtonPressed]}
             >
