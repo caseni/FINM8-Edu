@@ -18,11 +18,13 @@ const beginnerSectionPath = 'src/screens/learn/BeginnerSectionScreen.tsx';
 const reviewPath = 'src/screens/learn/LearningReviewScreen.tsx';
 const challengePath = 'src/screens/learn/LearningChallengeScreen.tsx';
 const lessonQuizPath = 'src/screens/learn/LessonQuizScreen.tsx';
+const beginnerTaskPlayerPath = 'src/components/learning/BeginnerPracticalTaskPlayer.tsx';
 const landing = read(landingPath);
 const beginnerSection = read(beginnerSectionPath);
 const review = read(reviewPath);
 const challenge = read(challengePath);
 const lessonQuiz = read(lessonQuizPath);
+const beginnerTaskPlayer = read(beginnerTaskPlayerPath);
 
 for (const [expected, label] of [
   ['const sectionAccessibilityLabel = language === \'tr\'', 'Beginner landing contextual status'],
@@ -83,6 +85,17 @@ for (const [expected, label] of [
   requireSource(lessonQuiz, expected, label);
 }
 
+for (const [expected, label] of [
+  ['const feedbackAccessibilityLabel = passed', 'Beginner task feedback summary label'],
+  ['accessibilityLabel={feedbackAccessibilityLabel}', 'Beginner task feedback label binding'],
+  ['accessibilityLiveRegion="polite"', 'Beginner task live feedback announcement'],
+  ['Doğru. Seçimin senaryodaki kanıtlarla uyumlu.', 'Beginner task correct feedback context'],
+  ['Henüz değil. Senaryodaki ipuçlarını birlikte değerlendir.', 'Beginner task retry feedback context'],
+  ['İpucu: ${takeawayText}', 'Beginner task retry hint context'],
+]) {
+  requireSource(beginnerTaskPlayer, expected, label);
+}
+
 const contextualReviewActions = (review.match(/accessibilityLabel=\{language === 'tr' \? `\$\{lessonTitle\}/g) ?? []).length;
 if (contextualReviewActions < 3) {
   throw new Error(`Review lesson controls: expected at least 3 contextual action labels, found ${contextualReviewActions}`);
@@ -99,3 +112,4 @@ console.log('  Beginner section: named lesson states + progress/completion summa
 console.log('  Review Center: contextual lesson actions + expanded/selected states + named back control');
 console.log('  Challenge: named actions + disabled state + live result summary + 44/52px touch targets');
 console.log('  Lesson quiz: live passed/failed quiz and spaced-review result summaries with score context');
+console.log('  Beginner task: live correct/retry feedback with takeaway or hint context');
