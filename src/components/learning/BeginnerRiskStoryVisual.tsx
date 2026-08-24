@@ -268,9 +268,9 @@ const createStyles = (theme: LearningTheme, wide: boolean, phone: boolean, pract
   branchLine: { width: '70%', height: phone ? 25 : 32, borderBottomWidth: 2, borderLeftWidth: 2, borderRightWidth: 2, borderColor: '#3A5668' },
   miniOutcome: { flex: 1, minWidth: 0, minHeight: wide ? 70 : phone ? 52 : 60, borderRadius: 12, borderWidth: 1, borderColor: '#3A4F5F', backgroundColor: '#102432', alignItems: 'center', justifyContent: 'center' },
   riskCompare: { width: '100%', minHeight: wide ? 150 : phone ? 118 : 132, flexDirection: 'row', alignItems: 'center', gap: phone ? 5 : 8, position: 'relative' },
-  riskMain: { flex: 1, minWidth: phone ? 156 : 0, minHeight: wide ? 145 : phone ? 112 : 128, alignItems: 'center', justifyContent: 'center', gap: 6, borderRadius: 13, backgroundColor: '#102432', borderWidth: 1, borderColor: '#354F61' },
-  riskFuture: { width: wide ? 170 : phone ? 80 : 108, minHeight: wide ? 145 : phone ? 112 : 128, alignItems: 'center', justifyContent: 'center', gap: 5, borderRadius: 13, borderWidth: 1 },
-  riskNotEqual: { position: 'absolute', right: wide ? 174 : phone ? 80 : 109, zIndex: 2, width: wide ? 26 : 20, textAlign: 'center', color: '#BBC9D1', fontSize: wide ? 24 : phone ? 17 : 20, fontWeight: '900', transform: [{ translateX: wide ? 13 : 10 }] },
+  riskMain: { flex: 1, minWidth: wide ? 310 : phone ? 156 : 0, minHeight: wide ? 145 : phone ? 112 : 128, alignItems: 'center', justifyContent: 'center', gap: 6, borderRadius: 13, backgroundColor: '#102432', borderWidth: 1, borderColor: '#354F61' },
+  riskFuture: { width: wide ? 160 : phone ? 80 : 108, minHeight: wide ? 145 : phone ? 112 : 128, alignItems: 'center', justifyContent: 'center', gap: 5, borderRadius: 13, borderWidth: 1 },
+  riskNotEqual: { position: 'absolute', right: wide ? 164 : phone ? 80 : 109, zIndex: 2, width: wide ? 26 : 20, textAlign: 'center', color: '#BBC9D1', fontSize: wide ? 24 : phone ? 17 : 20, fontWeight: '900', transform: [{ translateX: wide ? 13 : 10 }] },
   flow: { width: '100%', minHeight: wide ? 130 : phone ? 102 : 116, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: phone ? 4 : 7 },
   flowChip: { width: wide ? 118 : phone ? 72 : 84, minHeight: wide ? 78 : phone ? 58 : 68, borderRadius: 14, borderWidth: 1, borderColor: '#354F61', backgroundColor: '#102432', alignItems: 'center', justifyContent: 'center', gap: 4 },
 
