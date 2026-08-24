@@ -61,6 +61,7 @@ jobs:
           node scripts/beginnerTaskFeedbackQa.mjs
           node scripts/beginnerDesktopAssessmentQa.mjs
           node scripts/academyDesktopLessonQa.mjs
+          node scripts/academyEconomyResponsiveQa.mjs
           node scripts/advancedHookQa.mjs
           node scripts/advancedContinuationQa.mjs
           node scripts/academyExpansionQa.mjs
