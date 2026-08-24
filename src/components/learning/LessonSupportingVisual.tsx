@@ -79,9 +79,13 @@ export function LessonSupportingVisual({ assetRef, alt, language, role, theme = 
   const isAcademyFundamentalFoundation = isAcademyFundamentalStoryAsset(assetRef);
   const isAcademyRiskPortfolioFoundation = isAcademyRiskPortfolioStoryAsset(assetRef);
   const isEconomy = isEconomySlideAsset(assetRef);
-  const emphasizeCleanPractice = role === 'practice' && (hasCoreExpansionCleanVisual || hasFoundationCleanVisual || hasAdvancedCleanVisual);
+  const preferBeginnerChart = assetRef.includes('#beginner-chart');
+  const emphasizeCleanPractice = !preferBeginnerChart && role === 'practice' && (hasCoreExpansionCleanVisual || hasFoundationCleanVisual || hasAdvancedCleanVisual);
   const hideEditorialLabel = hasEditorialImage || hasPremiumHook || hasEconomyPremiumHook || hasTechnicalPremiumHook || hasSmcPremiumHook || hasQuantPremiumHook || hasStrategyPremiumHook || hasPsychologyPremiumHook || hasAssetPremiumHook || hasCoreExpansionCleanVisual || hasFoundationCleanVisual || hasAdvancedCleanVisual || isBeginnerEconomy || isBeginnerRisk || isBeginnerCoreChart || isBeginnerAppliedChart || isBeginnerChart || isBeginnerMarket || isAcademyMarketFoundation || isAcademyFundamentalFoundation || isAcademyRiskPortfolioFoundation || isEconomy;
-  const visual = hasEditorialImage ? <AcademyEditorialImageVisual assetRef={assetRef} alt={alt} role={role} theme={theme} />
+  const visual = preferBeginnerChart && isBeginnerCoreChart ? <BeginnerCoreChartStoryVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
+    : preferBeginnerChart && isBeginnerAppliedChart ? <BeginnerAppliedChartStoryVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
+    : preferBeginnerChart && isBeginnerChart ? <BeginnerChartStoryVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
+    : hasEditorialImage ? <AcademyEditorialImageVisual assetRef={assetRef} alt={alt} role={role} theme={theme} />
     : hasPremiumHook ? <AcademyPremiumHookVisual assetRef={assetRef} alt={alt} theme={theme} />
     : hasEconomyPremiumHook ? <AcademyEconomyPremiumHookVisual assetRef={assetRef} alt={alt} theme={theme} />
     : hasTechnicalPremiumHook ? <AcademyTechnicalPremiumHookVisual assetRef={assetRef} alt={alt} theme={theme} />
