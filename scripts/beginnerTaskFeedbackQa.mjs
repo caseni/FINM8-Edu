@@ -57,6 +57,15 @@ async function feedbackGeometry(page) {
   });
 }
 
+async function assertLiveFeedback(page, prefix, stage) {
+  const announcement = page.locator(`[aria-live="polite"][aria-label^="${prefix}"]`);
+  await announcement.waitFor();
+  const label = await announcement.getAttribute('aria-label');
+  if (!label || label.length <= prefix.length) {
+    throw new Error(`${stage}: live feedback is missing explanatory context -> ${label ?? 'missing'}`);
+  }
+}
+
 const browser = await chromium.launch({ executablePath: process.env.CHROME_BIN, headless: true });
 try {
   const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
@@ -68,9 +77,17 @@ try {
   });
 
   await openPriceFormationTask(page);
+
+  await page.getByText('Şirketin her dakika yeni fiyat seçmesi', { exact: true }).click();
+  await page.getByRole('button', { name: 'Kontrol et' }).click();
+  await page.getByText('Henüz değil. Senaryodaki ipuçlarını birlikte değerlendir.', { exact: true }).waitFor();
+  await assertLiveFeedback(page, 'Henüz değil. Senaryodaki ipuçlarını birlikte değerlendir.', 'Task incorrect feedback');
+  await page.getByRole('button', { name: 'Tekrar dene', exact: true }).click();
+
   await page.getByText('Alıcı ve satıcının aynı fiyatta buluşması', { exact: true }).click();
   await page.getByRole('button', { name: 'Kontrol et' }).click();
   await page.getByText('Doğru. Seçimin senaryodaki kanıtlarla uyumlu.', { exact: true }).waitFor();
+  await assertLiveFeedback(page, 'Doğru. Seçimin senaryodaki kanıtlarla uyumlu.', 'Task correct feedback');
   await page.waitForTimeout(220);
 
   const quizButton = page.getByRole('button', { name: 'Quiz’e geç' });
@@ -92,7 +109,7 @@ try {
   await page.screenshot({ path: 'visual-qa/beginner-task-feedback-auto-reveal.png', fullPage: true });
 
   if (diagnostics.length > 0) throw new Error(`Task feedback diagnostics:\n${diagnostics.join('\n')}`);
-  console.log(`Beginner task feedback auto-reveal: PASS (scrollTop ${geometry.scrollTop.toFixed(1)} / ${geometry.maxScrollTop.toFixed(1)})`);
+  console.log(`Beginner task feedback live announcement + auto-reveal: PASS (scrollTop ${geometry.scrollTop.toFixed(1)} / ${geometry.maxScrollTop.toFixed(1)})`);
 } finally {
   await browser.close();
 }
