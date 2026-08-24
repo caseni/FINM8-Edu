@@ -190,6 +190,16 @@ async function waitForVisibleExactText(page, text, stage, timeoutMs = 10000) {
   throw new Error(`${stage}: no visible exact text "${text}"`);
 }
 
+async function assertCompletionAnnouncement(page, trackTitle) {
+  const prefix = `${trackTitle} okulu tamamlandı. 12/12 ders. Quiz skoru yüzde `;
+  const announcement = page.locator(`[aria-live="polite"][aria-label^="${prefix}"]`);
+  await announcement.waitFor();
+  const label = await announcement.getAttribute('aria-label');
+  if (!label || !new RegExp(`^${prefix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\d+\\.$`).test(label)) {
+    throw new Error(`${trackTitle}: invalid Academy completion accessibility label -> ${label ?? 'missing'}`);
+  }
+}
+
 for (const track of tracks) {
   const ids = lessonIds(track.files);
   if (ids.length !== 12) throw new Error(`${track.title}: expected 12 lessons, found ${ids.length}`);
@@ -223,6 +233,7 @@ try {
     await page.getByText('Okulu tamamladın', { exact: true }).waitFor();
     await page.getByText(`${track.title} · 12/12 ders`, { exact: true }).waitFor();
     await page.getByText(/Bu okulun 12 dersini tamamladın/i).waitFor();
+    await assertCompletionAnnouncement(page, track.title);
     await assertNoHorizontalOverflow(page, `academy-final-result-${slug(track.title)}`);
 
     if (await page.getByRole('button', { name: 'Sıradaki derse geç', exact: true }).count()) {
@@ -248,7 +259,7 @@ try {
     if (track.title === 'Piyasaları Anla') {
       await page.screenshot({ path: 'visual-qa/academy-final-lesson-complete.png', fullPage: true });
     }
-    console.log(`${track.title}: lesson 12 -> school-complete result -> Academy -> 12/12 TAMAMLANDI PASS`);
+    console.log(`${track.title}: lesson 12 -> school-complete result -> accessible announcement -> Academy -> 12/12 TAMAMLANDI PASS`);
   }
 
   if (diagnostics.length > 0) {
