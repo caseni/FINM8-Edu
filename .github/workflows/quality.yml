@@ -46,6 +46,9 @@ jobs:
       - name: Academy visual routing audit
         run: node scripts/academyVisualRoutingAudit.mjs
 
+      - name: Learning auxiliary accessibility audit
+        run: node scripts/learningAuxiliaryAccessibilityAudit.mjs
+
       - name: Real editorial image asset audit
         run: node scripts/editorialImageCoverage.mjs
 
