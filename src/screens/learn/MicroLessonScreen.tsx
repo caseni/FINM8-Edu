@@ -68,6 +68,7 @@ export function MicroLessonScreen({ route, navigation }: Props) {
   const navigationState = navigation.getState();
   const previousRoute = navigationState.routes[navigationState.index - 1];
   const openedFromAcademy = route.params.source === 'academy' || previousRoute?.name === 'Academy';
+  const lessonSource = openedFromAcademy ? 'academy' : 'beginner';
 
   useEffect(() => {
     if (lesson && !isReadOnlyReview && !checkpoint) {
@@ -193,7 +194,7 @@ export function MicroLessonScreen({ route, navigation }: Props) {
           return;
         }
         saveLessonCheckpoint(lesson.id, 'task', checkpoint?.stepIndex ?? 0);
-        navigation.replace('PracticalTask', { lessonId: lesson.id });
+        navigation.replace('PracticalTask', { lessonId: lesson.id, source: lessonSource });
       }}
     />
   );
