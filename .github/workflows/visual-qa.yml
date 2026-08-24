@@ -67,6 +67,10 @@ jobs:
           node scripts/academyTrackResponsiveQa.mjs Şirketleri Anla
           node scripts/academyTrackResponsiveQa.mjs Risk ve Portföy
           node scripts/academyTrackResponsiveQa.mjs Karar Psikolojisi
+          node scripts/academyTrackResponsiveQa.mjs Yöntemler ve Planlar
+          node scripts/academyTrackResponsiveQa.mjs Sistematik ve Sayısal Yaklaşımlar
+          node scripts/academyTrackResponsiveQa.mjs İleri Grafik Yaklaşımları
+          node scripts/academyTrackResponsiveQa.mjs Varlık Türlerini Anla
           node scripts/advancedHookQa.mjs
           node scripts/advancedContinuationQa.mjs
           node scripts/academyExpansionQa.mjs
