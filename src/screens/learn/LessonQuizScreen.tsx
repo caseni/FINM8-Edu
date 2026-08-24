@@ -114,6 +114,11 @@ export function LessonQuizScreen({ route, navigation }: Props) {
       !route.params.review &&
       !isSpacedReview
     );
+    const academyCompletionAccessibilityLabel = showAcademyTrackCompletion && academyTrackTitle
+      ? language === 'tr'
+        ? `${academyTrackTitle} okulu tamamlandı. 12/12 ders. Quiz skoru yüzde ${result.score}.`
+        : `${academyTrackTitle} school complete. 12 of 12 lessons. Quiz score ${result.score} percent.`
+      : undefined;
     const primaryLabel = result.passed
       ? route.params.review
         ? language === 'tr' ? 'Review merkezine dön' : 'Return to review center'
@@ -153,7 +158,12 @@ export function LessonQuizScreen({ route, navigation }: Props) {
           onExit={returnToLearningEntry}
         />
         <ScrollView contentContainerStyle={styles.resultWrap}>
-          <View style={styles.resultCard} accessibilityRole="summary">
+          <View
+            style={styles.resultCard}
+            accessibilityRole="summary"
+            accessibilityLabel={academyCompletionAccessibilityLabel}
+            accessibilityLiveRegion={showAcademyTrackCompletion ? 'polite' : 'none'}
+          >
             <Text style={styles.resultEyebrow}>
               {showAcademyTrackCompletion
                 ? language === 'tr' ? 'OKUL TAMAMLANDI' : 'SCHOOL COMPLETE'
