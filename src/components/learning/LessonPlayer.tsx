@@ -122,6 +122,10 @@ export function LessonPlayer({
   );
   const totalSteps = blocks.length + 1;
   const progress = (stepIndex + 1) / totalSteps;
+  const lessonTitle = selectLocalizedText(lesson.title, language);
+  const stepAccessibilityLabel = language === 'tr'
+    ? `${lessonTitle}. Adım ${stepIndex + 1}/${totalSteps}.`
+    : `${lessonTitle}. Step ${stepIndex + 1} of ${totalSteps}.`;
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ y: 0, animated: false });
@@ -159,7 +163,11 @@ export function LessonPlayer({
         <View style={styles.progressGroup}>
           <View style={styles.progressCopy}>
             <Text style={styles.flowLabel}>{language === 'tr' ? 'DERS' : 'LESSON'}</Text>
-            <Text style={styles.stepText}>
+            <Text
+              accessibilityLabel={stepAccessibilityLabel}
+              accessibilityLiveRegion="polite"
+              style={styles.stepText}
+            >
               {language === 'tr'
                 ? `Adım ${stepIndex + 1}/${totalSteps}`
                 : `Step ${stepIndex + 1}/${totalSteps}`}
@@ -184,9 +192,7 @@ export function LessonPlayer({
             <Text style={styles.contextLabel}>{entryContext.sourceModule}</Text>
           ) : null}
         </View>
-        <Text style={styles.lessonTitle}>
-          {selectLocalizedText(lesson.title, language)}
-        </Text>
+        <Text style={styles.lessonTitle}>{lessonTitle}</Text>
 
         <View style={[styles.slide, isVisualOnlyStep && styles.visualSlide]}>
           {isTakeaway ? (
