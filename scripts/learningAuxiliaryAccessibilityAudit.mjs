@@ -19,6 +19,7 @@ const reviewPath = 'src/screens/learn/LearningReviewScreen.tsx';
 const challengePath = 'src/screens/learn/LearningChallengeScreen.tsx';
 const lessonQuizPath = 'src/screens/learn/LessonQuizScreen.tsx';
 const lessonPlayerPath = 'src/components/learning/LessonPlayer.tsx';
+const languageSwitchPath = 'src/components/learning/LearningLanguageSwitch.tsx';
 const beginnerTaskPlayerPath = 'src/components/learning/BeginnerPracticalTaskPlayer.tsx';
 const academyTaskPlayerPath = 'src/components/learning/PracticalTaskPlayer.tsx';
 const academyQuizPlayerPath = 'src/components/learning/QuizPlayer.tsx';
@@ -28,11 +29,13 @@ const review = read(reviewPath);
 const challenge = read(challengePath);
 const lessonQuiz = read(lessonQuizPath);
 const lessonPlayer = read(lessonPlayerPath);
+const languageSwitch = read(languageSwitchPath);
 const beginnerTaskPlayer = read(beginnerTaskPlayerPath);
 const academyTaskPlayer = read(academyTaskPlayerPath);
 const academyQuizPlayer = read(academyQuizPlayerPath);
 
 for (const [expected, label] of [
+  ['<LearningLanguageSwitch />', 'Beginner landing language switch'],
   ['const sectionAccessibilityLabel = language === \'tr\'', 'Beginner landing contextual status'],
   ['`${sectionTitle}. ${status}. ${completedCount}/${section.lessonIds.length} ders, yüzde ${progressPercent}.`', 'Beginner landing progress label'],
   ['accessibilityLabel={sectionAccessibilityLabel}', 'Beginner landing card label'],
@@ -41,6 +44,18 @@ for (const [expected, label] of [
   ['İleri öğrenme yoluna geç', 'Beginner landing completion action'],
 ]) {
   requireSource(landing, expected, label);
+}
+
+for (const [expected, label] of [
+  ["type SupportedLearningLanguage = 'tr' | 'en';", 'Learning language supported set'],
+  ['accessibilityRole="toolbar"', 'Learning language toolbar semantics'],
+  ['accessibilityRole="button"', 'Learning language button semantics'],
+  ['accessibilityState={{ selected }}', 'Learning language selected state'],
+  ['onPress={() => void setLanguage(option.id)}', 'Learning language persisted selection'],
+  ['Öğrenme dili', 'Learning language Turkish toolbar label'],
+  ['Learning language', 'Learning language English toolbar label'],
+]) {
+  requireSource(languageSwitch, expected, label);
 }
 
 for (const [expected, label] of [
@@ -56,6 +71,7 @@ for (const [expected, label] of [
 for (const [expected, label] of [
   ['const stepAccessibilityLabel = language === \'tr\'', 'Lesson step contextual announcement'],
   ['`${lessonTitle}. Adım ${stepIndex + 1}/${totalSteps}.`', 'Lesson step Turkish context'],
+  ['accessibilityRole="summary"', 'Lesson step summary semantics'],
   ['accessibilityLabel={stepAccessibilityLabel}', 'Lesson step label binding'],
   ['accessibilityLiveRegion="polite"', 'Lesson step live announcement'],
   ['accessibilityRole="progressbar"', 'Lesson step progress semantics'],
@@ -145,7 +161,7 @@ if (challengeButtonRoles < 3) {
 }
 
 console.log('Learning auxiliary accessibility audit PASS');
-console.log('  Beginner landing: named progress cards + completion summary + disabled state');
+console.log('  Beginner landing: persistent TR/EN switch + named progress cards + completion summary + disabled state');
 console.log('  Beginner section: named lesson states + progress/completion summaries + contextual next action');
 console.log('  Lesson player: live contextual step announcements + progressbar value');
 console.log('  Review Center: contextual lesson actions + expanded/selected states + named back control');
