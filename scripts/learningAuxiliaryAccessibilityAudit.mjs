@@ -18,6 +18,7 @@ const beginnerSectionPath = 'src/screens/learn/BeginnerSectionScreen.tsx';
 const reviewPath = 'src/screens/learn/LearningReviewScreen.tsx';
 const challengePath = 'src/screens/learn/LearningChallengeScreen.tsx';
 const lessonQuizPath = 'src/screens/learn/LessonQuizScreen.tsx';
+const lessonPlayerPath = 'src/components/learning/LessonPlayer.tsx';
 const beginnerTaskPlayerPath = 'src/components/learning/BeginnerPracticalTaskPlayer.tsx';
 const academyTaskPlayerPath = 'src/components/learning/PracticalTaskPlayer.tsx';
 const academyQuizPlayerPath = 'src/components/learning/QuizPlayer.tsx';
@@ -26,6 +27,7 @@ const beginnerSection = read(beginnerSectionPath);
 const review = read(reviewPath);
 const challenge = read(challengePath);
 const lessonQuiz = read(lessonQuizPath);
+const lessonPlayer = read(lessonPlayerPath);
 const beginnerTaskPlayer = read(beginnerTaskPlayerPath);
 const academyTaskPlayer = read(academyTaskPlayerPath);
 const academyQuizPlayer = read(academyQuizPlayerPath);
@@ -49,6 +51,17 @@ for (const [expected, label] of [
   ['`Sıradaki bölüme geç: ${nextSection.title.tr}`', 'Beginner next-section action context'],
 ]) {
   requireSource(beginnerSection, expected, label);
+}
+
+for (const [expected, label] of [
+  ['const stepAccessibilityLabel = language === \'tr\'', 'Lesson step contextual announcement'],
+  ['`${lessonTitle}. Adım ${stepIndex + 1}/${totalSteps}.`', 'Lesson step Turkish context'],
+  ['accessibilityLabel={stepAccessibilityLabel}', 'Lesson step label binding'],
+  ['accessibilityLiveRegion="polite"', 'Lesson step live announcement'],
+  ['accessibilityRole="progressbar"', 'Lesson step progress semantics'],
+  ['accessibilityValue={{ min: 0, max: totalSteps, now: stepIndex + 1 }}', 'Lesson progress value'],
+]) {
+  requireSource(lessonPlayer, expected, label);
 }
 
 for (const [expected, label] of [
@@ -134,6 +147,7 @@ if (challengeButtonRoles < 3) {
 console.log('Learning auxiliary accessibility audit PASS');
 console.log('  Beginner landing: named progress cards + completion summary + disabled state');
 console.log('  Beginner section: named lesson states + progress/completion summaries + contextual next action');
+console.log('  Lesson player: live contextual step announcements + progressbar value');
 console.log('  Review Center: contextual lesson actions + expanded/selected states + named back control');
 console.log('  Challenge: named actions + disabled state + live result summary + 44/52px touch targets');
 console.log('  Lesson quiz: live passed/failed quiz and spaced-review result summaries with score context');
