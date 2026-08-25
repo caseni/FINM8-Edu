@@ -19,12 +19,16 @@ const reviewPath = 'src/screens/learn/LearningReviewScreen.tsx';
 const challengePath = 'src/screens/learn/LearningChallengeScreen.tsx';
 const lessonQuizPath = 'src/screens/learn/LessonQuizScreen.tsx';
 const beginnerTaskPlayerPath = 'src/components/learning/BeginnerPracticalTaskPlayer.tsx';
+const academyTaskPlayerPath = 'src/components/learning/PracticalTaskPlayer.tsx';
+const academyQuizPlayerPath = 'src/components/learning/QuizPlayer.tsx';
 const landing = read(landingPath);
 const beginnerSection = read(beginnerSectionPath);
 const review = read(reviewPath);
 const challenge = read(challengePath);
 const lessonQuiz = read(lessonQuizPath);
 const beginnerTaskPlayer = read(beginnerTaskPlayerPath);
+const academyTaskPlayer = read(academyTaskPlayerPath);
+const academyQuizPlayer = read(academyQuizPlayerPath);
 
 for (const [expected, label] of [
   ['const sectionAccessibilityLabel = language === \'tr\'', 'Beginner landing contextual status'],
@@ -96,6 +100,27 @@ for (const [expected, label] of [
   requireSource(beginnerTaskPlayer, expected, label);
 }
 
+for (const [expected, label] of [
+  ['const feedbackLabel = passed', 'Academy task feedback summary label'],
+  ['accessibilityLabel={feedbackLabel}', 'Academy task feedback label binding'],
+  ['accessibilityLiveRegion="polite"', 'Academy task live feedback announcement'],
+  ['Doğru. Seçimin senaryodaki kanıtlarla uyumlu.', 'Academy task correct feedback context'],
+  ['Henüz değil. Senaryodaki ipuçlarını birlikte değerlendir.', 'Academy task retry feedback context'],
+]) {
+  requireSource(academyTaskPlayer, expected, label);
+}
+
+for (const [expected, label] of [
+  ['const feedbackAccessibilityLabel = selectedIsCorrect', 'Academy quiz feedback summary label'],
+  ['accessibilityLabel={feedbackAccessibilityLabel}', 'Academy quiz feedback label binding'],
+  ['accessibilityLiveRegion="polite"', 'Academy quiz live feedback announcement'],
+  ['Doğru. Neden: ${explanation}', 'Academy quiz correct feedback context'],
+  ['Bu kez değil. Senin seçimin:', 'Academy quiz retry feedback context'],
+  ['Doğru cevap:', 'Academy quiz correct-answer context'],
+]) {
+  requireSource(academyQuizPlayer, expected, label);
+}
+
 const contextualReviewActions = (review.match(/accessibilityLabel=\{language === 'tr' \? `\$\{lessonTitle\}/g) ?? []).length;
 if (contextualReviewActions < 3) {
   throw new Error(`Review lesson controls: expected at least 3 contextual action labels, found ${contextualReviewActions}`);
@@ -113,3 +138,5 @@ console.log('  Review Center: contextual lesson actions + expanded/selected stat
 console.log('  Challenge: named actions + disabled state + live result summary + 44/52px touch targets');
 console.log('  Lesson quiz: live passed/failed quiz and spaced-review result summaries with score context');
 console.log('  Beginner task: live correct/retry feedback with takeaway or hint context');
+console.log('  Academy task: live correct/retry feedback');
+console.log('  Academy quiz: live correct/retry feedback with answer and explanation context');
