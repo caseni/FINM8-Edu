@@ -59,6 +59,7 @@ jobs:
           node scripts/beginnerAppliedChartResponsiveQa.mjs
           node scripts/beginnerRiskResponsiveQa.mjs
           node scripts/beginnerTaskFeedbackQa.mjs
+          node scripts/lessonStepAccessibilityQa.mjs
           node scripts/beginnerDesktopAssessmentQa.mjs
           node scripts/academyDesktopLessonQa.mjs
           node scripts/advancedHookQa.mjs
