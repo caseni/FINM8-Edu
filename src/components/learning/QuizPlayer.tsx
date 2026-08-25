@@ -97,6 +97,14 @@ export function QuizPlayer({ quiz, language, theme = defaultLearningTheme, onCom
       ? language === 'tr' ? 'Sonucu gör' : 'See result'
       : language === 'tr' ? 'Sonraki soru' : 'Next question'
     : language === 'tr' ? 'Cevabı kontrol et' : 'Check answer';
+  const explanation = selectLocalizedText(question.explanation, language);
+  const feedbackAccessibilityLabel = selectedIsCorrect
+    ? language === 'tr'
+      ? `Doğru. Neden: ${explanation}`
+      : `Correct. Why: ${explanation}`
+    : language === 'tr'
+      ? `Bu kez değil. Senin seçimin: ${selectedOption ? selectLocalizedText(selectedOption.label, language) : '—'}. Doğru cevap: ${correctOption ? selectLocalizedText(correctOption.label, language) : '—'}. Neden: ${explanation}`
+      : `Not this time. Your answer: ${selectedOption ? selectLocalizedText(selectedOption.label, language) : '—'}. Correct answer: ${correctOption ? selectLocalizedText(correctOption.label, language) : '—'}. Why: ${explanation}`;
 
   return (
     <View style={styles.shell}>
@@ -136,17 +144,22 @@ export function QuizPlayer({ quiz, language, theme = defaultLearningTheme, onCom
             })}
           </View>
           {revealed ? (
-            <View style={[styles.explanation, selectedIsCorrect ? styles.explanationCorrect : styles.explanationIncorrect]}>
+            <View
+              accessibilityRole="summary"
+              accessibilityLabel={feedbackAccessibilityLabel}
+              accessibilityLiveRegion="polite"
+              style={[styles.explanation, selectedIsCorrect ? styles.explanationCorrect : styles.explanationIncorrect]}
+            >
               {selectedIsCorrect ? (
                 <>
                   <Text style={[styles.feedbackTitle, styles.feedbackCorrect]}>{language === 'tr' ? '✓ Doğru' : '✓ Correct'}</Text>
-                  <Text style={styles.explanationText}>{language === 'tr' ? 'Neden: ' : 'Why: '}{selectLocalizedText(question.explanation, language)}</Text>
+                  <Text style={styles.explanationText}>{language === 'tr' ? 'Neden: ' : 'Why: '}{explanation}</Text>
                 </>
               ) : (
                 <>
                   <Text style={[styles.feedbackLine, styles.feedbackIncorrect]}>{language === 'tr' ? '× Senin seçimin: ' : '× Your answer: '}<Text style={styles.feedbackValue}>{selectedOption ? selectLocalizedText(selectedOption.label, language) : '—'}</Text></Text>
                   <Text style={styles.feedbackLine}>{language === 'tr' ? '✓ Doğru cevap: ' : '✓ Correct answer: '}<Text style={styles.feedbackValue}>{correctOption ? selectLocalizedText(correctOption.label, language) : '—'}</Text></Text>
-                  <Text style={styles.explanationText}>{language === 'tr' ? 'Neden: ' : 'Why: '}{selectLocalizedText(question.explanation, language)}</Text>
+                  <Text style={styles.explanationText}>{language === 'tr' ? 'Neden: ' : 'Why: '}{explanation}</Text>
                 </>
               )}
             </View>
