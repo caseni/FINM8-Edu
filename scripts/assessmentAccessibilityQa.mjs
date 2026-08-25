@@ -141,13 +141,12 @@ async function solveBeginnerQuizToResult(page) {
     await page.getByRole('button', { name: actionLabel, exact: true }).click();
   }
 
-  const resultSummary = page.getByRole('summary', {
-    name: new RegExp(`${beginnerLessonTitle}.*Quiz tamamlandı.*Skor yüzde 100.*3/3 doğru cevap`, 'i'),
-  });
+  const expectedResultLabel = `${beginnerLessonTitle}. Quiz tamamlandı. Skor yüzde 100. 3/3 doğru cevap.`;
+  const resultSummary = page.locator(`[aria-live="polite"][aria-label="${expectedResultLabel}"]`);
   await resultSummary.waitFor();
-  const live = await resultSummary.getAttribute('aria-live');
-  if (live !== 'polite') {
-    throw new Error(`Beginner quiz result should expose aria-live=polite (got ${live})`);
+  const actualLabel = await resultSummary.getAttribute('aria-label');
+  if (actualLabel !== expectedResultLabel) {
+    throw new Error(`Beginner quiz result aria-label mismatch -> expected "${expectedResultLabel}", got "${actualLabel ?? 'missing'}"`);
   }
 }
 
