@@ -82,9 +82,20 @@ async function assertCheckedState(answer, stage) {
   }
 }
 
+async function assertPoliteFeedback(page, stage, allowedPrefixes) {
+  const live = page.locator('[aria-live="polite"][aria-label]');
+  await live.last().waitFor();
+  const label = (await live.last().getAttribute('aria-label'))?.trim();
+  if (!label || !allowedPrefixes.some((prefix) => label.startsWith(prefix))) {
+    throw new Error(`${stage}: invalid live feedback label -> ${label ?? 'missing'}`);
+  }
+  return label;
+}
+
 async function solveCurrentTaskToQuiz(page, stage) {
   const initialCheck = page.getByRole('button', { name: 'Kontrol et', exact: true });
   await initialCheck.click();
+  await assertPoliteFeedback(page, `${stage} initial feedback`, ['Doğru.', 'Henüz değil.']);
   const directContinue = page.getByRole('button', { name: 'Quiz’e geç', exact: true });
   if (await directContinue.count()) {
     await directContinue.click();
@@ -113,6 +124,7 @@ async function solveCurrentTaskToQuiz(page, stage) {
       await choices.nth(choiceIndex).click();
     }
     await page.getByRole('button', { name: 'Kontrol et', exact: true }).click();
+    await assertPoliteFeedback(page, `${stage} retry feedback`, ['Doğru.', 'Henüz değil.']);
     const continueButton = page.getByRole('button', { name: 'Quiz’e geç', exact: true });
     if (await continueButton.count()) {
       await continueButton.click();
@@ -184,7 +196,9 @@ async function checkAcademyAssessmentAccessibility(page, academyTrackTitle) {
   const quizStage = `${academyTrackTitle} Academy quiz`;
   const quizAnswers = await assertCleanAnswerLabels(page, 'radio', quizStage);
   await assertCheckedState(quizAnswers.nth(0), quizStage);
-  console.log(`${academyTrackTitle} · ${lessonName}: checkbox task + radio quiz accessibility PASS`);
+  await page.getByRole('button', { name: 'Cevabı kontrol et', exact: true }).click();
+  await assertPoliteFeedback(page, `${quizStage} feedback`, ['Doğru.', 'Bu kez değil.']);
+  console.log(`${academyTrackTitle} · ${lessonName}: checkbox task + radio quiz + live feedback accessibility PASS`);
 }
 
 async function checkBeginnerQuizAccessibility(page) {
@@ -225,7 +239,7 @@ try {
   if (diagnostics.length > 0) {
     throw new Error(`Assessment accessibility diagnostics:\n${diagnostics.join('\n')}`);
   }
-  console.log('Assessment accessibility: 10 Academy schools + Beginner checkbox tasks/radio quizzes + live quiz result PASS');
+  console.log('Assessment accessibility: 10 Academy schools + Beginner tasks/quizzes + live feedback/result PASS');
 } finally {
   await browser.close();
 }
