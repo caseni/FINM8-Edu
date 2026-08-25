@@ -84,6 +84,13 @@ export function PracticalTaskPlayer({ task, language, presentationMode, theme = 
     : passed
       ? completionLabel ? selectLocalizedText(completionLabel, language) : language === 'tr' ? 'Quiz’e geç' : 'Continue to quiz'
       : language === 'tr' ? 'Tekrar dene' : 'Try again';
+  const feedbackLabel = passed
+    ? language === 'tr'
+      ? 'Doğru. Seçimin senaryodaki kanıtlarla uyumlu.'
+      : 'Correct. Your selection matches the evidence in the scenario.'
+    : language === 'tr'
+      ? 'Henüz değil. Senaryodaki ipuçlarını birlikte değerlendir.'
+      : 'Not yet. Evaluate the clues in the scenario together.';
 
   return (
     <View style={styles.shell}>
@@ -172,7 +179,16 @@ export function PracticalTaskPlayer({ task, language, presentationMode, theme = 
               );
             })}
           </View>
-          {checked ? <Text style={[styles.feedback, passed ? styles.feedbackPassed : styles.feedbackRetry]}>{passed ? language === 'tr' ? 'Doğru. Seçimin senaryodaki kanıtlarla uyumlu.' : 'Correct. Your selection matches the evidence in the scenario.' : language === 'tr' ? 'Henüz değil. Senaryodaki ipuçlarını birlikte değerlendir.' : 'Not yet. Evaluate the clues in the scenario together.'}</Text> : null}
+          {checked ? (
+            <Text
+              accessibilityRole="summary"
+              accessibilityLabel={feedbackLabel}
+              accessibilityLiveRegion="polite"
+              style={[styles.feedback, passed ? styles.feedbackPassed : styles.feedbackRetry]}
+            >
+              {feedbackLabel}
+            </Text>
+          ) : null}
         </View>
       </ScrollView>
       <View style={styles.footer}>
