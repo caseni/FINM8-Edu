@@ -2,6 +2,7 @@ import React from 'react';
 import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { LearningLanguageSwitch } from '../../components/learning/LearningLanguageSwitch';
 import { BEGINNER_SECTION_IDS, BEGINNER_SECTIONS } from '../../domain/learning/beginnerJourney';
 import { selectLocalizedText, type LearningLanguage } from '../../domain/learning/presentation';
 import { useLanguageStore } from '../../store/useLanguageStore';
@@ -23,7 +24,10 @@ export function LearnLandingScreen() {
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.brandBlock}>
-          <Text style={styles.brand}>FINM8 EDU</Text>
+          <View style={styles.brandRow}>
+            <Text style={styles.brand}>FINM8 EDU</Text>
+            <LearningLanguageSwitch />
+          </View>
           <Text style={styles.title}>{language === 'tr' ? 'Öğrenmeye Başla' : 'Start Learning'}</Text>
           <Text style={styles.subtitle}>
             {language === 'tr'
@@ -168,6 +172,7 @@ const styles = StyleSheet.create({
   safeArea: { flex: 1, backgroundColor: '#06111F' },
   content: { width: '100%', maxWidth: 760, alignSelf: 'center', padding: 20, gap: 18, paddingBottom: 44 },
   brandBlock: { gap: 7, paddingTop: 8 },
+  brandRow: { minHeight: 38, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 12 },
   brand: { color: '#37D9C7', fontSize: 11, fontWeight: '900', letterSpacing: 2.4 },
   title: { color: '#F8FAFC', fontSize: 34, lineHeight: 40, fontWeight: '900' },
   subtitle: { maxWidth: 580, color: '#A7B8C8', fontSize: 16, lineHeight: 24 },
