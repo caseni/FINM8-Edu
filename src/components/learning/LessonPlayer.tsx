@@ -164,6 +164,7 @@ export function LessonPlayer({
           <View style={styles.progressCopy}>
             <Text style={styles.flowLabel}>{language === 'tr' ? 'DERS' : 'LESSON'}</Text>
             <Text
+              accessibilityRole="summary"
               accessibilityLabel={stepAccessibilityLabel}
               accessibilityLiveRegion="polite"
               style={styles.stepText}
