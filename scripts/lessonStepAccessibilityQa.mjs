@@ -37,7 +37,15 @@ async function assertStep(page, step, total) {
 
   const progress = page.getByRole('progressbar', { name: 'Ders ilerlemesi' });
   await progress.waitFor();
+  const min = await progress.getAttribute('aria-valuemin');
+  const max = await progress.getAttribute('aria-valuemax');
   const now = await progress.getAttribute('aria-valuenow');
+  if (min !== '0') {
+    throw new Error(`Lesson progressbar mismatch -> expected aria-valuemin=0, got ${min ?? 'missing'}`);
+  }
+  if (max !== String(total)) {
+    throw new Error(`Lesson progressbar mismatch -> expected aria-valuemax=${total}, got ${max ?? 'missing'}`);
+  }
   if (now !== String(step)) {
     throw new Error(`Lesson progressbar mismatch -> expected aria-valuenow=${step}, got ${now ?? 'missing'}`);
   }
