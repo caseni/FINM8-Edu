@@ -2,10 +2,12 @@ import { chromium } from 'playwright-core';
 
 const baseUrl = 'http://127.0.0.1:4173/';
 const sectionTitle = 'Para ve Ekonomi';
-const lessonTitle = 'Aynı para neden zamanla daha az şey alır';
+const lessonTitle = 'Aynı para neden zamanla daha az şey alır?';
+const lessonTitleSearch = /Aynı para neden zamanla daha az şey alır/i;
 
 async function assertStep(page, step, total) {
-  const expectedLabel = `${lessonTitle}. Adım ${step}/${total}.`;
+  const separator = /[.!?]$/.test(lessonTitle.trim()) ? ' ' : '. ';
+  const expectedLabel = `${lessonTitle}${separator}Adım ${step}/${total}.`;
   const liveStep = page.getByRole('status', { name: expectedLabel });
   if ((await liveStep.count()) === 0) {
     const visibleStep = page.getByText(`Adım ${step}/${total}`, { exact: true });
@@ -55,7 +57,7 @@ try {
   await page.getByText('Öğrenmeye Başla', { exact: true }).waitFor({ timeout: 10000 });
   await page.getByRole('button', { name: new RegExp(sectionTitle, 'i') }).first().click();
   await page.getByText('BAŞLANGIÇ · 6 KISA DERS', { exact: true }).waitFor();
-  await page.getByRole('button', { name: new RegExp(lessonTitle, 'i') }).click();
+  await page.getByRole('button', { name: lessonTitleSearch }).click();
 
   const stepText = page.getByText(/Adım 1\//);
   await stepText.waitFor();
