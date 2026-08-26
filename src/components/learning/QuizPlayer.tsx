@@ -145,6 +145,9 @@ export function QuizPlayer({ quiz, language, theme = defaultLearningTheme, onCom
           </View>
           {revealed ? (
             <View
+              role="status"
+              aria-label={feedbackAccessibilityLabel}
+              aria-live="polite"
               accessibilityRole="summary"
               accessibilityLabel={feedbackAccessibilityLabel}
               accessibilityLiveRegion="polite"
