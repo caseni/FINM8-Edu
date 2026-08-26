@@ -70,7 +70,8 @@ for (const [expected, label] of [
 
 for (const [expected, label] of [
   ['const stepAccessibilityLabel = language === \'tr\'', 'Lesson step contextual announcement'],
-  ['`${lessonTitle}. Adım ${stepIndex + 1}/${totalSteps}.`', 'Lesson step Turkish context'],
+  ["const lessonTitleSeparator = /[.!?]$/.test(lessonTitle.trim()) ? ' ' : '. ';", 'Lesson step punctuation normalization'],
+  ['`${lessonTitle}${lessonTitleSeparator}Adım ${stepIndex + 1}/${totalSteps}.`', 'Lesson step Turkish context'],
   ['accessible={true}', 'Lesson step explicit accessibility element'],
   ['accessibilityRole="summary"', 'Lesson step summary semantics'],
   ['accessibilityLabel={stepAccessibilityLabel}', 'Lesson step label binding'],
