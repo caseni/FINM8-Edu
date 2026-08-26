@@ -123,9 +123,10 @@ export function LessonPlayer({
   const totalSteps = blocks.length + 1;
   const progress = (stepIndex + 1) / totalSteps;
   const lessonTitle = selectLocalizedText(lesson.title, language);
+  const lessonTitleSeparator = /[.!?]$/.test(lessonTitle.trim()) ? ' ' : '. ';
   const stepAccessibilityLabel = language === 'tr'
-    ? `${lessonTitle}. Adım ${stepIndex + 1}/${totalSteps}.`
-    : `${lessonTitle}. Step ${stepIndex + 1} of ${totalSteps}.`;
+    ? `${lessonTitle}${lessonTitleSeparator}Adım ${stepIndex + 1}/${totalSteps}.`
+    : `${lessonTitle}${lessonTitleSeparator}Step ${stepIndex + 1} of ${totalSteps}.`;
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ y: 0, animated: false });
