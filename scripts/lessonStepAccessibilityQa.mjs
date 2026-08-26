@@ -6,11 +6,17 @@ const lessonTitle = 'Aynı para neden zamanla daha az şey alır';
 
 async function assertStep(page, step, total) {
   const expectedLabel = `${lessonTitle}. Adım ${step}/${total}.`;
-  const liveStep = page.locator(`[aria-live="polite"][aria-label="${expectedLabel}"]`);
+  const liveStep = page.getByRole('status', { name: expectedLabel });
   await liveStep.waitFor();
-  const actualLabel = await liveStep.getAttribute('aria-label');
-  if (actualLabel !== expectedLabel) {
-    throw new Error(`Lesson step live label mismatch -> expected "${expectedLabel}", got "${actualLabel ?? 'missing'}"`);
+
+  const role = await liveStep.getAttribute('role');
+  if (role !== 'status') {
+    throw new Error(`Lesson step status role mismatch -> expected status, got ${role ?? 'missing'}`);
+  }
+
+  const visibleStep = (await liveStep.innerText()).trim();
+  if (!visibleStep.includes(`Adım ${step}/${total}`)) {
+    throw new Error(`Lesson step visible copy mismatch -> expected Adım ${step}/${total}, got "${visibleStep}"`);
   }
 
   const progress = page.getByRole('progressbar', { name: 'Ders ilerlemesi' });
@@ -51,7 +57,7 @@ try {
   if (diagnostics.length > 0) {
     throw new Error(`Lesson step accessibility diagnostics:\n${diagnostics.join('\n')}`);
   }
-  console.log(`Lesson step accessibility: live 1/${total} -> 2/${total} -> 1/${total} + progressbar PASS`);
+  console.log(`Lesson step accessibility: status 1/${total} -> 2/${total} -> 1/${total} + progressbar PASS`);
 } finally {
   await browser.close();
 }
