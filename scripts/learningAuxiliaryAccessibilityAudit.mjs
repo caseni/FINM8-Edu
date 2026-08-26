@@ -76,8 +76,12 @@ for (const [expected, label] of [
   ['accessibilityRole="summary"', 'Lesson step summary semantics'],
   ['accessibilityLabel={stepAccessibilityLabel}', 'Lesson step label binding'],
   ['accessibilityLiveRegion="polite"', 'Lesson step live announcement'],
-  ['accessibilityRole="progressbar"', 'Lesson step progress semantics'],
-  ['accessibilityValue={{ min: 0, max: totalSteps, now: stepIndex + 1 }}', 'Lesson progress value'],
+  ['role="progressbar"', 'Lesson step web progress semantics'],
+  ['aria-valuemin={0}', 'Lesson progress web minimum'],
+  ['aria-valuemax={totalSteps}', 'Lesson progress web maximum'],
+  ['aria-valuenow={stepIndex + 1}', 'Lesson progress web current value'],
+  ['accessibilityRole="progressbar"', 'Lesson step native progress semantics'],
+  ['accessibilityValue={{ min: 0, max: totalSteps, now: stepIndex + 1 }}', 'Lesson progress native value'],
 ]) {
   requireSource(lessonPlayer, expected, label);
 }
