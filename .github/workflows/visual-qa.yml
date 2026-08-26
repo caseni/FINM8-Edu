@@ -51,6 +51,9 @@ jobs:
       - name: Capture beginner and Academy visual flows
         run: |
           mkdir -p visual-qa
+          node scripts/lessonStepAccessibilityQa.mjs
+          node scripts/learningLanguageQa.mjs
+          node scripts/beginnerTaskFeedbackQa.mjs
           node scripts/visualQa.mjs
           node scripts/beginnerDesktopLessonQa.mjs
           node scripts/beginnerResponsiveEditorialQa.mjs
@@ -58,9 +61,6 @@ jobs:
           node scripts/beginnerCoreChartResponsiveQa.mjs
           node scripts/beginnerAppliedChartResponsiveQa.mjs
           node scripts/beginnerRiskResponsiveQa.mjs
-          node scripts/beginnerTaskFeedbackQa.mjs
-          node scripts/lessonStepAccessibilityQa.mjs
-          node scripts/learningLanguageQa.mjs
           node scripts/beginnerDesktopAssessmentQa.mjs
           node scripts/academyDesktopLessonQa.mjs
           node scripts/advancedHookQa.mjs
