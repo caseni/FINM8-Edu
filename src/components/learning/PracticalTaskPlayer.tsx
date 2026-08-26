@@ -181,6 +181,9 @@ export function PracticalTaskPlayer({ task, language, presentationMode, theme = 
           </View>
           {checked ? (
             <View
+              role="status"
+              aria-label={feedbackLabel}
+              aria-live="polite"
               accessibilityRole="summary"
               accessibilityLabel={feedbackLabel}
               accessibilityLiveRegion="polite"
