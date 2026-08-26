@@ -7,6 +7,20 @@ const lessonTitle = 'Aynı para neden zamanla daha az şey alır';
 async function assertStep(page, step, total) {
   const expectedLabel = `${lessonTitle}. Adım ${step}/${total}.`;
   const liveStep = page.getByRole('status', { name: expectedLabel });
+  if ((await liveStep.count()) === 0) {
+    const visibleStep = page.getByText(`Adım ${step}/${total}`, { exact: true });
+    await visibleStep.waitFor();
+    const diagnostic = await visibleStep.evaluate((element) => {
+      const chain = [];
+      let current = element;
+      for (let depth = 0; current && depth < 4; depth += 1) {
+        chain.push(current.outerHTML);
+        current = current.parentElement;
+      }
+      return chain.join('\n--- parent ---\n');
+    });
+    throw new Error(`Lesson step status missing for "${expectedLabel}". Rendered DOM:\n${diagnostic}`);
+  }
   await liveStep.waitFor();
 
   const role = await liveStep.getAttribute('role');
