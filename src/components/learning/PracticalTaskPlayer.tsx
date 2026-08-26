@@ -180,14 +180,15 @@ export function PracticalTaskPlayer({ task, language, presentationMode, theme = 
             })}
           </View>
           {checked ? (
-            <Text
+            <View
               accessibilityRole="summary"
               accessibilityLabel={feedbackLabel}
               accessibilityLiveRegion="polite"
-              style={[styles.feedback, passed ? styles.feedbackPassed : styles.feedbackRetry]}
             >
-              {feedbackLabel}
-            </Text>
+              <Text style={[styles.feedback, passed ? styles.feedbackPassed : styles.feedbackRetry]}>
+                {feedbackLabel}
+              </Text>
+            </View>
           ) : null}
         </View>
       </ScrollView>
