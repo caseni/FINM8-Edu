@@ -163,7 +163,7 @@ export function LessonPlayer({
         <View style={styles.progressGroup}>
           <View style={styles.progressCopy}>
             <Text style={styles.flowLabel}>{language === 'tr' ? 'DERS' : 'LESSON'}</Text>
-            <View
+            <Text
               accessible={true}
               role="status"
               aria-label={stepAccessibilityLabel}
@@ -171,13 +171,12 @@ export function LessonPlayer({
               accessibilityRole="summary"
               accessibilityLabel={stepAccessibilityLabel}
               accessibilityLiveRegion="polite"
+              style={styles.stepText}
             >
-              <Text style={styles.stepText}>
-                {language === 'tr'
-                  ? `Adım ${stepIndex + 1}/${totalSteps}`
-                  : `Step ${stepIndex + 1}/${totalSteps}`}
-              </Text>
-            </View>
+              {language === 'tr'
+                ? `Adım ${stepIndex + 1}/${totalSteps}`
+                : `Step ${stepIndex + 1}/${totalSteps}`}
+            </Text>
           </View>
           <View
             accessibilityRole="progressbar"
