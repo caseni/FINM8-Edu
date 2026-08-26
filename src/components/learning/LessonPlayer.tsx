@@ -180,6 +180,11 @@ export function LessonPlayer({
             </Text>
           </View>
           <View
+            role="progressbar"
+            aria-label={language === 'tr' ? 'Ders ilerlemesi' : 'Lesson progress'}
+            aria-valuemin={0}
+            aria-valuemax={totalSteps}
+            aria-valuenow={stepIndex + 1}
             accessibilityRole="progressbar"
             accessibilityLabel={language === 'tr' ? 'Ders ilerlemesi' : 'Lesson progress'}
             accessibilityValue={{ min: 0, max: totalSteps, now: stepIndex + 1 }}
