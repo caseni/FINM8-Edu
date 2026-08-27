@@ -83,11 +83,19 @@ async function assertCheckedState(answer, stage) {
 }
 
 async function assertPoliteFeedback(page, stage, allowedPrefixes) {
-  const live = page.locator('[aria-live="polite"][aria-label]');
+  const live = page.locator('[role="status"], [aria-live="polite"]');
   await live.last().waitFor();
-  const label = (await live.last().getAttribute('aria-label'))?.trim();
+  const target = live.last();
+  const role = await target.getAttribute('role');
+  const liveMode = await target.getAttribute('aria-live');
+  const ariaLabel = (await target.getAttribute('aria-label'))?.trim();
+  const visibleText = (await target.innerText()).replace(/\s+/g, ' ').trim();
+  const label = ariaLabel || visibleText;
+  if (role !== 'status' && liveMode !== 'polite') {
+    throw new Error(`${stage}: feedback is not exposed as status/polite live region`);
+  }
   if (!label || !allowedPrefixes.some((prefix) => label.startsWith(prefix))) {
-    throw new Error(`${stage}: invalid live feedback label -> ${label ?? 'missing'}`);
+    throw new Error(`${stage}: invalid live feedback label -> ${label || 'missing'}`);
   }
   return label;
 }

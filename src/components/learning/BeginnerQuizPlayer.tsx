@@ -29,6 +29,14 @@ export function BeginnerQuizPlayer({ quiz, language, reinforcementVisual, theme 
   const selectedOption = question.options.find((option) => option.id === selectedOptionId);
   const correctOption = question.options.find((option) => option.id === question.correctOptionId);
   const visual = question.visual ?? reinforcementVisual;
+  const explanation = selectLocalizedText(question.explanation, language);
+  const feedbackAccessibilityLabel = selectedIsCorrect
+    ? language === 'tr'
+      ? `Doğru. Neden: ${explanation}`
+      : `Correct. Why: ${explanation}`
+    : language === 'tr'
+      ? `Bu kez değil. Senin seçimin: ${selectedOption ? selectLocalizedText(selectedOption.label, language) : '—'}. Doğru cevap: ${correctOption ? selectLocalizedText(correctOption.label, language) : '—'}. Neden: ${explanation}`
+      : `Not this time. Your answer: ${selectedOption ? selectLocalizedText(selectedOption.label, language) : '—'}. Correct answer: ${correctOption ? selectLocalizedText(correctOption.label, language) : '—'}. Why: ${explanation}`;
 
   const reveal = () => {
     if (!selectedOptionId) return;
@@ -96,7 +104,15 @@ export function BeginnerQuizPlayer({ quiz, language, reinforcementVisual, theme 
 
           {revealed ? (
             <View style={styles.feedbackGroup}>
-              <View style={[styles.explanationCard, selectedIsCorrect ? styles.explanationCorrect : styles.explanationWrong]} accessibilityRole="summary">
+              <View
+                style={[styles.explanationCard, selectedIsCorrect ? styles.explanationCorrect : styles.explanationWrong]}
+                role="status"
+                aria-label={feedbackAccessibilityLabel}
+                aria-live="polite"
+                accessibilityRole="summary"
+                accessibilityLabel={feedbackAccessibilityLabel}
+                accessibilityLiveRegion="polite"
+              >
                 <Text style={[styles.explanationTitle, selectedIsCorrect ? styles.titleCorrect : styles.titleWrong]}>
                   {selectedIsCorrect ? language === 'tr' ? '✓ Doğru' : '✓ Correct' : language === 'tr' ? 'Bu kez değil' : 'Not this time'}
                 </Text>
@@ -106,7 +122,7 @@ export function BeginnerQuizPlayer({ quiz, language, reinforcementVisual, theme 
                 {!selectedIsCorrect && correctOption ? (
                   <Text style={styles.explanationLine}>{language === 'tr' ? 'Doğru cevap: ' : 'Correct answer: '}<Text style={styles.explanationStrong}>{selectLocalizedText(correctOption.label, language)}</Text></Text>
                 ) : null}
-                <Text style={styles.explanationWhy}>{language === 'tr' ? 'Neden: ' : 'Why: '}{selectLocalizedText(question.explanation, language)}</Text>
+                <Text style={styles.explanationWhy}>{language === 'tr' ? 'Neden: ' : 'Why: '}{explanation}</Text>
               </View>
               {visual ? (
                 <View style={styles.feedbackVisual}>
