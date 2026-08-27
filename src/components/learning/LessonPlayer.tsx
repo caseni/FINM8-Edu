@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
+  Platform,
   Pressable,
   SafeAreaView,
   ScrollView,
@@ -32,6 +33,11 @@ import { LessonSupportingVisual } from './LessonSupportingVisual';
 
 type VisualBlock = Extract<ContentBlock, { kind: 'visual' }>;
 type RiskCalloutBlock = Extract<ContentBlock, { kind: 'callout' }>;
+
+const LEARNING_FONT_FAMILY = Platform.select({
+  web: 'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+  default: undefined,
+});
 
 export interface LessonPlayerProps {
   lesson: MicroLesson;
@@ -325,7 +331,7 @@ const createStyles = (theme: LearningTheme, wide: boolean, narrow: boolean) =>
       flexDirection: 'row',
       alignItems: 'center',
       gap: narrow ? 10 : theme.spacing.md,
-      paddingHorizontal: wide ? 28 : narrow ? 12 : theme.spacing.md,
+      paddingHorizontal: wide ? 22 : narrow ? 12 : theme.spacing.md,
       paddingVertical: theme.spacing.sm,
       borderBottomColor: theme.colors.border,
       borderBottomWidth: 1,
@@ -347,30 +353,30 @@ const createStyles = (theme: LearningTheme, wide: boolean, narrow: boolean) =>
     content: {
       flexGrow: 1,
       width: '100%',
-      maxWidth: wide ? 1080 : 760,
+      maxWidth: wide ? 980 : 720,
       alignSelf: 'center',
-      paddingHorizontal: wide ? 28 : narrow ? 12 : theme.spacing.md,
-      paddingTop: wide ? 22 : theme.spacing.sm,
+      paddingHorizontal: wide ? 22 : narrow ? 12 : theme.spacing.md,
+      paddingTop: wide ? 14 : theme.spacing.sm,
       paddingBottom: theme.spacing.md,
-      gap: wide ? 14 : theme.spacing.sm,
+      gap: wide ? 10 : theme.spacing.sm,
     },
     metaRow: { flexDirection: 'row', flexWrap: 'wrap', gap: theme.spacing.sm },
     duration: { color: theme.colors.textMuted, fontSize: wide ? 13 : 12 },
     contextLabel: { color: theme.colors.textMuted, fontSize: wide ? 13 : 12 },
-    lessonTitle: { color: theme.colors.text, fontSize: wide ? 28 : narrow ? 20 : 21, lineHeight: wide ? 36 : narrow ? 27 : 28, fontWeight: '900' },
+    lessonTitle: { color: theme.colors.text, fontFamily: LEARNING_FONT_FAMILY, fontSize: wide ? 26 : narrow ? 20 : 21, lineHeight: wide ? 33 : narrow ? 27 : 28, fontWeight: '800', letterSpacing: -0.35 },
     slide: {
       width: '100%',
       justifyContent: 'flex-start',
-      padding: wide ? 26 : narrow ? 14 : theme.spacing.md,
+      padding: wide ? 20 : narrow ? 13 : 15,
       backgroundColor: theme.colors.surface,
       borderColor: theme.colors.border,
       borderWidth: 1,
-      borderRadius: theme.radius.large,
+      borderRadius: 18,
     },
     visualSlide: { justifyContent: 'flex-start' },
-    takeaway: { gap: wide ? 18 : theme.spacing.md },
+    takeaway: { gap: wide ? 13 : 12 },
     takeawayEyebrow: { color: theme.colors.primary, fontSize: wide ? 12 : 11, lineHeight: 16, fontWeight: '900', letterSpacing: 0.8 },
-    takeawayText: { color: theme.colors.text, fontSize: wide ? 30 : narrow ? 22 : 23, fontWeight: '900', lineHeight: wide ? 40 : narrow ? 30 : 31 },
+    takeawayText: { color: theme.colors.text, fontFamily: LEARNING_FONT_FAMILY, fontSize: wide ? 27 : narrow ? 21 : 22, fontWeight: '800', lineHeight: wide ? 35 : narrow ? 29 : 30, letterSpacing: -0.25 },
     takeawayVisual: { marginTop: 2 },
     compactSafety: {
       gap: wide ? 7 : theme.spacing.xs,
@@ -392,14 +398,14 @@ const createStyles = (theme: LearningTheme, wide: boolean, narrow: boolean) =>
     },
     footer: {
       paddingHorizontal: wide ? 28 : narrow ? 12 : theme.spacing.md,
-      paddingVertical: wide ? 14 : narrow ? 10 : theme.spacing.md,
+      paddingVertical: wide ? 12 : narrow ? 10 : 12,
       borderTopColor: theme.colors.border,
       borderTopWidth: 1,
       backgroundColor: theme.colors.background,
     },
     footerActions: {
       width: '100%',
-      maxWidth: wide ? 1080 : 760,
+      maxWidth: wide ? 980 : 720,
       alignSelf: 'center',
       flexDirection: 'row',
       gap: narrow ? 8 : theme.spacing.md,
@@ -413,7 +419,7 @@ const createStyles = (theme: LearningTheme, wide: boolean, narrow: boolean) =>
       padding: narrow ? 11 : theme.spacing.md,
       minHeight: 52,
     },
-    primaryText: { color: theme.colors.primaryText, fontWeight: '900', fontSize: narrow ? 15 : 16 },
+    primaryText: { color: theme.colors.primaryText, fontFamily: LEARNING_FONT_FAMILY, fontWeight: '800', fontSize: narrow ? 15 : 16 },
     secondaryButton: {
       alignItems: 'center',
       justifyContent: 'center',
@@ -424,5 +430,5 @@ const createStyles = (theme: LearningTheme, wide: boolean, narrow: boolean) =>
       minWidth: narrow ? 86 : 100,
       minHeight: 52,
     },
-    secondaryText: { color: theme.colors.text, fontWeight: '800' },
+    secondaryText: { color: theme.colors.text, fontFamily: LEARNING_FONT_FAMILY, fontWeight: '700' },
   });
