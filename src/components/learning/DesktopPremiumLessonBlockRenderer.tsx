@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Platform, StyleSheet, Text, View } from 'react-native';
 import { selectAudienceCopy, type LearningLanguage } from '../../domain/learning/presentation';
 import type { ContentBlock, PresentationMode } from '../../domain/learning/types';
 import { defaultLearningTheme, type LearningTheme } from '../../theme/learningTheme';
@@ -8,6 +8,11 @@ import { LessonSupportingVisual, type LessonSupportingVisualRole } from './Lesso
 import { PremiumLessonBlockRenderer } from './PremiumLessonBlockRenderer';
 
 type VisualBlock = Extract<ContentBlock, { kind: 'visual' }>;
+
+const LEARNING_FONT_FAMILY = Platform.select({
+  web: 'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+  default: undefined,
+});
 
 interface SupportingVisual {
   readonly assetRef: string;
@@ -174,20 +179,20 @@ const createStyles = (theme: LearningTheme) => StyleSheet.create({
     width: '100%',
     flexDirection: 'row',
     alignItems: 'stretch',
-    gap: 28,
+    gap: 20,
   },
   singleColumn: {
     flexDirection: 'column',
   },
   copyPane: {
-    flex: 0.92,
+    flex: 0.96,
     minWidth: 0,
     justifyContent: 'center',
-    gap: 14,
-    paddingVertical: 8,
+    gap: 10,
+    paddingVertical: 2,
   },
   visualPane: {
-    flex: 1.18,
+    flex: 1.04,
     minWidth: 0,
     justifyContent: 'center',
   },
@@ -204,21 +209,25 @@ const createStyles = (theme: LearningTheme) => StyleSheet.create({
   eyebrowPractice: { color: theme.colors.success },
   prompt: {
     color: theme.colors.text,
-    fontSize: 32,
-    lineHeight: 41,
-    fontWeight: '900',
+    fontFamily: LEARNING_FONT_FAMILY,
+    fontSize: 28,
+    lineHeight: 36,
+    fontWeight: '800',
+    letterSpacing: -0.3,
   },
   body: {
     color: theme.colors.text,
-    fontSize: 20,
-    lineHeight: 31,
-    fontWeight: '500',
+    fontFamily: LEARNING_FONT_FAMILY,
+    fontSize: 18,
+    lineHeight: 28,
+    fontWeight: '400',
   },
   sectionTitle: {
     color: theme.colors.text,
-    fontSize: 23,
-    lineHeight: 31,
-    fontWeight: '800',
+    fontFamily: LEARNING_FONT_FAMILY,
+    fontSize: 21,
+    lineHeight: 28,
+    fontWeight: '700',
   },
   bulletList: { gap: 12 },
   bulletRow: {
@@ -256,21 +265,21 @@ const createStyles = (theme: LearningTheme) => StyleSheet.create({
     fontWeight: '500',
   },
   warningCopy: {
-    padding: 18,
+    padding: 14,
     borderRadius: theme.radius.medium,
     borderLeftWidth: 3,
     borderLeftColor: theme.colors.warning,
     backgroundColor: theme.colors.surfaceMuted,
   },
   riskCopy: {
-    padding: 18,
+    padding: 14,
     borderRadius: theme.radius.medium,
     borderLeftWidth: 3,
     borderLeftColor: theme.colors.risk,
     backgroundColor: theme.colors.surfaceMuted,
   },
   evidenceCopy: {
-    padding: 18,
+    padding: 14,
     borderRadius: theme.radius.medium,
     borderLeftWidth: 3,
     borderLeftColor: theme.colors.success,
