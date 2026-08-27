@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import { Platform, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { selectAudienceCopy, type LearningLanguage } from '../../domain/learning/presentation';
 import type { ContentBlock, PresentationMode } from '../../domain/learning/types';
 import { defaultLearningTheme, type LearningTheme } from '../../theme/learningTheme';
@@ -7,6 +7,11 @@ import { LessonBlockRenderer } from './LessonBlockRenderer';
 import { LessonSupportingVisual, type LessonSupportingVisualRole } from './LessonSupportingVisual';
 
 type VisualBlock = Extract<ContentBlock, { kind: 'visual' }>;
+
+const LEARNING_FONT_FAMILY = Platform.select({
+  web: 'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+  default: undefined,
+});
 
 interface SupportingVisual {
   readonly assetRef: string;
@@ -267,45 +272,48 @@ export function PremiumLessonBlockRenderer({
 }
 
 const createStyles = (theme: LearningTheme, wide: boolean) => StyleSheet.create({
-  block: { gap: wide ? 18 : 14 },
-  visualStep: { gap: 14 },
+  block: { gap: wide ? 13 : 11 },
+  visualStep: { gap: 10 },
   eyebrow: { color: theme.colors.primary, fontSize: 11, lineHeight: 15, fontWeight: '900', letterSpacing: 0.9 },
   eyebrowWarning: { color: theme.colors.warning },
   eyebrowRisk: { color: theme.colors.risk },
   eyebrowPractice: { color: theme.colors.success },
   prompt: {
     color: theme.colors.text,
-    fontSize: wide ? 30 : 24,
-    lineHeight: wide ? 39 : 32,
-    fontWeight: '900',
+    fontFamily: LEARNING_FONT_FAMILY,
+    fontSize: wide ? 28 : 22,
+    lineHeight: wide ? 36 : 29,
+    fontWeight: '800',
+    letterSpacing: -0.25,
   },
   body: {
     color: theme.colors.text,
-    fontSize: wide ? 20 : 17,
-    lineHeight: wide ? 31 : 26,
-    fontWeight: '500',
+    fontFamily: LEARNING_FONT_FAMILY,
+    fontSize: wide ? 18 : 16,
+    lineHeight: wide ? 28 : 24,
+    fontWeight: '400',
   },
-  sectionTitle: { color: theme.colors.text, fontSize: wide ? 22 : 19, lineHeight: wide ? 30 : 26, fontWeight: '800' },
+  sectionTitle: { color: theme.colors.text, fontFamily: LEARNING_FONT_FAMILY, fontSize: wide ? 21 : 18, lineHeight: wide ? 28 : 25, fontWeight: '700' },
   bulletList: { gap: 10 },
   bulletRow: { flexDirection: 'row', alignItems: 'flex-start', gap: 10 },
   bulletDot: { width: 7, height: 7, marginTop: wide ? 12 : 10, borderRadius: 4, backgroundColor: theme.colors.primary },
   visualFrame: { marginTop: 2 },
   warningCard: {
-    padding: wide ? 20 : 16,
+    padding: wide ? 16 : 14,
     borderRadius: theme.radius.medium,
     borderLeftWidth: 3,
     borderLeftColor: theme.colors.warning,
     backgroundColor: theme.colors.surfaceMuted,
   },
   riskCard: {
-    padding: wide ? 20 : 16,
+    padding: wide ? 16 : 14,
     borderRadius: theme.radius.medium,
     borderLeftWidth: 3,
     borderLeftColor: theme.colors.risk,
     backgroundColor: theme.colors.surfaceMuted,
   },
   evidenceCard: {
-    padding: wide ? 20 : 16,
+    padding: wide ? 16 : 14,
     borderRadius: theme.radius.medium,
     borderLeftWidth: 3,
     borderLeftColor: theme.colors.success,
@@ -313,13 +321,13 @@ const createStyles = (theme: LearningTheme, wide: boolean) => StyleSheet.create(
   },
   exampleCard: {
     gap: 7,
-    paddingHorizontal: wide ? 18 : 15,
-    paddingVertical: wide ? 15 : 13,
+    paddingHorizontal: wide ? 15 : 13,
+    paddingVertical: wide ? 12 : 11,
     borderRadius: theme.radius.medium,
     borderWidth: 1,
     borderColor: theme.colors.border,
     backgroundColor: theme.colors.surfaceMuted,
   },
   exampleEyebrow: { color: theme.colors.primary, fontSize: 10, lineHeight: 14, fontWeight: '900', letterSpacing: 0.8 },
-  exampleText: { color: theme.colors.text, fontSize: wide ? 17 : 15, lineHeight: wide ? 25 : 22, fontWeight: '600' },
+  exampleText: { color: theme.colors.text, fontFamily: LEARNING_FONT_FAMILY, fontSize: wide ? 16 : 14, lineHeight: wide ? 23 : 21, fontWeight: '500' },
 });
