@@ -50,12 +50,15 @@ export function BeginnerEconomyStoryVisual({ assetRef, alt, language, role, them
   const data = sceneFor(topic, role, tr);
   const semanticRole = roleKey(role);
 
+  const showHeading = role !== 'summary';
   return (
     <View style={styles.shell} accessibilityRole="image" accessibilityLabel={alt}>
-      <View style={styles.heading}>
-        <Text style={styles.title}>{data.title}</Text>
-        {data.body ? <Text style={styles.body}>{data.body}</Text> : null}
-      </View>
+      {showHeading ? (
+        <View style={styles.heading}>
+          <Text style={styles.title}>{data.title}</Text>
+          {data.body ? <Text style={styles.body}>{data.body}</Text> : null}
+        </View>
+      ) : null}
       <View
         style={styles.board}
         accessibilityLabel={`economy-${topicKey(topic)}-${semanticRole}-board`}

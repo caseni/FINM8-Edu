@@ -41,7 +41,7 @@ const COPY: Readonly<Record<string, BeginnerLessonCopy>> = {
     ],
   },
   'lesson.market.instruments.001': {
-    title: { tr: 'Piyasa araçlarını tanı', en: 'Meet the main market instruments' },
+    title: { tr: 'Piyasada aldığın şey aslında nedir?', en: 'What are you actually buying in a market?' },
     objective: { tr: 'Hisse, tahvil, döviz ve emtianın neyi temsil ettiğini ayırt et.', en: 'Tell what stocks, bonds, currencies, and commodities represent.' },
     hook: { tr: 'Bir hisse almakla altın almak aynı şey mi?', en: 'Is buying a stock the same as buying gold?' },
     explanation: { tr: 'Hayır. Hisse şirkete ortaklıktır. Tahvil bir kuruma borç vermektir. Döviz iki paranın birbirine göre değeridir. Emtia ise altın veya petrol gibi bir üründür.', en: 'No. A stock is ownership in a company. A bond is lending to an issuer. Foreign exchange is the relative value of two currencies. A commodity is a product such as gold or oil.' },
