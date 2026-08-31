@@ -89,7 +89,7 @@ const COPY: Readonly<Record<string, BeginnerLessonCopy>> = {
     hook: { tr: 'Fiyat neden bazen aynı bölgeye gelince tekrar tepki verir?', en: 'Why can price react again near the same area?' },
     explanation: { tr: 'Fiyat geçmişte bazı alanlarda birkaç kez tepki vermiş olabilir. Alt taraftaki bölgeye destek, üst taraftakine direnç denir. Bunlar tek bir kesin fiyat değil, yaklaşık alanlardır.', en: 'Price may have reacted several times around certain areas. The lower area is called support and the upper area resistance. These are approximate zones, not one exact price.' },
     misconception: { tr: 'Destek ve direnç duvar değildir; fiyat bölgeden geçebilir.', en: 'Support and resistance are not walls; price can move through them.' },
-    takeaway: { tr: 'Destek ve direnç, yaklaşık tepki bölgeleridir.', en: 'Support and resistance are approximate reaction zones.' },
+    takeaway: { tr: 'Bu bölgeler olası tepki alanlarıdır; kesin sınır değildir.', en: 'These zones are possible reaction areas, not exact boundaries.' },
     visualAlt: { tr: 'Fiyatın birkaç kez benzer alt ve üst bölgelerde tepki verdiğini gösteren sade grafik', en: 'Simple chart showing price reacting several times around similar lower and upper areas' },
     taskPrompt: { tr: 'Bir tepki bölgesini tanımak için hangi iki gözlem daha anlamlıdır?', en: 'Which two observations are more useful for recognizing a reaction area?' },
     taskChoices: [
@@ -130,7 +130,7 @@ const COPY: Readonly<Record<string, BeginnerLessonCopy>> = {
     hook: { tr: 'Fiyatın yanındaki yumuşak çizgi nereden geliyor?', en: 'Where does the smooth line beside price come from?' },
     explanation: { tr: 'Hareketli ortalama, geçmişteki fiyatları ortalayıp daha yumuşak bir çizgi oluşturur. Küçük dalgalanmalar arasında genel yönü görmeyi kolaylaştırabilir. Ama yalnız geçmiş veriden hesaplanır.', en: 'A moving average averages past prices into a smoother line. It can make the broader direction easier to see through small fluctuations, but it is calculated only from past data.' },
     misconception: { tr: 'Fiyat ortalamayı geçti diye sonraki yön kesinleşmez.', en: 'Crossing the average does not make the next direction certain.' },
-    takeaway: { tr: 'Hareketli ortalama geçmiş fiyatları sadeleştirir.', en: 'A moving average simplifies past prices.' },
+    takeaway: { tr: 'Bu çizgi yalnız geçmiş veriyi özetler.', en: 'This line only summarizes past data.' },
     visualAlt: { tr: 'Dalgalı fiyat yolu üzerinde geçmiş fiyatlardan oluşan daha yumuşak yardımcı çizgiyi gösteren sade grafik', en: 'Simple chart showing a smoother helper line built from past prices over a noisier price path' },
     taskPrompt: { tr: 'Daha uzun süreyi ortalayan çizgi genellikle nasıl görünür?', en: 'How does a line averaging a longer period usually look?' },
     taskChoices: [
