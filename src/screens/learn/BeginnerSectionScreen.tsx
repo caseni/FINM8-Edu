@@ -151,6 +151,7 @@ export function BeginnerSectionScreen() {
             return (
               <Pressable
                 key={lesson.id}
+                testID={`beginner-lesson-${lesson.id}`}
                 accessibilityRole="button"
                 accessibilityLabel={`${lessonTitle}. ${lessonState}.`}
                 onPress={() => openLesson(lesson.id)}

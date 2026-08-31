@@ -15,42 +15,43 @@ const allTracks = [
 ];
 const representativeTracks = ['Grafikleri Derinleştir', 'Sistematik ve Sayısal Yaklaşımlar', 'İleri Grafik Yaklaşımları'];
 const beginnerEconomyLessons = [
-  'Aynı para neden zamanla daha az şey alır',
-  'Faiz neyi etkiler',
-  'Merkez bankası neden önemlidir',
-  'Faiz değişince ekonomi nasıl etkilenir',
-  'Ekonomi büyüyor demek ne demek',
-  'Ekonomi neden bazen yavaşlar',
+  { id: 'lesson.economy.inflation.001', title: 'Aynı para neden zamanla daha az şey alır' },
+  { id: 'lesson.economy.interest-rates.001', title: 'Faiz neyi etkiler' },
+  { id: 'lesson.economy.central-banks.001', title: 'Merkez bankası neden önemlidir' },
+  { id: 'lesson.economy.monetary-policy.001', title: 'Faiz değişince ekonomi nasıl etkilenir' },
+  { id: 'lesson.economy.growth.001', title: 'Ekonomi büyüyor demek ne demek' },
+  { id: 'lesson.economy.business-cycle.001', title: 'Ekonomi neden bazen yavaşlar' },
 ];
 const beginnerMarketLessons = [
-  'Bir fiyat nasıl ortaya çıkar',
-  'Piyasada aldığın şey aslında nedir',
-  'Neden bazen alıp satmak kolay, bazen zor',
-  'Alış ve satış fiyatı neden farklı olabilir',
-  'Emir verirken aslında ne seçiyorsun',
-  'Ekrandaki fiyat neden işlem fiyatın olmayabilir',
+  { id: 'lesson.market.price-formation.001', title: 'Bir fiyat nasıl ortaya çıkar' },
+  { id: 'lesson.market.instruments.001', title: 'Piyasada aldığın şey aslında nedir' },
+  { id: 'lesson.market.liquidity.001', title: 'Neden bazen alıp satmak kolay, bazen zor' },
+  { id: 'lesson.market.bid-ask.001', title: 'Alış ve satış fiyatı neden farklı olabilir' },
+  { id: 'lesson.market.order-types.001', title: 'Emir verirken aslında ne seçiyorsun' },
+  { id: 'lesson.market.slippage.001', title: 'Ekrandaki fiyat neden işlem fiyatın olmayabilir' },
 ];
 const beginnerChartLessons = [
-  'Grafikte gördüğün şey aslında nedir',
-  'Aynı grafik neden yakınlaştırınca değişir',
-  'Fiyat genel olarak hangi yöne gidiyor',
-  'Fiyat neden bazı bölgelerde tekrar durur',
-  'Hareket neden bazen hızlanır, bazen yavaşlar',
-  'Grafikteki yardımcı çizgi geleceği bilir mi',
+  { id: 'lesson.chart.candles.001', title: 'Grafikte gördüğün şey aslında nedir' },
+  { id: 'lesson.chart.timeframes.001', title: 'Aynı grafik neden yakınlaştırınca değişir' },
+  { id: 'lesson.chart.trend.001', title: 'Fiyat genel olarak hangi yöne gidiyor' },
+  { id: 'lesson.chart.support-resistance.001', title: 'Fiyat neden bazı bölgelerde tekrar durur' },
+  { id: 'lesson.technical.momentum.001', title: 'Hareket neden bazen hızlanır, bazen yavaşlar' },
+  { id: 'lesson.technical.moving-average.001', title: 'Grafikteki yardımcı çizgi geleceği bilir mi' },
 ];
 const beginnerRiskLessons = [
-  'Kaybetmeden önce risk var mıdır',
-  'Fiyat çok oynuyorsa neden daha dikkatli olmalısın',
-  'Ne kadar aldığın neden önemlidir',
-  'Büyük hedef iyi karar demek midir',
-  'Çıkış fiyatı neden garanti değildir',
-  'Parayı farklı şeylere bölmek riski nasıl değiştirir',
+  { id: 'lesson.risk.uncertainty.001', title: 'Kaybetmeden önce risk var mıdır' },
+  { id: 'lesson.risk.volatility.001', title: 'Fiyat çok oynuyorsa neden daha dikkatli olmalısın' },
+  { id: 'lesson.risk.position-sizing.001', title: 'Ne kadar aldığın neden önemlidir' },
+  { id: 'lesson.risk.reward.001', title: 'Büyük hedef iyi karar demek midir' },
+  { id: 'lesson.risk.stop-orders.001', title: 'Çıkış fiyatı neden garanti değildir' },
+  { id: 'lesson.portfolio.diversification.001', title: 'Parayı farklı şeylere bölmek riski nasıl değiştirir' },
 ];
 const beginnerEndToEndCases = [
   {
     key: 'economy',
     section: 'Para ve Ekonomi',
     lesson: 'Aynı para neden zamanla daha az şey alır',
+    lessonId: 'lesson.economy.inflation.001',
     taskWrong: 'Paranın satın alma gücü artmıştır',
     taskCorrect: ['Paranın satın alma gücü azalmıştır'],
     quizOptionIndexes: [1, 0, 0],
@@ -59,6 +60,7 @@ const beginnerEndToEndCases = [
     key: 'markets',
     section: 'Piyasalar Nasıl Çalışır',
     lesson: 'Bir fiyat nasıl ortaya çıkar',
+    lessonId: 'lesson.market.price-formation.001',
     taskWrong: 'Şirketin her dakika yeni fiyat seçmesi',
     taskCorrect: ['Alıcı ve satıcının aynı fiyatta buluşması'],
     quizOptionIndexes: [1, 1, 0],
@@ -67,6 +69,7 @@ const beginnerEndToEndCases = [
     key: 'charts',
     section: 'Grafikleri Korkmadan Oku',
     lesson: 'Grafikte gördüğün şey aslında nedir',
+    lessonId: 'lesson.chart.candles.001',
     taskWrong: 'Henüz oluşmamış sonraki fiyatı',
     taskCorrect: ['O zaman aralığında ulaşılan en yüksek fiyatı', 'O zaman aralığında ulaşılan en düşük fiyatı'],
     quizOptionIndexes: [1, 0, 0],
@@ -75,6 +78,7 @@ const beginnerEndToEndCases = [
     key: 'risk',
     section: 'Riskten Korun',
     lesson: 'Kaybetmeden önce risk var mıdır',
+    lessonId: 'lesson.risk.uncertainty.001',
     taskWrong: 'Hesaba geçmiş 1.000 TL zarar',
     taskCorrect: ['Değerin düşebilme ihtimali'],
     quizOptionIndexes: [1, 0, 0],
@@ -136,8 +140,9 @@ async function openBeginnerSection(page, sectionName) {
   await page.getByText('BAŞLANGIÇ · 6 KISA DERS', { exact: true }).waitFor();
 }
 
-async function walkBeginnerLesson(page, lessonName, filePrefix) {
-  await page.getByRole('button', { name: new RegExp(lessonName, 'i') }).click();
+async function walkBeginnerLesson(page, lesson, filePrefix) {
+  await page.getByTestId(`beginner-lesson-${lesson.id}`).click();
+  const lessonName = lesson.title;
   await page.getByText(/Adım 1\//).waitFor();
   const stepMatch = (await page.getByText(/Adım 1\//).innerText()).match(/\/(\d+)/);
   const totalSteps = Number(stepMatch?.[1] ?? 1);
@@ -164,40 +169,40 @@ async function captureBeginnerFlow(page) {
   await openBeginnerSection(page, 'Para ve Ekonomi');
   await assertNoHorizontalOverflow(page, 'beginner-mobile-money-economy');
   await page.screenshot({ path: 'visual-qa/beginner-mobile-money-economy.png', fullPage: true });
-  for (const lessonName of beginnerEconomyLessons) {
+  for (const lesson of beginnerEconomyLessons) {
     await openBeginnerSection(page, 'Para ve Ekonomi');
-    await walkBeginnerLesson(page, lessonName, `beginner-economy-${slug(lessonName)}-mobile`);
+    await walkBeginnerLesson(page, lesson, `beginner-economy-${slug(lesson.title)}-mobile`);
   }
 
   await openBeginnerSection(page, 'Piyasalar Nasıl Çalışır');
   await assertNoHorizontalOverflow(page, 'beginner-mobile-markets');
   await page.screenshot({ path: 'visual-qa/beginner-mobile-markets.png', fullPage: true });
-  for (const lessonName of beginnerMarketLessons) {
+  for (const lesson of beginnerMarketLessons) {
     await openBeginnerSection(page, 'Piyasalar Nasıl Çalışır');
-    await walkBeginnerLesson(page, lessonName, `beginner-markets-${slug(lessonName)}-mobile`);
+    await walkBeginnerLesson(page, lesson, `beginner-markets-${slug(lesson.title)}-mobile`);
   }
 
   await openBeginnerSection(page, 'Grafikleri Korkmadan Oku');
   await assertNoHorizontalOverflow(page, 'beginner-mobile-charts');
   await page.screenshot({ path: 'visual-qa/beginner-mobile-charts.png', fullPage: true });
-  for (const lessonName of beginnerChartLessons) {
+  for (const lesson of beginnerChartLessons) {
     await openBeginnerSection(page, 'Grafikleri Korkmadan Oku');
-    await walkBeginnerLesson(page, lessonName, `beginner-charts-${slug(lessonName)}-mobile`);
+    await walkBeginnerLesson(page, lesson, `beginner-charts-${slug(lesson.title)}-mobile`);
   }
 
   await openBeginnerSection(page, 'Riskten Korun');
   await assertNoHorizontalOverflow(page, 'beginner-mobile-risk');
   await page.screenshot({ path: 'visual-qa/beginner-mobile-risk.png', fullPage: true });
-  for (const lessonName of beginnerRiskLessons) {
+  for (const lesson of beginnerRiskLessons) {
     await openBeginnerSection(page, 'Riskten Korun');
-    await walkBeginnerLesson(page, lessonName, `beginner-risk-${slug(lessonName)}-mobile`);
+    await walkBeginnerLesson(page, lesson, `beginner-risk-${slug(lesson.title)}-mobile`);
   }
 }
 
 async function captureBeginnerEndToEnd(page, testCase) {
   const prefix = `beginner-e2e-${testCase.key}`;
   await openBeginnerSection(page, testCase.section);
-  await page.getByRole('button', { name: new RegExp(testCase.lesson, 'i') }).click();
+  await page.getByTestId(`beginner-lesson-${testCase.lessonId}`).click();
   await page.getByText(/Adım 1\//).waitFor();
   const stepMatch = (await page.getByText(/Adım 1\//).innerText()).match(/\/(\d+)/);
   const totalSteps = Number(stepMatch?.[1] ?? 1);
