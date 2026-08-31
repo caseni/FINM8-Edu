@@ -124,3 +124,29 @@ Priority order:
 4. summary slides only when a second bespoke image adds learning value.
 
 This keeps bundle growth controlled and avoids creating visual noise simply to increase image count.
+
+
+## Code-drawn infographic parity
+
+Generated editorial assets and code-drawn infographics use the same teaching
+test. A code visual is not automatically acceptable because it is responsive or
+technically clean.
+
+For code-drawn infographics:
+
+- start from one sentence describing what the learner should understand;
+- choose a visual mechanism such as comparison, sequence, cause/effect,
+  matching, trade-off or before/after;
+- do not use an icon grid as the final teaching idea unless the comparison
+  itself is the concept;
+- keep headings, card labels and rule text within the declared text budget;
+- show meaning labels when icons alone would force the learner to guess;
+- do not repeat the slide's explanation or takeaway inside the visual;
+- verify 390px-class mobile and desktop screenshots;
+- reject visuals that are tidy but generic, decorative, or weaker than the text.
+
+The first machine-readable contracts live in
+`src/domain/learning/beginnerCodeInfographicSpecs.ts`. The content-quality gate
+requires a brief for every beginner Markets fallback infographic and validates
+its text budget. Visual QA remains the rendering proof; the design review gate
+remains the quality judgment.

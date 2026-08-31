@@ -21,6 +21,44 @@ available.
 - Locked content explains exactly what unlocks it.
 - Wrong answers teach the principle instead of merely marking failure.
 
+## 2A. Learning-copy hierarchy
+
+Beginner lesson surfaces have different jobs. They must not all restate the same
+sentence.
+
+- The lesson title names the topic or asks one simple question.
+- The hook creates curiosity with one short question or everyday situation.
+- The explanation answers that question in plain language.
+- The infographic demonstrates the mechanism; it does not echo the paragraph.
+- The misconception corrects one specific wrong idea.
+- The takeaway compresses the lesson into one short memory line.
+- Two consecutive surfaces must not repeat the same sentence with slightly
+  different wording.
+- In the currently hard-gated beginner Markets section: objective <= 16 words,
+  hook <= 14, explanation <= 40, misconception <= 24, takeaway <= 12.
+- Technical terminology appears only after the plain-language meaning is clear.
+
+## 2B. Code-infographic quality
+
+Code-drawn visuals are held to the same teaching standard as generated editorial
+images.
+
+- A custom infographic needs a machine-readable teaching brief before it is
+  treated as an accepted fallback.
+- The visual must encode a relationship: comparison, sequence, cause/effect,
+  matching, trade-off, or before/after. A row of generic icons by itself is not
+  a teaching mechanism.
+- Cards carry short meaning labels when the distinction itself is the lesson.
+- The slide owns the explanation; the infographic owns the visual proof.
+- Summary visuals must not repeat the takeaway as a second headline or rule.
+- Mobile and desktop screenshots are reviewed separately.
+- Visual QA screenshots are evidence that the infographic renders correctly,
+  but a human design review still checks hierarchy, meaning, polish, and
+  whether the visual looks template-like.
+
+Current hard-gate rollout starts with the six beginner Markets lessons, then
+expands section by section after the existing copy is cleaned.
+
 ## 3. Navigation and state
 
 - The next recommended lesson is reachable in one action.

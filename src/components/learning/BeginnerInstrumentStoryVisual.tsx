@@ -15,10 +15,10 @@ type Instrument = {
 };
 
 const INSTRUMENTS: readonly Instrument[] = [
-  { kind: 'stock', tr: 'HİSSE', en: 'STOCK', trMeaning: 'Şirkette ortaklık', enMeaning: 'Company ownership' },
-  { kind: 'bond', tr: 'TAHVİL', en: 'BOND', trMeaning: 'Borç verme ilişkisi', enMeaning: 'Lending relationship' },
-  { kind: 'fx', tr: 'DÖVİZ', en: 'FX', trMeaning: 'İki paranın göreli değeri', enMeaning: 'Relative currency value' },
-  { kind: 'commodity', tr: 'EMTİA', en: 'COMMODITY', trMeaning: 'Altın, petrol gibi ürün', enMeaning: 'Gold, oil and other goods' },
+  { kind: 'stock', tr: 'HİSSE', en: 'STOCK', trMeaning: 'Şirkete ortaklık', enMeaning: 'Company ownership' },
+  { kind: 'bond', tr: 'TAHVİL', en: 'BOND', trMeaning: 'Kuruma borç', enMeaning: 'Lending to an issuer' },
+  { kind: 'fx', tr: 'DÖVİZ', en: 'FX', trMeaning: 'İki paranın değeri', enMeaning: 'Value of two currencies' },
+  { kind: 'commodity', tr: 'EMTİA', en: 'COMMODITY', trMeaning: 'Altın, petrol vb.', enMeaning: 'Gold, oil, etc.' },
 ] as const;
 
 export interface BeginnerInstrumentStoryVisualProps {
@@ -128,10 +128,6 @@ function HookScene({ tr, styles }: { tr: boolean; styles: ReturnType<typeof crea
   const commodity = localized(INSTRUMENTS[3], tr);
   return (
     <View style={styles.scene}>
-      <SceneHeading
-        styles={styles}
-        title={tr ? 'İkisi de yatırım aracı. Ama aynı şeyi almıyorsun.' : 'Both are market instruments. You are not buying the same thing.'}
-      />
       <View style={styles.compareRow}>
         <View style={styles.largeCard}>
           <InstrumentIcon kind="stock" styles={styles} />
@@ -145,7 +141,6 @@ function HookScene({ tr, styles }: { tr: boolean; styles: ReturnType<typeof crea
           <Text style={styles.cardMeaning}>{commodity.meaning}</Text>
         </View>
       </View>
-      <Text style={styles.footerHint}>{tr ? 'İlk soru: “Bu araç neyi temsil ediyor?”' : 'First question: “What does this instrument represent?”'}</Text>
     </View>
   );
 }
@@ -155,8 +150,7 @@ function ConceptScene({ tr, styles }: { tr: boolean; styles: ReturnType<typeof c
     <View style={styles.scene}>
       <SceneHeading
         styles={styles}
-        title={tr ? 'Dört araç, dört ekonomik ilişki' : 'Four instruments, four economic relationships'}
-        body={tr ? 'İsme değil, temsil ettiği şeye bak.' : 'Look past the label to what the instrument represents.'}
+        title={tr ? 'Her araç neyi temsil eder?' : 'What does each instrument represent?'}
       />
       <View style={styles.grid}>
         {INSTRUMENTS.map((item) => {
@@ -212,7 +206,7 @@ function MisconceptionScene({ tr, styles }: { tr: boolean; styles: ReturnType<ty
     <View style={styles.scene}>
       <SceneHeading
         styles={styles}
-        title={tr ? 'Grafikler benzeyebilir; ekonomik anlam aynı değildir.' : 'Charts can look alike while economic meaning differs.'}
+        title={tr ? 'Aynı grafik, aynı ürün demek değildir.' : 'A similar chart does not mean the same product.'}
       />
       <View style={styles.grid}>
         {INSTRUMENTS.map((item) => {
@@ -241,10 +235,6 @@ function MisconceptionScene({ tr, styles }: { tr: boolean; styles: ReturnType<ty
 function SummaryScene({ tr, styles }: { tr: boolean; styles: ReturnType<typeof createStyles> }) {
   return (
     <View style={styles.scene}>
-      <SceneHeading
-        styles={styles}
-        title={tr ? 'Önce “ne alıyorum?” sonra “fiyatı ne yapıyor?”' : 'First ask “what am I buying?”, then “what is its price doing?”'}
-      />
       <View style={styles.summaryRow}>
         {INSTRUMENTS.map((item) => {
           const copy = localized(item, tr);
@@ -252,14 +242,10 @@ function SummaryScene({ tr, styles }: { tr: boolean; styles: ReturnType<typeof c
             <View key={item.kind} style={styles.summaryItem}>
               <InstrumentIcon kind={item.kind} styles={styles} />
               <Text style={styles.summaryLabel}>{copy.title}</Text>
+              <Text style={styles.summaryMeaning}>{copy.meaning}</Text>
             </View>
           );
         })}
-      </View>
-      <View style={styles.summaryRule}>
-        <Text style={styles.summaryRuleText}>
-          {tr ? 'Temsil ettiği şey değişirse temel risk kaynağı da değişebilir.' : 'When what it represents changes, its core risk source can change too.'}
-        </Text>
       </View>
     </View>
   );
@@ -357,16 +343,16 @@ const createStyles = (theme: LearningTheme, wide: boolean, narrow: boolean) => S
   summaryItem: {
     flex: 1,
     minWidth: 0,
-    minHeight: wide ? 116 : narrow ? 88 : 96,
+    minHeight: wide ? 128 : narrow ? 96 : 108,
     alignItems: 'center',
     justifyContent: 'center',
     gap: 5,
+    paddingHorizontal: narrow ? 5 : 8,
     borderRadius: 13,
     borderWidth: 1,
     borderColor: '#2D485D',
     backgroundColor: '#0E2131',
   },
   summaryLabel: { color: theme.colors.text, fontSize: wide ? 10 : narrow ? 8 : 9, fontWeight: '900', textAlign: 'center' },
-  summaryRule: { paddingHorizontal: wide ? 16 : 12, paddingVertical: wide ? 12 : 10, borderRadius: 12, backgroundColor: '#0D3034', borderWidth: 1, borderColor: '#2C706B' },
-  summaryRuleText: { color: '#D7ECE8', fontSize: wide ? 12 : narrow ? 10 : 11, lineHeight: wide ? 18 : narrow ? 14 : 16, textAlign: 'center', fontWeight: '700' },
+  summaryMeaning: { color: theme.colors.textMuted, fontSize: wide ? 10 : narrow ? 8 : 9, lineHeight: wide ? 14 : narrow ? 11 : 13, textAlign: 'center' },
 });

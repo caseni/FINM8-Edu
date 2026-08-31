@@ -1,4 +1,5 @@
 import { BEGINNER_SECTION_IDS, BEGINNER_SECTIONS } from './beginnerJourney';
+import { BEGINNER_MARKET_CODE_INFOGRAPHIC_SPEC_BY_LESSON_ID } from './beginnerCodeInfographicSpecs';
 import { MICRO_LESSON_CATALOG } from './catalog';
 import type { MicroLesson } from './types';
 
@@ -11,7 +12,11 @@ export interface BeginnerJourneyQualityIssue {
     | 'task_evidence_mismatch'
     | 'quiz_question_count'
     | 'quiz_option_count'
-    | 'advanced_jargon';
+    | 'advanced_jargon'
+    | 'clarity_copy_budget'
+    | 'clarity_repetition'
+    | 'missing_infographic_spec'
+    | 'infographic_spec_quality';
   readonly detail: string;
 }
 
@@ -45,6 +50,106 @@ const ADVANCED_JARGON: readonly RegExp[] = [
   /Sharpe/i,
   /Sortino/i,
 ];
+
+const MARKET_COPY_LIMITS = {
+  learningObjective: 16,
+  prompt: 14,
+  explanation: 40,
+  misconception: 24,
+  takeaway: 12,
+} as const;
+
+function wordCount(value: string): number {
+  const clean = value.trim().replace(/\s+/g, ' ');
+  return clean ? clean.split(' ').length : 0;
+}
+
+function normalizedTokens(value: string): string[] {
+  return value
+    .toLocaleLowerCase('tr-TR')
+    .replace(/[^a-z0-9çğıöşü\s]/gi, ' ')
+    .split(/\s+/)
+    .map((token) => token.trim())
+    .filter((token) => token.length >= 3);
+}
+
+function sharedTokenRatio(left: string, right: string): number {
+  const leftTokens = normalizedTokens(left);
+  const rightTokens = normalizedTokens(right);
+  if (leftTokens.length < 5 || rightTokens.length < 5) return 0;
+  const rightSet = new Set(rightTokens);
+  const shared = new Set(leftTokens.filter((token) => rightSet.has(token))).size;
+  return shared / Math.min(new Set(leftTokens).size, new Set(rightTokens).size);
+}
+
+function normalBlockCopy(lesson: MicroLesson, kind: 'prompt' | 'explanation' | 'misconception'): string {
+  const block = lesson.contentBlocks.find((candidate) => candidate.kind === kind);
+  return block && 'copy' in block ? block.copy.normal.tr : '';
+}
+
+function validateMarketClarity(lesson: MicroLesson, issues: BeginnerJourneyQualityIssue[]): void {
+  if (!BEGINNER_SECTIONS.markets.lessonIds.includes(lesson.id)) return;
+
+  const spec = BEGINNER_MARKET_CODE_INFOGRAPHIC_SPEC_BY_LESSON_ID.get(lesson.id);
+  if (!spec) {
+    issues.push({
+      lessonId: lesson.id,
+      reason: 'missing_infographic_spec',
+      detail: 'beginner market lesson must have a code-infographic teaching brief before fallback visuals are accepted',
+    });
+  } else {
+    if (
+      wordCount(spec.teachingGoal.tr) > 16 ||
+      spec.textBudget.headingWords > 8 ||
+      spec.textBudget.cardWords > 6 ||
+      spec.textBudget.ruleWords > 12
+    ) {
+      issues.push({
+        lessonId: lesson.id,
+        reason: 'infographic_spec_quality',
+        detail: 'infographic brief exceeds the visual text budget or teaching-goal budget',
+      });
+    }
+  }
+
+  const prompt = normalBlockCopy(lesson, 'prompt');
+  const explanation = normalBlockCopy(lesson, 'explanation');
+  const misconception = normalBlockCopy(lesson, 'misconception');
+  const surfaces = [
+    ['learningObjective', lesson.learningObjective.tr, MARKET_COPY_LIMITS.learningObjective],
+    ['prompt', prompt, MARKET_COPY_LIMITS.prompt],
+    ['explanation', explanation, MARKET_COPY_LIMITS.explanation],
+    ['misconception', misconception, MARKET_COPY_LIMITS.misconception],
+    ['takeaway', lesson.takeaway.tr, MARKET_COPY_LIMITS.takeaway],
+  ] as const;
+
+  for (const [field, value, limit] of surfaces) {
+    const count = wordCount(value);
+    if (count > limit) {
+      issues.push({
+        lessonId: lesson.id,
+        reason: 'clarity_copy_budget',
+        detail: `${field} has ${count} words; beginner-market budget is ${limit}`,
+      });
+    }
+  }
+
+  const repetitionPairs = [
+    ['explanation', explanation, 'takeaway', lesson.takeaway.tr],
+    ['misconception', misconception, 'takeaway', lesson.takeaway.tr],
+  ] as const;
+
+  for (const [leftName, left, rightName, right] of repetitionPairs) {
+    const ratio = sharedTokenRatio(left, right);
+    if (ratio >= 0.78) {
+      issues.push({
+        lessonId: lesson.id,
+        reason: 'clarity_repetition',
+        detail: `${leftName} and ${rightName} repeat too much of the same wording (overlap ${ratio.toFixed(2)})`,
+      });
+    }
+  }
+}
 
 function beginnerVisibleText(lesson: MicroLesson): string {
   const chunks: string[] = [
@@ -91,6 +196,8 @@ export function getBeginnerJourneyQualityReport(): BeginnerJourneyQualityReport 
       issues.push({ lessonId, reason: 'missing_lesson', detail: 'lesson id is not present in the catalog' });
       continue;
     }
+
+    validateMarketClarity(lesson, issues);
 
     const taskChoices = lesson.practicalTask.choices ?? [];
     if (taskChoices.length < MIN_OPTIONS) {
