@@ -86,11 +86,6 @@ function Gap({ tr, styles, compact = false }: { tr: boolean; styles: Styles; com
 function HookScene({ tr, styles }: { tr: boolean; styles: Styles }) {
   return (
     <View style={styles.scene}>
-      <Heading
-        styles={styles}
-        title={tr ? 'Aynı varlık için aynı anda iki farklı fiyat görebilirsin.' : 'The same asset can show two different prices at the same time.'}
-        body={tr ? 'Biri alıcının teklifi, diğeri satıcının teklifi.' : 'One is the buyer offer; the other is the seller offer.'}
-      />
       <View style={styles.quoteRow}>
         <QuoteCard side="bid" label={tr ? 'ALICI' : 'BUYER'} price="99,90" hint={tr ? 'Ödemeye hazır' : 'Willing to pay'} accessibilityLabel="bid-ask-buyer-side" styles={styles} />
         <Gap tr={tr} styles={styles} />
@@ -103,11 +98,11 @@ function HookScene({ tr, styles }: { tr: boolean; styles: Styles }) {
 function ConceptScene({ tr, styles }: { tr: boolean; styles: Styles }) {
   return (
     <View style={styles.scene}>
-      <Heading styles={styles} title={tr ? 'Bid alıcı tarafı, ask satıcı tarafı; aradaki mesafe spread.' : 'Bid is the buyer side, ask is the seller side; the distance is the spread.'} />
+      <Heading styles={styles} title="BID · SPREAD · ASK" />
       <View style={styles.quoteRow}>
-        <QuoteCard side="bid" label="BID" price="99,90" hint={tr ? 'En iyi alış' : 'Best buy'} accessibilityLabel="bid-ask-concept-bid" styles={styles} />
+        <QuoteCard side="bid" label="BID" price="99,90" hint={tr ? 'Alıcının teklifi' : 'Buyer offer'} accessibilityLabel="bid-ask-concept-bid" styles={styles} />
         <Gap tr={tr} styles={styles} compact />
-        <QuoteCard side="ask" label="ASK" price="100,10" hint={tr ? 'En iyi satış' : 'Best sell'} accessibilityLabel="bid-ask-concept-ask" styles={styles} />
+        <QuoteCard side="ask" label="ASK" price="100,10" hint={tr ? 'Satıcının teklifi' : 'Seller offer'} accessibilityLabel="bid-ask-concept-ask" styles={styles} />
       </View>
       <View style={styles.rule}><Text style={styles.ruleText}>{tr ? '100,10 − 99,90 = 0,20 spread' : '100.10 − 99.90 = 0.20 spread'}</Text></View>
     </View>
@@ -165,24 +160,22 @@ function MisconceptionScene({ tr, styles }: { tr: boolean; styles: Styles }) {
 function SummaryScene({ tr, styles }: { tr: boolean; styles: Styles }) {
   return (
     <View style={styles.scene}>
-      <Heading styles={styles} title={tr ? 'Tek bakışta: bid | spread | ask' : 'At a glance: bid | spread | ask'} />
       <View style={styles.summaryStrip}>
         <View style={[styles.summaryCell, styles.bidCard]}><Text style={styles.summaryLabel}>BID</Text><Text style={[styles.summaryPrice, styles.bidText]}>99,90</Text><Text style={styles.summaryHint}>{tr ? 'Alıcı' : 'Buyer'}</Text></View>
         <View style={styles.summaryGap}><Text style={styles.summaryGapValue}>0,20</Text><Text style={styles.summaryGapLabel}>SPREAD</Text></View>
         <View style={[styles.summaryCell, styles.askCard]}><Text style={styles.summaryLabel}>ASK</Text><Text style={[styles.summaryPrice, styles.askText]}>100,10</Text><Text style={styles.summaryHint}>{tr ? 'Satıcı' : 'Seller'}</Text></View>
       </View>
-      <View style={styles.rule}><Text style={styles.ruleText}>{tr ? 'Hemen alım ask’e, hemen satım bid’e yaklaşır.' : 'Immediate buying reaches toward ask; immediate selling reaches toward bid.'}</Text></View>
     </View>
   );
 }
 
 const createStyles = (theme: LearningTheme, wide: boolean, narrow: boolean) => StyleSheet.create({
-  shell: { width: '100%', minHeight: wide ? 300 : narrow ? 236 : 256, justifyContent: 'center', padding: wide ? 20 : narrow ? 6 : 14, overflow: 'hidden', borderRadius: wide ? 18 : 16, borderWidth: 1, borderColor: theme.colors.border, backgroundColor: '#081726' },
+  shell: { width: '100%', minHeight: wide ? 300 : narrow ? 236 : 256, justifyContent: 'center', padding: wide ? 16 : narrow ? 6 : 14, overflow: 'hidden', borderRadius: wide ? 18 : 16, borderWidth: 1, borderColor: theme.colors.border, backgroundColor: '#081726' },
   scene: { width: '100%', gap: wide ? 17 : narrow ? 9 : 12 },
   heading: { gap: 5 },
   headingTitle: { color: theme.colors.text, fontSize: wide ? 20 : narrow ? 15 : 17, lineHeight: wide ? 28 : narrow ? 21 : 24, fontWeight: '900' },
   headingBody: { color: theme.colors.textMuted, fontSize: wide ? 12 : narrow ? 9 : 10, lineHeight: wide ? 18 : narrow ? 13 : 15 },
-  quoteRow: { flexDirection: 'row', alignItems: 'stretch', gap: narrow ? 2 : 8 },
+  quoteRow: { flexDirection: 'row', alignItems: 'stretch', gap: wide ? 4 : narrow ? 2 : 8 },
   quoteCard: { flex: 1, minWidth: 0, minHeight: wide ? 154 : narrow ? 110 : 132, alignItems: 'center', justifyContent: 'center', gap: narrow ? 4 : 7, padding: narrow ? 6 : 9, borderRadius: 14, borderWidth: 1 },
   bidCard: { borderColor: '#2E716B', backgroundColor: '#0C2B31' },
   askCard: { borderColor: '#725851', backgroundColor: '#2A2025' },
@@ -196,8 +189,8 @@ const createStyles = (theme: LearningTheme, wide: boolean, narrow: boolean) => S
   quoteHint: { color: theme.colors.textMuted, fontSize: narrow ? 7 : 9, lineHeight: narrow ? 10 : 13, textAlign: 'center' },
   bidText: { color: '#68C4B8' },
   askText: { color: '#D29A86' },
-  gap: { width: wide ? 76 : narrow ? 45 : 54, alignItems: 'center', justifyContent: 'center', gap: narrow ? 2 : 4 },
-  gapCompact: { width: wide ? 68 : narrow ? 45 : 48 },
+  gap: { width: wide ? 48 : narrow ? 45 : 54, alignItems: 'center', justifyContent: 'center', gap: narrow ? 2 : 4 },
+  gapCompact: { width: wide ? 48 : narrow ? 45 : 48 },
   gapValue: { color: theme.colors.text, fontSize: wide ? 16 : narrow ? 9 : 12, fontWeight: '900' },
   gapLine: { width: '86%', height: 2, borderRadius: 2, backgroundColor: '#667E8D' },
   gapName: { color: theme.colors.primary, fontSize: narrow ? 6 : 8, fontWeight: '900', letterSpacing: 0.35 },
