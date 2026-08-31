@@ -145,7 +145,6 @@ function RiskStory({ tr, role, styles }: StoryProps) {
 
   return (
     <View style={styles.story}>
-      <Heading styles={styles}>{tr ? 'Risk önce gelir; kayıp sonra oluşabilir.' : 'Risk comes first; loss may happen later.'}</Heading>
       <View style={styles.flow}><View style={styles.flowChip}><Label styles={styles}>{tr ? 'KARAR' : 'DECISION'}</Label></View><Text style={styles.arrow}>→</Text><View style={[styles.flowChip, styles.accentCard]}><Label styles={styles}>{tr ? 'RİSK' : 'RISK'}</Label></View><Text style={styles.arrow}>→</Text><View style={styles.flowChip}><Label styles={styles}>{tr ? 'SONUÇ' : 'OUTCOME'}</Label></View></View>
     </View>
   );
@@ -164,7 +163,7 @@ function VolatilityStory({ tr, role, styles }: StoryProps) {
   if (role === 'misconception') {
     return <View style={styles.story}><Heading styles={styles}>{tr ? 'Geniş hareket yalnız yukarı gitmez.' : 'Wide movement does not only go upward.'}</Heading><View style={styles.pair}><Card styles={styles} aria="risk-vol-up"><Text style={styles.directionUp}>↗</Text><Text style={styles.caption}>{tr ? 'Geniş hareket yukarı' : 'Wide move up'}</Text></Card><Card styles={styles} aria="risk-vol-down"><Text style={styles.directionDown}>↘</Text><Text style={styles.caption}>{tr ? 'Geniş hareket aşağı' : 'Wide move down'}</Text></Card></View></View>;
   }
-  return <View style={styles.story}><Heading styles={styles}>{tr ? 'Volatilite = hareket genişliği; yön garantisi değil.' : 'Volatility = movement width, not direction.'}</Heading><View style={styles.simpleSummary}><View style={styles.rangeWide} /><Label styles={styles}>{tr ? 'GENİŞLİK' : 'WIDTH'}</Label><Text style={styles.notEqual}>≠</Text><Label styles={styles}>{tr ? 'YÖN' : 'DIRECTION'}</Label></View></View>;
+  return <View style={styles.story}><View style={styles.simpleSummary}><View style={styles.rangeWide} /><Label styles={styles}>{tr ? 'GENİŞLİK' : 'WIDTH'}</Label><Text style={styles.notEqual}>≠</Text><Label styles={styles}>{tr ? 'YÖN' : 'DIRECTION'}</Label></View></View>;
 }
 
 function SizeStory({ tr, role, styles }: StoryProps) {
@@ -180,7 +179,7 @@ function SizeStory({ tr, role, styles }: StoryProps) {
   if (role === 'misconception') {
     return <View style={styles.story}><Heading styles={styles}>{tr ? '“Alabiliyorum” ile “riskime uygun” aynı şey değildir.' : '“I can afford it” is not the same as “it fits my risk.”'}</Heading><View style={styles.pair}><Card styles={styles} aria="risk-size-can-buy"><Label styles={styles}>{tr ? 'ALABİLECEĞİN' : 'CAN BUY'}</Label><View style={styles.capacityFull} /></Card><Card styles={styles} aria="risk-size-fit" accent><Label styles={styles}>{tr ? 'RİSKE UYGUN' : 'FIT FOR RISK'}</Label><View style={styles.capacitySafe} /></Card></View></View>;
   }
-  return <View style={styles.story}><Heading styles={styles}>{tr ? 'Pozisyon büyüdükçe aynı hareketin etkisi büyür.' : 'As position size grows, the same move has a larger impact.'}</Heading><View style={styles.flow}><View style={styles.flowChip}><Label styles={styles}>{tr ? 'MİKTAR' : 'SIZE'}</Label></View><Text style={styles.arrow}>→</Text><View style={[styles.flowChip, styles.dangerCard]}><Label styles={styles}>{tr ? 'ETKİ' : 'IMPACT'}</Label></View></View></View>;
+  return <View style={styles.story}><View style={styles.flow}><View style={styles.flowChip}><Label styles={styles}>{tr ? 'MİKTAR' : 'SIZE'}</Label></View><Text style={styles.arrow}>→</Text><View style={[styles.flowChip, styles.dangerCard]}><Label styles={styles}>{tr ? 'ETKİ' : 'IMPACT'}</Label></View></View></View>;
 }
 
 function RewardStory({ tr, role, styles }: StoryProps) {
@@ -196,7 +195,7 @@ function RewardStory({ tr, role, styles }: StoryProps) {
   if (role === 'misconception') {
     return <View style={styles.story}><Heading styles={styles}>{tr ? '“1’e 5” yazmak, 5’in geleceğini garanti etmez.' : 'Writing “1 to 5” does not guarantee the 5.'}</Heading><View style={styles.pair}><Card styles={styles} aria="risk-reward-paper" accent><Label styles={styles}>{tr ? 'KÂĞIT ÜZERİNDE' : 'ON PAPER'}</Label><Text style={styles.plan}>1 : 5</Text></Card><Card styles={styles} aria="risk-reward-reality"><Label styles={styles}>{tr ? 'GERÇEK SONUÇ' : 'REAL RESULT'}</Label><Text style={styles.question}>?</Text></Card></View></View>;
   }
-  return <View style={styles.story}><Heading styles={styles}>{tr ? 'Büyük hedef tek başına yetmez.' : 'A large target is not enough by itself.'}</Heading><View style={styles.flow}><View style={styles.flowChip}><Label styles={styles}>{tr ? 'HEDEF' : 'TARGET'}</Label></View><Text style={styles.plus}>+</Text><View style={styles.flowChip}><Label styles={styles}>{tr ? 'OLASILIK' : 'LIKELIHOOD'}</Label></View><Text style={styles.plus}>+</Text><View style={styles.flowChip}><Label styles={styles}>{tr ? 'MALİYET' : 'COST'}</Label></View></View></View>;
+  return <View style={styles.story}><View style={styles.flow}><View style={styles.flowChip}><Label styles={styles}>{tr ? 'HEDEF' : 'TARGET'}</Label></View><Text style={styles.plus}>+</Text><View style={styles.flowChip}><Label styles={styles}>{tr ? 'OLASILIK' : 'LIKELIHOOD'}</Label></View><Text style={styles.plus}>+</Text><View style={styles.flowChip}><Label styles={styles}>{tr ? 'MALİYET' : 'COST'}</Label></View></View></View>;
 }
 
 function StopStory({ tr, role, styles }: StoryProps) {
@@ -212,7 +211,7 @@ function StopStory({ tr, role, styles }: StoryProps) {
   if (role === 'misconception') {
     return <View style={styles.story}><Heading styles={styles}>{tr ? 'Stop seviyesi fiyatı tutan bir duvar değildir.' : 'A stop level is not a wall that holds price.'}</Heading><View style={styles.wall} accessibilityLabel="risk-stop-not-wall"><Text style={styles.down}>↓</Text><View style={styles.stopLine}><Text style={styles.caption}>95 · STOP</Text><View style={styles.breakMark} /></View><Text style={styles.down}>↓</Text></View></View>;
   }
-  return <View style={styles.story}><Heading styles={styles}>{tr ? 'Stop plan sağlar; gerçekleşme fiyatını garanti etmez.' : 'A stop provides a plan; it does not guarantee execution price.'}</Heading><View style={styles.flow}><View style={styles.flowChip}><Label styles={styles}>{tr ? 'PLAN' : 'PLAN'}</Label><Text style={styles.plan}>95</Text></View><Text style={styles.notEqual}>≠</Text><View style={styles.flowChip}><Label styles={styles}>{tr ? 'GARANTİ' : 'GUARANTEE'}</Label><Text style={styles.question}>?</Text></View></View></View>;
+  return <View style={styles.story}><View style={styles.flow}><View style={styles.flowChip}><Label styles={styles}>{tr ? 'PLAN' : 'PLAN'}</Label><Text style={styles.plan}>95</Text></View><Text style={styles.notEqual}>≠</Text><View style={styles.flowChip}><Label styles={styles}>{tr ? 'GARANTİ' : 'GUARANTEE'}</Label><Text style={styles.question}>?</Text></View></View></View>;
 }
 
 function DiversificationStory({ tr, role, styles }: StoryProps) {
@@ -228,7 +227,7 @@ function DiversificationStory({ tr, role, styles }: StoryProps) {
   if (role === 'misconception') {
     return <View style={styles.story}><Heading styles={styles}>{tr ? 'Çok kutu görmek, çok farklı risk demek değildir.' : 'Many boxes do not automatically mean many different risks.'}</Heading><View style={styles.pair}><View style={styles.namesGrid} accessibilityLabel="risk-div-many-names">{Array.from({ length: 9 }).map((_, i) => <View key={i} style={styles.nameBox} />)}</View><Card styles={styles} aria="risk-div-different-risk" danger><Label styles={styles}>{tr ? 'FARKLI RİSK?' : 'DIFFERENT RISK?'}</Label><Text style={styles.question}>?</Text></Card></View></View>;
   }
-  return <View style={styles.story}><Heading styles={styles}>{tr ? 'Amaç isim sayısını değil, tek riske bağımlılığı azaltmaktır.' : 'The goal is to reduce dependence on one risk, not count names.'}</Heading><View style={styles.threeRow}>{['A', 'B', 'C'].map((x) => <View key={x} style={[styles.roundSource, styles.accentCard]}><Label styles={styles}>{`${tr ? 'RİSK' : 'RISK'} ${x}`}</Label></View>)}</View></View>;
+  return <View style={styles.story}><View style={styles.threeRow}>{['A', 'B', 'C'].map((x) => <View key={x} style={[styles.roundSource, styles.accentCard]}><Label styles={styles}>{`${tr ? 'RİSK' : 'RISK'} ${x}`}</Label></View>)}</View></View>;
 }
 
 const createStyles = (theme: LearningTheme, wide: boolean, phone: boolean, practice: boolean) => StyleSheet.create({

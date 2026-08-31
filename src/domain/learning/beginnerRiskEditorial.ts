@@ -22,11 +22,11 @@ type BeginnerLessonCopy = {
 const COPY: Readonly<Record<string, BeginnerLessonCopy>> = {
   'lesson.risk.uncertainty.001': {
     title: { tr: 'Kaybetmeden önce risk var mıdır?', en: 'Can risk exist before you lose money?' },
-    objective: { tr: 'Riskin, kayıp gerçekleşmeden önce de var olan olumsuz sonuç ihtimali olduğunu anla.', en: 'Understand that risk is the possibility of a bad outcome that exists before a loss actually happens.' },
+    objective: { tr: 'Risk ile gerçekleşmiş kayıp arasındaki farkı öğren.', en: 'Learn the difference between risk and a realized loss.' },
     hook: { tr: 'Henüz para kaybetmediysen hiç risk yok mudur?', en: 'If you have not lost money yet, is there no risk?' },
-    explanation: { tr: 'Risk, bir kararın kötü sonuçlanabilme ihtimalidir. Kayıp ise o kötü sonucun gerçekten gerçekleşmiş hâlidir. Geleceği tam bilmediğimiz için karar verirken belirsizlik taşırız. Risk yönetimi bütün kayıpları yok etmez; tek bir kötü sonucun etkisini sınırlamaya çalışır.', en: 'Risk is the possibility that a decision turns out badly. A loss is the bad outcome after it has actually happened. Because the future is not fully known, decisions carry uncertainty. Risk management does not remove every loss; it tries to limit the impact of one bad outcome.' },
-    misconception: { tr: 'Hesap bugün ekside değil diye risk sıfır değildir. Risk, sonuç ortaya çıkmadan önce de vardır.', en: 'Risk is not zero just because the account is not down today. Risk exists before the outcome is known.' },
-    takeaway: { tr: 'Kayıp sonuçtur; risk ise sonuç belli olmadan önce taşıdığın ihtimaldir.', en: 'A loss is an outcome; risk is the possibility you carry before the outcome is known.' },
+    explanation: { tr: 'Risk, kötü bir sonucun gerçekleşme ihtimalidir. Kayıp ise kötü sonuç gerçekten olduğunda ortaya çıkar. Sonuç belli değilken risk vardır; risk yönetimi bu olası etkinin büyüklüğünü sınırlamaya çalışır.', en: 'Risk is the possibility of a bad outcome. A loss appears when that bad outcome actually happens. Risk exists while the result is still uncertain; risk management tries to limit its possible impact.' },
+    misconception: { tr: 'Bugün zarar yok diye risk sıfır değildir.', en: 'No loss today does not mean there is no risk.' },
+    takeaway: { tr: 'Risk ihtimaldir; kayıp gerçekleşmiş sonuçtur.', en: 'Risk is possibility; loss is a realized outcome.' },
     visualAlt: { tr: 'Bir karar noktasından iyi, nötr ve kötü olası sonuçlara ayrılan sade risk yolu', en: 'Simple risk path branching from one decision into good, neutral, and bad possible outcomes' },
     taskPrompt: { tr: 'Hangisi henüz gerçekleşmiş kayıp değil, karar anındaki riski anlatır?', en: 'Which describes risk at decision time rather than a loss that already happened?' },
     taskChoices: [
@@ -42,11 +42,11 @@ const COPY: Readonly<Record<string, BeginnerLessonCopy>> = {
   },
   'lesson.risk.volatility.001': {
     title: { tr: 'Fiyat çok oynuyorsa neden daha dikkatli olmalısın?', en: 'Why should you be more careful when price moves a lot?' },
-    objective: { tr: 'Geniş ve hızlı fiyat hareketlerinin aynı miktar parayı daha fazla dalgalandırabileceğini anla.', en: 'Understand that wide and fast price moves can make the same amount of money fluctuate more.' },
-    hook: { tr: 'Aynı 1.000 TL, sakin ve çok hareketli iki piyasada aynı riski taşır mı?', en: 'Does the same TRY 1,000 carry the same risk in a calm and a very active market?' },
-    explanation: { tr: 'Hayır. Bazı fiyatlar dar bir aralıkta sakin hareket ederken bazıları kısa sürede çok daha geniş hareket eder. Bu hareket genişliğine volatilite denir. Fiyat daha çok oynadığında aynı büyüklükteki pozisyonun parasal etkisi de büyüyebilir. Volatilite yönü söylemez; yalnız hareketin ne kadar geniş olduğunu anlatır.', en: 'No. Some prices move calmly in a narrow range while others move much more widely in a short time. This movement range is called volatility. When price swings more, the cash impact of the same-sized position can also grow. Volatility does not tell direction; it describes how wide the movement is.' },
-    misconception: { tr: 'Çok hareketli piyasa yalnız daha çok kazanç ihtimali demek değildir. Aynı genişlik kaybı da büyütebilir.', en: 'A very active market does not only mean more gain potential. The same wide movement can also increase losses.' },
-    takeaway: { tr: 'Fiyat daha çok oynadıkça aynı miktarın hesabındaki etkisi daha büyük olabilir.', en: 'As price swings more, the same amount can have a larger effect on your account.' },
+    objective: { tr: 'Fiyat hareketi genişledikçe aynı miktarın neden daha çok dalgalandığını öğren.', en: 'Learn why the same amount can fluctuate more when price movement widens.' },
+    hook: { tr: 'Aynı 1.000 TL sakin ve hareketli piyasada aynı riski taşır mı?', en: 'Does the same TRY 1,000 carry the same risk in calm and active markets?' },
+    explanation: { tr: 'Bazı fiyatlar dar, bazıları geniş aralıkta hareket eder. Bu hareket genişliğine volatilite denir. Hareket genişledikçe aynı pozisyonun parasal etkisi büyüyebilir. Volatilite yönü değil, hareketin genişliğini anlatır.', en: 'Some prices move in narrow ranges and others in wide ranges. This movement width is called volatility. As the range widens, the cash impact of the same position can grow. Volatility describes width, not direction.' },
+    misconception: { tr: 'Yüksek volatilite yalnız daha fazla kazanç fırsatı değildir; kaybı da büyütebilir.', en: 'High volatility is not only more gain potential; it can increase losses too.' },
+    takeaway: { tr: 'Volatilite, fiyat hareketinin genişliğidir.', en: 'Volatility is the width of price movement.' },
     visualAlt: { tr: 'Aynı miktar için sakin dar fiyat yolu ile geniş ve hızlı fiyat yolunu karşılaştıran sade görsel', en: 'Simple visual comparing a calm narrow price path with a wide fast price path for the same amount' },
     taskPrompt: { tr: 'Aynı miktar parayla hangisi daha fazla kısa vadeli dalgalanma yaratabilir?', en: 'With the same amount of money, which can create more short-term fluctuation?' },
     taskChoices: [
@@ -62,11 +62,11 @@ const COPY: Readonly<Record<string, BeginnerLessonCopy>> = {
   },
   'lesson.risk.position-sizing.001': {
     title: { tr: 'Ne kadar aldığın neden önemlidir?', en: 'Why does how much you buy matter?' },
-    objective: { tr: 'Aynı fiyat hareketinin küçük ve büyük miktarlarda hesabı farklı etkileyebileceğini anla.', en: 'Understand that the same price move can affect an account differently depending on how much you hold.' },
-    hook: { tr: 'Fiyat aynı yüzde düşerse 1.000 TL ile 10.000 TL aynı kaybı mı yaşar?', en: 'If price falls by the same percentage, do TRY 1,000 and TRY 10,000 lose the same amount?' },
-    explanation: { tr: 'Hayır. Ne kadar büyük miktar taşırsan aynı fiyat hareketinin hesabındaki parasal etkisi o kadar büyür. Buna pozisyon büyüklüğü denir. Bu yüzden risk düşünürken yalnız “fiyat ne kadar düşebilir?” değil, “ben ne kadar para koyuyorum?” sorusu da önemlidir. Büyük miktar küçük hareketi bile büyük kayba çevirebilir.', en: 'No. The larger the amount you hold, the larger the cash impact of the same price move can be. This is called position size. So risk is not only about how far price can move; it is also about how much money you put into the position. A large amount can turn a small move into a large loss.' },
-    misconception: { tr: 'Alabileceğin en büyük miktarı almak, iyi risk yönetimi demek değildir. Miktar arttıkça tek kararın etkisi büyür.', en: 'Buying the largest amount you can afford is not the same as good risk management. As size grows, the impact of one decision grows too.' },
-    takeaway: { tr: 'Aynı fiyat hareketinde kaybı büyüten şeylerden biri, ne kadar büyük miktar taşıdığındır.', en: 'One factor that increases loss from the same price move is how large an amount you hold.' },
+    objective: { tr: 'Aynı fiyat hareketinde miktarın sonucu nasıl büyüttüğünü öğren.', en: 'Learn how position size changes the impact of the same price move.' },
+    hook: { tr: 'Fiyat %5 düşerse 1.000 TL ile 10.000 TL aynı kaybı mı yaşar?', en: 'If price falls 5%, do TRY 1,000 and TRY 10,000 lose the same amount?' },
+    explanation: { tr: 'Hayır. Taşıdığın miktar büyüdükçe aynı yüzde hareketin TL etkisi büyür. Buna pozisyon büyüklüğü denir. Risk yalnız fiyatın ne kadar oynayacağına değil, ne kadar para koyduğuna da bağlıdır.', en: 'No. As the amount you hold grows, the cash impact of the same percentage move grows too. This is position size. Risk depends not only on price movement, but also on how much money you put in.' },
+    misconception: { tr: 'Alabileceğin en büyük miktarı almak, iyi risk yönetimi değildir.', en: 'Buying the largest amount you can afford is not good risk management by itself.' },
+    takeaway: { tr: 'Miktar büyürse aynı hareketin hesabındaki etkisi büyür.', en: 'A larger amount makes the same move affect your account more.' },
     visualAlt: { tr: 'Aynı yüzde düşüşte küçük ve büyük para miktarlarının farklı parasal kayıp ürettiğini gösteren sade karşılaştırma', en: 'Simple comparison showing small and large amounts producing different cash losses under the same percentage decline' },
     taskPrompt: { tr: 'Aynı yüzde düşüşte hangi pozisyon daha büyük parasal kayıp yaratır?', en: 'Under the same percentage decline, which position creates the larger cash loss?' },
     taskChoices: [
@@ -82,11 +82,11 @@ const COPY: Readonly<Record<string, BeginnerLessonCopy>> = {
   },
   'lesson.risk.reward.001': {
     title: { tr: 'Büyük hedef iyi karar demek midir?', en: 'Does a large target mean a good decision?' },
-    objective: { tr: 'Büyük olası kazancın tek başına iyi karar anlamına gelmediğini; olasılık ve maliyetin de önemli olduğunu anla.', en: 'Understand that a large possible gain does not by itself make a good decision; probability and costs matter too.' },
-    hook: { tr: '1 kaybedip 5 kazanma hedefi yazmak işlemi otomatik olarak iyi yapar mı?', en: 'Does writing a target of losing 1 to gain 5 automatically make a trade good?' },
-    explanation: { tr: 'Hayır. Bir planın olası kaybı ile olası kazancı karşılaştırılabilir; buna risk/getiri karşılaştırması denir. Ama büyük hedefin gerçekleşme ihtimali çok düşük olabilir. Üstelik komisyon, alış-satış farkı ve fiyat kayması sonucu değiştirebilir. Bu yüzden yalnız hedefin büyük olması kararın iyi olduğunu kanıtlamaz.', en: 'No. A plan can compare its possible loss with its possible gain; this is called a risk-reward comparison. But a large target may have a very low chance of being reached. Fees, the buy-sell gap, and slippage can also change the result. A large target alone therefore does not prove a decision is good.' },
-    misconception: { tr: '“1 kaybedip 5 kazanacağım” yazmak, 5’in gerçekleşeceği anlamına gelmez. Hedef ile olasılık aynı şey değildir.', en: 'Writing “lose 1 to gain 5” does not mean the 5 will happen. A target and its probability are not the same thing.' },
-    takeaway: { tr: 'Büyük hedef tek başına kalite değildir; olasılık, maliyet ve gerçekleşme de önemlidir.', en: 'A large target is not quality by itself; probability, costs, and execution also matter.' },
+    objective: { tr: 'Büyük hedefin tek başına iyi karar olmadığını öğren.', en: 'Learn why a large target alone does not make a good decision.' },
+    hook: { tr: '1 kaybedip 5 kazanma hedefi, işlemi otomatik olarak iyi yapar mı?', en: 'Does a 1-to-5 target automatically make a trade good?' },
+    explanation: { tr: 'Hayır. Olası kayıp ile hedef karşılaştırılabilir ama hedefin gerçekleşme ihtimali ve işlem maliyetleri de önemlidir. Büyük hedef tek başına iyi karar kanıtı değildir.', en: 'No. Possible loss and target can be compared, but the chance of reaching the target and trading costs matter too. A large target alone does not prove a decision is good.' },
+    misconception: { tr: '“1’e 5” yazmak, 5’in gerçekleşeceğini garanti etmez.', en: 'Writing “1 to 5” does not guarantee that the 5 will happen.' },
+    takeaway: { tr: 'Hedef, olasılık ve maliyet birlikte değerlendirilir.', en: 'Target, probability, and cost are considered together.' },
     visualAlt: { tr: 'Küçük kayıp ve büyük hedef terazisinin yanında hedefe ulaşma olasılığı ve maliyetleri ayrı gösteren sade karar görseli', en: 'Simple decision visual showing a small loss and large target alongside separate probability and cost factors' },
     taskPrompt: { tr: 'Hangisi yalnız büyük hedefe bakmaktan daha sağlıklı bir değerlendirmedir?', en: 'Which is a healthier evaluation than looking only at a large target?' },
     taskChoices: [
@@ -102,11 +102,11 @@ const COPY: Readonly<Record<string, BeginnerLessonCopy>> = {
   },
   'lesson.risk.stop-orders.001': {
     title: { tr: 'Çıkış fiyatı neden garanti değildir?', en: 'Why is an exit price not guaranteed?' },
-    objective: { tr: 'Önceden çıkış seviyesi belirlemenin faydalı olabileceğini ama hızlı piyasanın gerçekleşme fiyatını değiştirebileceğini anla.', en: 'Understand that planning an exit level can be useful, but a fast market can still change the actual execution price.' },
+    objective: { tr: 'Stop emrinin çıkışı planladığını ama fiyatı garanti etmediğini öğren.', en: 'Learn how a stop plans an exit without guaranteeing the execution price.' },
     hook: { tr: '“95 olursa çıkarım” demek tam 95’ten çıkacağını garanti eder mi?', en: 'If you say “I will exit at 95,” does that guarantee an exit exactly at 95?' },
-    explanation: { tr: 'Hayır. Stop emri, fiyat belirlediğin seviyeye geldiğinde çıkış emrini devreye sokar. Fiyat çok hızlı hareket ederse veya arada işlem oluşmazsa gerçek çıkış fiyatı daha kötü olabilir. Yani stop, çıkışı planlamaya yardım eder ama maksimum kaybı kesin olarak kilitlemez.', en: 'No. A stop order activates an exit order when price reaches the level you chose. If price moves very quickly or no trades occur between prices, the actual exit can be worse. A stop helps plan an exit, but it does not lock the maximum loss with certainty.' },
-    misconception: { tr: 'Stop seviyesi bir duvar değildir. Piyasa hızlı atladığında gerçek işlem başka bir fiyattan gerçekleşebilir.', en: 'A stop level is not a wall. If the market jumps quickly, the actual trade can happen at a different price.' },
-    takeaway: { tr: 'Çıkış seviyesi plan sağlar; gerçekleşme fiyatı yine piyasa koşullarına bağlıdır.', en: 'An exit level provides a plan; the actual execution price still depends on market conditions.' },
+    explanation: { tr: 'Stop, fiyat seçtiğin seviyeye gelince çıkış emrini tetikler. Piyasa hızlı hareket ederse işlem başka bir fiyattan gerçekleşebilir. Bu yüzden stop plan sağlar ama kesin çıkış fiyatı vermez.', en: 'A stop triggers an exit order when price reaches your chosen level. If the market moves quickly, the trade can execute at another price. A stop gives a plan but not a guaranteed exit price.' },
+    misconception: { tr: 'Stop seviyesi duvar değildir; fiyat o seviyeyi atlayabilir.', en: 'A stop level is not a wall; price can jump past it.' },
+    takeaway: { tr: 'Stop plan sağlar; işlem fiyatını garanti etmez.', en: 'A stop provides a plan; it does not guarantee execution price.' },
     visualAlt: { tr: 'Planlanan 95 çıkış seviyesi ile hızlı fiyat atlaması sonrası 93 gerçekleşme fiyatını karşılaştıran sade görsel', en: 'Simple visual comparing a planned exit level of 95 with actual execution at 93 after a fast price jump' },
     taskPrompt: { tr: 'Fiyat 100’den hızla 93’e atlayıp arada işlem oluşmazsa 95 stopu ne yaşayabilir?', en: 'If price jumps from 100 to 93 with no trades in between, what can happen to a stop at 95?' },
     taskChoices: [
@@ -122,11 +122,11 @@ const COPY: Readonly<Record<string, BeginnerLessonCopy>> = {
   },
   'lesson.portfolio.diversification.001': {
     title: { tr: 'Parayı farklı şeylere bölmek riski nasıl değiştirir?', en: 'How can spreading money across different things change risk?' },
-    objective: { tr: 'Parayı gerçekten farklı risk kaynaklarına yaymanın tek bir olaya bağımlılığı azaltabileceğini anla.', en: 'Understand that spreading money across genuinely different risk sources can reduce dependence on one event.' },
+    objective: { tr: 'Farklı risk kaynaklarına yayılmanın neden önemli olduğunu öğren.', en: 'Learn why spreading across different risk sources matters.' },
     hook: { tr: 'On farklı isim almak gerçekten on farklı risk taşımak mıdır?', en: 'Does owning ten different names really mean having ten different risks?' },
-    explanation: { tr: 'Her zaman değil. Parayı farklı yatırımlara yaymak, tek bir yatırımın kötü sonucuna bağımlılığı azaltabilir. Buna çeşitlendirme denir. Ama seçtiğin yatırımlar aynı nedenden birlikte düşüyorsa yalnız isim sayısını artırmış olursun. Önemli olan farklı isimler değil, gerçekten farklı risk kaynakları taşımaktır.', en: 'Not always. Spreading money across different investments can reduce dependence on one investment having a bad outcome. This is called diversification. But if the investments all fall for the same reason, you have only increased the number of names. What matters is not different names, but genuinely different sources of risk.' },
-    misconception: { tr: 'Çok sayıda varlık otomatik olarak çeşitlendirme değildir. Hepsi aynı şeye bağlıysa risk hâlâ tek yerde yoğunlaşabilir.', en: 'Many assets do not automatically create diversification. If they all depend on the same thing, risk can still be concentrated.' },
-    takeaway: { tr: 'Çeşitlendirme, isim sayısını değil tek bir risk kaynağına bağımlılığı azaltmayı hedefler.', en: 'Diversification aims to reduce dependence on one source of risk, not simply increase the number of names.' },
+    explanation: { tr: 'Her zaman değil. Parayı farklı yatırımlara bölmek tek bir kötü sonuca bağımlılığı azaltabilir. Buna çeşitlendirme denir. Ama yatırımlar aynı nedenden birlikte düşüyorsa yalnız isim sayısını artırmış olursun. Önemli olan farklı risk kaynaklarıdır.', en: 'Not always. Spreading money across investments can reduce dependence on one bad outcome. This is diversification. But if the investments fall for the same reason, you have only added more names. What matters is having different sources of risk.' },
+    misconception: { tr: 'Çok sayıda varlık, tek başına iyi çeşitlendirme değildir.', en: 'Many assets do not automatically mean good diversification.' },
+    takeaway: { tr: 'Çeşitlendirme, tek riske bağımlılığı azaltmayı amaçlar.', en: 'Diversification aims to reduce dependence on one risk.' },
     visualAlt: { tr: 'Aynı risk kaynağına bağlı çok sayıda varlık ile farklı risk kaynaklarına yayılmış bir sepeti karşılaştıran sade görsel', en: 'Simple visual comparing many assets tied to one risk source with a basket spread across different risk sources' },
     taskPrompt: { tr: 'Hangisi daha güçlü çeşitlendirme örneğine yakındır?', en: 'Which is closer to stronger diversification?' },
     taskChoices: [
