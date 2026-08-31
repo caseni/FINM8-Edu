@@ -84,7 +84,7 @@ function ZoneStory({ tr, role, styles }: StoryProps) {
       </View>
     </View>
   );
-  return <View style={styles.scene}><Heading styles={styles} title={tr ? 'Destek ve direnç = geçmişte tepki görülen yaklaşık bölgeler.' : 'Support and resistance = approximate areas where price reacted before.'} /><View style={styles.zoneSummary}><View style={styles.summaryResistance}><Text style={styles.summaryLabel}>{tr ? 'DİRENÇ' : 'RESISTANCE'}</Text></View><View style={styles.summaryGap} /><View style={styles.summarySupport}><Text style={styles.summaryLabel}>{tr ? 'DESTEK' : 'SUPPORT'}</Text></View></View></View>;
+  return <View style={styles.scene}><View style={styles.zoneSummary}><View style={styles.summaryResistance}><Text style={styles.summaryLabel}>{tr ? 'DİRENÇ' : 'RESISTANCE'}</Text></View><View style={styles.summaryGap} /><View style={styles.summarySupport}><Text style={styles.summaryLabel}>{tr ? 'DESTEK' : 'SUPPORT'}</Text></View></View></View>;
 }
 
 function MomentumPair({ tr, styles }: { tr: boolean; styles: Styles }) {
@@ -115,7 +115,7 @@ function MomentumStory({ tr, role, styles }: StoryProps) {
       </View>
     </View>
   );
-  return <View style={styles.scene}><Heading styles={styles} title={tr ? 'Momentum = hareketin gücü ve hızı; gelecek yönünün garantisi değil.' : 'Momentum = strength and speed of movement, not a guarantee of future direction.'} /><View style={styles.momentumSummary}><Text style={styles.speedWord}>HIZ</Text><Text style={styles.plus}>+</Text><Text style={styles.speedWord}>{tr ? 'ISRAR' : 'PERSISTENCE'}</Text><Text style={styles.notEqual}>≠</Text><Text style={styles.question}>?</Text></View></View>;
+  return <View style={styles.scene}><View style={styles.momentumSummary}><Text style={styles.speedWord}>HIZ</Text><Text style={styles.plus}>+</Text><Text style={styles.speedWord}>{tr ? 'DEVAM' : 'PERSISTENCE'}</Text><Text style={styles.notEqual}>≠</Text><Text style={styles.question}>?</Text></View></View>;
 }
 
 function AverageStory({ tr, role, styles }: StoryProps) {
@@ -150,7 +150,7 @@ function AverageStory({ tr, role, styles }: StoryProps) {
       </View>
     </View>
   );
-  return <View style={styles.scene}><Heading styles={styles} title={tr ? 'Hareketli ortalama geçmişi sadeleştirir; geleceği bilmez.' : 'A moving average simplifies the past; it does not know the future.'} /><View style={styles.averageSummary}><View style={styles.pastSummary}><Text style={styles.eyebrow}>{tr ? 'GEÇMİŞ FİYATLAR' : 'PAST PRICES'}</Text><Path values={[25, 49, 35, 56, 44]} muted styles={styles} /></View><Text style={styles.formulaArrow}>→</Text><View style={styles.smoothSummary}><Text style={styles.eyebrow}>{tr ? 'YUMUŞAK ÖZET' : 'SMOOTH SUMMARY'}</Text><View style={styles.longLine} /></View></View></View>;
+  return <View style={styles.scene}><View style={styles.averageSummary}><View style={styles.pastSummary}><Text style={styles.eyebrow}>{tr ? 'GEÇMİŞ FİYATLAR' : 'PAST PRICES'}</Text><Path values={[25, 49, 35, 56, 44]} muted styles={styles} /></View><Text style={styles.formulaArrow}>→</Text><View style={styles.smoothSummary}><Text style={styles.eyebrow}>{tr ? 'YUMUŞAK ÖZET' : 'SMOOTH SUMMARY'}</Text><View style={styles.longLine} /></View></View></View>;
 }
 
 const createStyles = (theme: LearningTheme, wide: boolean, phone: boolean) => StyleSheet.create({

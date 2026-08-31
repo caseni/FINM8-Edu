@@ -22,11 +22,11 @@ type BeginnerLessonCopy = {
 const COPY: Readonly<Record<string, BeginnerLessonCopy>> = {
   'lesson.chart.candles.001': {
     title: { tr: 'Grafikte gördüğün şey aslında nedir?', en: 'What are you actually seeing on a chart?' },
-    objective: { tr: 'Grafiğin fiyatın zaman içindeki kaydı olduğunu ve bir mumun tek bir zaman parçasını özetlediğini anla.', en: 'Understand that a chart records price over time and that one candle summarizes one slice of time.' },
+    objective: { tr: 'Grafiğin ve tek bir mumun neyi gösterdiğini öğren.', en: 'Learn what a chart and a single candle show.' },
     hook: { tr: 'Grafikteki mumlar neyin kaydı?', en: 'What do the candles on a chart record?' },
-    explanation: { tr: 'Grafik, fiyatın zaman içinde nasıl değiştiğinin kaydıdır. Mum kullanılan grafikte her mum belirli bir süreyi özetler: fiyat nerede başladı, nerede bitti ve o sürede en yüksek ile en düşük nereye gitti. Bunlara açılış, kapanış, en yüksek ve en düşük denir.', en: 'A chart is a record of how price changed over time. On a candlestick chart, each candle summarizes one period: where price started, where it ended, and the highest and lowest points reached during that period. These are called open, close, high, and low.' },
-    misconception: { tr: 'Bir mum yalnızca geçmişteki bir zaman parçasını anlatır. Yeşil olması sonraki hareketin de yükseleceğini garanti etmez.', en: 'A candle describes one past period. A green candle does not guarantee that the next move will also rise.' },
-    takeaway: { tr: 'Grafik geçmiş fiyat hareketinin kaydıdır; gelecek için kesin cevap değildir.', en: 'A chart records past price movement; it is not a certain answer about the future.' },
+    explanation: { tr: 'Grafik, fiyatın zaman içindeki kaydıdır. Her mum seçilen bir süreyi özetler: başlangıç, bitiş, en yüksek ve en düşük fiyat. Bunlara açılış, kapanış, yüksek ve düşük denir.', en: 'A chart records price over time. Each candle summarizes one period: the start, finish, highest, and lowest price. These are called open, close, high, and low.' },
+    misconception: { tr: 'Yeşil bir mum, sonraki mumun da yükseleceğini garanti etmez.', en: 'A green candle does not guarantee that the next candle will rise.' },
+    takeaway: { tr: 'Her mum, geçmişteki bir zaman parçasını özetler.', en: 'Each candle summarizes one past period.' },
     visualAlt: { tr: 'Zaman boyunca ilerleyen fiyat kaydı ve tek bir mumun başlangıç, bitiş, en yüksek ve en düşük noktalarını gösteren sade grafik', en: 'Simple chart showing price over time and one candle with its start, finish, high, and low' },
     taskPrompt: { tr: 'Bir mumun en üst ucu neyi gösterir?', en: 'What does the top tip of a candle show?' },
     taskChoices: [
@@ -43,11 +43,11 @@ const COPY: Readonly<Record<string, BeginnerLessonCopy>> = {
   },
   'lesson.chart.timeframes.001': {
     title: { tr: 'Aynı grafik neden yakınlaştırınca değişir?', en: 'Why does the same chart change when you zoom in?' },
-    objective: { tr: 'Aynı fiyat hareketinin farklı zaman ölçeklerinde farklı görünebileceğini anla.', en: 'Understand that the same price movement can look different at different time scales.' },
-    hook: { tr: 'Yakından bakınca düşüş, uzaktan bakınca yükseliş görmek mümkün mü?', en: 'Can something look down close-up but still look up from farther away?' },
-    explanation: { tr: 'Evet. Her mum seçtiğin kadar zamanı özetler. Örneğin 15 dakikalık grafik küçük hareketleri büyütürken günlük grafik daha geniş resmi gösterir. Buna zaman dilimi denir. Bir yorum yaparken hangi zaman dilimine baktığını bilmek gerekir.', en: 'Yes. Each candle summarizes the amount of time you choose. A 15-minute chart magnifies smaller moves, while a daily chart shows a broader picture. This is called the timeframe. Any chart view needs the timeframe for context.' },
-    misconception: { tr: 'Kısa grafikte görülen küçük bir düşüş, daha geniş grafikteki genel yükselişi otomatik olarak bozmaz.', en: 'A small decline on a short chart does not automatically erase the broader rise on a larger chart.' },
-    takeaway: { tr: 'Aynı piyasa, farklı zaman ölçeklerinde farklı görünebilir.', en: 'The same market can look different at different time scales.' },
+    objective: { tr: 'Aynı fiyat hareketinin farklı zaman dilimlerinde neden farklı göründüğünü öğren.', en: 'Learn why the same price move can look different across timeframes.' },
+    hook: { tr: 'Yakından düşüş, uzaktan yükseliş görmek mümkün mü?', en: 'Can a move look down close-up but up from farther away?' },
+    explanation: { tr: 'Evet. Her mum seçtiğin zaman kadar veriyi özetler. 15 dakikalık grafik küçük hareketleri gösterirken günlük grafik daha geniş resmi gösterir. Buna zaman dilimi denir.', en: 'Yes. Each candle summarizes the amount of time you choose. A 15-minute chart shows smaller moves, while a daily chart shows the broader picture. This is the timeframe.' },
+    misconception: { tr: 'Kısa vadeli bir düşüş, daha geniş yükselişi tek başına bozmaz.', en: 'A short-term decline does not erase a broader rise by itself.' },
+    takeaway: { tr: 'Aynı piyasa farklı zaman dilimlerinde farklı görünebilir.', en: 'The same market can look different across timeframes.' },
     visualAlt: { tr: 'Aynı fiyat yolunu yakın ve uzak görünümde karşılaştıran sade zaman ölçeği görseli', en: 'Simple visual comparing the same price path in close-up and broader time views' },
     taskPrompt: { tr: '15 dakikalık grafikte küçük bir düşüş varken günlük grafik hâlâ yukarı gidiyorsa hangileri birlikte doğru olabilir?', en: 'If a 15-minute chart is falling slightly while the daily chart still trends upward, which statements can both be true?' },
     taskChoices: [
@@ -64,11 +64,11 @@ const COPY: Readonly<Record<string, BeginnerLessonCopy>> = {
   },
   'lesson.chart.trend.001': {
     title: { tr: 'Fiyat genel olarak hangi yöne gidiyor?', en: 'Which direction is price generally moving?' },
-    objective: { tr: 'Tek bir mum yerine fiyatın zaman içindeki genel yönünü yukarı, aşağı veya yatay olarak ayırt et.', en: 'Distinguish the broader direction of price over time as up, down, or sideways instead of judging one candle.' },
+    objective: { tr: 'Fiyatın genel yönünü tek bir muma bakmadan ayırt etmeyi öğren.', en: 'Learn to identify broader price direction without judging one candle.' },
     hook: { tr: 'Bugün fiyat yükseldi diye genel yön mutlaka yukarı mı?', en: 'If price rose today, is the broader direction definitely up?' },
-    explanation: { tr: 'Hayır. Genel yönü anlamak için tek bir muma değil, peş peşe oluşan tepe ve diplerin nasıl ilerlediğine bakılır. Tepeler ve dipler zamanla yukarı taşınıyorsa yükseliş, aşağı taşınıyorsa düşüş, belirgin ilerleme yoksa yatay hareket denebilir. Bu genel harekete trend denir.', en: 'No. To understand the broader direction, look at how a sequence of highs and lows develops rather than one candle. If both move higher over time, the move is upward; if both move lower, it is downward; if neither progresses clearly, price may be sideways. This broader movement is called a trend.' },
-    misconception: { tr: 'Son mumun rengi genel yönü tek başına belirlemez.', en: 'The color of the latest candle does not determine the broader direction by itself.' },
-    takeaway: { tr: 'Trend tek bir an değil, fiyatın zaman içindeki genel ilerleyişidir.', en: 'A trend is not one moment; it is the broader progression of price over time.' },
+    explanation: { tr: 'Hayır. Peş peşe oluşan tepe ve diplere bakılır. İkisi de yukarı taşınıyorsa yükseliş, aşağı taşınıyorsa düşüş; belirgin yön yoksa yatay hareket denir. Bu genel yapıya trend denir.', en: 'No. Look at successive highs and lows. If both move higher, the trend is rising; if both move lower, it is falling; without clear direction, it is sideways. This broader structure is the trend.' },
+    misconception: { tr: 'Son mumun rengi, genel yönü tek başına belirlemez.', en: 'The latest candle color does not determine the broader direction by itself.' },
+    takeaway: { tr: 'Trend, fiyatın zaman içindeki genel yönüdür.', en: 'Trend is the broader direction of price over time.' },
     visualAlt: { tr: 'Yukarı, aşağı ve yatay ilerleyen üç sade fiyat yolunu karşılaştıran grafik', en: 'Simple chart comparing upward, downward, and sideways price paths' },
     taskPrompt: { tr: 'Genel yükselişi destekleyen iki özellik hangisidir?', en: 'Which two features support a broader upward move?' },
     taskChoices: [
@@ -85,11 +85,11 @@ const COPY: Readonly<Record<string, BeginnerLessonCopy>> = {
   },
   'lesson.chart.support-resistance.001': {
     title: { tr: 'Fiyat neden bazı bölgelerde tekrar durur?', en: 'Why does price often pause around the same areas?' },
-    objective: { tr: 'Geçmişte tekrar tekrar tepki görülen fiyat alanlarını tek kesin çizgi yerine bölge olarak anla.', en: 'Understand areas with repeated past reactions as zones rather than one exact line.' },
-    hook: { tr: 'Fiyat neden bazen aynı yere yaklaşınca tekrar yön değiştirir?', en: 'Why can price change direction again when it returns near the same area?' },
-    explanation: { tr: 'Geçmişte alıcıların veya satıcıların daha çok tepki verdiği bazı fiyat alanları olabilir. Fiyat tekrar o bölgeye geldiğinde yeniden tepki görülebilir. Aşağıdaki tepki alanına destek, yukarıdaki tepki alanına direnç denir. Bunlar tek bir kusursuz çizgi değil, yaklaşık bölgelerdir.', en: 'Some price areas may have attracted stronger buyer or seller reactions in the past. When price returns, reactions can appear again. A lower reaction area is called support and an upper reaction area resistance. They are approximate zones, not perfect single lines.' },
-    misconception: { tr: 'Destek veya direnç bir duvar değildir. Fiyatın mutlaka orada duracağını garanti etmez.', en: 'Support or resistance is not a wall. It does not guarantee that price will stop there.' },
-    takeaway: { tr: 'Destek ve direnç, geçmiş tepkileri hatırlatan yaklaşık fiyat bölgeleridir.', en: 'Support and resistance are approximate price areas that mark past reactions.' },
+    objective: { tr: 'Fiyatın sık tepki verdiği alanları çizgi yerine bölge olarak okumayı öğren.', en: 'Learn to read repeated reaction areas as zones rather than exact lines.' },
+    hook: { tr: 'Fiyat neden bazen aynı bölgeye gelince tekrar tepki verir?', en: 'Why can price react again near the same area?' },
+    explanation: { tr: 'Fiyat geçmişte bazı alanlarda birkaç kez tepki vermiş olabilir. Alt taraftaki bölgeye destek, üst taraftakine direnç denir. Bunlar tek bir kesin fiyat değil, yaklaşık alanlardır.', en: 'Price may have reacted several times around certain areas. The lower area is called support and the upper area resistance. These are approximate zones, not one exact price.' },
+    misconception: { tr: 'Destek ve direnç duvar değildir; fiyat bölgeden geçebilir.', en: 'Support and resistance are not walls; price can move through them.' },
+    takeaway: { tr: 'Destek ve direnç, yaklaşık tepki bölgeleridir.', en: 'Support and resistance are approximate reaction zones.' },
     visualAlt: { tr: 'Fiyatın birkaç kez benzer alt ve üst bölgelerde tepki verdiğini gösteren sade grafik', en: 'Simple chart showing price reacting several times around similar lower and upper areas' },
     taskPrompt: { tr: 'Bir tepki bölgesini tanımak için hangi iki gözlem daha anlamlıdır?', en: 'Which two observations are more useful for recognizing a reaction area?' },
     taskChoices: [
@@ -106,11 +106,11 @@ const COPY: Readonly<Record<string, BeginnerLessonCopy>> = {
   },
   'lesson.technical.momentum.001': {
     title: { tr: 'Hareket neden bazen hızlanır, bazen yavaşlar?', en: 'Why does price sometimes speed up and slow down?' },
-    objective: { tr: 'Fiyatın yönünden ayrı olarak hareketin hızını ve devam gücünü fark et.', en: 'Recognize the speed and persistence of a price move separately from its direction.' },
-    hook: { tr: 'Fiyat hâlâ yükselirken yükselişin gücü azalabilir mi?', en: 'Can an upward move lose strength while price is still rising?' },
-    explanation: { tr: 'Evet. Fiyat aynı yönde ilerlemeye devam ederken hareket daha hızlı veya daha yavaş olabilir. Hareketin bu hızına ve ne kadar ısrarlı sürdüğüne momentum denir. Momentum zayıflaması yönün kesin döneceği anlamına gelmez; yalnız hareketin karakterinin değiştiğini gösterir.', en: 'Yes. Price can keep moving in the same direction while the move becomes faster or slower. The speed and persistence of that movement is called momentum. Weakening momentum does not mean direction will certainly reverse; it only shows that the character of the move is changing.' },
-    misconception: { tr: 'Hızlı yükseliş sonsuza kadar aynı hızda devam etmek zorunda değildir.', en: 'A fast rise does not have to continue at the same speed forever.' },
-    takeaway: { tr: 'Momentum yönü değil, hareketin hızını ve devam gücünü anlatır.', en: 'Momentum describes the speed and persistence of a move, not a guaranteed direction.' },
+    objective: { tr: 'Fiyat hareketinin yönünden ayrı olarak hızını ve gücünü fark etmeyi öğren.', en: 'Learn to notice the speed and strength of a move separately from direction.' },
+    hook: { tr: 'Fiyat yükselirken yükselişin gücü azalabilir mi?', en: 'Can an upward move lose strength while price is still rising?' },
+    explanation: { tr: 'Evet. Fiyat aynı yönde giderken hareket hızlanabilir veya yavaşlayabilir. Bu hız ve devam gücüne momentum denir. Momentum zayıflarsa hareket yavaşlamıştır; bu, yönün kesin döneceği anlamına gelmez.', en: 'Yes. Price can keep moving in one direction while the move speeds up or slows down. This speed and persistence is momentum. Weaker momentum means the move has slowed, not that direction must reverse.' },
+    misconception: { tr: 'Güçlü momentum, hareketin aynı hızda süreceğini garanti etmez.', en: 'Strong momentum does not guarantee that the move will continue at the same speed.' },
+    takeaway: { tr: 'Momentum, hareketin hızını ve devam gücünü anlatır.', en: 'Momentum describes a move’s speed and persistence.' },
     visualAlt: { tr: 'Aynı yönde ilerleyen hızlı ve yavaş iki fiyat hareketini karşılaştıran sade grafik', en: 'Simple chart comparing fast and slow price moves in the same direction' },
     taskPrompt: { tr: 'Fiyat yükselmeye devam ederken hareket belirgin biçimde yavaşlıyorsa ne söylenebilir?', en: 'If price is still rising but the move clearly slows, what can be said?' },
     taskChoices: [
@@ -126,11 +126,11 @@ const COPY: Readonly<Record<string, BeginnerLessonCopy>> = {
   },
   'lesson.technical.moving-average.001': {
     title: { tr: 'Grafikteki yardımcı çizgi geleceği bilir mi?', en: 'Does a helper line on the chart know the future?' },
-    objective: { tr: 'Hareketli ortalamanın geçmiş fiyatları yumuşatarak özetlediğini ve geleceği tahmin etmediğini anla.', en: 'Understand that a moving average smooths past prices and does not predict the future.' },
+    objective: { tr: 'Hareketli ortalamanın geçmiş fiyatları nasıl sadeleştirdiğini öğren.', en: 'Learn how a moving average simplifies past prices.' },
     hook: { tr: 'Fiyatın yanındaki yumuşak çizgi nereden geliyor?', en: 'Where does the smooth line beside price come from?' },
-    explanation: { tr: 'Hareketli ortalama, geçmişteki belirli sayıda fiyatı ortalayıp daha yumuşak bir çizgi oluşturur. Böylece küçük dalgalanmaların içinde genel yönü görmek kolaylaşabilir. Ama çizgi yalnız geçmiş veriden üretildiği için geleceği bilmez ve tek başına alım veya satım kararı değildir.', en: 'A moving average takes a chosen number of past prices and creates a smoother line. This can make the broader direction easier to see through small fluctuations. But because the line is built only from past data, it does not know the future and is not a buy or sell decision by itself.' },
-    misconception: { tr: 'Fiyat yardımcı çizgiyi geçti diye sonraki yön kesinleşmez.', en: 'Price crossing the helper line does not make the next direction certain.' },
-    takeaway: { tr: 'Hareketli ortalama geçmiş fiyatı sadeleştirir; geleceği tahmin etmez.', en: 'A moving average simplifies past price; it does not predict the future.' },
+    explanation: { tr: 'Hareketli ortalama, geçmişteki fiyatları ortalayıp daha yumuşak bir çizgi oluşturur. Küçük dalgalanmalar arasında genel yönü görmeyi kolaylaştırabilir. Ama yalnız geçmiş veriden hesaplanır.', en: 'A moving average averages past prices into a smoother line. It can make the broader direction easier to see through small fluctuations, but it is calculated only from past data.' },
+    misconception: { tr: 'Fiyat ortalamayı geçti diye sonraki yön kesinleşmez.', en: 'Crossing the average does not make the next direction certain.' },
+    takeaway: { tr: 'Hareketli ortalama geçmiş fiyatları sadeleştirir.', en: 'A moving average simplifies past prices.' },
     visualAlt: { tr: 'Dalgalı fiyat yolu üzerinde geçmiş fiyatlardan oluşan daha yumuşak yardımcı çizgiyi gösteren sade grafik', en: 'Simple chart showing a smoother helper line built from past prices over a noisier price path' },
     taskPrompt: { tr: 'Daha uzun süreyi ortalayan çizgi genellikle nasıl görünür?', en: 'How does a line averaging a longer period usually look?' },
     taskChoices: [
