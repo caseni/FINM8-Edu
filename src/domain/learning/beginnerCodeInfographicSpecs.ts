@@ -102,6 +102,69 @@ export const BEGINNER_MARKET_CODE_INFOGRAPHIC_SPECS: readonly BeginnerCodeInfogr
   },
 ] as const;
 
+
+export const BEGINNER_ECONOMY_CODE_INFOGRAPHIC_SPECS: readonly BeginnerCodeInfographicSpec[] = [
+  {
+    lessonId: 'lesson.economy.inflation.001',
+    teachingGoal: { tr: 'Aynı paranın zamanla daha az ürün alabildiğini göster.', en: 'Show that the same money can buy fewer goods over time.' },
+    mechanism: 'before_after',
+    roles: ['hook', 'concept', 'practice', 'misconception', 'summary'],
+    mobileStrategy: 'stacked',
+    textBudget: { headingWords: 7, cardWords: 5, ruleWords: 0 },
+    reviewQuestions: ['Aynı bütçe iki durumda açıkça karşılaştırılıyor mu?', 'Sepet farkı metinsiz anlaşılabiliyor mu?'],
+  },
+  {
+    lessonId: 'lesson.economy.interest-rates.001',
+    teachingGoal: { tr: 'Faiz yükselince borç maliyetinin artabildiğini göster.', en: 'Show that borrowing cost can rise when interest rises.' },
+    mechanism: 'cause_effect',
+    roles: ['hook', 'concept', 'practice', 'misconception', 'summary'],
+    mobileStrategy: 'stacked',
+    textBudget: { headingWords: 7, cardWords: 5, ruleWords: 0 },
+    reviewQuestions: ['Faiz ile maliyet arasındaki yön açık mı?', 'Kredi kartları gereksiz metin taşıyor mu?'],
+  },
+  {
+    lessonId: 'lesson.economy.central-banks.001',
+    teachingGoal: { tr: 'Merkez bankasının tek tek fiyatları değil ekonomik koşulları etkilediğini göster.', en: 'Show that a central bank influences conditions rather than individual prices.' },
+    mechanism: 'cause_effect',
+    roles: ['hook', 'concept', 'practice', 'misconception', 'summary'],
+    mobileStrategy: 'single_focus',
+    textBudget: { headingWords: 7, cardWords: 5, ruleWords: 0 },
+    reviewQuestions: ['Merkez bankası ile kredi/faiz koşulları ilişkisi görünür mü?', 'Görsel fiyat belirleme yanılgısını güçlendiriyor mu?'],
+  },
+  {
+    lessonId: 'lesson.economy.monetary-policy.001',
+    teachingGoal: { tr: 'Faiz kararının ekonomiye bir zincir üzerinden yayıldığını göster.', en: 'Show that a rate decision spreads through the economy as a chain.' },
+    mechanism: 'sequence',
+    roles: ['hook', 'concept', 'practice', 'misconception', 'summary'],
+    mobileStrategy: 'sequence',
+    textBudget: { headingWords: 7, cardWords: 5, ruleWords: 0 },
+    reviewQuestions: ['Faiz → kredi → harcama sırası açık mı?', 'Zaman etkisi görselde hissediliyor mu?'],
+  },
+  {
+    lessonId: 'lesson.economy.growth.001',
+    teachingGoal: { tr: 'Ekonomik büyümeyi daha fazla toplam üretim olarak göster.', en: 'Show economic growth as more total output.' },
+    mechanism: 'before_after',
+    roles: ['hook', 'concept', 'practice', 'misconception', 'summary'],
+    mobileStrategy: 'stacked',
+    textBudget: { headingWords: 7, cardWords: 5, ruleWords: 0 },
+    reviewQuestions: ['Büyüme borsa yükselişiyle karışıyor mu?', 'Toplam üretim fikri tek bakışta seçiliyor mu?'],
+  },
+  {
+    lessonId: 'lesson.economy.business-cycle.001',
+    teachingGoal: { tr: 'Harcama, üretim ve işe alım birlikte zayıflayınca yavaşlamayı göster.', en: 'Show slowdown when spending, production, and hiring weaken together.' },
+    mechanism: 'cause_effect',
+    roles: ['hook', 'concept', 'practice', 'misconception', 'summary'],
+    mobileStrategy: 'stacked',
+    textBudget: { headingWords: 7, cardWords: 5, ruleWords: 0 },
+    reviewQuestions: ['Birden fazla alanın birlikte zayıfladığı görülüyor mu?', 'Tek veri = resesyon yanılgısı önleniyor mu?'],
+  },
+] as const;
+
 export const BEGINNER_MARKET_CODE_INFOGRAPHIC_SPEC_BY_LESSON_ID = new Map(
   BEGINNER_MARKET_CODE_INFOGRAPHIC_SPECS.map((spec) => [spec.lessonId, spec] as const),
+);
+
+export const BEGINNER_CODE_INFOGRAPHIC_SPEC_BY_LESSON_ID = new Map(
+  [...BEGINNER_MARKET_CODE_INFOGRAPHIC_SPECS, ...BEGINNER_ECONOMY_CODE_INFOGRAPHIC_SPECS]
+    .map((spec) => [spec.lessonId, spec] as const),
 );

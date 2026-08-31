@@ -1,5 +1,5 @@
 import { BEGINNER_SECTION_IDS, BEGINNER_SECTIONS } from './beginnerJourney';
-import { BEGINNER_MARKET_CODE_INFOGRAPHIC_SPEC_BY_LESSON_ID } from './beginnerCodeInfographicSpecs';
+import { BEGINNER_CODE_INFOGRAPHIC_SPEC_BY_LESSON_ID } from './beginnerCodeInfographicSpecs';
 import { MICRO_LESSON_CATALOG } from './catalog';
 import type { MicroLesson } from './types';
 
@@ -51,13 +51,15 @@ const ADVANCED_JARGON: readonly RegExp[] = [
   /Sortino/i,
 ];
 
-const MARKET_COPY_LIMITS = {
+const BEGINNER_COPY_LIMITS = {
   learningObjective: 16,
   prompt: 14,
   explanation: 40,
   misconception: 24,
   takeaway: 12,
 } as const;
+
+const HARD_GATED_CLARITY_SECTION_IDS = new Set(['markets', 'money_economy']);
 
 function wordCount(value: string): number {
   const clean = value.trim().replace(/\s+/g, ' ');
@@ -87,15 +89,18 @@ function normalBlockCopy(lesson: MicroLesson, kind: 'prompt' | 'explanation' | '
   return block && 'copy' in block ? block.copy.normal.tr : '';
 }
 
-function validateMarketClarity(lesson: MicroLesson, issues: BeginnerJourneyQualityIssue[]): void {
-  if (!BEGINNER_SECTIONS.markets.lessonIds.includes(lesson.id)) return;
+function validateBeginnerClarity(lesson: MicroLesson, issues: BeginnerJourneyQualityIssue[]): void {
+  const section = BEGINNER_SECTION_IDS
+    .map((sectionId) => BEGINNER_SECTIONS[sectionId])
+    .find((candidate) => candidate.lessonIds.includes(lesson.id));
+  if (!section || !HARD_GATED_CLARITY_SECTION_IDS.has(section.id)) return;
 
-  const spec = BEGINNER_MARKET_CODE_INFOGRAPHIC_SPEC_BY_LESSON_ID.get(lesson.id);
+  const spec = BEGINNER_CODE_INFOGRAPHIC_SPEC_BY_LESSON_ID.get(lesson.id);
   if (!spec) {
     issues.push({
       lessonId: lesson.id,
       reason: 'missing_infographic_spec',
-      detail: 'beginner market lesson must have a code-infographic teaching brief before fallback visuals are accepted',
+      detail: 'hard-gated beginner lesson must have a code-infographic teaching brief before fallback visuals are accepted',
     });
   } else {
     if (
@@ -116,11 +121,11 @@ function validateMarketClarity(lesson: MicroLesson, issues: BeginnerJourneyQuali
   const explanation = normalBlockCopy(lesson, 'explanation');
   const misconception = normalBlockCopy(lesson, 'misconception');
   const surfaces = [
-    ['learningObjective', lesson.learningObjective.tr, MARKET_COPY_LIMITS.learningObjective],
-    ['prompt', prompt, MARKET_COPY_LIMITS.prompt],
-    ['explanation', explanation, MARKET_COPY_LIMITS.explanation],
-    ['misconception', misconception, MARKET_COPY_LIMITS.misconception],
-    ['takeaway', lesson.takeaway.tr, MARKET_COPY_LIMITS.takeaway],
+    ['learningObjective', lesson.learningObjective.tr, BEGINNER_COPY_LIMITS.learningObjective],
+    ['prompt', prompt, BEGINNER_COPY_LIMITS.prompt],
+    ['explanation', explanation, BEGINNER_COPY_LIMITS.explanation],
+    ['misconception', misconception, BEGINNER_COPY_LIMITS.misconception],
+    ['takeaway', lesson.takeaway.tr, BEGINNER_COPY_LIMITS.takeaway],
   ] as const;
 
   for (const [field, value, limit] of surfaces) {
@@ -129,7 +134,7 @@ function validateMarketClarity(lesson: MicroLesson, issues: BeginnerJourneyQuali
       issues.push({
         lessonId: lesson.id,
         reason: 'clarity_copy_budget',
-        detail: `${field} has ${count} words; beginner-market budget is ${limit}`,
+        detail: `${field} has ${count} words; beginner budget is ${limit}`,
       });
     }
   }
@@ -197,7 +202,7 @@ export function getBeginnerJourneyQualityReport(): BeginnerJourneyQualityReport 
       continue;
     }
 
-    validateMarketClarity(lesson, issues);
+    validateBeginnerClarity(lesson, issues);
 
     const taskChoices = lesson.practicalTask.choices ?? [];
     if (taskChoices.length < MIN_OPTIONS) {
