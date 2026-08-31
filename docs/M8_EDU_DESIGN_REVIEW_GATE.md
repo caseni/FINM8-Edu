@@ -34,8 +34,8 @@ sentence.
 - The takeaway compresses the lesson into one short memory line.
 - Two consecutive surfaces must not repeat the same sentence with slightly
   different wording.
-- In currently hard-gated beginner sections (Markets + Money/Economy + Charts): objective <= 16 words,
-  hook <= 14, explanation <= 40, misconception <= 24, takeaway <= 12.
+- All four beginner sections are hard-gated: objective <= 16 words, hook <= 14,
+  explanation <= 40, misconception <= 24, takeaway <= 12.
 - Technical terminology appears only after the plain-language meaning is clear.
 
 ## 2B. Code-infographic quality
@@ -56,9 +56,9 @@ images.
   but a human design review still checks hierarchy, meaning, polish, and
   whether the visual looks template-like.
 
-Current hard-gate rollout covers the six beginner Markets lessons, the six
-Money/Economy lessons, and the six Charts lessons. Risk is added only after its
-copy and infographic family is cleaned.
+The hard-gate rollout now covers all 24 beginner lessons across Money/Economy,
+Markets, Charts, and Risk. New beginner copy or fallback infographic changes
+must pass the same clarity and teaching-mechanism rules.
 
 ## 3. Navigation and state
 

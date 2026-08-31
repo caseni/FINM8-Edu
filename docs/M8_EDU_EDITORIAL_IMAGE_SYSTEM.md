@@ -147,6 +147,6 @@ For code-drawn infographics:
 
 The first machine-readable contracts live in
 `src/domain/learning/beginnerCodeInfographicSpecs.ts`. The content-quality gate
-requires a brief for every hard-gated beginner fallback infographic in Markets,
-Money/Economy, and Charts and validates its text budget. Visual QA remains the rendering proof; the design review gate
+requires a brief for every hard-gated beginner fallback infographic across all
+four beginner sections and validates its text budget. Visual QA remains the rendering proof; the design review gate
 remains the quality judgment.

@@ -218,6 +218,64 @@ export const BEGINNER_CHART_CODE_INFOGRAPHIC_SPECS: readonly BeginnerCodeInfogra
   },
 ] as const;
 
+
+export const BEGINNER_RISK_CODE_INFOGRAPHIC_SPECS: readonly BeginnerCodeInfographicSpec[] = [
+  {
+    lessonId: 'lesson.risk.uncertainty.001',
+    teachingGoal: { tr: 'Riskin sonuç ortaya çıkmadan önce var olan ihtimal olduğunu göster.', en: 'Show that risk exists as a possibility before the outcome is known.' },
+    mechanism: 'sequence',
+    roles: ['hook', 'concept', 'practice', 'misconception', 'summary'],
+    mobileStrategy: 'sequence',
+    textBudget: { headingWords: 7, cardWords: 5, ruleWords: 0 },
+    reviewQuestions: ['Risk ile gerçekleşmiş kayıp görsel olarak ayrılıyor mu?', 'Akış riskin sonuçtan önce geldiğini gösteriyor mu?'],
+  },
+  {
+    lessonId: 'lesson.risk.volatility.001',
+    teachingGoal: { tr: 'Dar ve geniş fiyat hareketinin aynı miktarı farklı etkilediğini göster.', en: 'Show how narrow and wide price moves affect the same amount differently.' },
+    mechanism: 'comparison',
+    roles: ['hook', 'concept', 'practice', 'misconception', 'summary'],
+    mobileStrategy: 'two_by_two',
+    textBudget: { headingWords: 7, cardWords: 5, ruleWords: 0 },
+    reviewQuestions: ['Dar ve geniş hareket farkı tek bakışta seçiliyor mu?', 'Volatilite yanlışlıkla yön sinyali gibi sunuluyor mu?'],
+  },
+  {
+    lessonId: 'lesson.risk.position-sizing.001',
+    teachingGoal: { tr: 'Aynı yüzde hareketin büyük miktarda daha büyük TL etkisi yarattığını göster.', en: 'Show that the same percentage move creates a larger cash impact at larger size.' },
+    mechanism: 'comparison',
+    roles: ['hook', 'concept', 'practice', 'misconception', 'summary'],
+    mobileStrategy: 'two_by_two',
+    textBudget: { headingWords: 7, cardWords: 5, ruleWords: 0 },
+    reviewQuestions: ['Miktar ile parasal etki ilişkisi açık mı?', 'Yüzde hareketi ile miktar birbirine karışıyor mu?'],
+  },
+  {
+    lessonId: 'lesson.risk.reward.001',
+    teachingGoal: { tr: 'Büyük hedefin olasılık ve maliyetten ayrı değerlendirilemeyeceğini göster.', en: 'Show that a large target cannot be judged without probability and cost.' },
+    mechanism: 'tradeoff',
+    roles: ['hook', 'concept', 'practice', 'misconception', 'summary'],
+    mobileStrategy: 'stacked',
+    textBudget: { headingWords: 7, cardWords: 5, ruleWords: 0 },
+    reviewQuestions: ['Hedef, olasılık ve maliyet birlikte görünür mü?', 'Büyük hedef ödül gibi parlatılıyor mu?'],
+  },
+  {
+    lessonId: 'lesson.risk.stop-orders.001',
+    teachingGoal: { tr: 'Stop seviyesinin plan olduğunu ama gerçekleşme fiyatını garanti etmediğini göster.', en: 'Show that a stop is a plan but does not guarantee execution price.' },
+    mechanism: 'before_after',
+    roles: ['hook', 'concept', 'practice', 'misconception', 'summary'],
+    mobileStrategy: 'sequence',
+    textBudget: { headingWords: 7, cardWords: 5, ruleWords: 0 },
+    reviewQuestions: ['Planlanan ve gerçekleşen fiyat açıkça ayrılıyor mu?', 'Stop seviyesi duvar gibi görünmüyor mu?'],
+  },
+  {
+    lessonId: 'lesson.portfolio.diversification.001',
+    teachingGoal: { tr: 'Çeşitlendirmeyi isim sayısı değil farklı risk kaynakları olarak göster.', en: 'Show diversification as different risk sources rather than simply more names.' },
+    mechanism: 'comparison',
+    roles: ['hook', 'concept', 'practice', 'misconception', 'summary'],
+    mobileStrategy: 'stacked',
+    textBudget: { headingWords: 7, cardWords: 5, ruleWords: 0 },
+    reviewQuestions: ['Çok isim ile farklı risk ayrımı görünür mü?', 'Aynı kaynağa bağlı varlıklar farklıymış gibi sunuluyor mu?'],
+  },
+] as const;
+
 export const BEGINNER_MARKET_CODE_INFOGRAPHIC_SPEC_BY_LESSON_ID = new Map(
   BEGINNER_MARKET_CODE_INFOGRAPHIC_SPECS.map((spec) => [spec.lessonId, spec] as const),
 );
@@ -227,5 +285,6 @@ export const BEGINNER_CODE_INFOGRAPHIC_SPEC_BY_LESSON_ID = new Map(
     ...BEGINNER_MARKET_CODE_INFOGRAPHIC_SPECS,
     ...BEGINNER_ECONOMY_CODE_INFOGRAPHIC_SPECS,
     ...BEGINNER_CHART_CODE_INFOGRAPHIC_SPECS,
+    ...BEGINNER_RISK_CODE_INFOGRAPHIC_SPECS,
   ].map((spec) => [spec.lessonId, spec] as const),
 );
