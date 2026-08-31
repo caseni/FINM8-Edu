@@ -160,11 +160,72 @@ export const BEGINNER_ECONOMY_CODE_INFOGRAPHIC_SPECS: readonly BeginnerCodeInfog
   },
 ] as const;
 
+
+export const BEGINNER_CHART_CODE_INFOGRAPHIC_SPECS: readonly BeginnerCodeInfographicSpec[] = [
+  {
+    lessonId: 'lesson.chart.candles.001',
+    teachingGoal: { tr: 'Bir mumun tek zaman parçasındaki dört fiyatı özetlediğini göster.', en: 'Show that one candle summarizes four prices in one time period.' },
+    mechanism: 'matching',
+    roles: ['hook', 'concept', 'practice', 'misconception', 'summary'],
+    mobileStrategy: 'single_focus',
+    textBudget: { headingWords: 7, cardWords: 5, ruleWords: 0 },
+    reviewQuestions: ['Açılış, kapanış, yüksek ve düşük tek bakışta ayrılıyor mu?', 'Mum geleceği tahmin ediyor gibi görünüyor mu?'],
+  },
+  {
+    lessonId: 'lesson.chart.timeframes.001',
+    teachingGoal: { tr: 'Aynı hareketin farklı zaman ölçeklerinde farklı görünebildiğini göster.', en: 'Show how the same move can look different across timeframes.' },
+    mechanism: 'comparison',
+    roles: ['hook', 'concept', 'practice', 'misconception', 'summary'],
+    mobileStrategy: 'two_by_two',
+    textBudget: { headingWords: 7, cardWords: 5, ruleWords: 0 },
+    reviewQuestions: ['Yakın ve geniş görünüm aynı piyasanın iki ölçeği olarak okunuyor mu?', 'Ölçek farkı renk dışında da görünür mü?'],
+  },
+  {
+    lessonId: 'lesson.chart.trend.001',
+    teachingGoal: { tr: 'Trendin tek mumdan değil ardışık tepe ve diplerden oluştuğunu göster.', en: 'Show that trend comes from successive highs and lows, not one candle.' },
+    mechanism: 'sequence',
+    roles: ['hook', 'concept', 'practice', 'misconception', 'summary'],
+    mobileStrategy: 'stacked',
+    textBudget: { headingWords: 7, cardWords: 5, ruleWords: 0 },
+    reviewQuestions: ['Tek mum ile genel yapı görsel olarak ayrılıyor mu?', 'Yükselen, düşen ve yatay yapı kolay seçiliyor mu?'],
+  },
+  {
+    lessonId: 'lesson.chart.support-resistance.001',
+    teachingGoal: { tr: 'Destek ve direncin kesin çizgi değil tepki bölgesi olduğunu göster.', en: 'Show support and resistance as reaction zones rather than exact lines.' },
+    mechanism: 'comparison',
+    roles: ['hook', 'concept', 'practice', 'misconception', 'summary'],
+    mobileStrategy: 'stacked',
+    textBudget: { headingWords: 7, cardWords: 5, ruleWords: 0 },
+    reviewQuestions: ['Bölge fikri çizgiden daha baskın mı?', 'Görsel kesin duvar algısı yaratıyor mu?'],
+  },
+  {
+    lessonId: 'lesson.technical.momentum.001',
+    teachingGoal: { tr: 'Aynı yöndeki hareketlerin farklı hız ve güçte olabildiğini göster.', en: 'Show that moves in the same direction can have different speed and strength.' },
+    mechanism: 'comparison',
+    roles: ['hook', 'concept', 'practice', 'misconception', 'summary'],
+    mobileStrategy: 'two_by_two',
+    textBudget: { headingWords: 7, cardWords: 5, ruleWords: 0 },
+    reviewQuestions: ['Hız farkı fiyat yönünden bağımsız okunuyor mu?', 'Görsel momentumun gelecek garantisi olduğu izlenimini veriyor mu?'],
+  },
+  {
+    lessonId: 'lesson.technical.moving-average.001',
+    teachingGoal: { tr: 'Hareketli ortalamanın geçmiş fiyatları yumuşak bir çizgide özetlediğini göster.', en: 'Show that a moving average smooths past prices into one line.' },
+    mechanism: 'before_after',
+    roles: ['hook', 'concept', 'practice', 'misconception', 'summary'],
+    mobileStrategy: 'stacked',
+    textBudget: { headingWords: 7, cardWords: 5, ruleWords: 0 },
+    reviewQuestions: ['Geçmiş fiyat → yumuşak çizgi ilişkisi açık mı?', 'Çizgi geleceği bilen sinyal gibi sunuluyor mu?'],
+  },
+] as const;
+
 export const BEGINNER_MARKET_CODE_INFOGRAPHIC_SPEC_BY_LESSON_ID = new Map(
   BEGINNER_MARKET_CODE_INFOGRAPHIC_SPECS.map((spec) => [spec.lessonId, spec] as const),
 );
 
 export const BEGINNER_CODE_INFOGRAPHIC_SPEC_BY_LESSON_ID = new Map(
-  [...BEGINNER_MARKET_CODE_INFOGRAPHIC_SPECS, ...BEGINNER_ECONOMY_CODE_INFOGRAPHIC_SPECS]
-    .map((spec) => [spec.lessonId, spec] as const),
+  [
+    ...BEGINNER_MARKET_CODE_INFOGRAPHIC_SPECS,
+    ...BEGINNER_ECONOMY_CODE_INFOGRAPHIC_SPECS,
+    ...BEGINNER_CHART_CODE_INFOGRAPHIC_SPECS,
+  ].map((spec) => [spec.lessonId, spec] as const),
 );

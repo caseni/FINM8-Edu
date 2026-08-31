@@ -59,7 +59,7 @@ const BEGINNER_COPY_LIMITS = {
   takeaway: 12,
 } as const;
 
-const HARD_GATED_CLARITY_SECTION_IDS = new Set(['markets', 'money_economy']);
+const HARD_GATED_CLARITY_SECTION_IDS = new Set(['markets', 'money_economy', 'charts']);
 
 function wordCount(value: string): number {
   const clean = value.trim().replace(/\s+/g, ' ');
