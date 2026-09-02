@@ -238,7 +238,7 @@ export function LearnLandingScreen() {
           </View>
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel={language === 'tr' ? 'İleri konuları aç' : 'Open advanced topics'}
+            accessibilityLabel={language === 'tr' ? 'Academy’yi aç' : 'Open Academy'}
             onPress={() => navigation.navigate('Academy')}
             style={({ pressed }) => [styles.academyButton, pressed && styles.buttonPressed]}
           >
