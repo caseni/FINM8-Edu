@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { LearningFlowHeader, QuizPlayer } from '../../components/learning';
 import { BeginnerQuizPlayer } from '../../components/learning/BeginnerQuizPlayer';
@@ -23,6 +23,9 @@ const ACADEMY_FOUNDATION_LESSON_COUNT = 6;
 
 export function LessonQuizScreen({ route, navigation }: Props) {
   const lesson = getMicroLessonById(route.params.lessonId);
+  const { width } = useWindowDimensions();
+  const wide = width >= 820;
+  const styles = createStyles(wide);
   const rawLanguage = useLanguageStore((state) => state.language);
   const language: LearningLanguage = rawLanguage === 'en' ? 'en' : 'tr';
   const submitQuiz = useLearningProgressStore((state) => state.submitQuiz);
@@ -179,28 +182,37 @@ export function LessonQuizScreen({ route, navigation }: Props) {
             accessibilityLabel={resultAccessibilityLabel}
             accessibilityLiveRegion="polite"
           >
-            <Text style={styles.resultEyebrow}>
-              {showAcademyTrackCompletion
-                ? language === 'tr' ? 'OKUL TAMAMLANDI' : 'SCHOOL COMPLETE'
-                : language === 'tr' ? 'DERS AKIŞI · 3/3' : 'LEARNING FLOW · 3/3'}
-            </Text>
-            <Text style={styles.resultEmoji}>{result.passed ? '✓' : '↻'}</Text>
-            <Text style={styles.title}>
-              {showAcademyTrackCompletion
-                ? language === 'tr' ? 'Okulu tamamladın' : 'You completed the school'
-                : result.passed
-                  ? isSpacedReview
-                    ? language === 'tr' ? 'Tekrar tamamlandı' : 'Review completed'
-                    : language === 'tr' ? 'Quiz tamamlandı' : 'Quiz completed'
-                  : language === 'tr' ? 'Kısa bir tekrar iyi olur' : 'A short review will help'}
-            </Text>
-            <Text style={styles.score}>%{result.score}</Text>
-            <Text style={styles.body}>
-              {showAcademyTrackCompletion && academyTrackTitle
-                ? `${academyTrackTitle} · ${academyTrack?.lessonIds.length ?? 12}/12 ${language === 'tr' ? 'ders' : 'lessons'}`
-                : `${result.correctAnswers}/${result.totalQuestions} ${language === 'tr' ? 'doğru cevap' : 'correct answers'}`}
-            </Text>
-            {newBadgeTitle ? <Text style={styles.badgeNotice}>◆ {language === 'tr' ? 'Yeni badge' : 'New badge'}: {newBadgeTitle}</Text> : null}
+            <View style={styles.resultStatus}>
+              <Text style={styles.resultEyebrow}>
+                {showAcademyTrackCompletion
+                  ? language === 'tr' ? 'OKUL TAMAMLANDI' : 'SCHOOL COMPLETE'
+                  : language === 'tr' ? 'DERS AKIŞI · 3/3' : 'LEARNING FLOW · 3/3'}
+              </Text>
+              <View style={[styles.resultIcon, !result.passed && styles.resultIconRetry]}>
+                <Text style={styles.resultEmoji}>{result.passed ? '✓' : '↻'}</Text>
+              </View>
+            </View>
+            <View style={styles.resultCopy}>
+              <Text style={styles.title}>
+                {showAcademyTrackCompletion
+                  ? language === 'tr' ? 'Okulu tamamladın' : 'You completed the school'
+                  : result.passed
+                    ? isSpacedReview
+                      ? language === 'tr' ? 'Tekrar tamamlandı' : 'Review completed'
+                      : language === 'tr' ? 'Quiz tamamlandı' : 'Quiz completed'
+                    : language === 'tr' ? 'Kısa bir tekrar iyi olur' : 'A short review will help'}
+              </Text>
+              <Text style={styles.body}>
+                {showAcademyTrackCompletion && academyTrackTitle
+                  ? `${academyTrackTitle} · ${academyTrack?.lessonIds.length ?? 12}/12 ${language === 'tr' ? 'ders' : 'lessons'}`
+                  : `${result.correctAnswers}/${result.totalQuestions} ${language === 'tr' ? 'doğru cevap' : 'correct answers'}`}
+              </Text>
+              {newBadgeTitle ? <Text style={styles.badgeNotice}>◆ {language === 'tr' ? 'Yeni badge' : 'New badge'}: {newBadgeTitle}</Text> : null}
+            </View>
+            <View style={styles.scoreBlock}>
+              <Text style={styles.score}>%{result.score}</Text>
+              <Text style={styles.scoreLabel}>{language === 'tr' ? 'skor' : 'score'}</Text>
+            </View>
           </View>
           <View accessibilityRole="summary" style={styles.takeawayCard}>
             <Text style={styles.takeawayEyebrow}>
@@ -285,23 +297,29 @@ export function LessonQuizScreen({ route, navigation }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (wide: boolean) => StyleSheet.create({
   safeArea: { flex: 1, backgroundColor: '#07111F' },
-  resultWrap: { flexGrow: 1, justifyContent: 'center', width: '100%', padding: 16, gap: 12 },
-  resultCard: { alignSelf: 'center', width: '100%', maxWidth: 520, padding: 24, borderRadius: 24, backgroundColor: '#102033', borderWidth: 1, borderColor: '#294057', alignItems: 'center', gap: 12 },
-  resultEyebrow: { color: '#2DD4BF', fontSize: 12, fontWeight: '900', letterSpacing: 0.7 },
-  resultEmoji: { color: '#2DD4BF', fontSize: 44, fontWeight: '900' },
-  title: { color: '#F8FAFC', fontSize: 25, fontWeight: '900', textAlign: 'center' },
-  score: { color: '#2DD4BF', fontSize: 42, fontWeight: '900' },
-  body: { color: '#9FB0C3', fontSize: 15, textAlign: 'center' },
-  badgeNotice: { color: '#FBBF24', fontSize: 15, fontWeight: '800', textAlign: 'center' },
-  takeawayCard: { alignSelf: 'center', width: '100%', maxWidth: 520, padding: 18, borderRadius: 18, backgroundColor: '#0C1928', borderWidth: 1, borderColor: '#294057', gap: 7 },
-  takeawayEyebrow: { color: '#2DD4BF', fontSize: 11, fontWeight: '900', letterSpacing: 0.8 },
-  takeawayText: { color: '#F8FAFC', fontSize: 16, lineHeight: 23, fontWeight: '700' },
-  takeawayHint: { color: '#9FB0C3', fontSize: 14, lineHeight: 20 },
-  resultFooter: { paddingHorizontal: 16, paddingVertical: 8, borderTopWidth: 1, borderTopColor: '#1F3449', backgroundColor: '#07111F', gap: 2 },
-  button: { alignSelf: 'center', width: '100%', maxWidth: 520, minHeight: 52, alignItems: 'center', justifyContent: 'center', padding: 16, borderRadius: 14, backgroundColor: '#2DD4BF' },
-  buttonText: { color: '#042F2E', fontWeight: '900' },
-  secondaryButton: { alignSelf: 'center', width: '100%', maxWidth: 520, minHeight: 44, alignItems: 'center', justifyContent: 'center', padding: 12 },
-  secondaryButtonText: { color: '#9FB0C3', fontSize: 14, fontWeight: '700' },
+  resultWrap: { flexGrow: 1, justifyContent: 'center', width: '100%', maxWidth: 900, alignSelf: 'center', paddingHorizontal: wide ? 28 : 16, paddingVertical: wide ? 28 : 18, gap: 12 },
+  resultCard: { width: '100%', flexDirection: wide ? 'row' : 'column', alignItems: wide ? 'center' : 'stretch', gap: wide ? 20 : 14, padding: wide ? 22 : 18, borderRadius: 22, backgroundColor: '#0B1C2A', borderWidth: 1, borderColor: '#294057' },
+  resultStatus: { flexDirection: wide ? 'column' : 'row', alignItems: 'center', justifyContent: wide ? 'center' : 'space-between', gap: 9 },
+  resultEyebrow: { color: '#55DCCB', fontSize: 9, fontWeight: '900', letterSpacing: 0.8 },
+  resultIcon: { width: wide ? 48 : 42, height: wide ? 48 : 42, alignItems: 'center', justifyContent: 'center', borderRadius: 15, borderWidth: 1, borderColor: '#32786F', backgroundColor: '#103633' },
+  resultIconRetry: { borderColor: '#755E42', backgroundColor: '#2B241D' },
+  resultEmoji: { color: '#5EEAD4', fontSize: wide ? 25 : 22, lineHeight: wide ? 28 : 25, fontWeight: '900' },
+  resultCopy: { flex: 1, gap: 5 },
+  title: { color: '#F8FAFC', fontSize: wide ? 23 : 21, lineHeight: wide ? 29 : 27, fontWeight: '900' },
+  body: { color: '#90A5B5', fontSize: wide ? 13 : 12, lineHeight: wide ? 19 : 18 },
+  badgeNotice: { color: '#FBBF24', fontSize: 11, lineHeight: 16, fontWeight: '800' },
+  scoreBlock: { minWidth: wide ? 112 : undefined, alignItems: wide ? 'flex-end' : 'flex-start', gap: 1 },
+  score: { color: '#5EEAD4', fontSize: wide ? 38 : 33, lineHeight: wide ? 43 : 38, fontWeight: '900' },
+  scoreLabel: { color: '#74899A', fontSize: 9, fontWeight: '800', letterSpacing: 0.5 },
+  takeawayCard: { width: '100%', paddingHorizontal: wide ? 4 : 2, paddingVertical: 10, gap: 6 },
+  takeawayEyebrow: { color: '#4CCFBE', fontSize: 9, fontWeight: '900', letterSpacing: 0.8 },
+  takeawayText: { maxWidth: 760, color: '#EEF4F6', fontSize: wide ? 16 : 15, lineHeight: wide ? 23 : 22, fontWeight: '800' },
+  takeawayHint: { maxWidth: 760, color: '#8197A8', fontSize: 11, lineHeight: 17 },
+  resultFooter: { paddingHorizontal: wide ? 28 : 16, paddingVertical: 10, borderTopWidth: 1, borderTopColor: '#1F3449', backgroundColor: '#07111F', gap: 2 },
+  button: { alignSelf: 'center', width: '100%', maxWidth: 844, minHeight: 52, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 18, borderRadius: 14, backgroundColor: '#2DD4BF' },
+  buttonText: { color: '#042F2E', fontSize: 14, fontWeight: '900' },
+  secondaryButton: { alignSelf: 'center', width: '100%', maxWidth: 844, minHeight: 44, alignItems: 'center', justifyContent: 'center', padding: 12 },
+  secondaryButtonText: { color: '#9FB0C3', fontSize: 13, fontWeight: '700' },
 });
