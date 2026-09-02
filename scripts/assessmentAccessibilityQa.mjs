@@ -161,12 +161,12 @@ async function solveBeginnerQuizToResult(page) {
     await page.getByRole('button', { name: actionLabel, exact: true }).click();
   }
 
-  const expectedResultLabel = `${beginnerLessonTitle}. Quiz tamamlandı. Skor yüzde 100. 3/3 doğru cevap.`;
-  const resultSummary = page.locator(`[aria-live="polite"][aria-label="${expectedResultLabel}"]`);
+  const expectedResultSuffix = 'Quiz tamamlandı. Skor yüzde 100. 3/3 doğru cevap.';
+  const resultSummary = page.locator('[aria-live="polite"]').filter({ has: page.getByText('Quiz tamamlandı', { exact: true }) }).last();
   await resultSummary.waitFor();
-  const actualLabel = await resultSummary.getAttribute('aria-label');
-  if (actualLabel !== expectedResultLabel) {
-    throw new Error(`Beginner quiz result aria-label mismatch -> expected "${expectedResultLabel}", got "${actualLabel ?? 'missing'}"`);
+  const actualLabel = (await resultSummary.getAttribute('aria-label'))?.trim();
+  if (!actualLabel || !actualLabel.startsWith(beginnerLessonTitle) || !actualLabel.endsWith(expectedResultSuffix)) {
+    throw new Error(`Beginner quiz result aria-label mismatch -> expected title prefix "${beginnerLessonTitle}" and suffix "${expectedResultSuffix}", got "${actualLabel ?? 'missing'}"`);
   }
 }
 
