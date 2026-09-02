@@ -157,7 +157,7 @@ export function BeginnerSectionScreen() {
         {!sectionComplete && nextLesson && nextLessonTitle ? (
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel={`${nextActionLabel}: ${nextLessonTitle}`}
+            accessibilityLabel={nextActionLabel}
             onPress={() => openLesson(nextLesson.id)}
             style={({ pressed }) => [styles.nextLessonCard, pressed && styles.nextLessonCardPressed]}
           >
