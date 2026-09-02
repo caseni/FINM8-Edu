@@ -1,5 +1,5 @@
 import React, { useMemo, useRef, useState } from 'react';
-import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ACADEMY_TRACK_IDS, ACADEMY_TRACKS, type AcademyTrackId } from '../../domain/learning/academyTracks';
@@ -34,6 +34,8 @@ const STARTER_TRACK_LABELS: Readonly<Record<AcademyTrackId, { tr: string; en: st
 
 export function AcademyHomeScreen() {
   const navigation = useNavigation<Navigation>();
+  const { width } = useWindowDimensions();
+  const wide = width >= 820;
   const rawLanguage = useLanguageStore((state) => state.language);
   const language: LearningLanguage = rawLanguage === 'en' ? 'en' : 'tr';
   const completedLessonIds = useLearningProgressStore((state) => state.completedLessonIds);
@@ -180,13 +182,13 @@ export function AcademyHomeScreen() {
         {beginnerComplete && !academyComplete ? (
           <View style={styles.starterGuide}>
             <Text style={styles.starterEyebrow}>{language === 'tr' ? 'NEREDEN DEVAM EDEBİLİRSİN?' : 'WHERE CAN YOU GO NEXT?'}</Text>
-            <Text style={styles.starterTitle}>{language === 'tr' ? 'Dört sade seçenekten birini seç.' : 'Choose one of four simple directions.'}</Text>
+            <Text style={styles.starterTitle}>{language === 'tr' ? 'Şu anda ne öğrenmek istiyorsun?' : 'What do you want to learn right now?'}</Text>
             <Text style={styles.starterBody}>
               {language === 'tr'
                 ? 'Bir seçim diğerlerini kapatmaz. Yalnız şu anda en çok merak ettiğin konuya gir.'
                 : 'One choice does not lock the others. Start with the subject you are most curious about right now.'}
             </Text>
-            <View style={styles.starterOptions}>
+            <View style={[styles.starterOptions, wide && styles.starterOptionsWide]}>
               {STARTER_TRACK_IDS.map((trackId) => {
                 const track = ACADEMY_TRACKS[trackId];
                 return (
@@ -196,7 +198,7 @@ export function AcademyHomeScreen() {
                     accessibilityLabel={`${STARTER_TRACK_LABELS[trackId][language]}: ${selectLocalizedText(track.title, language)}`}
                     accessibilityHint={language === 'tr' ? 'İlgili Academy okulunu açar ve ekrana getirir' : 'Opens the matching Academy school and brings it into view'}
                     onPress={() => openStarterTrack(trackId)}
-                    style={({ pressed }) => [styles.starterOption, pressed && styles.starterOptionPressed]}
+                    style={({ pressed }) => [styles.starterOption, wide && styles.starterOptionWide, pressed && styles.starterOptionPressed]}
                   >
                     <View style={styles.starterOptionCopy}>
                       <Text style={styles.starterOptionTitle}>{STARTER_TRACK_LABELS[trackId][language]}</Text>
@@ -335,7 +337,7 @@ export function AcademyHomeScreen() {
                         : language === 'tr' ? 'YAKINDA' : 'PLANNED'}
                     </Text>
                   </View>
-                  <Text style={styles.trackDescription}>{selectLocalizedText(track.description, language)}</Text>
+                  {expanded ? <Text style={styles.trackDescription}>{selectLocalizedText(track.description, language)}</Text> : null}
                   {active ? (
                     <>
                       <View style={styles.progressMeta}>
@@ -475,7 +477,9 @@ const styles = StyleSheet.create({
   starterTitle: { color: '#F8FAFC', fontSize: 18, lineHeight: 24, fontWeight: '900' },
   starterBody: { color: '#9FB6C1', fontSize: 12, lineHeight: 18 },
   starterOptions: { gap: 8, marginTop: 2 },
+  starterOptionsWide: { flexDirection: 'row', flexWrap: 'wrap' },
   starterOption: { minHeight: 58, flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 13, paddingVertical: 10, borderRadius: 14, backgroundColor: '#0D2933', borderWidth: 1, borderColor: '#28515A' },
+  starterOptionWide: { width: '49%' },
   starterOptionPressed: { backgroundColor: '#12343D' },
   starterOptionCopy: { flex: 1, gap: 2 },
   starterOptionTitle: { color: '#F8FAFC', fontSize: 14, fontWeight: '800' },
@@ -486,25 +490,25 @@ const styles = StyleSheet.create({
   sectionBody: { color: '#8FA4B8', fontSize: 13, lineHeight: 19 },
   trackCard: { overflow: 'hidden', borderRadius: 20, borderWidth: 1, borderColor: '#294057', backgroundColor: '#0C1928' },
   trackCardPlanned: { opacity: 0.72 },
-  trackHeader: { flexDirection: 'row', alignItems: 'flex-start', gap: 12, padding: 16 },
-  trackHeaderInteractive: { minHeight: 142 },
+  trackHeader: { flexDirection: 'row', alignItems: 'flex-start', gap: 11, paddingHorizontal: 15, paddingVertical: 13 },
+  trackHeaderInteractive: { minHeight: 104 },
   trackHeaderPressed: { backgroundColor: '#102033' },
-  trackNumber: { width: 42, height: 42, alignItems: 'center', justifyContent: 'center', borderRadius: 14, borderWidth: 1, borderColor: '#294057', backgroundColor: '#102033' },
+  trackNumber: { width: 36, height: 36, alignItems: 'center', justifyContent: 'center', borderRadius: 12, borderWidth: 1, borderColor: '#294057', backgroundColor: '#102033' },
   trackNumberActive: { borderColor: '#2F766F', backgroundColor: '#123B42' },
   trackNumberText: { color: '#5EEAD4', fontSize: 11, fontWeight: '900' },
-  trackCopy: { flex: 1, gap: 7 },
+  trackCopy: { flex: 1, gap: 5 },
   trackTitleRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 10 },
   trackTitle: { flex: 1, color: '#F8FAFC', fontSize: 17, lineHeight: 22, fontWeight: '900' },
   trackStatus: { fontSize: 9, fontWeight: '900', letterSpacing: 0.6 },
   trackStatusActive: { color: '#5EEAD4' },
   trackStatusPlanned: { color: '#8094A8' },
-  trackDescription: { color: '#9FB0C3', fontSize: 13, lineHeight: 19 },
+  trackDescription: { color: '#9FB0C3', fontSize: 12, lineHeight: 18 },
   progressMeta: { flexDirection: 'row', justifyContent: 'space-between', gap: 8, marginTop: 2 },
   progressText: { color: '#8FC4C5', fontSize: 11, fontWeight: '700' },
   progressTrack: { height: 5, overflow: 'hidden', borderRadius: 999, backgroundColor: '#172F46' },
   progressFill: { height: 5, borderRadius: 999, backgroundColor: '#2DD4BF' },
-  trackToggleRow: { minHeight: 30, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 1 },
-  trackToggleText: { color: '#5EEAD4', fontSize: 12, fontWeight: '800' },
+  trackToggleRow: { minHeight: 24, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  trackToggleText: { color: '#5EEAD4', fontSize: 11, fontWeight: '800' },
   trackToggleIcon: { color: '#5EEAD4', fontSize: 17, fontWeight: '800' },
   lessonList: { paddingHorizontal: 16, paddingBottom: 14 },
   nextLessonCard: { minHeight: 86, flexDirection: 'row', alignItems: 'center', gap: 12, marginTop: 14, marginBottom: 5, padding: 14, borderRadius: 16, borderWidth: 1, borderColor: '#2E706D', backgroundColor: '#0D2B33' },
