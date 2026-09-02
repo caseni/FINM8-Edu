@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { useNavigation, useRoute, type RouteProp } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { BEGINNER_SECTION_IDS, BEGINNER_SECTIONS } from '../../domain/learning/beginnerJourney';
@@ -14,38 +14,44 @@ type ScreenRoute = RouteProp<RootStackParamList, 'BeginnerSection'>;
 
 function sectionHero(sectionId: keyof typeof BEGINNER_SECTIONS, language: LearningLanguage): string {
   if (sectionId === 'charts') {
-    return language === 'tr' ? 'Önce grafikte ne gördüğünü anla.' : 'Understand what you are seeing on the chart first.';
+    return language === 'tr' ? 'Grafiğe bakınca ne gördüğünü anlamaya başla.' : 'Start understanding what you see on a chart.';
   }
   if (sectionId === 'risk') {
-    return language === 'tr' ? 'Önce neyi korumaya çalıştığını anla.' : 'Understand what you are trying to protect first.';
+    return language === 'tr' ? 'Kazançtan önce neyi koruduğunu öğren.' : 'Learn what you are protecting before chasing returns.';
   }
-  return language === 'tr' ? 'Önce günlük hayatta ne olduğunu anla.' : 'Understand what it means in everyday life first.';
+  if (sectionId === 'markets') {
+    return language === 'tr' ? 'Fiyatın ve işlemin arkasındaki mantığı gör.' : 'See the logic behind prices and trades.';
+  }
+  return language === 'tr' ? 'Paranın günlük hayattaki etkisini anlayarak başla.' : 'Start with how money affects everyday life.';
 }
 
 function sectionOutcome(sectionId: keyof typeof BEGINNER_SECTIONS, language: LearningLanguage): string {
   if (sectionId === 'money_economy') {
     return language === 'tr'
-      ? 'Bu bölümün sonunda satın alma gücü, faiz ve ekonomik yavaşlama gibi temel fikirleri günlük örneklerle ayırt edebilmen yeterli.'
-      : 'By the end, it is enough to recognize ideas such as purchasing power, interest, and economic slowdowns through everyday examples.';
+      ? 'Satın alma gücü, faiz ve ekonomik yavaşlama gibi temel fikirleri günlük örneklerde ayırt edebileceksin.'
+      : 'You will recognize ideas such as purchasing power, interest, and economic slowdowns in everyday examples.';
   }
   if (sectionId === 'markets') {
     return language === 'tr'
-      ? 'Bu bölümün sonunda fiyatın nasıl oluştuğunu, ne aldığını, alış-satış farkını ve işlem fiyatının neden değişebildiğini ayırt edebilmen yeterli.'
-      : 'By the end, it is enough to recognize how price forms, what you are buying, the buy-sell gap, and why execution price can differ.';
+      ? 'Fiyatın nasıl oluştuğunu, ne aldığını, alış-satış farkını ve işlem fiyatının neden değişebildiğini ayırt edebileceksin.'
+      : 'You will recognize how price forms, what you are buying, the buy-sell gap, and why execution price can differ.';
   }
   if (sectionId === 'charts') {
     return language === 'tr'
-      ? 'Bu bölümün sonunda grafiğin geçmiş fiyat kaydı olduğunu; zaman ölçeği, genel yön, tepki bölgesi ve yardımcı çizgilerin ne anlattığını temel düzeyde okuyabilmen yeterli.'
-      : 'By the end, it is enough to read a chart as a record of past prices and recognize time scale, broader direction, reaction areas, and helper lines at a basic level.';
+      ? 'Zaman dilimini, genel yönü, tepki bölgelerini ve yardımcı çizgilerin sınırlarını temel düzeyde okuyabileceksin.'
+      : 'You will read timeframes, broader direction, reaction areas, and the limits of helper lines at a basic level.';
   }
   return language === 'tr'
-    ? 'Bu bölümün sonunda riski kayıptan önce düşünmeyi ve daha kontrollü karar vermenin temelini ayırt edebilmen yeterli.'
-    : 'By the end, it is enough to recognize the basics of thinking about risk before loss and making more controlled decisions.';
+    ? 'Riski kayıptan önce fark etmeyi, miktarın etkisini ve kontrollü çıkışın temelini ayırt edebileceksin.'
+    : 'You will recognize risk before loss, the effect of position size, and the basics of controlled exits.';
 }
 
 export function BeginnerSectionScreen() {
   const navigation = useNavigation<Navigation>();
   const route = useRoute<ScreenRoute>();
+  const { width } = useWindowDimensions();
+  const wide = width >= 820;
+  const styles = createStyles(wide);
   const rawLanguage = useLanguageStore((state) => state.language);
   const language: LearningLanguage = rawLanguage === 'en' ? 'en' : 'tr';
   const completedLessonIds = useLearningProgressStore((state) => state.completedLessonIds);
@@ -73,17 +79,31 @@ export function BeginnerSectionScreen() {
     ? `${sectionTitle}. ${completedCount}/${lessons.length} ders tamamlandı, yüzde ${progressPercent}.`
     : `${sectionTitle}. ${completedCount} of ${lessons.length} lessons completed, ${progressPercent} percent.`;
 
+  const inProgressLesson = lessons.find((lesson) => (
+    !completedLessonIds.includes(lesson.id) && Boolean(lessonCheckpoints[lesson.id])
+  ));
+  const nextLesson = inProgressLesson ?? lessons.find((lesson) => !completedLessonIds.includes(lesson.id));
+  const nextCheckpoint = nextLesson ? lessonCheckpoints[nextLesson.id] : undefined;
+  const nextLessonTitle = nextLesson ? selectLocalizedText(nextLesson.title, language) : undefined;
+  const nextActionLabel = nextCheckpoint?.stage === 'task'
+    ? language === 'tr' ? 'Göreve devam et' : 'Continue task'
+    : nextCheckpoint?.stage === 'quiz'
+      ? language === 'tr' ? 'Quiz’e devam et' : 'Continue quiz'
+      : completedCount > 0
+        ? language === 'tr' ? 'Sıradaki derse geç' : 'Continue to next lesson'
+        : language === 'tr' ? 'İlk derse başla' : 'Start the first lesson';
+
   const openLesson = (lessonId: string) => {
     const checkpoint = lessonCheckpoints[lessonId];
     if (checkpoint?.stage === 'task') {
-      navigation.navigate('PracticalTask', { lessonId });
+      navigation.navigate('PracticalTask', { lessonId, source: 'beginner' });
       return;
     }
     if (checkpoint?.stage === 'quiz') {
-      navigation.navigate('LessonQuiz', { lessonId });
+      navigation.navigate('LessonQuiz', { lessonId, source: 'beginner' });
       return;
     }
-    navigation.navigate('MicroLesson', { lessonId });
+    navigation.navigate('MicroLesson', { lessonId, source: 'beginner' });
   };
 
   const continueAfterSection = () => {
@@ -102,7 +122,7 @@ export function BeginnerSectionScreen() {
             accessibilityRole="button"
             accessibilityLabel={language === 'tr' ? 'Öğrenmeye Başla ekranına dön' : 'Return to the beginner learning screen'}
             onPress={() => navigation.goBack()}
-            style={styles.backButton}
+            style={({ pressed }) => [styles.backButton, pressed && styles.pressed]}
           >
             <Text style={styles.backText}>‹</Text>
           </Pressable>
@@ -110,38 +130,73 @@ export function BeginnerSectionScreen() {
             <Text style={styles.brand}>FINM8 EDU</Text>
             <Text style={styles.title}>{sectionTitle}</Text>
           </View>
+          <Text style={styles.topProgress}>{completedCount}/{lessons.length}</Text>
         </View>
 
         <View style={styles.hero} accessibilityRole="summary" accessibilityLabel={sectionProgressAccessibilityLabel}>
-          <Text style={styles.heroEyebrow}>{language === 'tr' ? 'BAŞLANGIÇ · 6 KISA DERS' : 'BEGINNER · 6 SHORT LESSONS'}</Text>
-          <Text style={styles.heroTitle}>{sectionComplete
-            ? language === 'tr' ? 'Bu bölümü tamamladın.' : 'You completed this section.'
-            : sectionHero(section.id, language)}
-          </Text>
-          <Text style={styles.heroBody}>{selectLocalizedText(section.description, language)}</Text>
-          <View style={styles.progressMeta}>
-            <Text style={styles.progressText}>{completedCount}/{lessons.length} {language === 'tr' ? 'ders tamamlandı' : 'lessons completed'}</Text>
-            <Text style={styles.progressText}>{progressPercent}%</Text>
+          <View style={styles.heroCopy}>
+            <Text style={styles.heroEyebrow}>{language === 'tr' ? 'BAŞLANGIÇ · 6 KISA DERS' : 'BEGINNER · 6 SHORT LESSONS'}</Text>
+            <Text style={styles.heroTitle}>
+              {sectionComplete
+                ? language === 'tr' ? 'Bu bölümü tamamladın.' : 'You completed this section.'
+                : sectionHero(section.id, language)}
+            </Text>
+            <Text style={styles.heroBody}>{selectLocalizedText(section.description, language)}</Text>
           </View>
-          <View style={styles.progressTrack}><View style={[styles.progressFill, { width: `${progress * 100}%` }]} /></View>
+          <View style={styles.heroProgressPane}>
+            <View style={styles.progressHeadline}>
+              <Text style={styles.progressBig}>{completedCount}</Text>
+              <Text style={styles.progressOf}>/ {lessons.length}</Text>
+            </View>
+            <Text style={styles.progressCaption}>{language === 'tr' ? 'ders tamamlandı' : 'lessons complete'}</Text>
+            <View style={styles.progressTrack}><View style={[styles.progressFill, { width: `${progress * 100}%` }]} /></View>
+            <Text style={styles.progressPercent}>{progressPercent}%</Text>
+          </View>
         </View>
 
+        {!sectionComplete && nextLesson && nextLessonTitle ? (
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={`${nextActionLabel}: ${nextLessonTitle}`}
+            onPress={() => openLesson(nextLesson.id)}
+            style={({ pressed }) => [styles.nextLessonCard, pressed && styles.nextLessonCardPressed]}
+          >
+            <View style={styles.nextLessonCopy}>
+              <Text style={styles.nextLessonEyebrow}>{inProgressLesson ? (language === 'tr' ? 'KALDIĞIN YER' : 'CONTINUE HERE') : (language === 'tr' ? 'SIRADAKİ' : 'UP NEXT')}</Text>
+              <Text style={styles.nextLessonTitle}>{nextLessonTitle}</Text>
+              <Text style={styles.nextLessonMeta}>
+                {nextActionLabel} · {nextLesson.estimatedMinutes} {language === 'tr' ? 'dk' : 'min'}
+              </Text>
+            </View>
+            <View style={styles.nextLessonArrowWrap}><Text style={styles.nextLessonArrow}>›</Text></View>
+          </Pressable>
+        ) : null}
+
         {!sectionComplete ? (
-          <View style={styles.ruleCard}>
-            <Text style={styles.ruleTitle}>{language === 'tr' ? 'Bu bölümde kural basit:' : 'The rule in this section is simple:'}</Text>
-            <Text style={styles.ruleBody}>
+          <View style={styles.learningRhythm}>
+            <Text style={styles.learningRhythmLabel}>{language === 'tr' ? 'HER DERS' : 'EVERY LESSON'}</Text>
+            <Text style={styles.learningRhythmText}>
               {language === 'tr'
-                ? 'Önce anlamı gör. Terimin adını sonra öğren. Her ders tek ana fikre odaklanır.'
-                : 'See the meaning first. Learn the term second. Each lesson focuses on one main idea.'}
+                ? '1 ana fikir  ·  konuya özel görsel  ·  mini uygulama  ·  quiz'
+                : '1 core idea  ·  topic visual  ·  mini practice  ·  quiz'}
             </Text>
           </View>
         ) : null}
+
+        <View style={styles.lessonHeading}>
+          <View>
+            <Text style={styles.lessonHeadingEyebrow}>{language === 'tr' ? 'DERSLER' : 'LESSONS'}</Text>
+            <Text style={styles.lessonHeadingTitle}>{language === 'tr' ? 'Adım adım ilerle' : 'Move step by step'}</Text>
+          </View>
+          <Text style={styles.lessonHeadingMeta}>{language === 'tr' ? 'İstediğin zaman geri dönebilirsin' : 'Come back anytime'}</Text>
+        </View>
 
         <View style={styles.lessonList}>
           {lessons.map((lesson, index) => {
             const completed = completedLessonIds.includes(lesson.id);
             const checkpoint = lessonCheckpoints[lesson.id];
             const resume = checkpoint && !completed;
+            const isNext = nextLesson?.id === lesson.id && !completed;
             const lessonTitle = selectLocalizedText(lesson.title, language);
             const lessonState = resume
               ? language === 'tr' ? 'Kaldığın yerden devam et' : 'Continue where you left off'
@@ -155,15 +210,22 @@ export function BeginnerSectionScreen() {
                 accessibilityRole="button"
                 accessibilityLabel={`${lessonTitle}. ${lessonState}.`}
                 onPress={() => openLesson(lesson.id)}
-                style={({ pressed }) => [styles.lessonCard, completed && styles.lessonCardComplete, pressed && styles.lessonCardPressed]}
+                style={({ pressed }) => [
+                  styles.lessonRow,
+                  index > 0 && styles.lessonRowBorder,
+                  completed && styles.lessonRowComplete,
+                  isNext && styles.lessonRowNext,
+                  pressed && styles.lessonRowPressed,
+                ]}
               >
-                <View style={[styles.lessonNumber, completed && styles.lessonNumberComplete]}>
+                <View style={[styles.lessonNumber, completed && styles.lessonNumberComplete, isNext && styles.lessonNumberNext]}>
                   <Text style={styles.lessonNumberText}>{completed ? '✓' : index + 1}</Text>
                 </View>
                 <View style={styles.lessonCopy}>
                   <Text style={styles.lessonTitle}>{lessonTitle}</Text>
-                  <Text style={styles.lessonMeta}>{lessonState}</Text>
+                  <Text style={[styles.lessonMeta, resume && styles.lessonMetaResume]}>{lessonState}</Text>
                 </View>
+                {isNext ? <Text style={styles.nextTag}>{language === 'tr' ? 'SIRADA' : 'NEXT'}</Text> : null}
                 <Text style={styles.openText}>›</Text>
               </Pressable>
             );
@@ -178,40 +240,43 @@ export function BeginnerSectionScreen() {
               ? `${sectionTitle} bölümü tamamlandı. 6/6 ders.`
               : `${sectionTitle} section complete. 6 of 6 lessons.`}
           >
-            <Text style={styles.completionEyebrow}>{language === 'tr' ? 'BÖLÜM TAMAMLANDI' : 'SECTION COMPLETE'}</Text>
-            <Text style={styles.completionTitle}>
-              {nextSection
-                ? language === 'tr' ? 'Hazırsan sıradaki adıma geç.' : 'Move to the next step when you are ready.'
-                : language === 'tr' ? 'Temel yolun burada tamamlandı.' : 'Your foundation path is complete.'}
-            </Text>
-            <Text style={styles.completionBody}>
-              {nextSection
-                ? language === 'tr'
-                  ? `Sıradaki bölüm: ${nextSection.title.tr}. Burada da aynı sade öğrenme dili devam edecek.`
-                  : `Next section: ${nextSection.title.en}. The same simple learning language continues there.`
-                : language === 'tr'
-                  ? 'Şimdi yalnız ilgini çeken ileri alanda derinleşebilirsin. Hepsini yapmak zorunda değilsin.'
-                  : 'Now go deeper only in an advanced subject that interests you. You do not need to do everything.'}
-            </Text>
+            <View style={styles.completionCopy}>
+              <Text style={styles.completionEyebrow}>{language === 'tr' ? 'BÖLÜM TAMAMLANDI' : 'SECTION COMPLETE'}</Text>
+              <Text style={styles.completionTitle}>
+                {nextSection
+                  ? language === 'tr' ? 'Hazırsan sıradaki adıma geç.' : 'Move to the next step when you are ready.'
+                  : language === 'tr' ? 'Temel yolun burada tamamlandı.' : 'Your foundation path is complete.'}
+              </Text>
+              <Text style={styles.completionBody}>
+                {nextSection
+                  ? language === 'tr'
+                    ? `Sıradaki bölüm: ${nextSection.title.tr}.`
+                    : `Next section: ${nextSection.title.en}.`
+                  : language === 'tr'
+                    ? 'Şimdi ilgini çeken ileri alanda derinleşebilirsin.'
+                    : 'Now go deeper in an advanced subject that interests you.'}
+              </Text>
+            </View>
             <Pressable
               accessibilityRole="button"
               accessibilityLabel={nextSection
                 ? language === 'tr' ? `Sıradaki bölüme geç: ${nextSection.title.tr}` : `Continue to next section: ${nextSection.title.en}`
                 : language === 'tr' ? 'İleri öğrenme yollarını gör' : 'See deeper learning paths'}
               onPress={continueAfterSection}
-              style={({ pressed }) => [styles.nextButton, pressed && styles.nextButtonPressed]}
+              style={({ pressed }) => [styles.nextButton, pressed && styles.pressed]}
             >
               <Text style={styles.nextButtonText}>
                 {nextSection
-                  ? language === 'tr' ? 'Sıradaki bölüme geç' : 'Continue to next section'
-                  : language === 'tr' ? 'İleri yolları gör' : 'See deeper paths'}
+                  ? language === 'tr' ? 'Sıradaki bölüm' : 'Next section'
+                  : language === 'tr' ? 'Academy’ye geç' : 'Go to Academy'}
               </Text>
+              <Text style={styles.nextButtonArrow}>›</Text>
             </Pressable>
           </View>
         ) : (
-          <View style={styles.footerNote}>
-            <Text style={styles.footerTitle}>{language === 'tr' ? 'Ezber yok.' : 'No memorization.'}</Text>
-            <Text style={styles.footerBody}>{sectionOutcome(section.id, language)}</Text>
+          <View style={styles.outcome}>
+            <Text style={styles.outcomeEyebrow}>{language === 'tr' ? 'BU BÖLÜMDEN SONRA' : 'AFTER THIS SECTION'}</Text>
+            <Text style={styles.outcomeText}>{sectionOutcome(section.id, language)}</Text>
           </View>
         )}
       </ScrollView>
@@ -219,45 +284,77 @@ export function BeginnerSectionScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (wide: boolean) => StyleSheet.create({
   safeArea: { flex: 1, backgroundColor: '#06111F' },
-  content: { width: '100%', maxWidth: 760, alignSelf: 'center', padding: 20, gap: 16, paddingBottom: 42 },
-  topBar: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  backButton: { width: 44, height: 44, alignItems: 'center', justifyContent: 'center', borderRadius: 14, backgroundColor: '#0D1E2E', borderWidth: 1, borderColor: '#274055' },
-  backText: { color: '#F8FAFC', fontSize: 30, lineHeight: 32 },
-  headingCopy: { flex: 1 },
-  brand: { color: '#39D8C6', fontSize: 10, fontWeight: '900', letterSpacing: 2 },
-  title: { color: '#F8FAFC', fontSize: 27, lineHeight: 33, fontWeight: '900' },
-  hero: { gap: 9, padding: 20, borderRadius: 22, backgroundColor: '#0A2630', borderWidth: 1, borderColor: '#22606A' },
-  heroEyebrow: { color: '#5EEAD4', fontSize: 10, fontWeight: '900', letterSpacing: 0.8 },
-  heroTitle: { color: '#F8FAFC', fontSize: 23, lineHeight: 30, fontWeight: '900' },
-  heroBody: { color: '#B7C9D7', fontSize: 14, lineHeight: 21 },
-  progressMeta: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 5 },
-  progressText: { color: '#8FC8C3', fontSize: 11, fontWeight: '800' },
-  progressTrack: { height: 6, overflow: 'hidden', borderRadius: 999, backgroundColor: '#163249' },
-  progressFill: { height: 6, borderRadius: 999, backgroundColor: '#31D1BF' },
-  ruleCard: { gap: 5, padding: 15, borderRadius: 16, backgroundColor: '#0B1A28', borderWidth: 1, borderColor: '#1D354A' },
-  ruleTitle: { color: '#F8FAFC', fontSize: 14, fontWeight: '900' },
-  ruleBody: { color: '#9FB0C3', fontSize: 12, lineHeight: 18 },
-  lessonList: { gap: 10 },
-  lessonCard: { minHeight: 78, flexDirection: 'row', alignItems: 'center', gap: 12, padding: 14, borderRadius: 18, backgroundColor: '#0B1B2B', borderWidth: 1, borderColor: '#29445B' },
-  lessonCardComplete: { borderColor: '#2B5C58', backgroundColor: '#0A2026' },
-  lessonCardPressed: { backgroundColor: '#102437' },
-  lessonNumber: { width: 40, height: 40, borderRadius: 13, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: '#2D6170', backgroundColor: '#113644' },
-  lessonNumberComplete: { borderColor: '#31D1BF', backgroundColor: '#113D3A' },
-  lessonNumberText: { color: '#5EEAD4', fontSize: 12, fontWeight: '900' },
-  lessonCopy: { flex: 1, gap: 4 },
-  lessonTitle: { color: '#F8FAFC', fontSize: 16, lineHeight: 21, fontWeight: '800' },
-  lessonMeta: { color: '#8297AA', fontSize: 11, lineHeight: 15 },
-  openText: { color: '#31D1BF', fontSize: 24 },
-  completionCard: { gap: 8, padding: 18, borderRadius: 18, borderWidth: 1, borderColor: '#34796F', backgroundColor: '#0A292B' },
-  completionEyebrow: { color: '#5EEAD4', fontSize: 10, fontWeight: '900', letterSpacing: 0.8 },
-  completionTitle: { color: '#F8FAFC', fontSize: 18, lineHeight: 24, fontWeight: '900' },
-  completionBody: { color: '#ABC3C8', fontSize: 12, lineHeight: 18 },
-  nextButton: { alignSelf: 'flex-start', minHeight: 44, justifyContent: 'center', paddingHorizontal: 16, borderRadius: 13, backgroundColor: '#31D1BF' },
-  nextButtonPressed: { opacity: 0.78 },
-  nextButtonText: { color: '#05211F', fontSize: 12, fontWeight: '900' },
-  footerNote: { gap: 5, padding: 17, borderRadius: 17, borderWidth: 1, borderColor: '#1E4550', backgroundColor: '#0A2228' },
-  footerTitle: { color: '#5EEAD4', fontSize: 14, fontWeight: '900' },
-  footerBody: { color: '#9DB2BF', fontSize: 12, lineHeight: 18 },
+  content: { width: '100%', maxWidth: 980, alignSelf: 'center', paddingHorizontal: wide ? 28 : 18, paddingTop: 18, gap: wide ? 22 : 16, paddingBottom: 50 },
+  topBar: { minHeight: 48, flexDirection: 'row', alignItems: 'center', gap: 12 },
+  backButton: { width: 42, height: 42, alignItems: 'center', justifyContent: 'center', borderRadius: 13, backgroundColor: '#0A1928', borderWidth: 1, borderColor: '#253D51' },
+  backText: { color: '#DDE8EE', fontSize: 29, lineHeight: 30 },
+  headingCopy: { flex: 1, gap: 1 },
+  brand: { color: '#48DCCB', fontSize: 9, fontWeight: '900', letterSpacing: 1.9 },
+  title: { color: '#F8FAFC', fontSize: wide ? 25 : 22, lineHeight: wide ? 31 : 28, fontWeight: '900' },
+  topProgress: { color: '#8298A8', fontSize: 11, fontWeight: '900' },
+  pressed: { opacity: 0.72 },
+
+  hero: { flexDirection: wide ? 'row' : 'column', gap: wide ? 28 : 16, padding: wide ? 25 : 19, borderRadius: 24, backgroundColor: '#0A222A', borderWidth: 1, borderColor: '#255A60' },
+  heroCopy: { flex: wide ? 1.3 : undefined, gap: 8 },
+  heroEyebrow: { color: '#59E2D1', fontSize: 9, fontWeight: '900', letterSpacing: 0.9 },
+  heroTitle: { maxWidth: 620, color: '#F8FAFC', fontSize: wide ? 29 : 23, lineHeight: wide ? 36 : 30, fontWeight: '900' },
+  heroBody: { maxWidth: 660, color: '#9FB5C1', fontSize: wide ? 13 : 12, lineHeight: wide ? 20 : 18 },
+  heroProgressPane: { minWidth: wide ? 190 : undefined, justifyContent: 'center', gap: 6, paddingTop: wide ? 0 : 3 },
+  progressHeadline: { flexDirection: 'row', alignItems: 'baseline' },
+  progressBig: { color: '#ECF7F5', fontSize: wide ? 34 : 27, lineHeight: wide ? 39 : 32, fontWeight: '900' },
+  progressOf: { color: '#79909F', fontSize: 14, fontWeight: '800' },
+  progressCaption: { color: '#79909F', fontSize: 9, fontWeight: '800' },
+  progressTrack: { height: 5, overflow: 'hidden', borderRadius: 999, backgroundColor: '#19343E', marginTop: 3 },
+  progressFill: { height: 5, borderRadius: 999, backgroundColor: '#46D9C7' },
+  progressPercent: { alignSelf: 'flex-end', color: '#8CB2B2', fontSize: 9, fontWeight: '900' },
+
+  nextLessonCard: { minHeight: wide ? 106 : 96, flexDirection: 'row', alignItems: 'center', gap: 14, padding: wide ? 18 : 15, borderRadius: 20, borderWidth: 1, borderColor: '#34756E', backgroundColor: '#0B292D' },
+  nextLessonCardPressed: { backgroundColor: '#10353A' },
+  nextLessonCopy: { flex: 1, gap: 4 },
+  nextLessonEyebrow: { color: '#63E8D7', fontSize: 9, fontWeight: '900', letterSpacing: 0.85 },
+  nextLessonTitle: { color: '#F7FAFB', fontSize: wide ? 18 : 16, lineHeight: wide ? 24 : 22, fontWeight: '900' },
+  nextLessonMeta: { color: '#94AFB6', fontSize: 10, lineHeight: 15, fontWeight: '700' },
+  nextLessonArrowWrap: { width: 38, height: 38, alignItems: 'center', justifyContent: 'center', borderRadius: 13, backgroundColor: '#123B3C' },
+  nextLessonArrow: { color: '#65E7D7', fontSize: 26, lineHeight: 27 },
+
+  learningRhythm: { flexDirection: wide ? 'row' : 'column', alignItems: wide ? 'center' : 'flex-start', gap: wide ? 12 : 4, paddingHorizontal: 3 },
+  learningRhythmLabel: { color: '#4FCFBE', fontSize: 9, fontWeight: '900', letterSpacing: 0.8 },
+  learningRhythmText: { color: '#768C9C', fontSize: 10, lineHeight: 15, fontWeight: '700' },
+
+  lessonHeading: { flexDirection: wide ? 'row' : 'column', alignItems: wide ? 'flex-end' : 'flex-start', justifyContent: 'space-between', gap: 5, marginTop: 2 },
+  lessonHeadingEyebrow: { color: '#4ACBBA', fontSize: 9, fontWeight: '900', letterSpacing: 0.85, marginBottom: 3 },
+  lessonHeadingTitle: { color: '#F5F8FA', fontSize: wide ? 21 : 19, lineHeight: 26, fontWeight: '900' },
+  lessonHeadingMeta: { color: '#708596', fontSize: 10, lineHeight: 15 },
+
+  lessonList: { overflow: 'hidden', borderRadius: 20, borderWidth: 1, borderColor: '#20384B', backgroundColor: '#091724' },
+  lessonRow: { minHeight: wide ? 72 : 68, flexDirection: 'row', alignItems: 'center', gap: 11, paddingHorizontal: wide ? 17 : 13, paddingVertical: 10 },
+  lessonRowBorder: { borderTopWidth: 1, borderTopColor: '#172C3D' },
+  lessonRowComplete: { backgroundColor: '#0A1D23' },
+  lessonRowNext: { backgroundColor: '#0C252C' },
+  lessonRowPressed: { opacity: 0.72 },
+  lessonNumber: { width: 34, height: 34, borderRadius: 11, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: '#294A5E', backgroundColor: '#102333' },
+  lessonNumberComplete: { borderColor: '#31766F', backgroundColor: '#113632' },
+  lessonNumberNext: { borderColor: '#3F8E83', backgroundColor: '#123C3A' },
+  lessonNumberText: { color: '#61E2D1', fontSize: 10, fontWeight: '900' },
+  lessonCopy: { flex: 1, gap: 3 },
+  lessonTitle: { color: '#F3F7F9', fontSize: wide ? 14 : 13, lineHeight: 19, fontWeight: '800' },
+  lessonMeta: { color: '#758A9B', fontSize: 9, lineHeight: 13 },
+  lessonMetaResume: { color: '#62DCCA', fontWeight: '800' },
+  nextTag: { color: '#5DDBCB', fontSize: 8, fontWeight: '900', letterSpacing: 0.6 },
+  openText: { color: '#45CDBD', fontSize: 21, lineHeight: 22 },
+
+  completionCard: { flexDirection: wide ? 'row' : 'column', alignItems: wide ? 'center' : 'stretch', justifyContent: 'space-between', gap: 16, padding: 18, borderRadius: 20, borderWidth: 1, borderColor: '#34756E', backgroundColor: '#0A272B' },
+  completionCopy: { flex: 1, gap: 5 },
+  completionEyebrow: { color: '#5EEAD4', fontSize: 9, fontWeight: '900', letterSpacing: 0.8 },
+  completionTitle: { color: '#F8FAFC', fontSize: 17, lineHeight: 22, fontWeight: '900' },
+  completionBody: { color: '#9DB8BC', fontSize: 11, lineHeight: 17 },
+  nextButton: { minHeight: 46, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 12, paddingHorizontal: 15, borderRadius: 14, backgroundColor: '#45D7C5' },
+  nextButtonText: { color: '#05211F', fontSize: 11, fontWeight: '900' },
+  nextButtonArrow: { color: '#05211F', fontSize: 22, lineHeight: 22 },
+
+  outcome: { gap: 4, paddingHorizontal: 3 },
+  outcomeEyebrow: { color: '#4ACAB9', fontSize: 8, fontWeight: '900', letterSpacing: 0.75 },
+  outcomeText: { maxWidth: 760, color: '#7F96A5', fontSize: 10, lineHeight: 16 },
 });
