@@ -119,6 +119,14 @@ export function AcademyHomeScreen() {
             <Text style={styles.brand}>FINM8</Text>
             <Text style={styles.title}>Academy</Text>
           </View>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={language === 'tr' ? 'Konu ara' : 'Search topics'}
+            onPress={() => navigation.navigate('LearnSearch')}
+            style={({ pressed }) => [styles.searchButton, pressed && styles.searchButtonPressed]}
+          >
+            <Text style={styles.searchButtonText}>{language === 'tr' ? 'Ara' : 'Search'}</Text>
+          </Pressable>
         </View>
 
         <View style={styles.hero}>
@@ -457,6 +465,9 @@ const styles = StyleSheet.create({
   backButton: { width: 44, height: 44, alignItems: 'center', justifyContent: 'center', borderRadius: 14, backgroundColor: '#102033', borderWidth: 1, borderColor: '#294057' },
   backText: { color: '#F8FAFC', fontSize: 30, lineHeight: 32, fontWeight: '500' },
   headingCopy: { flex: 1 },
+  searchButton: { minHeight: 40, justifyContent: 'center', paddingHorizontal: 13, borderRadius: 12, borderWidth: 1, borderColor: '#294057', backgroundColor: '#0A1928' },
+  searchButtonPressed: { opacity: 0.72 },
+  searchButtonText: { color: '#A8C1C9', fontSize: 10, fontWeight: '900' },
   brand: { color: '#2DD4BF', fontSize: 11, letterSpacing: 2, fontWeight: '900' },
   title: { color: '#F8FAFC', fontSize: 30, lineHeight: 36, fontWeight: '900' },
   hero: { gap: 8, padding: 20, borderRadius: 22, backgroundColor: '#0D2630', borderWidth: 1, borderColor: '#1F5961' },
