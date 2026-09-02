@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useLearningProgressStore } from '../../store/useLearningProgressStore';
 import type { LearningProfile, LearningStage, LocalizedText } from '../../domain/learning/types';
@@ -23,6 +23,9 @@ const goals = (Object.keys(LEARNING_GOAL_LABELS) as Goal[]).map((id) => ({
 }));
 
 export function LearningOnboardingScreen({ navigation }: Props) {
+  const { width } = useWindowDimensions();
+  const wide = width >= 820;
+  const styles = createStyles(wide);
   const profile = useLearningProgressStore((state) => state.profile);
   const rawLanguage = useLanguageStore((state) => state.language);
   const language: LearningLanguage = rawLanguage === 'en' ? 'en' : 'tr';
@@ -35,6 +38,14 @@ export function LearningOnboardingScreen({ navigation }: Props) {
     setSelectedGoals((current) =>
       current.includes(goal) ? current.filter((item) => item !== goal) : [...current, goal]
     );
+
+  const exit = () => {
+    if (navigation.canGoBack()) {
+      navigation.goBack();
+      return;
+    }
+    navigation.replace('Home');
+  };
 
   const complete = () => {
     if (selectedGoals.length === 0) return;
@@ -51,20 +62,24 @@ export function LearningOnboardingScreen({ navigation }: Props) {
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.content}>
-        <Text style={styles.eyebrow}>M8 LEARN</Text>
-        <Text style={styles.title}>{language === 'tr' ? 'Öğrenme profilini oluştur' : 'Create your learning profile'}</Text>
-        <Text style={styles.body}>{language === 'tr' ? 'Seviyeni ve hedeflerini seç. Ders sırası aynı kalır; öneriler sana göre uyarlanır. Normal/Pro yalnız anlatım tarzını değiştirir.' : 'Choose your level and goals. Lesson order stays the same, while recommendations adapt to you. Normal/Pro changes only the presentation style.'}</Text>
+        <View style={styles.topBar}>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={language === 'tr' ? 'Öğrenme ekranına dön' : 'Return to learning'}
+            onPress={exit}
+            style={({ pressed }) => [styles.backButton, pressed && styles.pressed]}
+          >
+            <Text style={styles.backText}>‹</Text>
+          </Pressable>
+          <View style={styles.headingCopy}>
+            <Text style={styles.eyebrow}>FINM8 EDU</Text>
+            <Text style={styles.topTitle}>{editing ? (language === 'tr' ? 'Öğrenme tercihlerin' : 'Learning preferences') : (language === 'tr' ? 'Sana göre ayarla' : 'Personalize your learning')}</Text>
+          </View>
+        </View>
 
-        <View style={styles.stepHeader} accessibilityRole="progressbar" accessibilityLabel={language === 'tr' ? 'Profil oluşturma adımları' : 'Profile setup steps'} accessibilityValue={{ min: 0, max: 2, now: 2 }}>
-          <View style={styles.stepItem}>
-            <View style={styles.stepMarker}><Text style={styles.stepMarkerText}>1</Text></View>
-            <Text style={styles.stepText}>{language === 'tr' ? 'Seviye' : 'Level'}</Text>
-          </View>
-          <View style={styles.stepLine} />
-          <View style={styles.stepItem}>
-            <View style={styles.stepMarker}><Text style={styles.stepMarkerText}>2</Text></View>
-            <Text style={styles.stepText}>{language === 'tr' ? 'Hedefler' : 'Goals'}</Text>
-          </View>
+        <View style={styles.hero}>
+          <Text style={styles.title}>{language === 'tr' ? 'Nereden başlayacağını birlikte seçelim.' : 'Let’s choose the right starting point.'}</Text>
+          <Text style={styles.body}>{language === 'tr' ? 'Seviyeni ve ne öğrenmek istediğini söyle. İçerik aynı kalır; öneriler ve başlangıç noktası sana göre düzenlenir.' : 'Tell us your level and what you want to learn. The content stays the same; recommendations and starting points adapt to you.'}</Text>
         </View>
 
         <View style={styles.sectionHeading}>
@@ -100,34 +115,35 @@ export function LearningOnboardingScreen({ navigation }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (wide: boolean) => StyleSheet.create({
   safeArea: { flex: 1, backgroundColor: '#07111F' },
-  content: { width: '100%', maxWidth: 760, alignSelf: 'center', padding: 24, paddingBottom: 18, gap: 18 },
-  eyebrow: { color: '#2DD4BF', fontSize: 12, letterSpacing: 2, fontWeight: '900' },
-  title: { color: '#F8FAFC', fontSize: 32, fontWeight: '900' },
-  body: { color: '#9FB0C3', fontSize: 15, lineHeight: 22 },
-  options: { gap: 10 },
-  option: { padding: 18, borderRadius: 18, backgroundColor: '#102033', borderWidth: 1, borderColor: '#294057', gap: 4 },
-  optionActive: { borderColor: '#2DD4BF', borderWidth: 2, backgroundColor: '#123B42' },
-  optionTitle: { color: '#F8FAFC', fontSize: 17, fontWeight: '800' },
-  optionBody: { color: '#9FB0C3', fontSize: 13, lineHeight: 19 },
-  stepHeader: { flexDirection: 'row', alignItems: 'center', paddingVertical: 4 },
-  stepItem: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  stepMarker: { width: 26, height: 26, borderRadius: 13, alignItems: 'center', justifyContent: 'center', backgroundColor: '#123B42', borderWidth: 1, borderColor: '#2DD4BF' },
-  stepMarkerText: { color: '#5EEAD4', fontSize: 11, fontWeight: '900' },
-  stepText: { color: '#B8D6D5', fontSize: 12, fontWeight: '800' },
-  stepLine: { flex: 1, height: 2, marginHorizontal: 10, backgroundColor: '#2DD4BF' },
-  sectionHeading: { gap: 5, marginTop: 4 },
-  sectionKicker: { color: '#5EEAD4', fontSize: 10, letterSpacing: 0.8, fontWeight: '900' },
-  sectionTitle: { color: '#F8FAFC', fontSize: 19, fontWeight: '800' },
+  content: { width: '100%', maxWidth: 900, alignSelf: 'center', paddingHorizontal: wide ? 28 : 18, paddingTop: 18, paddingBottom: 18, gap: wide ? 22 : 17 },
+  topBar: { minHeight: 46, flexDirection: 'row', alignItems: 'center', gap: 12 },
+  backButton: { width: 42, height: 42, alignItems: 'center', justifyContent: 'center', borderRadius: 13, borderWidth: 1, borderColor: '#253D51', backgroundColor: '#0A1928' },
+  backText: { color: '#E6EFF3', fontSize: 29, lineHeight: 30 },
+  headingCopy: { flex: 1, gap: 1 },
+  eyebrow: { color: '#49D9C8', fontSize: 9, letterSpacing: 1.8, fontWeight: '900' },
+  topTitle: { color: '#F5F8FA', fontSize: 20, lineHeight: 25, fontWeight: '900' },
+  pressed: { opacity: 0.72 },
+  hero: { gap: 7, paddingVertical: wide ? 8 : 3 },
+  title: { maxWidth: 660, color: '#F8FAFC', fontSize: wide ? 31 : 25, lineHeight: wide ? 39 : 32, fontWeight: '900' },
+  body: { maxWidth: 720, color: '#8FA4B4', fontSize: wide ? 13 : 12, lineHeight: wide ? 20 : 18 },
+  sectionHeading: { gap: 4, marginTop: 2 },
+  sectionKicker: { color: '#4ED5C5', fontSize: 9, letterSpacing: 0.8, fontWeight: '900' },
+  sectionTitle: { color: '#F5F8FA', fontSize: wide ? 20 : 18, lineHeight: 24, fontWeight: '900' },
+  options: { flexDirection: wide ? 'row' : 'column', gap: 9 },
+  option: { flex: wide ? 1 : undefined, minHeight: wide ? 126 : 92, justifyContent: 'center', padding: 15, borderRadius: 17, backgroundColor: '#0A1928', borderWidth: 1, borderColor: '#263F54', gap: 5 },
+  optionActive: { borderColor: '#36BFB0', backgroundColor: '#0D2B31' },
+  optionTitle: { color: '#F3F7F9', fontSize: 15, lineHeight: 20, fontWeight: '900' },
+  optionBody: { color: '#8298A8', fontSize: 10, lineHeight: 16 },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  chip: { minHeight: 44, justifyContent: 'center', paddingVertical: 10, paddingHorizontal: 14, borderRadius: 99, borderWidth: 1, borderColor: '#294057', backgroundColor: '#102033' },
-  chipActive: { borderColor: '#2DD4BF', backgroundColor: '#123B42' },
-  chipText: { color: '#9FB0C3', fontWeight: '700' },
-  chipTextActive: { color: '#5EEAD4' },
-  footer: { width: '100%', maxWidth: 760, alignSelf: 'center', paddingHorizontal: 24, paddingTop: 12, paddingBottom: 16, backgroundColor: '#07111F', borderTopWidth: 1, borderTopColor: '#1F3449', gap: 8 },
-  footerHint: { color: '#9FB0C3', fontSize: 12, textAlign: 'center' },
-  button: { minHeight: 52, alignItems: 'center', justifyContent: 'center', padding: 17, borderRadius: 15, backgroundColor: '#2DD4BF' },
-  buttonText: { color: '#042F2E', fontSize: 16, fontWeight: '900' },
+  chip: { minHeight: 42, justifyContent: 'center', paddingVertical: 9, paddingHorizontal: 13, borderRadius: 999, borderWidth: 1, borderColor: '#294057', backgroundColor: '#0A1928' },
+  chipActive: { borderColor: '#2FBCAE', backgroundColor: '#0D3035' },
+  chipText: { color: '#91A5B4', fontSize: 11, fontWeight: '700' },
+  chipTextActive: { color: '#65E7D7', fontWeight: '900' },
+  footer: { width: '100%', maxWidth: 900, alignSelf: 'center', paddingHorizontal: wide ? 28 : 18, paddingTop: 10, paddingBottom: 14, backgroundColor: '#07111F', borderTopWidth: 1, borderTopColor: '#1F3449', gap: 7 },
+  footerHint: { color: '#8297A7', fontSize: 10, textAlign: 'center' },
+  button: { alignSelf: 'center', width: '100%', maxWidth: 844, minHeight: 52, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 18, borderRadius: 14, backgroundColor: '#2DD4BF' },
+  buttonText: { color: '#042F2E', fontSize: 14, fontWeight: '900' },
   disabled: { opacity: 0.35 },
 });
