@@ -105,7 +105,7 @@ function ExchangeStory({ role, tr, styles }: StoryProps) {
 
   return (
     <View style={styles.story}>
-      <Heading title={title} detail={detail} styles={styles} />
+      {role !== 'summary' ? <Heading title={title} detail={detail} styles={styles} /> : null}
       {role === 'practice' ? (
         <View style={styles.dualPanel}>
           <SimpleCard label={tr ? 'PİYASA A' : 'MARKET A'} value={tr ? 'Belirli saatler' : 'Defined hours'} styles={styles} />
@@ -143,7 +143,7 @@ function IndexStory({ role, tr, styles }: StoryProps) {
 
   return (
     <View style={styles.story}>
-      <Heading title={title} detail={tr ? 'Grubun üyeleri aynı yönde gitmek zorunda değildir.' : 'Members of the group do not have to move in the same direction.'} styles={styles} />
+      {role !== 'summary' ? <Heading title={title} detail={tr ? 'Grubun üyeleri aynı yönde gitmek zorunda değildir.' : 'Members of the group do not have to move in the same direction.'} styles={styles} /> : null}
       <View style={styles.indexScene}>
         <View style={styles.indexMembers}>
           <IndexMember label="A" direction="↑" positive styles={styles} />
@@ -182,7 +182,7 @@ function EtfStory({ role, tr, styles }: StoryProps) {
 
   return (
     <View style={styles.story}>
-      <Heading title={title} detail={tr ? 'Risk, içindeki varlıklara bağlıdır.' : 'Risk depends on what is inside.'} styles={styles} />
+      {role !== 'summary' ? <Heading title={title} detail={tr ? 'Risk, içindeki varlıklara bağlıdır.' : 'Risk depends on what is inside.'} styles={styles} /> : null}
       {role === 'practice' ? (
         <View style={styles.dualPanel}>
           <View style={styles.basketPanel}>
@@ -231,7 +231,7 @@ function BondStory({ role, tr, styles }: StoryProps) {
 
   return (
     <View style={styles.story}>
-      <Heading title={title} detail={tr ? 'Tahvilin fiyatı piyasada yine hareket edebilir.' : 'A bond’s market price can still move.'} styles={styles} />
+      {role !== 'summary' ? <Heading title={title} detail={tr ? 'Tahvilin fiyatı piyasada yine hareket edebilir.' : 'A bond’s market price can still move.'} styles={styles} /> : null}
       {role === 'practice' ? (
         <View style={styles.rateScene}>
           <SimpleCard label={tr ? 'YENİ FAİZLER' : 'NEW RATES'} value="↑" styles={styles} accent />
@@ -261,7 +261,7 @@ function ForexStory({ role, tr, styles }: StoryProps) {
 
   return (
     <View style={styles.story}>
-      <Heading title={title} detail={tr ? 'Kur tek bir paranın mutlak değeri değildir.' : 'An exchange rate is not one currency’s absolute value.'} styles={styles} />
+      {role !== 'summary' ? <Heading title={title} detail={tr ? 'Kur tek bir paranın mutlak değeri değildir.' : 'An exchange rate is not one currency’s absolute value.'} styles={styles} /> : null}
       <View style={styles.fxScene}>
         <View style={styles.currencyBlock}><Text style={styles.currencyAmount}>1</Text><Text style={styles.currencyCode}>EUR</Text></View>
         <Text style={styles.fxEquals}>≈</Text>
@@ -283,7 +283,7 @@ function CommodityStory({ role, tr, styles }: StoryProps) {
 
   return (
     <View style={styles.story}>
-      <Heading title={title} detail={tr ? 'Her ürünün fiyatını etkileyen koşullar farklı olabilir.' : 'Different conditions can drive each product’s price.'} styles={styles} />
+      {role !== 'summary' ? <Heading title={title} detail={tr ? 'Her ürünün fiyatını etkileyen koşullar farklı olabilir.' : 'Different conditions can drive each product’s price.'} styles={styles} /> : null}
       <View style={styles.commodityRow}>
         <View style={styles.commodityItem}><GoldBar styles={styles} /><Text style={styles.commodityLabel}>{tr ? 'ALTIN' : 'GOLD'}</Text></View>
         <View style={styles.commodityItem}><OilBarrel styles={styles} /><Text style={styles.commodityLabel}>{tr ? 'PETROL' : 'OIL'}</Text></View>
