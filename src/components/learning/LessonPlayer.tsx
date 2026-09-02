@@ -202,14 +202,20 @@ export function LessonPlayer({
       </View>
 
       <ScrollView ref={scrollRef} contentContainerStyle={styles.content}>
-        <View style={styles.metaRow}>
-          <Text style={styles.duration}>{selectLocalizedText(LEARNING_STAGE_LABELS[lesson.learningStage], language)}</Text>
-          <Text style={styles.duration}>{lesson.estimatedMinutes} {language === 'tr' ? 'dk' : 'min'}</Text>
-          {entryContext ? (
-            <Text style={styles.contextLabel}>{entryContext.sourceModule}</Text>
-          ) : null}
+        <View style={styles.lessonIntro}>
+          <Text style={styles.lessonTitle}>{lessonTitle}</Text>
+          <View style={styles.metaRow}>
+            <Text style={styles.duration}>{selectLocalizedText(LEARNING_STAGE_LABELS[lesson.learningStage], language)}</Text>
+            <Text style={styles.metaDot}>·</Text>
+            <Text style={styles.duration}>{lesson.estimatedMinutes} {language === 'tr' ? 'dk' : 'min'}</Text>
+            {entryContext ? (
+              <>
+                <Text style={styles.metaDot}>·</Text>
+                <Text style={styles.contextLabel}>{entryContext.sourceModule}</Text>
+              </>
+            ) : null}
+          </View>
         </View>
-        <Text style={styles.lessonTitle}>{lessonTitle}</Text>
 
         <View style={[styles.slide, isVisualOnlyStep && styles.visualSlide]}>
           {isTakeaway ? (
@@ -360,21 +366,22 @@ const createStyles = (theme: LearningTheme, wide: boolean, narrow: boolean) =>
       paddingBottom: theme.spacing.md,
       gap: wide ? 10 : theme.spacing.sm,
     },
-    metaRow: { flexDirection: 'row', flexWrap: 'wrap', gap: theme.spacing.sm },
-    duration: { color: theme.colors.textMuted, fontSize: wide ? 13 : 12 },
-    contextLabel: { color: theme.colors.textMuted, fontSize: wide ? 13 : 12 },
-    lessonTitle: { color: theme.colors.text, fontFamily: LEARNING_FONT_FAMILY, fontSize: wide ? 26 : narrow ? 20 : 21, lineHeight: wide ? 33 : narrow ? 27 : 28, fontWeight: '800', letterSpacing: -0.35 },
+    lessonIntro: { gap: wide ? 5 : 4, paddingHorizontal: wide ? 2 : 0 },
+    metaRow: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: wide ? 6 : 5 },
+    duration: { color: theme.colors.textMuted, fontSize: wide ? 11 : 10, fontWeight: '700' },
+    metaDot: { color: theme.colors.textMuted, fontSize: wide ? 10 : 9, opacity: 0.65 },
+    contextLabel: { color: theme.colors.textMuted, fontSize: wide ? 11 : 10, fontWeight: '700' },
+    lessonTitle: { maxWidth: 820, color: theme.colors.text, fontFamily: LEARNING_FONT_FAMILY, fontSize: wide ? 25 : narrow ? 20 : 21, lineHeight: wide ? 32 : narrow ? 27 : 28, fontWeight: '900', letterSpacing: -0.35 },
     slide: {
       width: '100%',
       justifyContent: 'flex-start',
-      padding: wide ? 20 : narrow ? 13 : 15,
-      backgroundColor: theme.colors.surface,
-      borderColor: theme.colors.border,
-      borderWidth: 1,
-      borderRadius: 18,
+      paddingVertical: wide ? 8 : 4,
+      paddingHorizontal: 0,
+      backgroundColor: 'transparent',
+      borderWidth: 0,
     },
     visualSlide: { justifyContent: 'flex-start' },
-    takeaway: { gap: wide ? 13 : 12 },
+    takeaway: { gap: wide ? 14 : 12, paddingHorizontal: wide ? 2 : 0 },
     takeawayEyebrow: { color: theme.colors.primary, fontSize: wide ? 12 : 11, lineHeight: 16, fontWeight: '900', letterSpacing: 0.8 },
     takeawayText: { color: theme.colors.text, fontFamily: LEARNING_FONT_FAMILY, fontSize: wide ? 27 : narrow ? 21 : 22, fontWeight: '800', lineHeight: wide ? 35 : narrow ? 29 : 30, letterSpacing: -0.25 },
     takeawayVisual: { marginTop: 2 },
