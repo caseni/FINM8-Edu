@@ -185,14 +185,14 @@ const createStyles = (theme: LearningTheme) => StyleSheet.create({
     flexDirection: 'column',
   },
   copyPane: {
-    flex: 0.96,
+    flex: 0.82,
     minWidth: 0,
     justifyContent: 'center',
     gap: 10,
     paddingVertical: 2,
   },
   visualPane: {
-    flex: 1.04,
+    flex: 1.18,
     minWidth: 0,
     justifyContent: 'center',
   },
