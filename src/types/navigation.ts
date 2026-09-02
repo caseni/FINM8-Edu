@@ -13,6 +13,7 @@ export type RootStackParamList = {
   Home: undefined;
   BeginnerSection: { sectionId: BeginnerSectionId };
   Academy: undefined;
+  LearnSearch: undefined;
   LearningOnboarding: undefined;
   MicroLesson: {
     lessonId: string;
@@ -48,6 +49,7 @@ export type MainStackParamList = {
   Home: undefined;
   BeginnerSection: { sectionId: BeginnerSectionId };
   Academy: undefined;
+  LearnSearch: undefined;
   LearningOnboarding: undefined;
   MicroLesson: {
     lessonId: string;

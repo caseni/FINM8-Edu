@@ -7,6 +7,7 @@ import { CourseDetailScreen } from '../screens/course/CourseDetailScreen';
 import { AcademyHomeScreen } from '../screens/learn/AcademyHomeScreen';
 import { BeginnerSectionScreen } from '../screens/learn/BeginnerSectionScreen';
 import { LearnLandingScreen } from '../screens/learn/LearnLandingScreen';
+import { LearnSearchScreen } from '../screens/learn/LearnSearchScreen';
 import { LearningOnboardingScreen } from '../screens/learn/LearningOnboardingScreen';
 import { MicroLessonScreen } from '../screens/learn/MicroLessonScreen';
 import { LessonQuizScreen } from '../screens/learn/LessonQuizScreen';
@@ -40,6 +41,7 @@ export const AppNavigator: React.FC = () => {
         />
         <Stack.Screen name="BeginnerSection" component={BeginnerSectionScreen} options={{ headerShown: false }} />
         <Stack.Screen name="Academy" component={AcademyHomeScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="LearnSearch" component={LearnSearchScreen} options={{ headerShown: false }} />
         <Stack.Screen name="LearningOnboarding" component={LearningOnboardingScreen} options={{ headerShown: false }} />
         <Stack.Screen name="MicroLesson" component={MicroLessonScreen} options={{ headerShown: false }} />
         <Stack.Screen name="PracticalTask" component={PracticalTaskScreen} options={{ headerShown: false, gestureEnabled: false }} />

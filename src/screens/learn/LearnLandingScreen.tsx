@@ -146,14 +146,24 @@ export function LearnLandingScreen() {
               <Text style={styles.primaryButtonText}>{nextActionLabel}</Text>
               <Text style={styles.primaryButtonArrow}>›</Text>
             </Pressable>
-            <Pressable
-              accessibilityRole="button"
-              accessibilityLabel={language === 'tr' ? 'İleri konuları aç' : 'Open advanced topics'}
-              onPress={() => navigation.navigate('Academy')}
-              style={({ pressed }) => [styles.linkButton, pressed && styles.buttonPressed]}
-            >
-              <Text style={styles.linkButtonText}>{language === 'tr' ? 'İleri konular' : 'Advanced topics'}</Text>
-            </Pressable>
+            <View style={styles.secondaryActions}>
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel={language === 'tr' ? 'Konu ara' : 'Search topics'}
+                onPress={() => navigation.navigate('LearnSearch')}
+                style={({ pressed }) => [styles.linkButton, pressed && styles.buttonPressed]}
+              >
+                <Text style={styles.linkButtonText}>{language === 'tr' ? 'Konu ara' : 'Search topics'}</Text>
+              </Pressable>
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel={language === 'tr' ? 'İleri konuları aç' : 'Open advanced topics'}
+                onPress={() => navigation.navigate('Academy')}
+                style={({ pressed }) => [styles.linkButton, pressed && styles.buttonPressed]}
+              >
+                <Text style={styles.linkButtonText}>{language === 'tr' ? 'İleri konular' : 'Advanced topics'}</Text>
+              </Pressable>
+            </View>
           </View>
         </View>
 
@@ -282,7 +292,8 @@ const createStyles = (wide: boolean) => StyleSheet.create({
   primaryButton: { minHeight: 52, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 12, paddingHorizontal: 17, borderRadius: 15, backgroundColor: '#46D8C6' },
   primaryButtonText: { flex: 1, color: '#05221F', fontSize: 13, fontWeight: '900' },
   primaryButtonArrow: { color: '#05221F', fontSize: 25, lineHeight: 25 },
-  linkButton: { minHeight: 42, alignItems: 'center', justifyContent: 'center' },
+  secondaryActions: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8 },
+  linkButton: { flex: 1, minHeight: 42, alignItems: 'center', justifyContent: 'center' },
   linkButtonText: { color: '#A2BAC2', fontSize: 11, fontWeight: '800' },
   buttonPressed: { opacity: 0.72 },
 
