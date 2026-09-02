@@ -59,7 +59,7 @@ export function LearnLandingScreen() {
   };
 
   const nextActionLabel = beginnerComplete
-    ? language === 'tr' ? 'Academy’ye geç' : 'Go to Academy'
+    ? language === 'tr' ? 'İleri öğrenme yoluna geç' : 'Choose a deeper learning path'
     : checkpoint?.stage === 'task'
       ? language === 'tr' ? 'Göreve devam et' : 'Continue task'
       : checkpoint?.stage === 'quiz'
@@ -89,7 +89,15 @@ export function LearnLandingScreen() {
           </View>
         </View>
 
-        <View style={styles.hero}>
+        <View
+          style={styles.hero}
+          accessibilityRole={beginnerComplete ? 'summary' : undefined}
+          accessibilityLabel={beginnerComplete
+            ? language === 'tr'
+              ? 'Temel okuryazarlık yolu tamamlandı. 24/24 ders tamamlandı.'
+              : 'Foundation literacy path complete. 24 of 24 lessons completed.'
+            : undefined}
+        >
           <View style={styles.heroCopy}>
             <Text style={styles.heroEyebrow}>{language === 'tr' ? 'BUGÜN 5 DAKİKA' : '5 MINUTES TODAY'}</Text>
             <Text style={styles.title}>
@@ -172,6 +180,7 @@ export function LearnLandingScreen() {
         <View style={styles.sectionList}>
           {BEGINNER_SECTION_IDS.map((sectionId) => {
             const section = BEGINNER_SECTIONS[sectionId];
+            const active = section.status === 'active';
             const completedCount = section.lessonIds.filter((lessonId) => completedLessonIds.includes(lessonId)).length;
             const progress = section.lessonIds.length ? completedCount / section.lessonIds.length : 0;
             const progressPercent = Math.round(progress * 100);
@@ -183,16 +192,19 @@ export function LearnLandingScreen() {
                 ? language === 'tr' ? 'DEVAM' : 'CONTINUE'
                 : language === 'tr' ? 'BAŞLA' : 'START';
             const sectionTitle = selectLocalizedText(section.title, language);
+            const sectionAccessibilityLabel = language === 'tr'
+              ? `${sectionTitle}. ${status}. ${completedCount}/${section.lessonIds.length} ders, yüzde ${progressPercent}.`
+              : `${sectionTitle}. ${status}. ${completedCount} of ${section.lessonIds.length} lessons, ${progressPercent} percent.`;
 
             return (
               <Pressable
                 key={section.id}
                 accessibilityRole="button"
-                accessibilityLabel={language === 'tr'
-                  ? `${sectionTitle}. ${status}. ${completedCount}/${section.lessonIds.length} ders, yüzde ${progressPercent}.`
-                  : `${sectionTitle}. ${status}. ${completedCount} of ${section.lessonIds.length} lessons, ${progressPercent} percent.`}
+                accessibilityLabel={sectionAccessibilityLabel}
+                accessibilityState={active ? undefined : { disabled: true }}
+                disabled={!active}
                 onPress={() => navigation.navigate('BeginnerSection', { sectionId: section.id })}
-                style={({ pressed }) => [styles.sectionCard, completed && styles.sectionCardComplete, pressed && styles.sectionCardPressed]}
+                style={({ pressed }) => [styles.sectionCard, completed && styles.sectionCardComplete, !active && styles.sectionCardDisabled, pressed && active && styles.sectionCardPressed]}
               >
                 <View style={styles.cardTop}>
                   <View style={[styles.sectionNumber, completed && styles.sectionNumberComplete]}>
@@ -289,6 +301,7 @@ const createStyles = (wide: boolean) => StyleSheet.create({
   sectionCard: { width: wide ? '49%' : '100%', minHeight: wide ? 154 : 132, justifyContent: 'space-between', gap: 12, padding: 16, borderRadius: 20, borderWidth: 1, borderColor: '#203A4E', backgroundColor: '#091827' },
   sectionCardComplete: { borderColor: '#2D6965', backgroundColor: '#0A2027' },
   sectionCardPressed: { backgroundColor: '#102632' },
+  sectionCardDisabled: { opacity: 0.55 },
   cardTop: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   sectionNumber: { width: 36, height: 36, alignItems: 'center', justifyContent: 'center', borderRadius: 12, backgroundColor: '#102435', borderWidth: 1, borderColor: '#2B4A5E' },
   sectionNumberComplete: { backgroundColor: '#103A38', borderColor: '#317D74' },
