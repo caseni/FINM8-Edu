@@ -34,7 +34,11 @@ export function LearnLandingScreen() {
   const completedBeginnerCount = beginnerLessonIds.filter((lessonId) => completedLessonIds.includes(lessonId)).length;
   const beginnerComplete = beginnerLessonIds.length > 0 && completedBeginnerCount === beginnerLessonIds.length;
   const beginnerProgress = beginnerLessonIds.length ? completedBeginnerCount / beginnerLessonIds.length : 0;
-  const nextLessonId = beginnerLessonIds.find((lessonId) => !completedLessonIds.includes(lessonId));
+  const recentBeginnerCheckpoint = Object.values(lessonCheckpoints)
+    .filter((item) => beginnerLessonIds.includes(item.lessonId) && !completedLessonIds.includes(item.lessonId))
+    .sort((left, right) => right.updatedAt.localeCompare(left.updatedAt))[0];
+  const nextLessonId = recentBeginnerCheckpoint?.lessonId
+    ?? beginnerLessonIds.find((lessonId) => !completedLessonIds.includes(lessonId));
   const nextLesson = nextLessonId ? MICRO_LESSON_CATALOG.find((lesson) => lesson.id === nextLessonId) : undefined;
   const nextSection = nextLessonId
     ? BEGINNER_SECTION_IDS.map((sectionId) => BEGINNER_SECTIONS[sectionId]).find((section) => section.lessonIds.includes(nextLessonId))
