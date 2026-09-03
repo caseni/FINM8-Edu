@@ -149,7 +149,7 @@ const dcf = createFoundationLesson({
   proExplanationEn: 'FCFF versus FCFE, WACC, terminal growth, exit multiples, mid-year conventions, and scenario analysis depend on model design. Terminal value often represents a large share of total value and deserves separate sensitivity testing.',
   misconception: 'DCF’de çıkan tek sayıyı kesin gerçek değer sanma.',
   misconceptionEn: 'Common mistake: treating one model output as an objective and certain “true value.”',
-  takeaway: 'DCF tek fiyat değil, varsayımlara bağlı değer aralığı üretir.',
+  takeaway: 'DCF sonucunu tek sayı değil, varsayım hassasiyetiyle değerlendir.',
   takeawayEn: 'DCF is an assumption engine: it helps reason about a value range through cash, time, and risk.',
   prerequisiteConceptKeys: ['fundamental.cash_flow', 'fundamental.growth_quality', 'fundamental.debt_liquidity'],
   relatedConceptKeys: ['fundamental.valuation_multiples', 'risk.basics'],
