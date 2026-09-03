@@ -62,7 +62,7 @@ function Correlation({ role, tr, styles }: SceneProps) {
         : tr ? 'Bazı yatırımlar birlikte hareket eder' : 'Some investments move together';
   return (
     <View style={styles.story}>
-      <Head title={title} detail={tr ? 'Çeşitlendirme için kötü günde nasıl davrandıklarına da bak.' : 'For diversification, also watch how they behave on bad days.'} styles={styles} />
+      {role !== 'summary' ? <Head title={title} detail={tr ? 'Çeşitlendirme için kötü günde nasıl davrandıklarına da bak.' : 'For diversification, also watch how they behave on bad days.'} styles={styles} /> : null}
       <View style={styles.pathPair}>
         <View style={styles.pathCard}><Text style={styles.pathLabel}>A</Text><Text style={styles.pathText}>↗  ↘  ↗  ↗</Text></View>
         <View style={styles.pathCard}><Text style={styles.pathLabel}>B</Text><Text style={[styles.pathText, together ? styles.samePath : styles.diffPath]}>{together ? '↗  ↘  ↗  ↗' : '↘  ↗  ↘  ↗'}</Text></View>
@@ -81,7 +81,7 @@ function Drawdown({ role, tr, styles }: SceneProps) {
       : tr ? '100 → 70 → toparlanma' : '100 → 70 → recovery';
   return (
     <View style={styles.story}>
-      <Head title={title} detail={tr ? 'Aradaki büyük düşüş, son sonuç toparlansa bile önemlidir.' : 'A large decline matters even if the ending result recovers.'} styles={styles} />
+      {role !== 'summary' ? <Head title={title} detail={tr ? 'Aradaki büyük düşüş, son sonuç toparlansa bile önemlidir.' : 'A large decline matters even if the ending result recovers.'} styles={styles} /> : null}
       <View style={styles.drawScene}>
         <Point label={tr ? 'ZİRVE' : 'PEAK'} value="100" styles={styles} />
         <Text style={styles.downArrow}>↘</Text>
@@ -107,7 +107,7 @@ function Leverage({ role, tr, styles }: SceneProps) {
       : tr ? '1× ve 3× aynı değildir' : '1× and 3× are not the same';
   return (
     <View style={styles.story}>
-      <Head title={title} detail={tr ? 'Kaldıraç yönü seçmez; olumlu veya olumsuz etkiyi büyütebilir.' : 'Leverage does not choose direction; it can amplify positive or negative impact.'} styles={styles} />
+      {role !== 'summary' ? <Head title={title} detail={tr ? 'Kaldıraç yönü seçmez; olumlu veya olumsuz etkiyi büyütebilir.' : 'Leverage does not choose direction; it can amplify positive or negative impact.'} styles={styles} /> : null}
       <View style={styles.dual}>
         <View style={styles.metricCard}><Text style={styles.metricTitle}>1×</Text><Text style={styles.metricSub}>{tr ? 'FİYAT' : 'PRICE'} {loss ? '−5%' : '+5%'}</Text><Text style={styles.metricValue}>{tr ? 'HESAP' : 'ACCOUNT'} {loss ? '−5%' : '+5%'}</Text></View>
         <View style={[styles.metricCard, styles.metricCardAccent]}><Text style={styles.metricTitle}>3×</Text><Text style={styles.metricSub}>{tr ? 'FİYAT' : 'PRICE'} {loss ? '−5%' : '+5%'}</Text><Text style={[styles.metricValue, loss && styles.warn]}>{tr ? 'HESAP' : 'ACCOUNT'} {loss ? '−15%' : '+15%'}</Text></View>
@@ -125,7 +125,7 @@ function Concentration({ role, tr, styles }: SceneProps) {
       : tr ? 'Aynı kaynağa bağlı olabilirler' : 'They may depend on the same source';
   return (
     <View style={styles.story}>
-      <Head title={title} detail={tr ? 'Farklı görünen yatırımlar aynı ekonomik olaydan etkilenebilir.' : 'Investments that look different can be exposed to the same economic event.'} styles={styles} />
+      {role !== 'summary' ? <Head title={title} detail={tr ? 'Farklı görünen yatırımlar aynı ekonomik olaydan etkilenebilir.' : 'Investments that look different can be exposed to the same economic event.'} styles={styles} /> : null}
       <View style={styles.holdings}>{['A','B','C','D','E','F'].map((x) => <View key={x} style={styles.holding}><Text style={styles.holdingText}>{x}</Text></View>)}</View>
       <Text style={styles.centerArrow}>↓</Text>
       {hidden ? (
@@ -146,7 +146,7 @@ function RiskBudget({ role, tr, styles }: SceneProps) {
       : tr ? 'Eşit para, eşit risk olmayabilir' : 'Equal money may not mean equal risk';
   return (
     <View style={styles.story}>
-      <Head title={title} detail={tr ? 'Daha hareketli yatırım toplam riske daha fazla katkı yapabilir.' : 'The more volatile investment can contribute more of the total risk.'} styles={styles} />
+      {role !== 'summary' ? <Head title={title} detail={tr ? 'Daha hareketli yatırım toplam riske daha fazla katkı yapabilir.' : 'The more volatile investment can contribute more of the total risk.'} styles={styles} /> : null}
       <View style={styles.budgetRows}>
         <View style={styles.budgetRow}><Text style={styles.budgetLabel}>{tr ? 'PARA' : 'MONEY'}</Text><Bar value="50%" width="50%" styles={styles} /><Bar value="50%" width="50%" styles={styles} muted /></View>
         <View style={styles.budgetRow}><Text style={styles.budgetLabel}>{tr ? 'RİSK' : 'RISK'}</Text><Bar value={question ? '50%?' : '75%'} width={question ? '50%' : '75%'} styles={styles} warn /><Bar value={question ? '50%?' : '25%'} width={question ? '50%' : '25%'} styles={styles} muted /></View>
@@ -168,7 +168,7 @@ function Construction({ role, tr, styles }: SceneProps) {
   const nodes = tr ? ['AMAÇ', 'SINIR', 'DAĞILIM', 'KONTROL'] : ['GOAL', 'LIMITS', 'ALLOCATE', 'REVIEW'];
   return (
     <View style={styles.story}>
-      <Head title={title} detail={tr ? 'Zaman, nakit ihtiyacı ve kabul edilebilir kayıp seçimden önce gelir.' : 'Time horizon, liquidity needs, and acceptable loss come before product selection.'} styles={styles} />
+      {role !== 'summary' ? <Head title={title} detail={tr ? 'Zaman, nakit ihtiyacı ve kabul edilebilir kayıp seçimden önce gelir.' : 'Time horizon, liquidity needs, and acceptable loss come before product selection.'} styles={styles} /> : null}
       <View style={styles.planRow}>
         {nodes.map((node, index) => <React.Fragment key={node}><View style={[styles.planNode, index === 0 && styles.planNodeAccent]}><Text style={styles.planText}>{node}</Text></View>{index < nodes.length - 1 ? <Text style={styles.planArrow}>→</Text> : null}</React.Fragment>)}
       </View>
