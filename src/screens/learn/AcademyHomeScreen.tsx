@@ -153,11 +153,11 @@ export function AcademyHomeScreen() {
                 : 'You completed every lesson across all ten Academy schools. You can reopen completed schools to revisit specific topics or keep using your reviews.'
               : beginnerComplete
                 ? language === 'tr'
-                  ? 'Dört temel alanı tamamladın. Burada her şeyi yapmak zorunda değilsin; merak ettiğin tek bir alandan devam etmen yeterli.'
-                  : 'You completed the four foundation areas. You do not need to do everything here; continuing with one subject that interests you is enough.'
+                  ? 'Temeli bitirdin. Şimdi yalnız merak ettiğin alanda derinleş.'
+                  : 'You finished the foundation. Now go deeper only in what interests you.'
                 : language === 'tr'
-                  ? 'Core günlük öğrenme yolun olarak kalır. Academy’de ekonomi, finansal piyasalar, teknik ve temel analiz, psikoloji ve sistematik yaklaşımları istediğin sırayla derinleştirebilirsin.'
-                  : 'Core remains your daily learning path. Academy lets you go deeper into economics, financial markets, technical and fundamental analysis, psychology, and systematic approaches.'}
+                  ? 'Temel yol günlük rotan. Academy’de zaten bildiğin veya merak ettiğin konuya doğrudan girebilirsin.'
+                  : 'The foundation path is your daily route. Academy lets you jump directly into a subject you already know or want to explore.'}
           </Text>
           {academyComplete ? (
             <Text style={styles.heroCompletionMeta}>
