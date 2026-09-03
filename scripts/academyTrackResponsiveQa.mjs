@@ -9,6 +9,9 @@ const viewports = [
   { name: 'mobile-390', sizeClass: 'mobile', width: 390, height: 844, minVisualWidth: 240 },
   { name: 'desktop', sizeClass: 'desktop', width: 1440, height: 900, minVisualWidth: 300 },
 ];
+const MAX_VISUAL_WORDS = 24;
+const MAX_SUMMARY_VISUAL_WORDS = 18;
+const SUMMARY_REPETITION_THRESHOLD = 0.78;
 
 const slug = (value) => value
   .toLocaleLowerCase('tr-TR')
@@ -20,6 +23,29 @@ const slug = (value) => value
 
 const escapedTrack = trackTitle.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 const openPattern = new RegExp(`^${escapedTrack} derslerini aç$`, 'i');
+
+function wordCount(value) {
+  const clean = value.trim().replace(/\s+/g, ' ');
+  return clean ? clean.split(' ').length : 0;
+}
+
+function normalizedTokens(value) {
+  return value
+    .toLocaleLowerCase('tr-TR')
+    .replace(/[^a-z0-9çğıöşü\s]/gi, ' ')
+    .split(/\s+/)
+    .map((token) => token.trim())
+    .filter((token) => token.length >= 3);
+}
+
+function sharedTokenRatio(left, right) {
+  const leftTokens = normalizedTokens(left);
+  const rightTokens = normalizedTokens(right);
+  if (leftTokens.length < 5 || rightTokens.length < 5) return 0;
+  const rightSet = new Set(rightTokens);
+  const shared = new Set(leftTokens.filter((token) => rightSet.has(token))).size;
+  return shared / Math.min(new Set(leftTokens).size, new Set(rightTokens).size);
+}
 
 async function openAcademy(page) {
   await page.goto(baseUrl, { waitUntil: 'networkidle' });
@@ -68,9 +94,43 @@ async function largestImage(page) {
     const image = images.nth(i);
     if (!(await image.isVisible())) continue;
     const box = await image.boundingBox();
-    if (box && (!largest || box.width * box.height > largest.width * largest.height)) largest = box;
+    if (box && (!largest || box.width * box.height > largest.width * largest.height)) {
+      largest = {
+        ...box,
+        text: (await image.innerText()).trim(),
+      };
+    }
   }
   return largest;
+}
+
+async function takeawayText(page) {
+  const marker = page.getByText('AKLINDA KALSIN', { exact: true });
+  if (await marker.count() === 0) return '';
+  return marker.evaluate((node) => {
+    const parent = node.parentElement;
+    if (!parent) return '';
+    const children = Array.from(parent.children);
+    const markerIndex = children.indexOf(node);
+    return children[markerIndex + 1]?.textContent?.trim() ?? '';
+  });
+}
+
+async function assertVisualTeachingCopy(page, visual, label, step, total) {
+  const visualWords = wordCount(visual.text);
+  if (visualWords > MAX_VISUAL_WORDS) {
+    throw new Error(`${label}: visual carries ${visualWords} visible words; Academy visual budget is ${MAX_VISUAL_WORDS}`);
+  }
+  if (step !== total) return;
+  if (visualWords > MAX_SUMMARY_VISUAL_WORDS) {
+    throw new Error(`${label}: summary visual carries ${visualWords} visible words; summary budget is ${MAX_SUMMARY_VISUAL_WORDS}`);
+  }
+
+  const takeaway = await takeawayText(page);
+  const repetition = sharedTokenRatio(visual.text, takeaway);
+  if (repetition >= SUMMARY_REPETITION_THRESHOLD) {
+    throw new Error(`${label}: summary visual repeats the takeaway too closely (overlap ${repetition.toFixed(2)})`);
+  }
 }
 
 async function assertNoOverflow(page, label) {
@@ -111,6 +171,9 @@ try {
         if (visual.width > (viewport.sizeClass === 'mobile' ? 360 : 700) + 1) throw new Error(`${label}: visual too wide at ${visual.width.toFixed(1)}px`);
         if (visual.x < -1 || visual.x + visual.width > viewport.width + 1) throw new Error(`${label}: visual escapes viewport`);
         if (visual.height > viewport.height * 0.75) throw new Error(`${label}: visual too tall at ${visual.height.toFixed(1)}px`);
+        if (viewport.name === 'mobile-390') {
+          await assertVisualTeachingCopy(page, visual, label, step, total);
+        }
 
         if (step === 1 || step === 3 || step === total) {
           await page.screenshot({ path: `visual-qa/${label}.png`, fullPage: true });
