@@ -13,10 +13,12 @@ import type { RootStackParamList } from '../../types/navigation';
 type Navigation = NativeStackNavigationProp<RootStackParamList, 'Academy'>;
 
 const STARTER_TRACK_IDS: readonly AcademyTrackId[] = [
+  'economy',
   'financial_markets',
   'technical_analysis',
   'fundamental_analysis',
   'risk_portfolio',
+  'market_psychology',
 ];
 
 const STARTER_TRACK_LABELS: Readonly<Record<AcademyTrackId, { tr: string; en: string }>> = {
@@ -187,14 +189,18 @@ export function AcademyHomeScreen() {
           </Pressable>
         ) : null}
 
-        {beginnerComplete && !academyComplete ? (
+        {!academyComplete ? (
           <View style={styles.starterGuide}>
-            <Text style={styles.starterEyebrow}>{language === 'tr' ? 'NEREDEN DEVAM EDEBİLİRSİN?' : 'WHERE CAN YOU GO NEXT?'}</Text>
+            <Text style={styles.starterEyebrow}>{language === 'tr' ? 'NEREYE GİTMEK İSTİYORSUN?' : 'WHERE DO YOU WANT TO GO?'}</Text>
             <Text style={styles.starterTitle}>{language === 'tr' ? 'Şu anda ne öğrenmek istiyorsun?' : 'What do you want to learn right now?'}</Text>
             <Text style={styles.starterBody}>
-              {language === 'tr'
-                ? 'Bir seçim diğerlerini kapatmaz. Yalnız şu anda en çok merak ettiğin konuya gir.'
-                : 'One choice does not lock the others. Start with the subject you are most curious about right now.'}
+              {beginnerComplete
+                ? language === 'tr'
+                  ? 'Bir seçim diğerlerini kapatmaz. Yalnız şu anda en çok merak ettiğin konuya gir.'
+                  : 'One choice does not lock the others. Start with the subject you are most curious about right now.'
+                : language === 'tr'
+                  ? 'Temel yolu sırayla tamamlayabilir veya zaten bildiğin bir alana doğrudan girebilirsin.'
+                  : 'Follow the foundation path in order, or jump directly into a subject you already know.'}
             </Text>
             <View style={[styles.starterOptions, wide && styles.starterOptionsWide]}>
               {STARTER_TRACK_IDS.map((trackId) => {
@@ -225,8 +231,8 @@ export function AcademyHomeScreen() {
             {academyComplete
               ? language === 'tr' ? 'Tamamladığın okullar' : 'Completed schools'
               : language === 'tr'
-                ? beginnerComplete ? 'Tüm ileri alanlar' : 'İlgini seç'
-                : beginnerComplete ? 'All deeper subjects' : 'Choose your subject'}
+                ? 'Tüm Academy alanları'
+                : 'All Academy subjects'}
           </Text>
           <Text style={styles.sectionBody}>
             {academyComplete
@@ -234,12 +240,8 @@ export function AcademyHomeScreen() {
                 ? 'On okulun tamamı bitti. İstediğin okulu yeniden açıp belirli bir derse veya konuya dönebilirsin.'
                 : 'All ten schools are complete. Reopen any school whenever you want to revisit a lesson or topic.'
               : language === 'tr'
-                ? beginnerComplete
-                  ? 'Yukarıdaki dört yoldan başlayabilir veya aşağıdaki diğer ileri alanlara göz atabilirsin.'
-                  : 'Bir okulu aç, derslerini incele. Hepsini aynı anda bitirmen gerekmez.'
-                : beginnerComplete
-                  ? 'Start with one of the four directions above, or explore the other advanced subjects below.'
-                  : 'Open one school to explore its lessons. You do not need to complete everything at once.'}
+                ? 'Yukarıdaki kısa yollardan birini seçebilir veya aşağıdaki tüm alanları inceleyebilirsin.'
+                : 'Choose one of the shortcuts above, or browse every Academy subject below.'}
           </Text>
         </View>
 
@@ -490,7 +492,7 @@ const styles = StyleSheet.create({
   starterOptions: { gap: 8, marginTop: 2 },
   starterOptionsWide: { flexDirection: 'row', flexWrap: 'wrap' },
   starterOption: { minHeight: 58, flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 13, paddingVertical: 10, borderRadius: 14, backgroundColor: '#0D2933', borderWidth: 1, borderColor: '#28515A' },
-  starterOptionWide: { width: '49%' },
+  starterOptionWide: { width: '32.4%' },
   starterOptionPressed: { backgroundColor: '#12343D' },
   starterOptionCopy: { flex: 1, gap: 2 },
   starterOptionTitle: { color: '#F8FAFC', fontSize: 14, fontWeight: '800' },

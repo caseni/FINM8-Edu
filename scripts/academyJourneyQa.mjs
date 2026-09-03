@@ -45,7 +45,7 @@ async function assertNoHorizontalOverflow(page, label) {
 
 async function openHome(page) {
   await page.goto(baseUrl, { waitUntil: 'networkidle' });
-  await page.getByText('Öğrenmeye Başla', { exact: true }).waitFor({ timeout: 10000 });
+  await page.getByTestId('learn-home-screen').waitFor({ timeout: 10000 });
 }
 
 async function openAcademy(page) {

@@ -74,7 +74,7 @@ export function LearnLandingScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <ScrollView contentContainerStyle={styles.content}>
+      <ScrollView testID="learn-home-screen" contentContainerStyle={styles.content}>
         <View style={styles.topBar}>
           <View style={styles.brandWrap}>
             <Text style={styles.brand}>FINM8 EDU</Text>
