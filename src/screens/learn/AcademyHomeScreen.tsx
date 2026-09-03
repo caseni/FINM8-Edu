@@ -108,7 +108,7 @@ export function AcademyHomeScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <ScrollView ref={scrollViewRef} contentContainerStyle={[styles.content, !wide && styles.contentWithHubNav]}>
+      <ScrollView testID="academy-home-screen" ref={scrollViewRef} contentContainerStyle={[styles.content, !wide && styles.contentWithHubNav]}>
         <View style={styles.topBar}>
           <Pressable
             accessibilityRole="button"
