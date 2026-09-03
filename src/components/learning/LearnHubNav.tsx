@@ -31,6 +31,8 @@ export function LearnHubNav({ active }: LearnHubNavProps) {
 
   return (
     <View
+      role="tablist"
+      aria-label={language === 'tr' ? 'FINM8 EDU ana gezinme' : 'FINM8 EDU main navigation'}
       accessibilityRole="tablist"
       accessibilityLabel={language === 'tr' ? 'FINM8 EDU ana gezinme' : 'FINM8 EDU main navigation'}
       style={styles.shell}
@@ -40,6 +42,9 @@ export function LearnHubNav({ active }: LearnHubNavProps) {
         return (
           <Pressable
             key={item.key}
+            role="tab"
+            aria-label={item.label[language]}
+            aria-selected={selected}
             accessibilityRole="tab"
             accessibilityLabel={item.label[language]}
             accessibilityState={{ selected }}
