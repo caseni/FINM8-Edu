@@ -57,7 +57,7 @@ async function seedProgress(page, completedLessonIds) {
 async function openAcademy(page) {
   await page.getByTestId('learn-home-screen').waitFor();
   await page.getByRole('button', { name: /İleri konular/i }).click();
-  await page.getByText('Finansı konu konu derinleştir.', { exact: true }).waitFor();
+  await page.getByTestId('academy-home-screen').waitFor();
 }
 
 async function advanceLessonToTask(page) {
@@ -248,7 +248,7 @@ try {
 
     await academyReturn.click();
 
-    await page.getByText('Finansı konu konu derinleştir.', { exact: true }).waitFor();
+    await page.getByTestId('academy-home-screen').waitFor();
     const completedTrackButton = page.getByRole('button', { name: new RegExp(`^${track.title} derslerini kapat$`, 'i') });
     await completedTrackButton.waitFor();
     await completedTrackButton.getByText('12/12 ders', { exact: true }).waitFor();
