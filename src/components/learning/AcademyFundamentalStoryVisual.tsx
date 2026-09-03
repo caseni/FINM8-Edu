@@ -100,7 +100,7 @@ function Statements({ role, tr, styles }: SceneProps) {
         : tr ? 'Şirkete üç pencereden bak' : 'Look at the company through three windows';
   return (
     <View style={styles.story}>
-      <Head title={title} detail={tr ? 'Kazanç, sahip oldukları ve gerçek para hareketi birlikte okunur.' : 'Read earnings, what it owns and owes, and actual cash movement together.'} styles={styles} />
+      {role !== 'summary' ? <Head title={title} detail={tr ? 'Kazanç, sahip oldukları ve gerçek para hareketi birlikte okunur.' : 'Read earnings, what it owns and owes, and actual cash movement together.'} styles={styles} /> : null}
       <View style={styles.threeRow}>
         <Box title={tr ? 'NE KAZANDI?' : 'WHAT DID IT EARN?'} value={tr ? 'Gelir tablosu' : 'Income statement'} styles={styles} />
         <Box title={tr ? 'NEYE SAHİP / BORÇLU?' : 'WHAT DOES IT OWN / OWE?'} value={tr ? 'Bilanço' : 'Balance sheet'} styles={styles} />
@@ -120,7 +120,7 @@ function Income({ role, tr, styles }: SceneProps) {
         : tr ? 'Satış → maliyetler → kalan kâr' : 'Sales → costs → profit left';
   return (
     <View style={styles.story}>
-      <Head title={title} detail={tr ? 'Maliyetler satıştan hızlı artarsa elde kalan azalabilir.' : 'If costs grow faster than sales, less can remain.'} styles={styles} />
+      {role !== 'summary' ? <Head title={title} detail={tr ? 'Maliyetler satıştan hızlı artarsa elde kalan azalabilir.' : 'If costs grow faster than sales, less can remain.'} styles={styles} /> : null}
       <View style={styles.flowRow}>
         <Box title={tr ? 'SATIŞ' : 'SALES'} value="100" tone="good" styles={styles} />
         <Text style={styles.arrow}>→</Text>
@@ -142,7 +142,7 @@ function Balance({ role, tr, styles }: SceneProps) {
         : tr ? 'Ne var? Ne kadar borç var?' : 'What does it own? What does it owe?';
   return (
     <View style={styles.story}>
-      <Head title={title} detail={tr ? 'Şirketin sahip oldukları ile yükümlülüklerini yan yana oku.' : 'Read what the company owns together with what it owes.'} styles={styles} />
+      {role !== 'summary' ? <Head title={title} detail={tr ? 'Şirketin sahip oldukları ile yükümlülüklerini yan yana oku.' : 'Read what the company owns together with what it owes.'} styles={styles} /> : null}
       <View style={styles.dual}>
         <View style={styles.sidePanel}>
           <Text style={styles.sideTitle}>{tr ? 'SAHİP OLDUKLARI' : 'WHAT IT OWNS'}</Text>
@@ -175,7 +175,7 @@ function CashFlow({ role, tr, styles }: SceneProps) {
         : tr ? 'Para girer, para çıkar' : 'Cash comes in and cash goes out';
   return (
     <View style={styles.story}>
-      <Head title={title} detail={tr ? 'Müşteri henüz ödememiş, stok alınmış veya yatırım yapılmış olabilir.' : 'Customers may not have paid yet, inventory may have been bought, or the company may have invested.'} styles={styles} />
+      {role !== 'summary' ? <Head title={title} detail={tr ? 'Müşteri henüz ödememiş, stok alınmış veya yatırım yapılmış olabilir.' : 'Customers may not have paid yet, inventory may have been bought, or the company may have invested.'} styles={styles} /> : null}
       <View style={styles.cashScene}>
         <Box title={tr ? 'KÂR' : 'PROFIT'} value="+18" tone="good" styles={styles} />
         <Text style={styles.notEqual}>≠</Text>
@@ -196,7 +196,7 @@ function Profitability({ role, tr, styles }: SceneProps) {
         : tr ? 'Kârı satışla birlikte düşün' : 'Think about profit together with sales';
   return (
     <View style={styles.story}>
-      <Head title={title} detail={tr ? 'Satışın ne kadarının kâr olarak kaldığını gör.' : 'See how much of sales remains as profit.'} styles={styles} />
+      {role !== 'summary' ? <Head title={title} detail={tr ? 'Satışın ne kadarının kâr olarak kaldığını gör.' : 'See how much of sales remains as profit.'} styles={styles} /> : null}
       <View style={styles.dual}>
         <View style={styles.marginPanel}><Text style={styles.marginTitle}>A</Text><Text style={styles.marginSales}>100 {tr ? 'satış' : 'sales'}</Text><View style={[styles.marginFill, { width: '70%' }]} /><Text style={styles.marginProfit}>10 {tr ? 'kâr' : 'profit'}</Text></View>
         <View style={styles.marginPanel}><Text style={styles.marginTitle}>B</Text><Text style={styles.marginSales}>250 {tr ? 'satış' : 'sales'}</Text><View style={[styles.marginFill, styles.marginFillMuted, { width: '28%' }]} /><Text style={styles.marginProfit}>10 {tr ? 'kâr' : 'profit'}</Text></View>
@@ -215,7 +215,7 @@ function Debt({ role, tr, styles }: SceneProps) {
         : tr ? 'Borçta zamanlama da önemlidir' : 'Timing matters with debt';
   return (
     <View style={styles.story}>
-      <Head title={title} detail={tr ? 'Yakında ödeme gerekirken kasada az para varsa baskı büyür.' : 'Pressure rises when a large payment is due soon and cash is low.'} styles={styles} />
+      {role !== 'summary' ? <Head title={title} detail={tr ? 'Yakında ödeme gerekirken kasada az para varsa baskı büyür.' : 'Pressure rises when a large payment is due soon and cash is low.'} styles={styles} /> : null}
       <View style={styles.dual}>
         <View style={styles.debtPanel}><Text style={styles.debtTitle}>{tr ? 'ŞİRKET A' : 'COMPANY A'}</Text><Text style={styles.debtLine}>{tr ? 'Nakit 80' : 'Cash 80'}</Text><Text style={styles.debtLine}>{tr ? 'Yakın ödeme 30' : 'Due soon 30'}</Text><Text style={styles.debtOkay}>{tr ? 'daha rahat' : 'more room'}</Text></View>
         <View style={[styles.debtPanel, styles.debtPanelWarn]}><Text style={styles.debtTitle}>{tr ? 'ŞİRKET B' : 'COMPANY B'}</Text><Text style={styles.debtLine}>{tr ? 'Nakit 20' : 'Cash 20'}</Text><Text style={styles.debtLine}>{tr ? 'Yakın ödeme 80' : 'Due soon 80'}</Text><Text style={styles.debtWarn}>{tr ? 'daha fazla baskı' : 'more pressure'}</Text></View>
