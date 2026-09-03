@@ -54,6 +54,7 @@ jobs:
           node scripts/lessonStepAccessibilityQa.mjs
           node scripts/learningLanguageQa.mjs
           node scripts/learnSearchQa.mjs
+          node scripts/learnHubNavQa.mjs
           node scripts/beginnerTaskFeedbackQa.mjs
           node scripts/visualQa.mjs
           node scripts/beginnerDesktopLessonQa.mjs
