@@ -283,8 +283,8 @@ export function LearnLandingScreen() {
             <Text style={styles.academyBody}>
               {profileRecommendation
                 ? language === 'tr'
-                  ? 'Tercihlerine göre ilgili Academy alanlarını öne çıkarıyoruz. İstersen diğer alanlara da istediğin zaman geçebilirsin.'
-                  : 'We surface Academy subjects that fit your preferences. You can still explore any other subject whenever you want.'
+                  ? 'Tercihlerine göre bir başlangıç yönü öneriyoruz. Diğer Academy alanlarının tamamı yine açık.'
+                  : 'We suggest a starting direction from your preferences. Every other Academy subject stays open to you.'
                 : language === 'tr'
                   ? 'Ekonomi, piyasalar, grafikler, şirketler, risk ve daha fazlasında doğrudan istediğin alana gir.'
                   : 'Jump directly into economics, markets, charts, companies, risk, and more.'}
