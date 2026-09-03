@@ -123,7 +123,7 @@ async function openCompletedAcademy(page) {
   await page.goto(baseUrl, { waitUntil: 'networkidle' });
   await page.getByText('24 / 24 TAMAMLANDI', { exact: true }).waitFor();
   await page.getByRole('button', { name: 'İleri öğrenme yoluna geç' }).click();
-  await page.getByText('Şimdi yalnız ilgini seç.', { exact: true }).waitFor();
+  await page.getByTestId('academy-home-screen').waitFor();
 }
 
 async function openAcademyFoundation(page, path) {
@@ -190,7 +190,7 @@ try {
   await page.screenshot({ path: 'visual-qa/post-core-risk-complete.png', fullPage: true });
   await page.getByRole('button', { name: 'İleri öğrenme yollarını gör' }).click();
 
-  await page.getByText('Şimdi yalnız ilgini seç.', { exact: true }).waitFor();
+  await page.getByTestId('academy-home-screen').waitFor();
   for (const option of [
     'Piyasaları daha iyi anla',
     'Grafikleri derinleştir',
