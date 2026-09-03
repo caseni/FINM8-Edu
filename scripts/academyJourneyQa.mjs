@@ -51,7 +51,7 @@ async function openHome(page) {
 async function openAcademy(page) {
   await openHome(page);
   await page.getByRole('button', { name: /İleri konular/i }).click();
-  await page.getByText('Finansı konu konu derinleştir.', { exact: true }).waitFor();
+  await page.getByTestId('academy-home-screen').waitFor();
 }
 
 async function buttonNames(page) {
@@ -202,7 +202,7 @@ async function completeQuiz(page, prefix, firstLessonName) {
     await academyReturn.click();
   }
 
-  await page.getByText('Finansı konu konu derinleştir.', { exact: true }).waitFor();
+  await page.getByTestId('academy-home-screen').waitFor();
   await assertNoHorizontalOverflow(page, `${prefix}-academy-return`);
 
   if (passed) {
