@@ -32,7 +32,7 @@ async function resetProgress(page) {
   await page.goto(baseUrl, { waitUntil: 'networkidle' });
   await page.evaluate((key) => window.localStorage.removeItem(key), progressKey);
   await page.reload({ waitUntil: 'networkidle' });
-  await page.getByText('Öğrenmeye Başla', { exact: true }).waitFor({ timeout: 10000 });
+  await page.getByTestId('learn-home-screen').waitFor({ timeout: 10000 });
 }
 
 async function advanceLessonToTask(page) {
@@ -172,7 +172,7 @@ async function solveBeginnerQuizToResult(page) {
 
 async function openAcademyFirstLesson(page, academyTrackTitle) {
   await page.goto(baseUrl, { waitUntil: 'networkidle' });
-  await page.getByText('Öğrenmeye Başla', { exact: true }).waitFor({ timeout: 10000 });
+  await page.getByTestId('learn-home-screen').waitFor({ timeout: 10000 });
   await page.getByRole('button', { name: /İleri konular/i }).click();
   await page.getByText('Finansı konu konu derinleştir.', { exact: true }).waitFor();
 

@@ -55,7 +55,7 @@ async function seedProgress(page, completedLessonIds) {
 }
 
 async function openAcademy(page) {
-  await page.getByText('Öğrenmeye Başla', { exact: true }).waitFor();
+  await page.getByTestId('learn-home-screen').waitFor();
   await page.getByRole('button', { name: /İleri konular/i }).click();
   await page.getByText('Finansı konu konu derinleştir.', { exact: true }).waitFor();
 }

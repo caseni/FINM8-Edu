@@ -106,7 +106,7 @@ async function seedCompletedBeginnerPath(page) {
     }));
   }, { key: progressKey, lessonIds: beginnerLessonIds });
   await page.reload({ waitUntil: 'networkidle' });
-  await page.getByText('Öğrenmeye Başla', { exact: true }).waitFor();
+  await page.getByTestId('learn-home-screen').waitFor();
 }
 
 async function assertNoHorizontalOverflow(page, label) {
