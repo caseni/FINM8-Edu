@@ -133,6 +133,8 @@ jobs:
           mkdir -p visual-qa
           node scripts/academyEconomyResponsiveQa.mjs
           node scripts/academyMarketsResponsiveQa.mjs
+          node scripts/academyTrackResponsiveQa.mjs Ekonomiyi Anla
+          node scripts/academyTrackResponsiveQa.mjs Piyasaları Anla
           node scripts/academyTrackResponsiveQa.mjs Grafikleri Derinleştir
           node scripts/academyTrackResponsiveQa.mjs Şirketleri Anla
           node scripts/academyTrackResponsiveQa.mjs Risk ve Portföy
