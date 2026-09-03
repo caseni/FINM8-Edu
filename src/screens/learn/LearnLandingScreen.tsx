@@ -19,6 +19,33 @@ const SECTION_SHORT_LABELS: Record<BeginnerSectionId, { tr: string; en: string }
   risk: { tr: 'Miktar · çıkış · çeşitlendirme', en: 'Size · exits · diversification' },
 };
 
+const GOAL_RECOMMENDATIONS: Readonly<Record<string, { tr: string; en: string }>> = {
+  financial_literacy: {
+    tr: 'Ekonomi ve piyasaları sağlam bir zeminde derinleştir.',
+    en: 'Go deeper into economics and markets on a solid foundation.',
+  },
+  investing: {
+    tr: 'Şirketleri, riskleri ve uzun vadeli kararları derinleştir.',
+    en: 'Go deeper into companies, risk, and long-term decisions.',
+  },
+  trading: {
+    tr: 'Grafik, piyasa yapısı ve risk yönetiminde derinleş.',
+    en: 'Go deeper into charts, market structure, and risk management.',
+  },
+  risk_management: {
+    tr: 'Risk, pozisyon büyüklüğü ve kontrollü çıkışları derinleştir.',
+    en: 'Go deeper into risk, position sizing, and controlled exits.',
+  },
+  portfolio_management: {
+    tr: 'Portföy, çeşitlendirme ve ortak risk kaynaklarını derinleştir.',
+    en: 'Go deeper into portfolios, diversification, and shared risk drivers.',
+  },
+  data_literacy: {
+    tr: 'Grafik, veri ve sistematik düşünme tarafında derinleş.',
+    en: 'Go deeper into charts, data, and systematic thinking.',
+  },
+};
+
 export function LearnLandingScreen() {
   const navigation = useNavigation<Navigation>();
   const { width } = useWindowDimensions();
@@ -45,6 +72,9 @@ export function LearnLandingScreen() {
     : undefined;
   const checkpoint = nextLessonId ? lessonCheckpoints[nextLessonId] : undefined;
   const profileReady = Boolean(profile.onboardingCompletedAt);
+  const profileRecommendation = profileReady
+    ? GOAL_RECOMMENDATIONS[profile.goals[0] ?? 'financial_literacy']
+    : undefined;
 
   const openNext = () => {
     if (!nextLessonId) {
@@ -244,21 +274,35 @@ export function LearnLandingScreen() {
 
         <View style={styles.academyCard}>
           <View style={styles.academyCopy}>
-            <Text style={styles.academyEyebrow}>ACADEMY</Text>
-            <Text style={styles.academyTitle}>{language === 'tr' ? 'Bir konuyu zaten biliyor musun?' : 'Already know the basics?'}</Text>
+            <Text style={styles.academyEyebrow}>{profileRecommendation ? (language === 'tr' ? 'SANA GÖRE' : 'FOR YOU') : 'ACADEMY'}</Text>
+            <Text style={styles.academyTitle}>
+              {profileRecommendation
+                ? profileRecommendation[language]
+                : language === 'tr' ? 'Bir konuyu zaten biliyor musun?' : 'Already know the basics?'}
+            </Text>
             <Text style={styles.academyBody}>
-              {language === 'tr'
-                ? 'Ekonomi, piyasalar, grafikler, şirketler, risk ve daha fazlasında doğrudan istediğin alana gir.'
-                : 'Jump directly into economics, markets, charts, companies, risk, and more.'}
+              {profileRecommendation
+                ? language === 'tr'
+                  ? 'Tercihlerine göre ilgili Academy alanlarını öne çıkarıyoruz. İstersen diğer alanlara da istediğin zaman geçebilirsin.'
+                  : 'We surface Academy subjects that fit your preferences. You can still explore any other subject whenever you want.'
+                : language === 'tr'
+                  ? 'Ekonomi, piyasalar, grafikler, şirketler, risk ve daha fazlasında doğrudan istediğin alana gir.'
+                  : 'Jump directly into economics, markets, charts, companies, risk, and more.'}
             </Text>
           </View>
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel={language === 'tr' ? 'Academy’yi aç' : 'Open Academy'}
+            accessibilityLabel={profileRecommendation
+              ? language === 'tr' ? 'Önerilen Academy alanlarını gör' : 'See recommended Academy subjects'
+              : language === 'tr' ? 'Academy’yi aç' : 'Open Academy'}
             onPress={() => navigation.navigate('Academy')}
             style={({ pressed }) => [styles.academyButton, pressed && styles.buttonPressed]}
           >
-            <Text style={styles.academyButtonText}>{language === 'tr' ? 'Academy’yi aç' : 'Open Academy'}</Text>
+            <Text style={styles.academyButtonText}>
+              {profileRecommendation
+                ? language === 'tr' ? 'Önerilen alanları gör' : 'See recommendations'
+                : language === 'tr' ? 'Academy’yi aç' : 'Open Academy'}
+            </Text>
             <Text style={styles.academyButtonArrow}>›</Text>
           </Pressable>
         </View>
