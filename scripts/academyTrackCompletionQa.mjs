@@ -127,7 +127,7 @@ async function seedCompletedLessons(page, lessonIds) {
 async function openAcademy(page) {
   await page.getByTestId('learn-home-screen').waitFor();
   await page.getByRole('button', { name: /İleri konular/i }).click();
-  await page.getByText('Academy', { exact: true }).first().waitFor();
+  await page.getByTestId('academy-home-screen').waitFor();
 }
 
 for (const track of tracks) {
