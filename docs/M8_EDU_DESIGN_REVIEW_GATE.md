@@ -51,15 +51,26 @@ sentence.
 Code-drawn visuals are held to the same teaching standard as generated editorial
 images.
 
-- A custom infographic needs a machine-readable teaching brief before it is
-  treated as an accepted fallback.
+- A custom beginner infographic needs a machine-readable teaching brief before
+  it is treated as an accepted fallback.
 - The visual must encode a relationship: comparison, sequence, cause/effect,
   matching, trade-off, or before/after. A row of generic icons by itself is not
   a teaching mechanism.
 - Cards carry short meaning labels when the distinction itself is the lesson.
 - The slide owns the explanation; the infographic owns the visual proof.
 - Summary visuals must not repeat the takeaway as a second headline or rule.
+- Academy visuals are browser-gated for visible copy density: <= 24 visible
+  words on a visual, and <= 18 visible words on the final summary visual.
+- On the Academy summary step, visual wording and takeaway wording fail the
+  browser gate when token overlap reaches 0.78 or higher. The check runs across
+  all 120 Academy lessons at the 390 px mobile reference viewport.
 - Mobile and desktop screenshots are reviewed separately.
+- Mobile lesson composition must use the available teaching area deliberately;
+  concise content should not collapse to the top and leave a large dead zone
+  before the navigation controls.
+- Generic investment-safety language is shown as compact educational metadata on
+  the final step. It must not visually compete with the lesson takeaway or its
+  teaching visual.
 - Visual QA screenshots are evidence that the infographic renders correctly,
   but a human design review still checks hierarchy, meaning, polish, and
   whether the visual looks template-like.
@@ -67,7 +78,9 @@ images.
 The hard-gate rollout now covers all 24 beginner lessons across Money/Economy,
 Markets, Charts, and Risk, plus all 120 Academy lessons across the ten schools.
 New learner-facing copy must stay inside its stage-appropriate clarity budget.
-New beginner fallback infographics must also pass the teaching-mechanism rules.
+Beginner fallback infographics must pass the teaching-mechanism rules, while
+Academy visuals must also pass the executable browser text-density and summary
+repetition checks.
 
 ## 3. Navigation and state
 
