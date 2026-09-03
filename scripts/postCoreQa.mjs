@@ -121,7 +121,7 @@ async function assertNoHorizontalOverflow(page, label) {
 
 async function openCompletedAcademy(page) {
   await page.goto(baseUrl, { waitUntil: 'networkidle' });
-  await page.getByText('24 / 24 TAMAMLANDI', { exact: true }).waitFor();
+  await page.getByRole('button', { name: 'İleri öğrenme yoluna geç' }).waitFor();
   await page.getByRole('button', { name: 'İleri öğrenme yoluna geç' }).click();
   await page.getByTestId('academy-home-screen').waitFor();
 }
@@ -169,7 +169,7 @@ try {
   const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
   await seedCompletedBeginnerPath(page);
 
-  await page.getByText('24 / 24 TAMAMLANDI', { exact: true }).waitFor();
+  await page.getByRole('button', { name: 'İleri öğrenme yoluna geç' }).waitFor();
   if (await page.getByText('TAMAMLANDI', { exact: true }).count() < 4) {
     throw new Error('Expected all four beginner sections to show TAMAMLANDI.');
   }
