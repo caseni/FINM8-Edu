@@ -37,7 +37,7 @@ async function openAcademy(page) {
   await page.goto(baseUrl, { waitUntil: 'networkidle' });
   await page.getByText('Öğrenmeye Başla', { exact: true }).waitFor({ timeout: 10000 });
   await page.getByRole('button', { name: /İleri konular/i }).click();
-  await page.getByText('Finansı konu konu derinleştir.', { exact: true }).waitFor();
+  await page.getByTestId('academy-home-screen').waitFor();
 }
 
 async function buttonNames(page) {
