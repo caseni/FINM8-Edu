@@ -30,7 +30,7 @@ async function seedProgress(page, completedLessonIds) {
 async function openAcademy(page) {
   await page.getByText('Öğrenmeye Başla', { exact: true }).waitFor();
   await page.getByRole('button', { name: /İleri konular/i }).click();
-  await page.getByText('Finansı konu konu derinleştir.', { exact: true }).waitFor();
+  await page.getByTestId('academy-home-screen').waitFor();
 }
 
 async function advanceLessonToTask(page) {
@@ -152,7 +152,7 @@ try {
   await academyReturn.waitFor();
   await academyReturn.click();
 
-  await page.getByText('Finansı konu konu derinleştir.', { exact: true }).waitFor();
+  await page.getByTestId('academy-home-screen').waitFor();
   const expanded = page.getByRole('button', { name: /^Piyasaları Anla derslerini kapat$/i });
   await expanded.waitFor();
   await expanded.getByText('6/12 ders', { exact: true }).waitFor();
