@@ -20,6 +20,9 @@ available.
 - Plain-language terms appear before abbreviations.
 - Locked content explains exactly what unlocks it.
 - Wrong answers teach the principle instead of merely marking failure.
+- Quiz feedback may be short when it is already specific and explanatory; the
+  system must not pad a correct explanation by repeating the lesson takeaway or
+  misconception just to satisfy a word-count target.
 
 ## 2A. Learning-copy hierarchy
 

@@ -94,46 +94,6 @@ function audienceCopy(tr: string, en?: string) {
   return { normal: localized(tr, en) };
 }
 
-function countWords(value: string): number {
-  const normalized = value.trim().replace(/\s+/g, ' ');
-  return normalized ? normalized.split(' ').length : 0;
-}
-
-function stripEditorialPrefix(value: string): string {
-  return value
-    .replace(/^Yaygın hata:\s*/i, '')
-    .replace(/^Common mistake:\s*/i, '')
-    .trim();
-}
-
-function contextualQuizExplanation(
-  explanation: string,
-  index: number,
-  spec: FoundationLessonSpec,
-  language: 'tr' | 'en',
-): string {
-  if (countWords(explanation) >= 8) return explanation;
-
-  const isEnglish = language === 'en';
-  const takeaway = isEnglish ? spec.takeawayEn : spec.takeaway;
-  const misconception = isEnglish ? spec.misconceptionEn : spec.misconception;
-  const objective = isEnglish ? spec.objectiveEn : spec.objective;
-
-  const context = index === 1
-    ? stripEditorialPrefix(misconception ?? takeaway ?? objective ?? '')
-    : stripEditorialPrefix(takeaway ?? objective ?? misconception ?? '');
-
-  if (!context) return explanation;
-
-  const bridge = index === 0
-    ? isEnglish ? 'The key point is:' : 'Ana nokta şu:'
-    : index === 1
-      ? isEnglish ? 'This avoids a common mistake:' : 'Bu, yaygın bir hatayı önler:'
-      : isEnglish ? 'So remember:' : 'Bu yüzden şunu hatırla:';
-
-  return `${explanation} ${bridge} ${context}`;
-}
-
 export function createFoundationLesson(spec: FoundationLessonSpec): MicroLesson {
   const firstQuestionVisual = FIRST_QUESTION_VISUALS[spec.conceptKey];
   const contentBlocks: MicroLesson['contentBlocks'] = [
@@ -193,10 +153,7 @@ export function createFoundationLesson(spec: FoundationLessonSpec): MicroLesson 
         } : {}),
         options: question.choices.map((choice) => ({ id: choice.id, label: localized(choice.label, choice.labelEn) })),
         correctOptionId: question.correctId,
-        explanation: localized(
-          contextualQuizExplanation(question.explanation, index, spec, 'tr'),
-          question.explanationEn ? contextualQuizExplanation(question.explanationEn, index, spec, 'en') : undefined,
-        ),
+        explanation: localized(question.explanation, question.explanationEn),
       })),
     },
     takeaway: localized(spec.takeaway, spec.takeawayEn),

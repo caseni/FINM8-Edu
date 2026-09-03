@@ -118,7 +118,7 @@ const OVERLAP_STOP_WORDS = new Set([
 ]);
 
 const MIN_TEACHING_WORDS = 55;
-const MIN_QUIZ_EXPLANATION_WORDS = 8;
+const MIN_QUIZ_EXPLANATION_WORDS = 3;
 
 function normalizeText(value: string): string {
   return value
