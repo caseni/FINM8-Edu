@@ -6,6 +6,7 @@ import { ACADEMY_TRACK_IDS, ACADEMY_TRACKS, type AcademyTrackId } from '../../do
 import { BEGINNER_SECTION_IDS, BEGINNER_SECTIONS } from '../../domain/learning/beginnerJourney';
 import { MICRO_LESSON_CATALOG } from '../../domain/learning/catalog';
 import { selectLocalizedText, type LearningLanguage } from '../../domain/learning/presentation';
+import { LearnHubNav } from '../../components/learning/LearnHubNav';
 import { useLanguageStore } from '../../store/useLanguageStore';
 import { useLearningProgressStore } from '../../store/useLearningProgressStore';
 import type { RootStackParamList } from '../../types/navigation';
@@ -107,7 +108,7 @@ export function AcademyHomeScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <ScrollView ref={scrollViewRef} contentContainerStyle={styles.content}>
+      <ScrollView ref={scrollViewRef} contentContainerStyle={[styles.content, !wide && styles.contentWithHubNav]}>
         <View style={styles.topBar}>
           <Pressable
             accessibilityRole="button"
@@ -456,6 +457,7 @@ export function AcademyHomeScreen() {
           </Text>
         </View>
       </ScrollView>
+      <LearnHubNav active="academy" />
     </SafeAreaView>
   );
 }
@@ -463,6 +465,7 @@ export function AcademyHomeScreen() {
 const styles = StyleSheet.create({
   safeArea: { flex: 1, backgroundColor: '#07111F' },
   content: { width: '100%', maxWidth: 900, alignSelf: 'center', padding: 20, gap: 18, paddingBottom: 36 },
+  contentWithHubNav: { paddingBottom: 104 },
   topBar: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   backButton: { width: 44, height: 44, alignItems: 'center', justifyContent: 'center', borderRadius: 14, backgroundColor: '#102033', borderWidth: 1, borderColor: '#294057' },
   backText: { color: '#F8FAFC', fontSize: 30, lineHeight: 32, fontWeight: '500' },

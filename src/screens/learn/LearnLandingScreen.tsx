@@ -3,6 +3,7 @@ import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, useWindowDimensi
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { LearningLanguageSwitch } from '../../components/learning/LearningLanguageSwitch';
+import { LearnHubNav } from '../../components/learning/LearnHubNav';
 import { BEGINNER_SECTION_IDS, BEGINNER_SECTIONS, type BeginnerSectionId } from '../../domain/learning/beginnerJourney';
 import { MICRO_LESSON_CATALOG } from '../../domain/learning/catalog';
 import { selectLocalizedText, type LearningLanguage } from '../../domain/learning/presentation';
@@ -307,13 +308,14 @@ export function LearnLandingScreen() {
           </Pressable>
         </View>
       </ScrollView>
+      <LearnHubNav active="home" />
     </SafeAreaView>
   );
 }
 
 const createStyles = (wide: boolean) => StyleSheet.create({
   safeArea: { flex: 1, backgroundColor: '#06111F' },
-  content: { width: '100%', maxWidth: 980, alignSelf: 'center', paddingHorizontal: wide ? 28 : 18, paddingTop: 18, paddingBottom: 52, gap: wide ? 24 : 18 },
+  content: { width: '100%', maxWidth: 980, alignSelf: 'center', paddingHorizontal: wide ? 28 : 18, paddingTop: 18, paddingBottom: wide ? 52 : 104, gap: wide ? 24 : 18 },
   topBar: { minHeight: 48, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 14 },
   brandWrap: { flex: 1, gap: 3 },
   brand: { color: '#55E7D4', fontSize: 11, fontWeight: '900', letterSpacing: 2.5 },

@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, useWindowDimensions, View } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { LearnHubNav } from '../../components/learning/LearnHubNav';
 import { ACADEMY_TRACK_IDS, ACADEMY_TRACKS } from '../../domain/learning/academyTracks';
 import { BEGINNER_SECTION_IDS, BEGINNER_SECTIONS } from '../../domain/learning/beginnerJourney';
 import { MICRO_LESSON_CATALOG } from '../../domain/learning/catalog';
@@ -204,13 +205,14 @@ export function LearnSearchScreen({ navigation }: Props) {
           </View>
         )}
       </ScrollView>
+      <LearnHubNav active="search" />
     </SafeAreaView>
   );
 }
 
 const createStyles = (wide: boolean) => StyleSheet.create({
   safeArea: { flex: 1, backgroundColor: '#06111F' },
-  content: { width: '100%', maxWidth: 900, alignSelf: 'center', paddingHorizontal: wide ? 28 : 18, paddingTop: 18, paddingBottom: 50, gap: 18 },
+  content: { width: '100%', maxWidth: 900, alignSelf: 'center', paddingHorizontal: wide ? 28 : 18, paddingTop: 18, paddingBottom: wide ? 50 : 104, gap: 18 },
   topBar: { minHeight: 46, flexDirection: 'row', alignItems: 'center', gap: 12 },
   backButton: { width: 42, height: 42, alignItems: 'center', justifyContent: 'center', borderRadius: 13, borderWidth: 1, borderColor: '#253D51', backgroundColor: '#0A1928' },
   backText: { color: '#E6EFF3', fontSize: 29, lineHeight: 30 },
