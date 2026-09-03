@@ -171,17 +171,19 @@ export function LearnLandingScreen() {
           </View>
         </View>
 
-        <View style={styles.promiseRow}>
-          <View style={styles.promiseMark}><Text style={styles.promiseMarkText}>01</Text></View>
-          <View style={styles.promiseCopy}>
-            <Text style={styles.promiseTitle}>{language === 'tr' ? 'Önce anla, sonra terimi öğren.' : 'Understand first, learn the term second.'}</Text>
-            <Text style={styles.promiseBody}>
-              {language === 'tr'
-                ? 'Kısa açıklama, konuya özel görsel, mini uygulama ve quiz aynı akışta.'
-                : 'Short explanation, topic-specific visual, mini practice, and quiz in one flow.'}
-            </Text>
+        {completedBeginnerCount === 0 ? (
+          <View style={styles.promiseRow}>
+            <View style={styles.promiseMark}><Text style={styles.promiseMarkText}>01</Text></View>
+            <View style={styles.promiseCopy}>
+              <Text style={styles.promiseTitle}>{language === 'tr' ? 'Önce anla, sonra terimi öğren.' : 'Understand first, learn the term second.'}</Text>
+              <Text style={styles.promiseBody}>
+                {language === 'tr'
+                  ? 'Kısa açıklama, konuya özel görsel, mini uygulama ve quiz aynı akışta.'
+                  : 'Short explanation, topic-specific visual, mini practice, and quiz in one flow.'}
+              </Text>
+            </View>
           </View>
-        </View>
+        ) : null}
 
         <View style={styles.sectionHeading}>
           <View>
