@@ -49,7 +49,12 @@ export function LearnHubNav({ active }: LearnHubNavProps) {
             accessibilityLabel={item.label[language]}
             accessibilityState={{ selected }}
             onPress={() => {
-              if (!selected) navigation.navigate(item.route);
+              if (selected) return;
+              if (item.key === 'home') {
+                navigation.popToTop();
+                return;
+              }
+              navigation.navigate(item.route);
             }}
             style={({ pressed }) => [styles.item, selected && styles.itemActive, pressed && !selected && styles.itemPressed]}
           >
