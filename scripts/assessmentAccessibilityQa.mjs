@@ -17,7 +17,11 @@ const academyTrackTitles = [
 const beginnerSectionTitle = 'Para ve Ekonomi';
 const beginnerLessonTitle = 'Aynı para neden zamanla daha az şey alır';
 const beginnerCorrectTaskAnswer = 'Paranın satın alma gücü azalmıştır';
-const beginnerCorrectQuizOptionIndexes = [1, 0, 0];
+const beginnerCorrectQuizAnswers = [
+  'Paranla ne kadar ürün ve hizmet alabildiğini',
+  'Aynı parayla daha az ürün alabilirsin',
+  'Hayır; daha geniş bir ürün grubuna bakmak gerekir',
+];
 
 async function buttonNames(page) {
   return page.getByRole('button').evaluateAll((buttons) =>
@@ -148,14 +152,14 @@ async function solveCurrentTaskToQuiz(page, stage) {
 }
 
 async function solveBeginnerQuizToResult(page) {
-  for (let questionIndex = 0; questionIndex < beginnerCorrectQuizOptionIndexes.length; questionIndex += 1) {
-    const radios = page.getByRole('radio');
-    const target = radios.nth(beginnerCorrectQuizOptionIndexes[questionIndex]);
+  for (let questionIndex = 0; questionIndex < beginnerCorrectQuizAnswers.length; questionIndex += 1) {
+    const target = page.getByRole('radio', { name: beginnerCorrectQuizAnswers[questionIndex], exact: true });
+    await target.waitFor();
     if ((await target.getAttribute('aria-checked')) !== 'true') {
       await target.click();
     }
     await page.getByRole('button', { name: 'Cevabı kontrol et', exact: true }).click();
-    const actionLabel = questionIndex === beginnerCorrectQuizOptionIndexes.length - 1
+    const actionLabel = questionIndex === beginnerCorrectQuizAnswers.length - 1
       ? 'Sonucu gör'
       : 'Sonraki soru';
     await page.getByRole('button', { name: actionLabel, exact: true }).click();
