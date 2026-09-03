@@ -64,10 +64,12 @@ export function MarketPsychologySlideVisual({ assetRef, alt, language, role, the
   const styles = createStyles(theme);
   return (
     <View style={styles.shell} accessibilityLabel={alt}>
-      <View style={styles.header}>
-        <Text style={styles.title}>{TOPIC_TITLES[topic][language]}</Text>
-        <Text style={styles.detail}>{ROLE_COPY[role][language]}</Text>
-      </View>
+      {role !== 'summary' ? (
+        <View style={styles.header}>
+          <Text style={styles.title}>{TOPIC_TITLES[topic][language]}</Text>
+          <Text style={styles.detail}>{ROLE_COPY[role][language]}</Text>
+        </View>
+      ) : null}
       <View style={styles.canvas}>{renderTopic(topic, role, styles, language)}</View>
     </View>
   );
