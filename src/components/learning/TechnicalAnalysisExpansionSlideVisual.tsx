@@ -72,7 +72,7 @@ function RsiScene({ role, tr, styles }: SceneProps) {
   if (role === 'practice') return <><Header styles={styles} title={tr ? 'Eşik + fiyat yapısı' : 'Threshold + price structure'} detail={tr ? 'RSI’ı tek başına değil fiyatla birlikte oku.' : 'Read RSI together with price, not alone.'} /><View style={styles.row}><Card styles={styles} label="RSI" value="74" tone="warning" /><Card styles={styles} label={tr ? 'FİYAT' : 'PRICE'} value={tr ? 'YÜKSELEN YAPI' : 'HH / HL'} tone="success" /></View></>;
   if (role === 'misconception') return <Rule styles={styles} title={tr ? '70 ≠ OTOMATİK SAT' : '70 ≠ AUTOMATIC SELL'} detail={tr ? '30 ≠ otomatik al. Eşikler dönüş emri değildir.' : '30 ≠ automatic buy. Thresholds are not reversal commands.'} warning />;
   if (role === 'risk') return <Rule styles={styles} title={tr ? 'RSI FİYATTAN TÜRETİLİR' : 'RSI IS PRICE-DERIVED'} detail={tr ? 'Aynı fiyat riskini bağımsız kanıt gibi iki kez sayma.' : 'Do not double-count the same price evidence as independent evidence.'} />;
-  return <Rule styles={styles} title={tr ? 'RSI = HAREKET GÜCÜ ÖZETİ' : 'RSI = MOMENTUM CONTEXT'} detail={tr ? 'Gelecek yön garantisi değil.' : 'Not a guarantee of future direction.'} />;
+  return <Oscillator styles={styles} value={63} labels />;
 }
 
 function MacdScene({ role, tr, styles }: SceneProps) {
@@ -81,7 +81,7 @@ function MacdScene({ role, tr, styles }: SceneProps) {
   if (role === 'practice') return <><Header styles={styles} title={tr ? 'Yönlü piyasa mı, yatay alan mı?' : 'Trend or range?'} detail={tr ? 'Aynı kesişim farklı rejimde farklı kalite taşır.' : 'The same crossover carries different quality across regimes.'} /><View style={styles.row}><Card styles={styles} label={tr ? 'YÖNLÜ' : 'TREND'} value={tr ? 'DAHA TEMİZ' : 'CLEANER'} tone="success" /><Card styles={styles} label={tr ? 'YATAY ALAN' : 'RANGE'} value={tr ? 'SIK YANILIR' : 'WHIPSAW'} tone="warning" /></View></>;
   if (role === 'misconception') return <Rule styles={styles} title={tr ? 'HER KESİŞİM ≠ SİNYAL' : 'EVERY CROSSOVER ≠ SIGNAL'} detail={tr ? 'Yatay piyasada sık yanlış teyit oluşabilir.' : 'Ranges can generate frequent false confirmation.'} warning />;
   if (role === 'risk') return <Rule styles={styles} title={tr ? 'PARAMETREYE DUYARLI' : 'PARAMETER-SENSITIVE'} detail={tr ? 'Ayar değişirse tepki hızı ve kesişimler değişebilir.' : 'Changing settings can alter response speed and crossovers.'} />;
-  return <Rule styles={styles} title={tr ? 'MACD = GECİKMELİ HAREKET ÖZETİ' : 'MACD = LAGGING RELATIONSHIP SUMMARY'} detail={tr ? 'Yapı ve rejimle birlikte anlam kazanır.' : 'It gains meaning with structure and regime.'} />;
+  return <MacdPanel styles={styles} />;
 }
 
 function MultiTimeframeScene({ role, tr, styles }: SceneProps) {
@@ -90,7 +90,7 @@ function MultiTimeframeScene({ role, tr, styles }: SceneProps) {
   if (role === 'practice') return <><Header styles={styles} title={tr ? 'Kısa düşüş ne olabilir?' : 'What can a short decline be?'} detail={tr ? 'Ana yükseliş korunuyorsa kısa bir geri çekilme olabilir.' : 'It can be a pullback if broader uptrend structure holds.'} /><View style={styles.row}><Card styles={styles} label="1D" value={tr ? 'YÜKSELİŞ' : 'HH / HL'} tone="success" /><Card styles={styles} label="15m" value="↓" tone="warning" /></View></>;
   if (role === 'misconception') return <Rule styles={styles} title={tr ? 'HER ZAMAN DİLİMİ AYNI YÖNÜ GÖSTERMEZ' : 'EVERY TF NEED NOT MATCH'} detail={tr ? 'Küçük yapı ile ana yapıyı birbirine karıştırma.' : 'Do not confuse internal structure with broad structure.'} warning />;
   if (role === 'risk') return <Rule styles={styles} title={tr ? 'ÇOK FAZLA ZAMAN DİLİMİ = GÜRÜLTÜ' : 'TOO MANY TFs = NOISE'} detail={tr ? 'Her zaman dilimine net bir rol ver.' : 'Give each timeframe a clear role.'} />;
-  return <Rule styles={styles} title={tr ? 'ÖLÇEKLERİ AYIR, SONRA BAĞLA' : 'SEPARATE SCALES, THEN CONNECT THEM'} detail={tr ? 'Ana bağlam önce gelir.' : 'Broad context comes first.'} />;
+  return <View style={styles.stack}><ScaleRow styles={styles} label="1D" direction="up" /><ScaleRow styles={styles} label="1h" direction="up" /><ScaleRow styles={styles} label="15m" direction="down" /></View>;
 }
 
 function PatternScene({ role, tr, styles }: SceneProps) {
@@ -99,7 +99,7 @@ function PatternScene({ role, tr, styles }: SceneProps) {
   if (role === 'practice') return <><Header styles={styles} title={tr ? 'Şekilden sonra bağlama bak' : 'After the shape, inspect context'} detail={tr ? 'Önceki yön · işlem hacmi · oynaklık · kırılımın devamı' : 'Prior trend · volume · volatility · breakout behavior'} /><View style={styles.grid}><Tag styles={styles} text={tr ? 'ÖNCEKİ YÖN' : 'PRIOR TREND'} /><Tag styles={styles} text={tr ? 'HACİM' : 'VOLUME'} /><Tag styles={styles} text={tr ? 'OYNAKLIK' : 'VOLATILITY'} /><Tag styles={styles} text={tr ? 'KIRILIM' : 'BREAKOUT'} /></View></>;
   if (role === 'misconception') return <Rule styles={styles} title={tr ? 'ŞEKİL ≠ KESİN HEDEF' : 'SHAPE ≠ CERTAIN TARGET'} detail={tr ? 'Formasyon hedefleri yalnızca yönteme dayalı tahminlerdir.' : 'Pattern targets are methodological projections.'} warning />;
   if (role === 'risk') return <Rule styles={styles} title={tr ? 'SONRADAN BAKMA YANILGISI' : 'SONRADAN BAKMA YANILGISI'} detail={tr ? 'Geçmiş grafikte kusursuz görünen şekil canlıda belirsiz olabilir.' : 'A perfect historical shape can be ambiguous in real time.'} />;
-  return <Rule styles={styles} title={tr ? 'FORMASYON = ŞEKİL + BAĞLAM' : 'PATTERN = GEOMETRY + CONTEXT'} detail={tr ? 'Tahmin makinesi değildir.' : 'It is not a prediction machine.'} />;
+  return <PatternFork styles={styles} compact />;
 }
 
 function ConfluenceScene({ role, tr, styles }: SceneProps) {
@@ -108,7 +108,7 @@ function ConfluenceScene({ role, tr, styles }: SceneProps) {
   if (role === 'practice') return <><Header styles={styles} title={tr ? 'Hangisi daha bağımsız?' : 'Which is more independent?'} detail={tr ? 'Fiyatın yapısı + işlem hacmi + oynaklık' : 'Price structure + volume + volatility'} /><View style={styles.row}><Card styles={styles} label={tr ? 'ÇEŞİTLİ' : 'DIVERSE'} value="3×" tone="success" /><Card styles={styles} label={tr ? 'AYNI KAYNAK' : 'SAME SOURCE'} value="RSI·MACD·MA" tone="warning" /></View></>;
   if (role === 'misconception') return <Rule styles={styles} title={tr ? 'GÖSTERGE SAYISI ≠ KANIT SAYISI' : 'INDICATOR COUNT ≠ EVIDENCE COUNT'} detail={tr ? 'Aynı kaynaktan gelen benzer kanıtları iki kez sayma.' : 'Do not double-count correlated evidence.'} warning />;
   if (role === 'risk') return <Rule styles={styles} title={tr ? 'KANITLARIN BİRLEŞMESİ ≠ KESİNLİK' : 'CONFLUENCE ≠ CERTAINTY'} detail={tr ? 'Belirsizlik devam eder; risk ayrıca yönetilir.' : 'Uncertainty remains; risk is managed separately.'} />;
-  return <Rule styles={styles} title={tr ? 'FARKLI KAYNAK · AYNI YORUM' : 'DIFFERENT SOURCES · SAME INTERPRETATION'} detail={tr ? 'Asıl değer burada.' : 'That is the useful part.'} />;
+  return <EvidenceTree styles={styles} tr={tr} />;
 }
 
 function IndicatorLimitsScene({ role, tr, styles }: SceneProps) {
@@ -117,7 +117,7 @@ function IndicatorLimitsScene({ role, tr, styles }: SceneProps) {
   if (role === 'practice') return <><Header styles={styles} title={tr ? 'Geçmişte mükemmel, sonra zayıf' : 'Perfect in-sample, weak later'} detail={tr ? 'Geçmişe aşırı uyum ihtimalini düşün.' : 'Consider overfitting.'} /><View style={styles.row}><Card styles={styles} label={tr ? 'GEÇMİŞ TESTİ' : 'BACKTEST'} value="98%" tone="success" /><Card styles={styles} label={tr ? 'YENİ DÖNEM' : 'NEW PERIOD'} value="52%" tone="risk" /></View></>;
   if (role === 'misconception') return <Rule styles={styles} title={tr ? 'İNDİKATÖR ≠ YENİ GERÇEKLİK' : 'INDICATOR ≠ NEW REALITY'} detail={tr ? 'Çoğu mevcut verinin farklı matematiksel görünümüdür.' : 'Most are different mathematical views of existing data.'} warning />;
   if (role === 'risk') return <Rule styles={styles} title={tr ? 'GEÇMİŞE GÖRE AYARLAMA RİSKİ' : 'PARAMETER-MINING RISK'} detail={tr ? 'Geçmişe en iyi uyan ayar gelecekte dayanıklı olmayabilir.' : 'The setting that best fits history may not be robust later.'} />;
-  return <Rule styles={styles} title={tr ? 'ARAÇTIR · KARARIN KENDİSİ DEĞİL' : 'A TOOL · NOT THE DECISION ITSELF'} detail={tr ? 'Bağlam, kanıt ve risk hâlâ gerekir.' : 'Context, evidence, and risk still matter.'} />;
+  return <View style={styles.grid}><Tag styles={styles} text={tr ? 'GECİKME' : 'LAG'} /><Tag styles={styles} text={tr ? 'AYARLAR' : 'PARAMETERS'} /><Tag styles={styles} text={tr ? 'PİYASA KOŞULU' : 'REGIME'} /><Tag styles={styles} text={tr ? 'AŞIRI UYUM' : 'OVERFIT'} /></View>;
 }
 
 function PriceStrip({ styles, up = false }: { styles: ReturnType<typeof createStyles>; up?: boolean }) {

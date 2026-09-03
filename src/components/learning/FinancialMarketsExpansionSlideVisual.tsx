@@ -58,7 +58,7 @@ function CryptoScene({ role, tr, styles }: SceneProps) {
   if (role === 'practice') return <><Header styles={styles} title={tr ? 'Spot mu, perpetual mı?' : 'Spot or perpetual?'} detail={tr ? 'Finansman ve tasfiye mekaniği aynı değildir.' : 'Financing and liquidation mechanics differ.'} /><View style={styles.row}><Card styles={styles} label="SPOT" value={tr ? 'VARLIK' : 'ASSET'} /><Card styles={styles} label="PERP" value={tr ? 'SÖZLEŞME' : 'CONTRACT'} tone="warning" /></View></>;
   if (role === 'misconception') return <Rule styles={styles} title={tr ? '7/24 ≠ 7/24 AYNI LİKİDİTE' : '24/7 ≠ IDENTICAL LIQUIDITY 24/7'} detail={tr ? 'Katılım ve derinlik saate ve platforma göre değişebilir.' : 'Participation and depth can vary by hour and venue.'} warning />;
   if (role === 'risk') return <Rule styles={styles} title={tr ? 'SAKLAMA + PLATFORM + ÜRÜN RİSKİ' : 'CUSTODY + VENUE + PRODUCT RISK'} detail={tr ? 'Kripto maruziyetinde işlem yerini ve ürün tipini ayrı kontrol et.' : 'Check venue and product type separately.'} />;
-  return <Rule styles={styles} title={tr ? 'KRİPTO = TEK, HOMOJEN PİYASA DEĞİL' : 'CRYPTO ≠ ONE UNIFORM MARKET'} detail={tr ? 'Likidite ve risk işlem yerine göre değişebilir.' : 'Liquidity and risk can vary across venues.'} />;
+  return <VenueCluster styles={styles} />;
 }
 
 function SessionsScene({ role, tr, styles }: SceneProps) {
@@ -67,7 +67,7 @@ function SessionsScene({ role, tr, styles }: SceneProps) {
   if (role === 'practice') return <><Header styles={styles} title={tr ? 'Düşük katılımda ne olabilir?' : 'What can happen with lower participation?'} detail={tr ? 'Daha geniş spread, daha az derinlik.' : 'Wider spreads, lower depth.'} /><View style={styles.row}><Card styles={styles} label={tr ? 'ANA SEANS' : 'MAIN'} value={tr ? 'DERİN' : 'DEEP'} tone="success" /><Card styles={styles} label={tr ? 'SEANS DIŞI' : 'OFF-HOURS'} value={tr ? 'DAHA SIĞ' : 'SHALLOWER'} tone="warning" /></View></>;
   if (role === 'misconception') return <Rule styles={styles} title={tr ? 'AÇIK PİYASA ≠ SABİT KOŞULLAR' : 'OPEN MARKET ≠ CONSTANT CONDITIONS'} detail={tr ? 'Likidite ve spread gün içinde değişebilir.' : 'Liquidity and spreads can vary through the day.'} warning />;
   if (role === 'risk') return <Rule styles={styles} title={tr ? 'SEANS DIŞI GERÇEKLEŞMEYE DİKKAT' : 'WATCH OFF-HOURS EXECUTION'} detail={tr ? 'Ana seans derinliğini varsayma.' : 'Do not assume regular-session depth.'} />;
-  return <Rule styles={styles} title={tr ? 'SAAT = GERÇEKLEŞME BAĞLAMI' : 'TIME = EXECUTION CONTEXT'} detail={tr ? 'İşlem saatini likiditeyle birlikte oku.' : 'Read trading hours together with liquidity.'} />;
+  return <SessionTimeline styles={styles} />;
 }
 
 function VolumeScene({ role, tr, styles }: SceneProps) {
@@ -76,7 +76,7 @@ function VolumeScene({ role, tr, styles }: SceneProps) {
   if (role === 'practice') return <><Header styles={styles} title={tr ? 'Aynı hacim, farklı likidite' : 'Same volume, different liquidity'} detail={tr ? 'Spread ve derinlik ayrıca ölçülür.' : 'Spread and depth are separate.'} /><View style={styles.row}><Card styles={styles} label="VOL 1M" value={tr ? 'DAR SPREAD' : 'TIGHT'} tone="success" /><Card styles={styles} label="VOL 1M" value={tr ? 'GENİŞ SPREAD' : 'WIDE'} tone="warning" /></View></>;
   if (role === 'misconception') return <Rule styles={styles} title={tr ? 'YÜKSEK HACİM ≠ YÜKSELİŞ SİNYALİ' : 'HIGH VOLUME ≠ BULLISH SIGNAL'} detail={tr ? 'Fiyat bağlamı olmadan yön çıkarma.' : 'Do not infer direction without price context.'} warning />;
   if (role === 'risk') return <Rule styles={styles} title={tr ? 'HACİM ≠ LİKİDİTE' : 'VOLUME ≠ LIQUIDITY'} detail={tr ? 'Derinlik, spread ve emir büyüklüğünü ayrıca değerlendir.' : 'Assess depth, spread, and order size separately.'} />;
-  return <Rule styles={styles} title={tr ? 'HACİM = AKTİVİTE' : 'VOLUME = ACTIVITY'} detail={tr ? 'Yön ve likidite için ek kanıt gerekir.' : 'Direction and liquidity need more context.'} />;
+  return <VolumeBars styles={styles} />;
 }
 
 function LiquidityProviderScene({ role, tr, styles }: SceneProps) {
@@ -85,7 +85,7 @@ function LiquidityProviderScene({ role, tr, styles }: SceneProps) {
   if (role === 'practice') return <><Header styles={styles} title={tr ? 'Stres artarsa quote değişebilir' : 'Quotes can change under stress'} detail={tr ? 'Envanter ve adverse selection riski spreadi genişletebilir.' : 'Inventory and adverse-selection risk can widen spreads.'} /><View style={styles.row}><Card styles={styles} label={tr ? 'NORMAL' : 'NORMAL'} value="99 / 101" tone="success" /><Card styles={styles} label={tr ? 'STRES' : 'STRESS'} value="97 / 103" tone="warning" /></View></>;
   if (role === 'misconception') return <Rule styles={styles} title={tr ? 'MARKET MAKER ≠ PİYASA PATRONU' : 'MARKET MAKER ≠ MARKET CONTROLLER'} detail={tr ? 'Tek başına fiyat yönünü belirlemez.' : 'It does not single-handedly set market direction.'} warning />;
   if (role === 'risk') return <Rule styles={styles} title={tr ? 'LİKİDİTE STRESTE GERİ ÇEKİLEBİLİR' : 'LIQUIDITY CAN RETREAT UNDER STRESS'} detail={tr ? 'Quote genişliği ve derinlik sabit değildir.' : 'Quote width and depth are not fixed.'} />;
-  return <Rule styles={styles} title={tr ? 'LİKİDİTE SAĞLAYICI = GERÇEKLEŞEBİLİRLİK DESTEĞİ' : 'LIQUIDITY PROVIDER = EXECUTABILITY SUPPORT'} detail={tr ? 'Yön garantisi değildir.' : 'It is not a direction guarantee.'} />;
+  return <TwoSidedQuote styles={styles} />;
 }
 
 function PrimarySecondaryScene({ role, tr, styles }: SceneProps) {
@@ -94,7 +94,7 @@ function PrimarySecondaryScene({ role, tr, styles }: SceneProps) {
   if (role === 'practice') return <><Header styles={styles} title={tr ? 'Borsada mevcut hisse aldın' : 'You bought an existing share'} detail={tr ? 'Bu genellikle ikincil piyasa işlemidir.' : 'That is generally a secondary-market trade.'} /><View style={styles.row}><Card styles={styles} label={tr ? 'YATIRIMCI A' : 'INVESTOR A'} value="SELL" /><Text style={styles.arrow}>→</Text><Card styles={styles} label={tr ? 'YATIRIMCI B' : 'INVESTOR B'} value="BUY" tone="success" /></View></>;
   if (role === 'misconception') return <Rule styles={styles} title={tr ? 'HER HİSSE ALIMI → ŞİRKETE PARA ✕' : 'EVERY STOCK TRADE → COMPANY CASH ✕'} detail={tr ? 'İkincil piyasada para çoğunlukla yatırımcılar arasında el değiştirir.' : 'In secondary markets, money generally changes hands between investors.'} warning />;
   if (role === 'risk') return <Rule styles={styles} title={tr ? 'İHRAÇ VE İŞLEM MEKANİĞİNİ AYIR' : 'SEPARATE ISSUANCE FROM TRADING'} detail={tr ? 'Underwriting/allocation ile order matching aynı süreç değildir.' : 'Underwriting/allocation and order matching are different processes.'} />;
-  return <Rule styles={styles} title={tr ? 'BİRİNCİL = SERMAYE · İKİNCİL = LİKİDİTE' : 'PRIMARY = CAPITAL · SECONDARY = LIQUIDITY'} detail={tr ? 'İki piyasa birbirini destekler ama aynı değildir.' : 'They support each other but are not the same.'} />;
+  return <IssuanceFlow styles={styles} tr={tr} />;
 }
 
 function DerivativesScene({ role, tr, styles }: SceneProps) {
@@ -103,7 +103,7 @@ function DerivativesScene({ role, tr, styles }: SceneProps) {
   if (role === 'practice') return <><Header styles={styles} title={tr ? 'Futures ≠ Spot' : 'Futures ≠ Spot'} detail={tr ? 'Vade, teminat ve sözleşme kuralları ayrıdır.' : 'Maturity, margin, and contract rules differ.'} /><View style={styles.row}><Card styles={styles} label="SPOT" value={tr ? 'DAYANAK' : 'UNDERLYING'} /><Card styles={styles} label="FUTURES" value={tr ? 'SÖZLEŞME' : 'CONTRACT'} tone="warning" /></View></>;
   if (role === 'misconception') return <Rule styles={styles} title={tr ? 'TÜREV ≠ DAYANAK VARLIĞIN AYNISI' : 'DERIVATIVE ≠ UNDERLYING'} detail={tr ? 'Nakit akışı, kaldıraç ve vade profili farklı olabilir.' : 'Cash flow, leverage, and maturity can differ.'} warning />;
   if (role === 'risk') return <Rule styles={styles} title={tr ? 'KALDIRAÇ + TEMİNAT + VADE' : 'LEVERAGE + MARGIN + MATURITY'} detail={tr ? 'Türev riskini ürün yapısıyla birlikte değerlendir.' : 'Assess derivative risk through the contract structure.'} />;
-  return <Rule styles={styles} title={tr ? 'TÜREV = DAYANAĞA BAĞLI SÖZLEŞME' : 'DERIVATIVE = CONTRACT LINKED TO UNDERLYING'} detail={tr ? 'Hedge veya spekülasyon için kullanılabilir.' : 'It can be used for hedging or speculation.'} />;
+  return <DerivativeTree styles={styles} />;
 }
 
 function VenueCluster({ styles }: { styles: ReturnType<typeof createStyles> }) { return <View style={styles.cluster}>{[['CEX A','100.0'],['CEX B','100.3'],['DEX','99.8']].map(([name, price]) => <View key={name} style={styles.clusterCard}><Text style={styles.cardLabel}>{name}</Text><Text style={styles.cardValue}>{price}</Text></View>)}</View>; }

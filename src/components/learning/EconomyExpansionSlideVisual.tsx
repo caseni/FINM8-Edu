@@ -74,7 +74,7 @@ function LaborScene({ role, tr, styles }: SceneProps) {
   if (role === 'practice') return <><Header styles={styles} title={tr ? 'İşsizlik ↓, istihdam ↓ ise?' : 'Unemployment ↓, employment ↓?'} detail={tr ? 'Katılım oranını kontrol et.' : 'Check participation.'} /><View style={styles.row}><Card styles={styles} label={tr ? 'İŞSİZLİK' : 'UNEMP.'} value="↓" tone="success" /><Card styles={styles} label={tr ? 'İSTİHDAM' : 'EMPLOY.'} value="↓" tone="warning" /><Card styles={styles} label={tr ? 'KATILIM' : 'PARTICIP.'} value="?" /></View></>;
   if (role === 'misconception') return <Rule styles={styles} title={tr ? 'İŞSİZLİK ↓ ≠ OTOMATİK İSTİHDAM ↑' : 'UNEMPLOYMENT ↓ ≠ AUTOMATIC EMPLOYMENT ↑'} detail={tr ? 'İşgücünden çıkış oranı da düşürebilir.' : 'Leaving the labor force can also lower the rate.'} warning />;
   if (role === 'risk') return <Rule styles={styles} title={tr ? 'TEK İŞGÜCÜ GÖSTERGESİNE BAĞLANMA' : 'DO NOT RELY ON ONE LABOR INDICATOR'} detail={tr ? 'İstihdam, katılım, ücret ve çalışma saatleri ek bağlam sağlar.' : 'Employment, participation, wages, and hours add context.'} />;
-  return <Rule styles={styles} title={tr ? 'İŞSİZLİK + İSTİHDAM + KATILIM' : 'UNEMPLOYMENT + EMPLOYMENT + PARTICIPATION'} detail={tr ? 'İşgücü piyasasını birlikte oku.' : 'Read the labor market as a set of measures.'} />;
+  return <LaborGroups styles={styles} />;
 }
 
 function FiscalScene({ role, tr, styles }: SceneProps) {
@@ -83,7 +83,7 @@ function FiscalScene({ role, tr, styles }: SceneProps) {
   if (role === 'practice') return <><Header styles={styles} title={tr ? 'Aynı bütçe adımı, farklı ortam' : 'Same fiscal step, different environment'} detail={tr ? 'Ekonomik boşluk ve finansman etkisini değiştirebilir.' : 'Economic slack and financing can change the effect.'} /><View style={styles.row}><Card styles={styles} label={tr ? 'ZAYIF TALEP' : 'WEAK DEMAND'} value={tr ? 'ETKİ A' : 'EFFECT A'} tone="success" /><Card styles={styles} label={tr ? 'KAPASİTE DOLU' : 'FULL CAPACITY'} value={tr ? 'ETKİ B' : 'EFFECT B'} tone="warning" /></View></>;
   if (role === 'misconception') return <Rule styles={styles} title={tr ? 'HER HARCAMA = AYNI ETKİ ✕' : 'EVERY SPENDING ITEM = SAME EFFECT ✕'} detail={tr ? 'Harcamanın türü ve ekonomik koşul önemlidir.' : 'Spending composition and economic conditions matter.'} warning />;
   if (role === 'risk') return <Rule styles={styles} title={tr ? 'MALİYE ≠ PARA POLİTİKASI' : 'FISCAL ≠ MONETARY POLICY'} detail={tr ? 'Kurumları, araçları ve aktarım kanalları farklıdır.' : 'Institutions, tools, and transmission channels differ.'} />;
-  return <Rule styles={styles} title={tr ? 'MALİYE = VERGİ + HARCAMA + BAĞLAM' : 'FISCAL = TAX + SPENDING + CONTEXT'} detail={tr ? 'Bütçe kararlarının ekonomik etkisi koşullara bağlıdır.' : 'The impact of budget decisions depends on conditions.'} />;
+  return <FiscalFlow styles={styles} tr={tr} />;
 }
 
 function FxScene({ role, tr, styles }: SceneProps) {
@@ -92,7 +92,7 @@ function FxScene({ role, tr, styles }: SceneProps) {
   if (role === 'practice') return <><Header styles={styles} title="EUR/USD ↑" detail={tr ? 'Euro dolar karşısında göreli olarak güçlenir.' : 'The euro strengthens relative to the dollar.'} /><View style={styles.row}><Card styles={styles} label="EUR" value="↑" tone="success" /><Card styles={styles} label="USD" value={tr ? 'GÖRELİ' : 'RELATIVE'} tone="warning" /></View></>;
   if (role === 'misconception') return <Rule styles={styles} title={tr ? 'KUR = TEK FAKTÖR ✕' : 'FX = ONE FACTOR ✕'} detail={tr ? 'Faiz, enflasyon, risk ve sermaye akımları birlikte rol oynayabilir.' : 'Rates, inflation, risk, and capital flows can all matter.'} warning />;
   if (role === 'risk') return <Rule styles={styles} title={tr ? 'GÜÇLÜ PARA HERKES İÇİN AYNI SONUÇ DEĞİL' : 'STRONGER CURRENCY ≠ SAME EFFECT FOR EVERYONE'} detail={tr ? 'İthalatçı, ihracatçı ve borçlunun etkisi farklı olabilir.' : 'Importers, exporters, and borrowers can be affected differently.'} />;
-  return <Rule styles={styles} title={tr ? 'DÖVİZ KURU = GÖRELİ FİYAT' : 'EXCHANGE RATE = RELATIVE PRICE'} detail={tr ? 'İki para birimi arasındaki dengeyi anlatır.' : 'It describes the balance between two currencies.'} />;
+  return <FxBalance styles={styles} />;
 }
 
 function ProductivityScene({ role, tr, styles }: SceneProps) {
@@ -101,7 +101,7 @@ function ProductivityScene({ role, tr, styles }: SceneProps) {
   if (role === 'practice') return <><Header styles={styles} title={tr ? 'Daha uzun çalışmak mı, daha verimli çalışmak mı?' : 'Work longer or work more productively?'} detail={tr ? 'Girdi artışı ile girdi başına çıktı artışını ayır.' : 'Separate more input from more output per input.'} /><View style={styles.row}><Card styles={styles} label={tr ? 'SAAT' : 'HOURS'} value="2×" tone="warning" /><Card styles={styles} label={tr ? 'ÇIKTI/SAAT' : 'OUTPUT/HOUR'} value="↑" tone="success" /></View></>;
   if (role === 'misconception') return <Rule styles={styles} title={tr ? 'DAHA ÇOK GİRDİ ≠ DAHA YÜKSEK VERİMLİLİK' : 'MORE INPUT ≠ HIGHER PRODUCTIVITY'} detail={tr ? 'Önemli olan girdi başına üretimdir.' : 'What matters is output per unit of input.'} warning />;
   if (role === 'risk') return <Rule styles={styles} title={tr ? 'KISA DÖNEM ÖLÇÜMÜ DÖNGÜDEN ETKİLENEBİLİR' : 'SHORT-RUN MEASURES CAN BE CYCLICAL'} detail={tr ? 'Kapasite kullanımı ve sektör yapısı ölçümü oynatabilir.' : 'Capacity use and sector mix can move the measure.'} />;
-  return <Rule styles={styles} title={tr ? 'VERİMLİLİK = KAYNAK BAŞINA DAHA FAZLA DEĞER' : 'PRODUCTIVITY = MORE VALUE PER INPUT'} detail={tr ? 'Uzun vadeli büyümenin temel kaynaklarından biridir.' : 'It is one key source of long-run growth.'} />;
+  return <ProductivityCompare styles={styles} tr={tr} />;
 }
 
 function IndicatorsScene({ role, tr, styles }: SceneProps) {
@@ -110,7 +110,7 @@ function IndicatorsScene({ role, tr, styles }: SceneProps) {
   if (role === 'practice') return <><Header styles={styles} title={tr ? 'Başlık değil sürpriz önemli olabilir' : 'The surprise can matter more than the headline'} detail={tr ? 'Gerçekleşen − beklenti farkını ve revizyonu kontrol et.' : 'Check actual vs expected and any revision.'} /><View style={styles.row}><Card styles={styles} label="ACTUAL" value="3.2" /><Card styles={styles} label="EXPECTED" value="2.8" tone="warning" /><Card styles={styles} label="REVISED" value="2.5→2.7" /></View></>;
   if (role === 'misconception') return <Rule styles={styles} title={tr ? 'TEK SAYI = “İYİ/KÖTÜ” ✕' : 'ONE NUMBER = “GOOD/BAD” ✕'} detail={tr ? 'Dönem, baz, beklenti ve revizyon bağlamı gerekir.' : 'Period, base, expectations, and revisions matter.'} warning />;
   if (role === 'risk') return <Rule styles={styles} title={tr ? 'VERİ AÇIKLAMASI ≠ OTOMATİK İŞLEM SİNYALİ' : 'DATA RELEASE ≠ AUTOMATIC TRADE SIGNAL'} detail={tr ? 'Konumlanma ve eşzamanlı veriler piyasa tepkisini değiştirebilir.' : 'Positioning and simultaneous releases can change the reaction.'} />;
-  return <Rule styles={styles} title={tr ? 'ACTUAL + EXPECTED + PRIOR + REVISION' : 'ACTUAL + EXPECTED + PRIOR + REVISION'} detail={tr ? 'Ekonomik veriyi bağlamıyla oku.' : 'Read economic data in context.'} />;
+  return <ReleaseCard styles={styles} />;
 }
 
 function RealNominalScene({ role, tr, styles }: SceneProps) {
@@ -119,7 +119,7 @@ function RealNominalScene({ role, tr, styles }: SceneProps) {
   if (role === 'practice') return <><Header styles={styles} title={tr ? 'Pozitif nominal, negatif reel mümkün' : 'Positive nominal, negative real is possible'} detail={tr ? 'Enflasyon nominal artıştan yüksek olabilir.' : 'Inflation can exceed the nominal gain.'} /><View style={styles.row}><Card styles={styles} label={tr ? 'NOMİNAL' : 'NOMINAL'} value="+8%" tone="success" /><Card styles={styles} label={tr ? 'ENFLASYON' : 'INFLATION'} value="+10%" tone="warning" /><Card styles={styles} label={tr ? 'REEL' : 'REAL'} value="<0" tone="risk" /></View></>;
   if (role === 'misconception') return <Rule styles={styles} title={tr ? 'PARA MİKTARI ↑ ≠ SATIN ALMA GÜCÜ ↑' : 'MONEY AMOUNT ↑ ≠ PURCHASING POWER ↑'} detail={tr ? 'Fiyat düzeyindeki değişimi hesaba kat.' : 'Account for changes in the price level.'} warning />;
   if (role === 'risk') return <Rule styles={styles} title={tr ? 'REEL HESAP ÖLÇÜME BAĞLIDIR' : 'REAL MEASURES DEPEND ON THE DEFLATOR'} detail={tr ? 'Kullanılan enflasyon/deflatör seçimi sonucu etkileyebilir.' : 'The inflation measure or deflator can affect the result.'} />;
-  return <Rule styles={styles} title={tr ? 'NOMİNAL = PARA · REEL = FİYAT ETKİSİ AYRILMIŞ' : 'NOMINAL = MONEY · REAL = PRICE-ADJUSTED'} detail={tr ? 'Ekonomik gücü anlamak için ikisini ayır.' : 'Separate them to understand economic purchasing power.'} />;
+  return <RealNominalCompare styles={styles} />;
 }
 
 function LaborGroups({ styles }: { styles: ReturnType<typeof createStyles> }) {

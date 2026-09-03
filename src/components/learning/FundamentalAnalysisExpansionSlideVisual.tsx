@@ -58,7 +58,7 @@ function GrowthScene({ role, tr, styles }: SceneProps) {
   if (role === 'practice') return <><Header styles={styles} title={tr ? 'Büyüme güçlü, nakit zayıf' : 'Strong growth, weak cash'} detail={tr ? 'Nedenini ayrıca incele.' : 'Investigate the reason separately.'} /><View style={styles.row}><Card styles={styles} label={tr ? 'GELİR' : 'REVENUE'} value="+28%" tone="success" /><Card styles={styles} label={tr ? 'İŞL. NAKİT' : 'OPERATING CASH'} value="−8%" tone="risk" /></View></>;
   if (role === 'misconception') return <Rule styles={styles} title={tr ? 'EN HIZLI BÜYÜYEN ≠ EN KALİTELİ' : 'FASTEST GROWTH ≠ HIGHEST QUALITY'} detail={tr ? 'Kaynak, marj ve nakit dönüşümünü kontrol et.' : 'Check source, margins, and cash conversion.'} warning />;
   if (role === 'risk') return <Rule styles={styles} title={tr ? 'GEÇİCİ BÜYÜME ETKİLERİ' : 'TEMPORARY GROWTH EFFECTS'} detail={tr ? 'Kur, satın alma veya baz etkisini ayır.' : 'Separate FX, acquisitions, and base effects.'} />;
-  return <Rule styles={styles} title={tr ? 'BÜYÜME = ORAN + KAYNAK + NAKİT' : 'GROWTH = RATE + SOURCE + CASH'} detail={tr ? 'Sürdürülebilirliği bu üçlüyle sorgula.' : 'Use all three to question durability.'} />;
+  return <View style={styles.grid}><Chip styles={styles} text={tr ? 'HACİM' : 'VOLUME'} /><Chip styles={styles} text={tr ? 'FİYAT' : 'PRICE'} /><Chip styles={styles} text={tr ? 'MARJ' : 'MARGIN'} /><Chip styles={styles} text={tr ? 'NAKİT' : 'CASH'} /></View>;
 }
 
 function PerShareScene({ role, tr, styles }: SceneProps) {
@@ -67,7 +67,7 @@ function PerShareScene({ role, tr, styles }: SceneProps) {
   if (role === 'practice') return <><Header styles={styles} title={tr ? 'Seyrelme etkisi' : 'Dilution effect'} detail={tr ? 'Aynı ekonomik pasta daha fazla paya bölünebilir.' : 'The same economic pie can be split across more shares.'} /><View style={styles.flow}><Card styles={styles} label={tr ? 'KÂR' : 'EARNINGS'} value="100" /><Text style={styles.arrow}>÷</Text><Card styles={styles} label={tr ? 'HİSSE' : 'SHARES'} value="↑" tone="warning" /><Text style={styles.arrow}>→</Text><Card styles={styles} label="EPS" value="↓" tone="risk" /></View></>;
   if (role === 'misconception') return <Rule styles={styles} title={tr ? 'TOPLAM KÂR ↑ ≠ EPS ↑' : 'TOTAL PROFIT ↑ ≠ EPS ↑'} detail={tr ? 'Hisse sayısını ve diluted share count’u kontrol et.' : 'Check share count and diluted share count.'} warning />;
   if (role === 'risk') return <Rule styles={styles} title={tr ? 'GERİ ALIM DA BAĞLAM İSTER' : 'BUYBACKS ALSO NEED CONTEXT'} detail={tr ? 'Fiyat, finansman ve fırsat maliyeti önemlidir.' : 'Price, financing, and opportunity cost matter.'} />;
-  return <Rule styles={styles} title={tr ? 'ŞİRKET TOPLAMI + PAY BAŞINA SONUÇ' : 'COMPANY TOTAL + PER-SHARE RESULT'} detail={tr ? 'İkisini birlikte izle.' : 'Track both.'} />;
+  return <><ShareSplit styles={styles} shares={5} /><ShareSplit styles={styles} shares={9} /></>;
 }
 
 function MultiplesScene({ role, tr, styles }: SceneProps) {
@@ -76,7 +76,7 @@ function MultiplesScene({ role, tr, styles }: SceneProps) {
   if (role === 'practice') return <><Header styles={styles} title={tr ? 'Çarpanı açıklayan farklar' : 'What explains multiple differences?'} detail={tr ? 'Büyüme · marj · risk · sermaye ihtiyacı' : 'Growth · margin · risk · capital needs'} /><View style={styles.grid}><Chip styles={styles} text={tr ? 'BÜYÜME' : 'GROWTH'} /><Chip styles={styles} text={tr ? 'MARJ' : 'MARGIN'} /><Chip styles={styles} text={tr ? 'RİSK' : 'RISK'} /><Chip styles={styles} text={tr ? 'SERMAYE' : 'CAPITAL'} /></View></>;
   if (role === 'misconception') return <Rule styles={styles} title={tr ? 'DÜŞÜK ÇARPAN ≠ OTOMATİK UCUZ' : 'LOW MULTIPLE ≠ AUTOMATICALLY CHEAP'} detail={tr ? 'Risk ve düşen kâr beklentisi de fiyatlanıyor olabilir.' : 'Risk or falling earnings expectations may be priced in.'} warning />;
   if (role === 'risk') return <Rule styles={styles} title={tr ? 'PAYDAYI KONTROL ET' : 'CHECK THE DENOMINATOR'} detail={tr ? 'Negatif veya döngüsel kâr çarpanı bozabilir.' : 'Negative or cyclical earnings can distort multiples.'} />;
-  return <Rule styles={styles} title={tr ? 'ÇARPAN = KARŞILAŞTIRMA ARACI' : 'MULTIPLE = COMPARISON TOOL'} detail={tr ? 'Karar veya kesin değer değildir.' : 'Not a decision or certain value.'} />;
+  return <View style={styles.row}><Card styles={styles} label="P/E" value="EQUITY / EARNINGS" /><Card styles={styles} label="EV/EBITDA" value="EV / EBITDA" /></View>;
 }
 
 function DcfScene({ role, tr, styles }: SceneProps) {
@@ -85,7 +85,7 @@ function DcfScene({ role, tr, styles }: SceneProps) {
   if (role === 'practice') return <><Header styles={styles} title={tr ? 'İskonto oranı ↑' : 'Discount rate ↑'} detail={tr ? 'Diğer her şey aynıyken bugünkü değer genellikle ↓' : 'All else equal, present value generally ↓'} /><View style={styles.flow}><Card styles={styles} label={tr ? 'İSKONTO' : 'DISCOUNT'} value="↑" tone="warning" /><Text style={styles.arrow}>→</Text><Card styles={styles} label={tr ? 'BUGÜNKÜ DEĞER' : 'PRESENT VALUE'} value="↓" tone="risk" /></View></>;
   if (role === 'misconception') return <Rule styles={styles} title={tr ? 'DCF ÇIKTISI ≠ GERÇEK DEĞER' : 'DCF OUTPUT ≠ TRUE VALUE'} detail={tr ? 'Sonuç varsayımlara bağlıdır.' : 'The result depends on assumptions.'} warning />;
   if (role === 'risk') return <Rule styles={styles} title={tr ? 'HASSASİYETİ TEST ET' : 'TEST SENSITIVITY'} detail={tr ? 'Büyüme, marj, terminal değer ve iskonto oranını değiştir.' : 'Vary growth, margins, terminal value, and discount rate.'} />;
-  return <Rule styles={styles} title={tr ? 'NAKİT + ZAMAN + RİSK + VARSAYIM' : 'CASH + TIME + RISK + ASSUMPTIONS'} detail={tr ? 'DCF’nin temel mantığı.' : 'The core logic of DCF.'} />;
+  return <Timeline styles={styles} labels />;
 }
 
 function PeersScene({ role, tr, styles }: SceneProps) {
@@ -94,7 +94,7 @@ function PeersScene({ role, tr, styles }: SceneProps) {
   if (role === 'practice') return <><Header styles={styles} title={tr ? 'Aynı P/E, farklı şirket' : 'Same P/E, different company'} detail={tr ? 'Çarpanı açıklayan ekonomik farkları bul.' : 'Find the economic differences behind the multiple.'} /><View style={styles.row}><Card styles={styles} label="A" value="P/E 16x" /><Card styles={styles} label="B" value="P/E 16x" /><Text style={styles.notEqual}>≠</Text></View></>;
   if (role === 'misconception') return <Rule styles={styles} title={tr ? 'SEKTÖR KODU ≠ EŞDEĞER ŞİRKET' : 'SECTOR CODE ≠ EQUIVALENT COMPANY'} detail={tr ? 'Karşılaştırılabilirliği ayrıca kontrol et.' : 'Assess comparability separately.'} warning />;
   if (role === 'risk') return <Rule styles={styles} title={tr ? 'MUHASEBE VE DÖNGÜ FARKLARI' : 'ACCOUNTING AND CYCLE DIFFERENCES'} detail={tr ? 'Ham peer çarpanını yanıltabilir.' : 'Can distort raw peer multiples.'} />;
-  return <Rule styles={styles} title={tr ? 'PEER = BENZERLİK + AÇIK FARKLAR' : 'PEER = SIMILARITY + EXPLICIT DIFFERENCES'} detail={tr ? 'İyi karşılaştırmanın temeli.' : 'The basis of a useful comparison.'} />;
+  return <PeerMatrix styles={styles} labels />;
 }
 
 function LimitsScene({ role, tr, styles }: SceneProps) {
@@ -103,7 +103,7 @@ function LimitsScene({ role, tr, styles }: SceneProps) {
   if (role === 'practice') return <><Header styles={styles} title={tr ? 'Güçlü finansal + yüksek beklenti' : 'Strong financials + high expectations'} detail={tr ? 'Şirket kalitesini fiyatlama koşulundan ayır.' : 'Separate business quality from what is already priced in.'} /><View style={styles.row}><Card styles={styles} label={tr ? 'FİNANSAL' : 'FINANCIALS'} value="STRONG" tone="success" /><Card styles={styles} label={tr ? 'BEKLENTİ' : 'EXPECTATIONS'} value="HIGH" tone="warning" /></View></>;
   if (role === 'misconception') return <Rule styles={styles} title={tr ? 'GÜÇLÜ TEMEL ≠ FİYAT KESİN YÜKSELİR' : 'STRONG FUNDAMENTALS ≠ PRICE MUST RISE'} detail={tr ? 'Beklentiler ve ödenen fiyat sonucu etkiler.' : 'Expectations and price paid affect outcomes.'} warning />;
   if (role === 'risk') return <Rule styles={styles} title={tr ? 'MODEL RİSKİ' : 'MODEL RISK'} detail={tr ? 'Tahmin, muhasebe ve rejim değişimi sonuçları bozabilir.' : 'Forecast, accounting, and regime changes can alter conclusions.'} />;
-  return <Rule styles={styles} title={tr ? 'ANLA · DEĞERLENDİR · BELİRSİZLİĞİ KORU' : 'UNDERSTAND · VALUE · KEEP UNCERTAINTY'} detail={tr ? 'Temel analizin sağlıklı sınırı.' : 'A healthy boundary for fundamental analysis.'} />;
+  return <View style={styles.three}><Card styles={styles} label={tr ? 'RAPOR' : 'REPORT'} value={tr ? 'GEÇMİŞ' : 'PAST'} /><Card styles={styles} label={tr ? 'TAHMİN' : 'FORECAST'} value="?" /><Card styles={styles} label={tr ? 'DEĞER' : 'VALUE'} value={tr ? 'ARALIK' : 'RANGE'} /></View>;
 }
 
 function GrowthCard({ styles, label, price, volume, cash }: { styles: ReturnType<typeof createStyles>; label: string; price: string; volume: string; cash: string }) { return <View style={styles.card}><Text style={styles.cardLabel}>{label}</Text><Text style={styles.cardValue}>GROWTH 25%</Text><Text style={styles.meta}>PRICE {price} · VOL {volume} · CASH {cash}</Text></View>; }
