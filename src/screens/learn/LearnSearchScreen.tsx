@@ -19,11 +19,25 @@ const QUICK_TOPICS = {
   en: ['Interest', 'Liquidity', 'Trend', 'Risk', 'ETF', 'Balance sheet'],
 } as const;
 
+const SEARCH_STOP_WORDS = {
+  tr: new Set(['nedir', 'ne', 'nasıl', 'neden', 'bir', 've', 'ile', 'mi', 'mı', 'mu', 'mü']),
+  en: new Set(['what', 'is', 'are', 'how', 'why', 'the', 'a', 'an', 'and', 'of', 'to']),
+} as const;
+
 function normalize(value: string, language: LearningLanguage) {
   return value
     .toLocaleLowerCase(language === 'tr' ? 'tr-TR' : 'en-US')
+    .replace(/[^a-z0-9çğıöşü\s-]/gi, ' ')
     .replace(/\s+/g, ' ')
     .trim();
+}
+
+function queryTokens(value: string, language: LearningLanguage) {
+  const tokens = normalize(value, language)
+    .split(' ')
+    .map((token) => token.trim())
+    .filter((token) => token.length >= 2 && !SEARCH_STOP_WORDS[language].has(token));
+  return tokens.length > 0 ? tokens : [normalize(value, language)].filter(Boolean);
 }
 
 export function LearnSearchScreen({ navigation }: Props) {
@@ -37,6 +51,7 @@ export function LearnSearchScreen({ navigation }: Props) {
 
   const results = useMemo(() => {
     if (normalizedQuery.length < 2) return [];
+    const tokens = queryTokens(normalizedQuery, language);
     return MICRO_LESSON_CATALOG
       .map((lesson) => {
         const title = selectLocalizedText(lesson.title, language);
@@ -44,13 +59,14 @@ export function LearnSearchScreen({ navigation }: Props) {
         const takeaway = selectLocalizedText(lesson.takeaway, language);
         const titleNorm = normalize(title, language);
         const bodyNorm = normalize(`${objective} ${takeaway}`, language);
-        const score = titleNorm.startsWith(normalizedQuery)
-          ? 3
-          : titleNorm.includes(normalizedQuery)
-            ? 2
-            : bodyNorm.includes(normalizedQuery)
-              ? 1
-              : 0;
+        const titleTokenHits = tokens.filter((token) => titleNorm.includes(token)).length;
+        const bodyTokenHits = tokens.filter((token) => bodyNorm.includes(token)).length;
+        const score =
+          (titleNorm.startsWith(normalizedQuery) ? 20 : 0)
+          + (titleNorm.includes(normalizedQuery) ? 12 : 0)
+          + (bodyNorm.includes(normalizedQuery) ? 6 : 0)
+          + (titleTokenHits * 4)
+          + (bodyTokenHits * 2);
         return { lesson, title, objective, score };
       })
       .filter((item) => item.score > 0)
@@ -97,7 +113,11 @@ export function LearnSearchScreen({ navigation }: Props) {
         </View>
 
         <View style={styles.hero}>
-          <Text style={styles.heroEyebrow}>{language === 'tr' ? '144 DERS İÇİNDE ARA' : 'SEARCH 144 LESSONS'}</Text>
+          <Text style={styles.heroEyebrow}>
+            {language === 'tr'
+              ? `${MICRO_LESSON_CATALOG.length} DERS İÇİNDE ARA`
+              : `SEARCH ${MICRO_LESSON_CATALOG.length} LESSONS`}
+          </Text>
           <Text style={styles.heroTitle}>
             {language === 'tr' ? 'Merak ettiğin kavrama doğrudan git.' : 'Go straight to the concept you are curious about.'}
           </Text>
