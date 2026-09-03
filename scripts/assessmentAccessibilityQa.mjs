@@ -174,7 +174,7 @@ async function openAcademyFirstLesson(page, academyTrackTitle) {
   await page.goto(baseUrl, { waitUntil: 'networkidle' });
   await page.getByTestId('learn-home-screen').waitFor({ timeout: 10000 });
   await page.getByRole('button', { name: /İleri konular/i }).click();
-  await page.getByText('Finansı konu konu derinleştir.', { exact: true }).waitFor();
+  await page.getByTestId('academy-home-screen').waitFor();
 
   const before = new Set(await buttonNames(page));
   await page.getByRole('button', { name: new RegExp(`^${academyTrackTitle} derslerini aç$`, 'i') }).click();
