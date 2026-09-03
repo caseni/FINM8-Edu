@@ -49,7 +49,7 @@ const ROLE_TEXT: Record<SlideRole, { tr: string; en: string }> = {
 export function SmcIctSlideVisual({ assetRef, alt, language, role, theme = defaultLearningTheme }: SmcIctSlideVisualProps) {
   const topic = topicFor(assetRef); if (!topic) return null;
   const s = createStyles(theme); const tr = language === 'tr';
-  return <View style={s.shell} accessibilityLabel={alt}><View style={s.header}><Text style={s.title}>{TITLES[topic][language]}</Text><Text style={s.detail}>{ROLE_TEXT[role][language]}</Text></View><View style={s.canvas}>{render(topic, role, s, tr)}</View></View>;
+  return <View style={s.shell} accessibilityLabel={alt}>{role !== 'summary' ? <View style={s.header}><Text style={s.title}>{TITLES[topic][language]}</Text><Text style={s.detail}>{ROLE_TEXT[role][language]}</Text></View> : null}<View style={s.canvas}>{render(topic, role, s, tr)}</View></View>;
 }
 
 function render(topic: Topic, role: SlideRole, s: ReturnType<typeof createStyles>, tr: boolean) {
