@@ -36,6 +36,11 @@ sentence.
   different wording.
 - All four beginner sections are hard-gated: objective <= 16 words, hook <= 14,
   explanation <= 40, misconception <= 24, takeaway <= 12.
+- Academy keeps more depth but is also hard-gated across all 10 schools / 120
+  lessons: objective <= 16 words, hook <= 20, explanation <= 45,
+  misconception <= 16, takeaway <= 15.
+- Beginner and Academy explanation/takeaway or misconception/takeaway surfaces
+  fail the gate when they repeat too much of the same wording.
 - Technical terminology appears only after the plain-language meaning is clear.
 
 ## 2B. Code-infographic quality
@@ -57,8 +62,9 @@ images.
   whether the visual looks template-like.
 
 The hard-gate rollout now covers all 24 beginner lessons across Money/Economy,
-Markets, Charts, and Risk. New beginner copy or fallback infographic changes
-must pass the same clarity and teaching-mechanism rules.
+Markets, Charts, and Risk, plus all 120 Academy lessons across the ten schools.
+New learner-facing copy must stay inside its stage-appropriate clarity budget.
+New beginner fallback infographics must also pass the teaching-mechanism rules.
 
 ## 3. Navigation and state
 

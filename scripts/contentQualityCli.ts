@@ -1,8 +1,10 @@
+import { getAcademyJourneyQualityReport } from '../src/domain/learning/academyJourneyQuality';
 import { getBeginnerJourneyQualityReport } from '../src/domain/learning/beginnerJourneyQuality';
 import { getContentQualitySnapshot } from '../src/domain/learning/contentQuality';
 
 const snapshot = getContentQualitySnapshot();
 const beginnerJourney = getBeginnerJourneyQualityReport();
+const academyJourney = getAcademyJourneyQualityReport();
 const { assessment, curriculumOverlap, editorialDepth, english, visualCoverage } = snapshot;
 
 console.log('FINM8 EDU content quality audit');
@@ -23,6 +25,9 @@ console.log(`duplicate quiz-explanation groups: ${editorialDepth.duplicateQuizEx
 console.log(`beginner sections: ${beginnerJourney.sectionCount}/4`);
 console.log(`beginner lessons: ${beginnerJourney.lessonCount}/${beginnerJourney.expectedLessonCount}`);
 console.log(`beginner journey issues: ${beginnerJourney.issues.length}`);
+console.log(`academy tracks: ${academyJourney.trackCount}/10`);
+console.log(`academy lessons: ${academyJourney.lessonCount}/${academyJourney.expectedLessonCount}`);
+console.log(`academy journey issues: ${academyJourney.issues.length}`);
 
 const topThinLessons = editorialDepth.thinTeachingLessons
   .slice(0, 5)
@@ -122,6 +127,13 @@ if (beginnerJourney.issues.length > 0) {
   }
 }
 
+if (academyJourney.issues.length > 0) {
+  console.log('Academy journey quality issues:');
+  for (const issue of academyJourney.issues) {
+    console.log(`- ${issue.lessonId}: ${issue.reason} -> ${issue.detail}`);
+  }
+}
+
 const blockers: string[] = [];
 
 if (english.incompleteLessons.length > 0) {
@@ -188,6 +200,18 @@ if (beginnerJourney.lessonCount !== beginnerJourney.expectedLessonCount) {
 
 if (beginnerJourney.issues.length > 0) {
   blockers.push(`beginner journey quality issues: ${beginnerJourney.issues.length}`);
+}
+
+if (academyJourney.trackCount !== 10) {
+  blockers.push(`academy track count drifted: ${academyJourney.trackCount}`);
+}
+
+if (academyJourney.lessonCount !== academyJourney.expectedLessonCount) {
+  blockers.push(`academy lesson count drifted: ${academyJourney.lessonCount}/${academyJourney.expectedLessonCount}`);
+}
+
+if (academyJourney.issues.length > 0) {
+  blockers.push(`academy journey quality issues: ${academyJourney.issues.length}`);
 }
 
 if (blockers.length > 0) {
