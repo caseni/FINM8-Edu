@@ -12,6 +12,8 @@ const viewports = [
 const MAX_VISUAL_WORDS = 24;
 const MAX_SUMMARY_VISUAL_WORDS = 18;
 const SUMMARY_REPETITION_THRESHOLD = 0.78;
+const MAX_MOBILE_VISUAL_TO_ACTION_GAP = 220;
+const MAX_MOBILE_SAFETY_TO_ACTION_GAP = 120;
 
 const slug = (value) => value
   .toLocaleLowerCase('tr-TR')
@@ -133,6 +135,34 @@ async function assertVisualTeachingCopy(page, visual, label, step, total) {
   }
 }
 
+async function assertMobileVerticalBalance(page, visual, label, step, total) {
+  const primaryAction = page.getByRole('button', {
+    name: step === total ? 'Göreve geç' : 'Sonraki adıma geç',
+  });
+  const actionBox = await primaryAction.boundingBox();
+  if (!actionBox) throw new Error(`${label}: primary lesson action is not measurable`);
+
+  const visualGap = actionBox.y - (visual.y + visual.height);
+  if (visualGap > MAX_MOBILE_VISUAL_TO_ACTION_GAP) {
+    throw new Error(`${label}: ${visualGap.toFixed(1)}px dead zone below the teaching visual; mobile budget is ${MAX_MOBILE_VISUAL_TO_ACTION_GAP}px`);
+  }
+
+  if (step !== total) return;
+  const safetyLabel = page.getByText('EĞİTİM NOTU', { exact: true });
+  await safetyLabel.waitFor();
+  const safetyBox = await safetyLabel.evaluate((node) => {
+    const parent = node.parentElement;
+    if (!parent) return null;
+    const rect = parent.getBoundingClientRect();
+    return { y: rect.y, height: rect.height };
+  });
+  if (!safetyBox) throw new Error(`${label}: summary educational note is not measurable`);
+  const safetyGap = actionBox.y - (safetyBox.y + safetyBox.height);
+  if (safetyGap > MAX_MOBILE_SAFETY_TO_ACTION_GAP) {
+    throw new Error(`${label}: ${safetyGap.toFixed(1)}px dead zone below the summary note; mobile budget is ${MAX_MOBILE_SAFETY_TO_ACTION_GAP}px`);
+  }
+}
+
 async function assertNoOverflow(page, label) {
   const d = await page.evaluate(() => ({
     viewport: document.documentElement.clientWidth,
@@ -173,6 +203,7 @@ try {
         if (visual.height > viewport.height * 0.75) throw new Error(`${label}: visual too tall at ${visual.height.toFixed(1)}px`);
         if (viewport.name === 'mobile-390') {
           await assertVisualTeachingCopy(page, visual, label, step, total);
+          await assertMobileVerticalBalance(page, visual, label, step, total);
         }
 
         if (step === 1 || step === 3 || step === total) {
