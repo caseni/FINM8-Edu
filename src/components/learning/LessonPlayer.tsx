@@ -10,7 +10,6 @@ import {
   View,
 } from 'react-native';
 import {
-  selectAudienceCopy,
   selectLocalizedText,
   type LearningLanguage,
 } from '../../domain/learning/presentation';
@@ -217,7 +216,7 @@ export function LessonPlayer({
           </View>
         </View>
 
-        <View style={[styles.slide, isVisualOnlyStep && styles.visualSlide]}>
+        <View style={[styles.slide, isVisualOnlyStep && styles.visualSlide, isTakeaway && styles.takeawaySlide]}>
           {isTakeaway ? (
             <View style={styles.takeaway}>
               <Text style={styles.takeawayEyebrow}>
@@ -239,14 +238,14 @@ export function LessonPlayer({
               ) : null}
               {safetyBlock ? (
                 <View
-                  accessibilityLabel={language === 'tr' ? 'Güvenlik notu' : 'Safety note'}
+                  accessibilityLabel={language === 'tr' ? 'Eğitim notu' : 'Educational note'}
                   style={styles.compactSafety}
                 >
                   <Text style={styles.compactSafetyLabel}>
-                    {language === 'tr' ? 'DİKKAT' : 'WATCH OUT'}
+                    {language === 'tr' ? 'EĞİTİM NOTU' : 'EDUCATIONAL NOTE'}
                   </Text>
                   <Text style={styles.compactSafetyText}>
-                    {selectAudienceCopy(safetyBlock.copy, presentationMode, language)}
+                    {selectLocalizedText(lesson.contentVersion.riskDisclaimer, language)}
                   </Text>
                 </View>
               ) : null}
@@ -373,35 +372,37 @@ const createStyles = (theme: LearningTheme, wide: boolean, narrow: boolean) =>
     contextLabel: { color: theme.colors.textMuted, fontSize: wide ? 11 : 10, fontWeight: '700' },
     lessonTitle: { maxWidth: 820, color: theme.colors.text, fontFamily: LEARNING_FONT_FAMILY, fontSize: wide ? 25 : narrow ? 20 : 21, lineHeight: wide ? 32 : narrow ? 27 : 28, fontWeight: '900', letterSpacing: -0.35 },
     slide: {
+      flexGrow: wide ? 0 : 1,
       width: '100%',
-      justifyContent: 'flex-start',
+      justifyContent: wide ? 'flex-start' : 'center',
       paddingVertical: wide ? 8 : 4,
       paddingHorizontal: 0,
       backgroundColor: 'transparent',
       borderWidth: 0,
     },
-    visualSlide: { justifyContent: 'flex-start' },
-    takeaway: { gap: wide ? 14 : 12, paddingHorizontal: wide ? 2 : 0 },
+    visualSlide: { justifyContent: wide ? 'flex-start' : 'center' },
+    takeawaySlide: { justifyContent: 'flex-start' },
+    takeaway: { flexGrow: wide ? 0 : 1, gap: wide ? 14 : 12, paddingHorizontal: wide ? 2 : 0 },
     takeawayEyebrow: { color: theme.colors.primary, fontSize: wide ? 12 : 11, lineHeight: 16, fontWeight: '900', letterSpacing: 0.8 },
     takeawayText: { color: theme.colors.text, fontFamily: LEARNING_FONT_FAMILY, fontSize: wide ? 27 : narrow ? 21 : 22, fontWeight: '800', lineHeight: wide ? 35 : narrow ? 29 : 30, letterSpacing: -0.25 },
-    takeawayVisual: { marginTop: 2 },
+    takeawayVisual: { flexGrow: wide ? 0 : 1, justifyContent: wide ? 'flex-start' : 'center', marginTop: 2 },
     compactSafety: {
-      gap: wide ? 7 : theme.spacing.xs,
+      gap: wide ? 7 : 3,
       marginTop: 2,
-      paddingTop: wide ? 12 : theme.spacing.sm,
+      paddingTop: wide ? 12 : 8,
       borderTopColor: theme.colors.border,
       borderTopWidth: 1,
     },
     compactSafetyLabel: {
-      color: theme.colors.risk,
-      fontSize: wide ? 11 : 10,
+      color: theme.colors.textMuted,
+      fontSize: wide ? 10 : 9,
       fontWeight: '900',
       letterSpacing: 0.8,
     },
     compactSafetyText: {
       color: theme.colors.textMuted,
-      fontSize: wide ? 15 : 13,
-      lineHeight: wide ? 23 : 19,
+      fontSize: wide ? 14 : 12,
+      lineHeight: wide ? 21 : 17,
     },
     footer: {
       paddingHorizontal: wide ? 28 : narrow ? 12 : theme.spacing.md,
