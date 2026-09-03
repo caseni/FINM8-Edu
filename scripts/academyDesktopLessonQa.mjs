@@ -16,7 +16,7 @@ async function openAcademyMarketLesson(page) {
   await page.goto(baseUrl, { waitUntil: 'networkidle' });
   await page.getByText('Öğrenmeye Başla', { exact: true }).waitFor({ timeout: 10000 });
   await page.getByRole('button', { name: /İleri konular/i }).click();
-  await page.getByText('Finansı konu konu derinleştir.', { exact: true }).waitFor();
+  await page.getByTestId('academy-home-screen').waitFor();
   await page.getByRole('button', { name: /^Piyasaları Anla derslerini aç$/i }).click();
   await page.getByRole('button', { name: /^Borsa ne işe yarar\?$/i }).click();
   await page.getByText(/Adım 1\//).waitFor();
