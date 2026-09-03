@@ -6,6 +6,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: visual-qa-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
 jobs:
   academy-render:
     runs-on: ubuntu-latest
