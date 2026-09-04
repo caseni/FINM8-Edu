@@ -150,24 +150,29 @@ async function assertMobileVerticalBalance(page, visual, label, step, total) {
     ? await lessonContent.boundingBox()
     : undefined;
   const visualBottom = visual.y + visual.height;
-  const teachingBottom = contentBox
+  let teachingBottom = contentBox
     ? Math.max(visualBottom, contentBox.y + contentBox.height)
     : visualBottom;
+  let safetyBox;
+  if (step === total) {
+    const safetyLabel = page.getByText('EĞİTİM NOTU', { exact: true });
+    await safetyLabel.waitFor();
+    safetyBox = await safetyLabel.evaluate((node) => {
+      const parent = node.parentElement;
+      if (!parent) return null;
+      const rect = parent.getBoundingClientRect();
+      return { y: rect.y, height: rect.height };
+    });
+    if (!safetyBox) throw new Error(`${label}: summary educational note is not measurable`);
+    teachingBottom = Math.max(teachingBottom, safetyBox.y + safetyBox.height);
+  }
+
   const contentGap = actionBox.y - teachingBottom;
   if (contentGap > MAX_MOBILE_CONTENT_TO_ACTION_GAP) {
     throw new Error(`${label}: ${contentGap.toFixed(1)}px dead zone below the teaching content; mobile budget is ${MAX_MOBILE_CONTENT_TO_ACTION_GAP}px`);
   }
 
-  if (step !== total) return;
-  const safetyLabel = page.getByText('EĞİTİM NOTU', { exact: true });
-  await safetyLabel.waitFor();
-  const safetyBox = await safetyLabel.evaluate((node) => {
-    const parent = node.parentElement;
-    if (!parent) return null;
-    const rect = parent.getBoundingClientRect();
-    return { y: rect.y, height: rect.height };
-  });
-  if (!safetyBox) throw new Error(`${label}: summary educational note is not measurable`);
+  if (!safetyBox) return;
   const safetyGap = actionBox.y - (safetyBox.y + safetyBox.height);
   if (safetyGap > MAX_MOBILE_SAFETY_TO_ACTION_GAP) {
     throw new Error(`${label}: ${safetyGap.toFixed(1)}px dead zone below the summary note; mobile budget is ${MAX_MOBILE_SAFETY_TO_ACTION_GAP}px`);
