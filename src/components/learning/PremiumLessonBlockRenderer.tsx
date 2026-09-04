@@ -196,7 +196,7 @@ export function PremiumLessonBlockRenderer({
   if (block.kind === 'visual') {
     const example = exampleForAsset(block.assetRef, language);
     return (
-      <View style={styles.visualStep}>
+      <View testID="lesson-step-content" style={styles.visualStep}>
         <LessonBlockRenderer
           block={block}
           language={language}
@@ -217,7 +217,7 @@ export function PremiumLessonBlockRenderer({
 
   if (block.kind === 'bullet_list') {
     return (
-      <View style={styles.block}>
+      <View testID="lesson-step-content" style={styles.block}>
         {block.title ? <Text style={styles.sectionTitle}>{selectAudienceCopy(block.title, presentationMode, language)}</Text> : null}
         <View style={styles.bulletList}>
           {block.items.map((item, index) => (
@@ -246,7 +246,7 @@ export function PremiumLessonBlockRenderer({
         : undefined;
 
   return (
-    <View style={[styles.block, toneStyle]}>
+    <View testID="lesson-step-content" style={[styles.block, toneStyle]}>
       {label ? (
         <Text style={[
           styles.eyebrow,

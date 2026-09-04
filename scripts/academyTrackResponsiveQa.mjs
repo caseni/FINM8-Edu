@@ -12,7 +12,7 @@ const viewports = [
 const MAX_VISUAL_WORDS = 24;
 const MAX_SUMMARY_VISUAL_WORDS = 18;
 const SUMMARY_REPETITION_THRESHOLD = 0.78;
-const MAX_MOBILE_VISUAL_TO_ACTION_GAP = 220;
+const MAX_MOBILE_CONTENT_TO_ACTION_GAP = 220;
 const MAX_MOBILE_SAFETY_TO_ACTION_GAP = 120;
 
 const slug = (value) => value
@@ -142,9 +142,20 @@ async function assertMobileVerticalBalance(page, visual, label, step, total) {
   const actionBox = await primaryAction.boundingBox();
   if (!actionBox) throw new Error(`${label}: primary lesson action is not measurable`);
 
-  const visualGap = actionBox.y - (visual.y + visual.height);
-  if (visualGap > MAX_MOBILE_VISUAL_TO_ACTION_GAP) {
-    throw new Error(`${label}: ${visualGap.toFixed(1)}px dead zone below the teaching visual; mobile budget is ${MAX_MOBILE_VISUAL_TO_ACTION_GAP}px`);
+  // Visual-only steps can carry a teaching example below the image. Measure from
+  // the lowest rendered teaching content so explanatory copy is never counted as
+  // empty space while the 220px composition budget remains unchanged.
+  const lessonContent = page.getByTestId('lesson-step-content');
+  const contentBox = (await lessonContent.count()) > 0
+    ? await lessonContent.boundingBox()
+    : undefined;
+  const visualBottom = visual.y + visual.height;
+  const teachingBottom = contentBox
+    ? Math.max(visualBottom, contentBox.y + contentBox.height)
+    : visualBottom;
+  const contentGap = actionBox.y - teachingBottom;
+  if (contentGap > MAX_MOBILE_CONTENT_TO_ACTION_GAP) {
+    throw new Error(`${label}: ${contentGap.toFixed(1)}px dead zone below the teaching content; mobile budget is ${MAX_MOBILE_CONTENT_TO_ACTION_GAP}px`);
   }
 
   if (step !== total) return;
