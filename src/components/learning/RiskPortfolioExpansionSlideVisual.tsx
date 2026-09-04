@@ -86,7 +86,7 @@ function RecoveryScene({ role, tr, styles }: SceneProps) {
 }
 
 const createStyles = (theme: LearningTheme) => StyleSheet.create({
-  shell: { minHeight: 220, overflow: 'hidden', borderRadius: theme.radius.medium, borderWidth: 1, borderColor: theme.colors.border, backgroundColor: theme.colors.background },
+  shell: { minHeight: 260, overflow: 'hidden', borderRadius: theme.radius.medium, borderWidth: 1, borderColor: theme.colors.border, backgroundColor: theme.colors.background },
   canvas: { flex: 1, justifyContent: 'center', gap: 13, padding: 14 },
   header: { gap: 4 }, title: { color: theme.colors.text, fontSize: 16, lineHeight: 21, fontWeight: '900' }, detail: { color: theme.colors.textMuted, fontSize: 11, lineHeight: 16, fontWeight: '700' },
   row: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 7, flexWrap: 'wrap' },
