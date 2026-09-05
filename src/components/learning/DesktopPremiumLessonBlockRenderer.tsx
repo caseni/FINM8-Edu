@@ -265,11 +265,8 @@ const createStyles = (theme: LearningTheme) => StyleSheet.create({
     fontWeight: '500',
   },
   warningCopy: {
-    padding: 14,
-    borderRadius: theme.radius.medium,
-    borderLeftWidth: 3,
-    borderLeftColor: theme.colors.warning,
-    backgroundColor: theme.colors.surfaceMuted,
+    alignSelf: 'center',
+    paddingVertical: 4,
   },
   riskCopy: {
     padding: 14,

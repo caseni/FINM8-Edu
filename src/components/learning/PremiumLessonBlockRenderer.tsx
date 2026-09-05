@@ -299,11 +299,7 @@ const createStyles = (theme: LearningTheme, wide: boolean) => StyleSheet.create(
   bulletDot: { width: 7, height: 7, marginTop: wide ? 12 : 10, borderRadius: 4, backgroundColor: theme.colors.primary },
   visualFrame: { marginTop: 2 },
   warningCard: {
-    padding: wide ? 16 : 14,
-    borderRadius: theme.radius.medium,
-    borderLeftWidth: 3,
-    borderLeftColor: theme.colors.warning,
-    backgroundColor: theme.colors.surfaceMuted,
+    paddingVertical: 4,
   },
   riskCard: {
     padding: wide ? 16 : 14,

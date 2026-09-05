@@ -34,7 +34,7 @@ export function BeginnerMarketStoryVisual(props: Props) {
   const { width } = useWindowDimensions();
   const wide = width >= 900;
 
-  if (hasBeginnerEditorialImage(props.assetRef, props.role)) {
+  if (!props.assetRef.includes('fiyat-piyasada-nasil-olusur') && hasBeginnerEditorialImage(props.assetRef, props.role)) {
     return (
       <BeginnerEditorialImageVisual
         assetRef={props.assetRef}

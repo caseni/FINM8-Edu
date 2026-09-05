@@ -23,7 +23,7 @@ const COPY: Readonly<Record<string, BeginnerLessonCopy>> = {
   'lesson.market.price-formation.001': {
     title: { tr: 'Bir fiyat nasıl ortaya çıkar?', en: 'How does a price appear?' },
     objective: { tr: 'Alıcı ve satıcı buluşunca fiyatın nasıl oluştuğunu öğren.', en: 'Learn how a price forms when buyers and sellers meet.' },
-    hook: { tr: 'Bir ürünün fiyatını kim seçiyor?', en: 'Who chooses the price of something?' },
+    hook: { tr: 'Tek bir kişi seçmez; iki tarafın teklifleri buluşur.', en: 'No single person chooses it; the two sides’ offers meet.' },
     explanation: { tr: 'Alıcı bir fiyat teklif eder, satıcı da kabul edeceği fiyatı söyler. İkisi aynı noktada buluşursa işlem gerçekleşir. Ekrandaki son fiyat, bu son işlemin fiyatıdır.', en: 'A buyer offers a price and a seller states what they will accept. When they meet at the same point, a trade happens. The last price on screen is the price of that latest trade.' },
     misconception: { tr: 'Fiyatı tek başına şirket veya borsa belirlemez. İşlem, alıcı ve satıcı buluşunca oluşur.', en: 'A company or exchange does not set the price alone. A trade forms when buyer and seller meet.' },
     takeaway: { tr: 'Fiyat, alıcı ile satıcının buluştuğu noktadır.', en: 'Price is where buyer and seller meet.' },

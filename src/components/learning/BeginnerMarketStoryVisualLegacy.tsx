@@ -78,13 +78,12 @@ function PriceStory({ tr, role, styles }: SceneProps) {
   if (role === 'hook') {
     return (
       <View style={styles.story}>
-        <Heading styles={styles} title={tr ? 'İki taraf farklı fiyat düşünüyor' : 'Two sides have different prices in mind'} />
         <View style={styles.dualRow}>
           <Person styles={styles} label={tr ? 'ALICI' : 'BUYER'} value="98" accent />
           <View style={styles.gapMark}><View style={styles.gapLine} /><Text style={styles.gapText}>?</Text><View style={styles.gapLine} /></View>
           <Person styles={styles} label={tr ? 'SATICI' : 'SELLER'} value="102" />
         </View>
-        <Text style={styles.bottomHint}>{tr ? 'İşlem olması için ortak bir noktada buluşmaları gerekir.' : 'A trade needs a price both sides can accept.'}</Text>
+        <Text style={styles.bottomHint}>{tr ? 'Ortak fiyat yoksa işlem yok.' : 'No shared price, no trade.'}</Text>
       </View>
     );
   }
@@ -92,7 +91,6 @@ function PriceStory({ tr, role, styles }: SceneProps) {
   if (role === 'concept') {
     return (
       <View style={styles.story}>
-        <Heading styles={styles} title={tr ? 'İki taraf 100’de buluştu' : 'Both sides meet at 100'} />
         <View style={styles.matchStage}>
           <View style={styles.sideOffer}><Text style={styles.microLabel}>{tr ? 'ALICI' : 'BUYER'}</Text><Text style={styles.offerValue}>100</Text></View>
           <View style={styles.arrowLine}><View style={styles.arrowStem} /><View style={styles.matchDot} /></View>
@@ -100,7 +98,6 @@ function PriceStory({ tr, role, styles }: SceneProps) {
           <View style={styles.arrowLine}><View style={styles.matchDot} /><View style={styles.arrowStem} /></View>
           <View style={styles.sideOffer}><Text style={styles.microLabel}>{tr ? 'SATICI' : 'SELLER'}</Text><Text style={styles.offerValue}>100</Text></View>
         </View>
-        <Text style={styles.bottomHint}>{tr ? 'Ekrandaki son fiyat, gerçekleşmiş bu buluşmanın kaydıdır.' : 'The last price records this completed meeting.'}</Text>
       </View>
     );
   }
@@ -133,7 +130,6 @@ function PriceStory({ tr, role, styles }: SceneProps) {
   if (role === 'misconception') {
     return (
       <View style={styles.story}>
-        <Heading styles={styles} title={tr ? 'Fiyatı tek bir taraf seçmez' : 'One side does not choose the price'} />
         <View style={styles.mistakeStage}>
           <View style={styles.fixedTag}>
             <Text style={styles.fixedTagSmall}>{tr ? 'ŞİRKET FİYATI' : 'COMPANY PRICE'}</Text>
@@ -153,7 +149,6 @@ function PriceStory({ tr, role, styles }: SceneProps) {
 
   return (
     <View style={styles.story}>
-      <Heading styles={styles} title={tr ? 'Fiyat = iki tarafın buluştuğu nokta' : 'Price = where two sides meet'} />
       <View style={styles.summaryMeet}>
         <View style={styles.summarySide}><Text style={styles.microLabel}>{tr ? 'ALICI' : 'BUYER'}</Text></View>
         <View style={styles.summaryArrow} />

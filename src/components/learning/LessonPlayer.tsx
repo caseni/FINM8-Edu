@@ -201,8 +201,9 @@ export function LessonPlayer({
       </View>
 
       <ScrollView ref={scrollRef} contentContainerStyle={styles.content}>
-        <View style={styles.lessonIntro}>
-          <Text style={styles.lessonTitle}>{lessonTitle}</Text>
+        {stepIndex === 0 ? (
+          <View style={styles.lessonIntro}>
+            <Text style={styles.lessonTitle}>{lessonTitle}</Text>
           <View style={styles.metaRow}>
             <Text style={styles.duration}>{selectLocalizedText(LEARNING_STAGE_LABELS[lesson.learningStage], language)}</Text>
             <Text style={styles.metaDot}>·</Text>
@@ -214,7 +215,8 @@ export function LessonPlayer({
               </>
             ) : null}
           </View>
-        </View>
+          </View>
+        ) : null}
 
         <View style={[styles.slide, isVisualOnlyStep && styles.visualSlide, isTakeaway && styles.takeawaySlide]}>
           {isTakeaway ? (
