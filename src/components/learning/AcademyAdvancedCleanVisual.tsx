@@ -215,7 +215,7 @@ function Chain({ s, warn }: { s: S; warn: boolean }) {
 }
 
 const createStyles = (_theme: LearningTheme) => StyleSheet.create({
-  shell:{width:'100%',minHeight:260,borderRadius:18,borderWidth:1,borderColor:'#24465C',backgroundColor:'#081725',padding:14,justifyContent:'center',overflow:'hidden'},
+  shell:{width:'100%',minHeight:316,borderRadius:18,borderWidth:1,borderColor:'#24465C',backgroundColor:'#081725',padding:14,justifyContent:'center',overflow:'hidden'},
   shellSummary:{minHeight:180},good:{color:'#5EEAD4'},warn:{color:'#D09263'},micro:{color:'#A5B6C0',fontSize:8,fontWeight:'900',textAlign:'center'},
   flow:{minHeight:150,flexDirection:'row',alignItems:'center',justifyContent:'center',gap:6,flexWrap:'wrap'},
   node:{minWidth:60,minHeight:58,paddingHorizontal:8,borderRadius:14,borderWidth:1,borderColor:'#35566A',backgroundColor:'#102638',alignItems:'center',justifyContent:'center'},

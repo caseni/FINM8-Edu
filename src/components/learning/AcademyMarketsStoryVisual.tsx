@@ -317,7 +317,7 @@ function Wheat({ styles }: { styles: ReturnType<typeof createStyles> }) {
 const createStyles = (theme: LearningTheme) => StyleSheet.create({
   photoShell: { width: '100%', aspectRatio: 16 / 9, overflow: 'hidden', borderRadius: 20, borderWidth: 1, borderColor: '#24465C', backgroundColor: '#06111B' },
   photo: { width: '100%', height: '100%' },
-  shell: { width: '100%', minHeight: 280, borderRadius: 20, borderWidth: 1, borderColor: '#24465C', backgroundColor: '#081725', padding: 16, justifyContent: 'center' },
+  shell: { width: '100%', minHeight: 316, borderRadius: 20, borderWidth: 1, borderColor: '#24465C', backgroundColor: '#081725', padding: 16, justifyContent: 'center' },
   story: { gap: 18 },
   heading: { gap: 5 },
   headingTitle: { color: theme.colors.text, fontSize: 18, lineHeight: 23, fontWeight: '900' },

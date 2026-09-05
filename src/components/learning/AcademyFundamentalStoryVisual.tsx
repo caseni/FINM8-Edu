@@ -228,7 +228,7 @@ const createStyles = (theme: LearningTheme) => StyleSheet.create({
   photoShell: { width: '100%', aspectRatio: 0.8, overflow: 'hidden', borderRadius: 20, borderWidth: 1, borderColor: '#24465C', backgroundColor: '#06111B' },
   photo: { width: '100%', height: '100%' },
   photoShellWide: { aspectRatio: 16 / 9 },
-  shell: { width: '100%', minHeight: 240, justifyContent: 'center', borderRadius: 20, borderWidth: 1, borderColor: '#24465C', backgroundColor: '#081725', padding: 16 },
+  shell: { width: '100%', minHeight: 316, justifyContent: 'center', borderRadius: 20, borderWidth: 1, borderColor: '#24465C', backgroundColor: '#081725', padding: 16 },
   story: { gap: 18 },
   head: { gap: 5 },
   title: { color: theme.colors.text, fontSize: 18, lineHeight: 23, fontWeight: '900' },

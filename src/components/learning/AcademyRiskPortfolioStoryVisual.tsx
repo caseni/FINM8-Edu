@@ -178,7 +178,7 @@ function Construction({ role, tr, styles }: SceneProps) {
 }
 
 const createStyles = (theme: LearningTheme) => StyleSheet.create({
-  shell: { width: '100%', minHeight: 238, justifyContent: 'center', borderRadius: 20, borderWidth: 1, borderColor: '#24465C', backgroundColor: '#081725', padding: 16 },
+  shell: { width: '100%', minHeight: 316, justifyContent: 'center', borderRadius: 20, borderWidth: 1, borderColor: '#24465C', backgroundColor: '#081725', padding: 16 },
   story: { gap: 18 },
   head: { gap: 5 },
   title: { color: theme.colors.text, fontSize: 18, lineHeight: 23, fontWeight: '900' },
