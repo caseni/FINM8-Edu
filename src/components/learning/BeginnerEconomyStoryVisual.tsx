@@ -1,5 +1,13 @@
 import React from 'react';
-import { StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import {
+  Image,
+  Platform,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+  type ImageSourcePropType,
+} from 'react-native';
 import type { LearningLanguage } from '../../domain/learning/presentation';
 import { defaultLearningTheme, type LearningTheme } from '../../theme/learningTheme';
 import type { LessonSupportingVisualRole } from './LessonSupportingVisual';
@@ -14,6 +22,15 @@ type Props = {
 };
 type Styles = ReturnType<typeof createStyles>;
 type SceneProps = { tr: boolean; role: LessonSupportingVisualRole; styles: Styles };
+
+const inflationSvgArtwork: Record<LessonSupportingVisualRole, ImageSourcePropType> = {
+  hook: require('../../../assets/learning/beginner/economy/inflation-hook.svg'),
+  concept: require('../../../assets/learning/beginner/economy/inflation-concept.svg'),
+  practice: require('../../../assets/learning/beginner/economy/inflation-practice.svg'),
+  misconception: require('../../../assets/learning/beginner/economy/inflation-misconception.svg'),
+  risk: require('../../../assets/learning/beginner/economy/inflation-misconception.svg'),
+  summary: require('../../../assets/learning/beginner/economy/inflation-summary.svg'),
+};
 
 function topicForAsset(assetRef: string): Topic | undefined {
   if (assetRef.includes('enflasyon-satin-alma-gucu')) return 'inflation';
@@ -47,12 +64,17 @@ export function BeginnerEconomyStoryVisual({ assetRef, alt, language, role, them
   const styles = createStyles(theme, wide, phone);
   const tr = language === 'tr';
   const semanticRole = roleKey(role);
+  const useInflationSvg = topic === 'inflation' && Platform.OS === 'web';
 
   return (
     <View style={styles.shell} accessibilityRole="image" accessibilityLabel={alt}>
       <View style={styles.glow} />
-      <View style={styles.board} accessibilityLabel={`economy-${topicKey(topic)}-${semanticRole}-board`}>
-        {topic === 'inflation' ? <InflationScene tr={tr} role={role} styles={styles} /> : null}
+      <View
+        style={[styles.board, useInflationSvg && styles.svgBoard]}
+        accessibilityLabel={`economy-${topicKey(topic)}-${semanticRole}-board`}
+      >
+        {useInflationSvg ? <Image source={inflationSvgArtwork[role]} resizeMode="contain" style={styles.webArtwork} /> : null}
+        {!useInflationSvg && topic === 'inflation' ? <InflationScene tr={tr} role={role} styles={styles} /> : null}
         {topic === 'rates' ? <RatesScene tr={tr} role={role} styles={styles} /> : null}
         {topic === 'centralBank' ? <CentralBankScene tr={tr} role={role} styles={styles} /> : null}
         {topic === 'policy' ? <PolicyScene tr={tr} role={role} styles={styles} /> : null}
@@ -181,7 +203,7 @@ function GrowthScene({ tr, role, styles }: SceneProps) {
     );
   }
 
-  const before = r === 'practice' ? '100' : '100';
+  const before = '100';
   const after = r === 'practice' ? '105' : '↑';
   return (
     <View style={styles.growthScene}>
@@ -278,6 +300,8 @@ const createStyles = (theme: LearningTheme, wide: boolean, phone: boolean) => St
   },
   glow: { position: 'absolute', width: wide ? 330 : 240, height: wide ? 330 : 240, borderRadius: 999, backgroundColor: '#0B333A', opacity: 0.28, alignSelf: 'center' },
   board: { width: '100%', minHeight: wide ? 238 : phone ? 188 : 210, justifyContent: 'center', zIndex: 2 },
+  svgBoard: { aspectRatio: 1.5, minHeight: 0 },
+  webArtwork: { width: '100%', height: '100%' },
   scene: { width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: wide ? 18 : phone ? 9 : 13 },
   sceneVertical: { width: '100%', minHeight: wide ? 210 : phone ? 170 : 190, alignItems: 'center', justifyContent: 'center', gap: 12 },
   micro: { color: '#91A7B4', fontSize: wide ? 10 : phone ? 8 : 9, lineHeight: wide ? 14 : phone ? 11 : 13, fontWeight: '900', textAlign: 'center', letterSpacing: 0.35 },
