@@ -19,7 +19,7 @@ export interface BeginnerSlippageStoryVisualProps {
   theme?: LearningTheme;
 }
 
-const slippageSvgArtwork: Record<LessonSupportingVisualRole, ImageSourcePropType> = {
+const artwork: Record<LessonSupportingVisualRole, ImageSourcePropType> = {
   hook: require('../../../assets/learning/beginner/markets/slippage-hook.svg'),
   concept: require('../../../assets/learning/beginner/markets/slippage-concept.svg'),
   practice: require('../../../assets/learning/beginner/markets/slippage-practice.svg'),
@@ -29,9 +29,9 @@ const slippageSvgArtwork: Record<LessonSupportingVisualRole, ImageSourcePropType
 };
 
 /**
- * Slippage is one execution journey: a displayed reference price, market
- * movement while the order is matched, and the eventual fill price. Showing
- * that path is clearer than comparing two UI cards.
+ * Slippage is one execution journey: displayed reference price -> matching
+ * path -> actual fill. The visual intentionally contains no hidden legacy
+ * comparison cards or QA-only accessibility markers.
  */
 export function BeginnerSlippageStoryVisual({
   alt,
@@ -40,17 +40,16 @@ export function BeginnerSlippageStoryVisual({
   theme = defaultLearningTheme,
 }: BeginnerSlippageStoryVisualProps) {
   const { width } = useWindowDimensions();
-  const wide = width >= 900;
-  const styles = createStyles(theme, wide);
+  const compact = width < 520;
+  const styles = createStyles(theme, compact);
 
   return (
     <View style={styles.shell} accessibilityRole="image" accessibilityLabel={alt}>
       {Platform.OS === 'web' ? (
-        <Image source={slippageSvgArtwork[role]} resizeMode="contain" style={styles.webImage} />
+        <Image source={artwork[role]} resizeMode="contain" style={styles.image} accessible={false} />
       ) : (
         <NativeSlippageScene role={role} language={language} styles={styles} />
       )}
-      <QaMarkers role={role} styles={styles} />
     </View>
   );
 }
@@ -71,194 +70,90 @@ function NativeSlippageScene({
   const tr = language === 'tr';
 
   return (
-    <>
-      <View style={styles.glow} />
-      {misconception ? <SnapshotGhost styles={styles} /> : null}
-      <View style={[styles.executionTrack, misconception && styles.executionTrackLower]} />
-      <View style={[styles.executionTrace, misconception && styles.executionTraceLower]} />
-      <View style={[styles.startPoint, misconception && styles.startPointLower]} />
-      <View style={[styles.endPoint, misconception && styles.endPointLower]} />
-      <View style={[styles.endHalo, misconception && styles.endHaloLower]} />
+    <View style={styles.stage}>
+      {misconception ? <View style={styles.snapshot}><Text style={styles.snapshotText}>100,00</Text></View> : null}
+      <View style={[styles.track, misconception && styles.trackLower]} />
+      <View style={[styles.trace, misconception && styles.traceLower]} />
+      <View style={[styles.start, misconception && styles.startLower]} />
+      <View style={[styles.end, misconception && styles.endLower]} />
       <Text style={[styles.startPrice, misconception && styles.startPriceLower]}>100,00</Text>
       <Text style={[styles.endPrice, misconception && styles.endPriceLower]}>100,15</Text>
-      {concept ? <DepthLevels styles={styles} /> : null}
-      {!misconception ? <Text style={styles.deltaText}>+0,15</Text> : null}
+      {concept ? (
+        <View style={styles.depth}>
+          <Text style={styles.depthText}>100,05</Text>
+          <Text style={styles.depthText}>100,10</Text>
+        </View>
+      ) : null}
+      {!misconception ? <Text style={styles.delta}>+0,15</Text> : null}
       <Text style={styles.hiddenContext} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
-        {tr ? 'Görülen fiyat ile gerçekleşen fiyat arasında kayma oluşabilir' : 'The displayed price can differ from the execution price'}
+        {tr
+          ? 'Görülen fiyat ile gerçekleşen fiyat arasında kayma oluşabilir'
+          : 'The displayed price can differ from the execution price'}
       </Text>
-    </>
-  );
-}
-
-function DepthLevels({ styles }: { styles: SceneStyles }) {
-  return (
-    <>
-      <Text style={[styles.levelText, styles.levelOne]}>100,05</Text>
-      <Text style={[styles.levelText, styles.levelTwo]}>100,10</Text>
-      <View style={[styles.levelDot, styles.levelDotOne]} />
-      <View style={[styles.levelDot, styles.levelDotTwo]} />
-    </>
-  );
-}
-
-function SnapshotGhost({ styles }: { styles: SceneStyles }) {
-  return (
-    <View style={styles.snapshotGhost}>
-      <View style={styles.clockRing}>
-        <View style={styles.clockHandOne} />
-        <View style={styles.clockHandTwo} />
-      </View>
-      <Text style={styles.snapshotPrice}>100,00</Text>
     </View>
   );
 }
 
-function QaMarkers({ role, styles }: { role: LessonSupportingVisualRole; styles: SceneStyles }) {
-  const labels = role === 'hook'
-    ? ['slippage-hook-screen', 'slippage-hook-fill', 'slippage-execution-process']
-    : role === 'concept'
-      ? ['slippage-concept-expected', 'slippage-concept-actual', 'slippage-concept-depth']
-      : role === 'practice'
-        ? ['slippage-practice-expected', 'slippage-practice-actual', 'slippage-practice-delta']
-        : role === 'misconception' || role === 'risk'
-          ? ['slippage-misconception-screen', 'slippage-misconception-market']
-          : ['slippage-summary-process', 'slippage-summary-reference', 'slippage-summary-actual'];
-
-  return (
-    <View style={styles.qaMarkers} pointerEvents="none">
-      {labels.map((label) => <View key={label} style={styles.qaMarker} accessibilityLabel={label} />)}
-    </View>
-  );
-}
-
-const createStyles = (theme: LearningTheme, wide: boolean) => StyleSheet.create({
+const createStyles = (theme: LearningTheme, compact: boolean) => StyleSheet.create({
   shell: {
     width: '100%',
-    maxWidth: wide ? 620 : 460,
+    maxWidth: 620,
     aspectRatio: 1.5,
     alignSelf: 'center',
     overflow: 'hidden',
-    position: 'relative',
-    borderRadius: wide ? 18 : 16,
+    borderRadius: compact ? 16 : 18,
     borderWidth: 1,
     borderColor: theme.colors.border,
     backgroundColor: '#071522',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  webImage: { width: '100%', height: '100%' },
-  glow: {
-    position: 'absolute',
-    width: '66%',
-    aspectRatio: 1,
-    left: '19%',
-    top: '-12%',
-    borderRadius: 999,
-    backgroundColor: 'rgba(71, 215, 195, 0.07)',
+  image: { width: '100%', height: '100%' },
+  stage: { width: '90%', height: '82%', position: 'relative' },
+  track: {
+    position: 'absolute', left: '13%', right: '10%', top: '55%', height: 10,
+    borderRadius: 5, backgroundColor: '#31586B', transform: [{ rotate: '-12deg' }],
   },
-  executionTrack: {
-    position: 'absolute',
-    left: '18%',
-    right: '15%',
-    top: '55%',
-    height: 10,
-    borderRadius: 5,
-    backgroundColor: '#31586B',
-    transform: [{ rotate: '-12deg' }],
+  trackLower: { top: '62%' },
+  trace: {
+    position: 'absolute', left: '15%', right: '13%', top: '53%', height: 5,
+    borderRadius: 3, backgroundColor: '#47D7C3', transform: [{ rotate: '-12deg' }],
   },
-  executionTrackLower: { top: '61%' },
-  executionTrace: {
-    position: 'absolute',
-    left: '20%',
-    right: '18%',
-    top: '53%',
-    height: 5,
-    borderRadius: 3,
-    backgroundColor: '#47D7C3',
-    transform: [{ rotate: '-12deg' }],
+  traceLower: { top: '60%' },
+  start: {
+    position: 'absolute', left: '15%', top: '59%', width: compact ? 17 : 21,
+    height: compact ? 17 : 21, borderRadius: 99, backgroundColor: '#C3D1D7',
   },
-  executionTraceLower: { top: '59%' },
-  startPoint: {
-    position: 'absolute',
-    left: '20%',
-    top: '59%',
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    backgroundColor: '#C3D1D7',
+  startLower: { top: '66%' },
+  end: {
+    position: 'absolute', right: '12%', top: '35%', width: compact ? 19 : 23,
+    height: compact ? 19 : 23, borderRadius: 99, backgroundColor: '#8AEADD',
+    borderWidth: 4, borderColor: 'rgba(71,215,195,0.24)',
   },
-  startPointLower: { top: '65%' },
-  endPoint: {
-    position: 'absolute',
-    right: '17%',
-    top: '36%',
-    width: 22,
-    height: 22,
-    borderRadius: 11,
-    backgroundColor: '#8AEADD',
-  },
-  endPointLower: { top: '42%' },
-  endHalo: {
-    position: 'absolute',
-    right: '14.8%',
-    top: '32.5%',
-    width: 46,
-    height: 46,
-    borderRadius: 23,
-    borderWidth: 2,
-    borderColor: 'rgba(71, 215, 195, 0.32)',
-  },
-  endHaloLower: { top: '38.5%' },
+  endLower: { top: '42%' },
   startPrice: {
-    position: 'absolute',
-    left: '14%',
-    top: '43%',
-    color: '#C8D7DD',
-    fontSize: wide ? 17 : 13,
-    fontWeight: '900',
+    position: 'absolute', left: '8%', top: '42%', color: '#C8D7DD',
+    fontSize: compact ? 12 : 16, fontWeight: '900',
   },
   startPriceLower: { top: '49%' },
   endPrice: {
-    position: 'absolute',
-    right: '11%',
-    top: '24%',
-    color: '#8AEADD',
-    fontSize: wide ? 17 : 13,
-    fontWeight: '900',
+    position: 'absolute', right: '6%', top: '22%', color: '#8AEADD',
+    fontSize: compact ? 12 : 16, fontWeight: '900',
   },
-  endPriceLower: { top: '30%' },
-  deltaText: {
-    position: 'absolute',
-    left: '45%',
-    bottom: '15%',
-    color: '#9FDCD4',
-    fontSize: wide ? 17 : 13,
-    fontWeight: '900',
+  endPriceLower: { top: '29%' },
+  delta: {
+    position: 'absolute', left: '45%', bottom: '10%', color: '#9FDCD4',
+    fontSize: compact ? 12 : 16, fontWeight: '900',
   },
-  levelText: { position: 'absolute', color: '#B7C9D1', fontSize: wide ? 12 : 10, fontWeight: '800' },
-  levelOne: { left: '43%', top: '37%' },
-  levelTwo: { left: '60%', top: '30%' },
-  levelDot: { position: 'absolute', width: 10, height: 10, borderRadius: 5, backgroundColor: '#6DAEA8' },
-  levelDotOne: { left: '48%', top: '50%' },
-  levelDotTwo: { left: '64%', top: '44%' },
-  snapshotGhost: {
-    position: 'absolute',
-    left: '18%',
-    top: '14%',
-    width: '25%',
-    alignItems: 'center',
-    gap: 5,
-    opacity: 0.46,
+  depth: {
+    position: 'absolute', left: '42%', top: '25%', gap: compact ? 10 : 14,
   },
-  clockRing: {
-    width: wide ? 50 : 40,
-    height: wide ? 50 : 40,
-    borderRadius: 999,
-    borderWidth: 2,
-    borderColor: '#708894',
+  depthText: { color: '#B7C9D1', fontSize: compact ? 10 : 12, fontWeight: '800' },
+  snapshot: {
+    position: 'absolute', left: '10%', top: '12%', width: '28%', height: compact ? 46 : 58,
+    borderRadius: 16, borderWidth: 1, borderColor: '#4D6674', backgroundColor: '#102431',
+    alignItems: 'center', justifyContent: 'center', opacity: 0.52,
   },
-  clockHandOne: { position: 'absolute', left: '49%', top: '22%', width: 2, height: '28%', backgroundColor: '#9AAEB8' },
-  clockHandTwo: { position: 'absolute', left: '49%', top: '49%', width: '25%', height: 2, backgroundColor: '#9AAEB8', transform: [{ rotate: '30deg' }] },
-  snapshotPrice: { color: '#C5D3D9', fontSize: wide ? 15 : 12, fontWeight: '900' },
+  snapshotText: { color: '#C5D3D9', fontSize: compact ? 12 : 15, fontWeight: '900' },
   hiddenContext: { position: 'absolute', width: 1, height: 1, opacity: 0 },
-  qaMarkers: { position: 'absolute', width: 1, height: 1, left: 0, top: 0, opacity: 0 },
-  qaMarker: { width: 1, height: 1 },
 });
