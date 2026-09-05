@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid meet">
+  <defs>
+    <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#071522"/><stop offset="1" stop-color="#0A2030"/></linearGradient>
+    <radialGradient id="halo"><stop stop-color="#47D7C3" stop-opacity=".18"/><stop offset="1" stop-color="#47D7C3" stop-opacity="0"/></radialGradient>
+  </defs>
+  <rect width="1200" height="800" rx="44" fill="url(#bg)"/>
+  <circle cx="600" cy="405" r="350" fill="url(#halo)"/>
+  <path d="M250 480H950" stroke="#173B4C" stroke-width="90" stroke-linecap="round" opacity=".76"/>
+  <circle cx="390" cy="480" r="38" fill="#172C3A" stroke="#6E8794" stroke-width="4"/>
+  <text x="390" y="495" text-anchor="middle" font-family="Arial, sans-serif" font-size="42" font-weight="800" fill="#D8E5E9">0</text>
+  <path d="M445 480H565" stroke="#708794" stroke-width="5" stroke-dasharray="10 14"/>
+  <text x="600" y="500" text-anchor="middle" font-family="Arial, sans-serif" font-size="58" font-weight="800" fill="#91A6B0">≠</text>
+  <circle cx="775" cy="480" r="72" fill="none" stroke="#47D7C3" stroke-width="4" stroke-dasharray="10 14"/>
+  <text x="775" y="500" text-anchor="middle" font-family="Arial, sans-serif" font-size="58" font-weight="800" fill="#E8F4F5">?</text>
+  <path d="M775 390C795 325 835 290 900 270" fill="none" stroke="#47D7C3" stroke-width="4" stroke-linecap="round" opacity=".7"/>
+  <path d="M775 390C805 350 865 360 925 385" fill="none" stroke="#78909E" stroke-width="4" stroke-linecap="round" opacity=".7"/>
+  <path d="M775 390C810 420 860 430 915 460" fill="none" stroke="#C78E79" stroke-width="4" stroke-linecap="round" opacity=".75"/>
+  <circle cx="905" cy="268" r="14" fill="#8AEADD"/>
+  <circle cx="930" cy="387" r="12" fill="#718A96"/>
+  <circle cx="920" cy="465" r="14" fill="#D0A08D"/>
+</svg>
