@@ -26,6 +26,7 @@ import { BeginnerCoreChartStoryVisual, isBeginnerCoreChartStoryAsset } from './B
 import { BeginnerEconomyStoryVisual, isBeginnerEconomyStoryAsset } from './BeginnerEconomyStoryVisual';
 import { BeginnerMarketStoryVisual, isBeginnerMarketStoryAsset } from './BeginnerMarketStoryVisual';
 import { BeginnerRiskStoryVisual, isBeginnerRiskStoryAsset } from './BeginnerRiskStoryVisual';
+import { BeginnerRiskUncertaintyVisual } from './BeginnerRiskUncertaintyVisual';
 import { ChartLessonSlideVisual, isChartLessonSlideAsset } from './ChartLessonSlideVisual';
 import { EconomyExpansionSlideVisual, isEconomyExpansionSlideAsset } from './EconomyExpansionSlideVisual';
 import { EconomySlideVisual, isEconomySlideAsset } from './EconomySlideVisual';
@@ -71,6 +72,7 @@ export function LessonSupportingVisual({ assetRef, alt, language, role, theme = 
   const hasEditorialImage = !hasCoreExpansionCleanVisual && !hasFoundationCleanVisual && !hasAdvancedCleanVisual && hasAcademyEditorialImage(assetRef, role);
   const isBeginnerEconomy = isBeginnerEconomyStoryAsset(assetRef);
   const isBeginnerRisk = isBeginnerRiskStoryAsset(assetRef);
+  const isBeginnerRiskUncertainty = assetRef.includes('risk-belirsizlik-kayip');
   const isBeginnerCoreChart = isBeginnerCoreChartStoryAsset(assetRef);
   const isBeginnerAppliedChart = isBeginnerAppliedChartStoryAsset(assetRef);
   const isBeginnerChart = isBeginnerChartStoryAsset(assetRef);
@@ -100,6 +102,7 @@ export function LessonSupportingVisual({ assetRef, alt, language, role, theme = 
     : hasFoundationCleanVisual ? <AcademyFoundationCleanVisual assetRef={assetRef} alt={alt} language={language} role={role as Exclude<LessonSupportingVisualRole, 'hook'>} theme={theme} />
     : hasAdvancedCleanVisual ? <AcademyAdvancedCleanVisual assetRef={assetRef} alt={alt} language={language} role={role as Exclude<LessonSupportingVisualRole, 'hook'>} theme={theme} />
     : isBeginnerEconomy ? <BeginnerEconomyStoryVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
+    : isBeginnerRiskUncertainty ? <BeginnerRiskUncertaintyVisual alt={alt} language={language} role={role} theme={theme} />
     : isBeginnerRisk ? <BeginnerRiskStoryVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
     : isBeginnerCoreChart ? <BeginnerCoreChartStoryVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
     : isBeginnerAppliedChart ? <BeginnerAppliedChartStoryVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
