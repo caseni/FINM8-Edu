@@ -30,9 +30,10 @@ const liquiditySvgArtwork: Record<LessonSupportingVisualRole, ImageSourcePropTyp
 
 /**
  * Liquidity is taught as one continuous market scene, never as side-by-side
- * "many buyers / few buyers" cards. Web can display the SVG master directly.
- * Native keeps the same visual language with lightweight React Native shapes so
- * the lesson does not depend on an additional SVG runtime package.
+ * "many buyers / few buyers" cards. Human figures are deliberately avoided:
+ * order flow, price points and market depth carry the teaching meaning instead.
+ * Web can display the SVG master directly. Native keeps the same language with
+ * lightweight React Native shapes so no additional SVG runtime is required.
  */
 export function BeginnerLiquidityStoryVisual({
   alt,
@@ -70,11 +71,11 @@ type SceneProps = {
 function NativeLiquidityScene({ role, language, styles }: SceneProps) {
   const tr = language === 'tr';
   const sparse = role === 'misconception' || role === 'risk';
-  const participants = sparse ? 3 : role === 'hook' ? 8 : role === 'summary' ? 7 : 9;
+  const nodes = sparse ? 3 : role === 'hook' ? 5 : role === 'summary' ? 5 : 6;
   const quoteValues = sparse
     ? ['99', '103']
     : role === 'concept'
-      ? ['99', '101']
+      ? ['99', '100', '101']
       : role === 'practice'
         ? ['99,8', '99,9', '100', '100,1']
         : ['99', '100', '101'];
@@ -84,10 +85,15 @@ function NativeLiquidityScene({ role, language, styles }: SceneProps) {
       <View style={styles.glow} />
       {sparse ? <HistoryBackdrop styles={styles} /> : null}
       {role === 'summary' ? <RippleField styles={styles} /> : <MarketLane role={role} styles={styles} />}
-      <Seller styles={styles} />
-      <View style={styles.participantRow}>
-        {Array.from({ length: participants }).map((_, index) => (
-          <Participant key={index} active={!sparse && index % 3 === 0} styles={styles} />
+      <OrderToken role={role} styles={styles} />
+      <View style={[styles.nodeRow, sparse && styles.nodeRowSparse]}>
+        {Array.from({ length: nodes }).map((_, index) => (
+          <MarketNode
+            key={index}
+            active={!sparse && index === Math.floor(nodes / 2)}
+            muted={sparse && index > 0}
+            styles={styles}
+          />
         ))}
       </View>
       <View style={styles.quoteRow}>
@@ -100,11 +106,7 @@ function NativeLiquidityScene({ role, language, styles }: SceneProps) {
           </View>
         ))}
       </View>
-      {role === 'summary' ? (
-        <View style={styles.orderDrop}>
-          <Text style={styles.orderDropText}>+</Text>
-        </View>
-      ) : null}
+      {role === 'summary' ? <View style={styles.summaryPulse} /> : null}
       <Text style={styles.hiddenContext} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
         {tr ? 'Likidite piyasa sahnesi' : 'Liquidity market scene'}
       </Text>
@@ -112,23 +114,28 @@ function NativeLiquidityScene({ role, language, styles }: SceneProps) {
   );
 }
 
-function Seller({ styles }: { styles: SceneStyles }) {
+function OrderToken({ role, styles }: { role: LessonSupportingVisualRole; styles: SceneStyles }) {
+  const summary = role === 'summary';
   return (
-    <View style={styles.seller}>
-      <View style={styles.sellerHead} />
-      <View style={styles.sellerBody} />
-      <View style={styles.sellerArm} />
-      <View style={[styles.sellerLeg, styles.sellerLegLeft]} />
-      <View style={[styles.sellerLeg, styles.sellerLegRight]} />
+    <View style={[styles.orderToken, summary && styles.orderTokenSummary]}>
+      <View style={styles.orderArrowStem} />
+      <View style={styles.orderArrowHead} />
     </View>
   );
 }
 
-function Participant({ active, styles }: { active: boolean; styles: SceneStyles }) {
+function MarketNode({
+  active,
+  muted,
+  styles,
+}: {
+  active: boolean;
+  muted: boolean;
+  styles: SceneStyles;
+}) {
   return (
-    <View style={styles.participantWrap}>
-      <View style={[styles.participantHead, active && styles.participantHeadActive]} />
-      <View style={[styles.participantBody, active && styles.participantBodyActive]} />
+    <View style={[styles.marketNode, active && styles.marketNodeActive, muted && styles.marketNodeMuted]}>
+      <View style={[styles.marketNodeCore, active && styles.marketNodeCoreActive]} />
     </View>
   );
 }
@@ -233,32 +240,125 @@ const createStyles = (theme: LearningTheme, wide: boolean) => StyleSheet.create(
     borderColor: '#47D7C3',
     backgroundColor: '#8AEADD',
   },
-  seller: { position: 'absolute', left: '14%', bottom: '22%', width: 54, height: 112 },
-  sellerHead: { position: 'absolute', width: 24, height: 24, left: 14, top: 0, borderRadius: 12, backgroundColor: '#D9C3A7' },
-  sellerBody: { position: 'absolute', width: 42, height: 58, left: 5, top: 26, borderTopLeftRadius: 18, borderTopRightRadius: 18, borderBottomLeftRadius: 8, borderBottomRightRadius: 8, borderWidth: 2, borderColor: '#47D7C3', backgroundColor: '#124C4D' },
-  sellerArm: { position: 'absolute', width: 48, height: 8, left: 34, top: 45, borderRadius: 4, backgroundColor: '#D9C3A7', transform: [{ rotate: '30deg' }] },
-  sellerLeg: { position: 'absolute', width: 9, height: 35, bottom: 0, borderRadius: 6, backgroundColor: '#55758A' },
-  sellerLegLeft: { left: 13, transform: [{ rotate: '4deg' }] },
-  sellerLegRight: { left: 31, transform: [{ rotate: '-4deg' }] },
-  participantRow: { position: 'absolute', left: '31%', right: '10%', bottom: '23%', minHeight: 52, flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between' },
-  participantWrap: { width: 22, height: 46, alignItems: 'center' },
-  participantHead: { width: 11, height: 11, borderRadius: 6, backgroundColor: '#66869A' },
-  participantHeadActive: { backgroundColor: '#A9DED8' },
-  participantBody: { width: 20, height: 28, marginTop: 3, borderTopLeftRadius: 9, borderTopRightRadius: 9, borderBottomLeftRadius: 4, borderBottomRightRadius: 4, borderWidth: 1, borderColor: '#294A5D', backgroundColor: '#173244' },
-  participantBodyActive: { borderColor: '#3CAFA4', backgroundColor: '#16464B' },
-  quoteRow: { position: 'absolute', left: '30%', right: '12%', top: '19%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around' },
-  quoteChip: { minWidth: 42, height: 27, paddingHorizontal: 8, alignItems: 'center', justifyContent: 'center', borderRadius: 10, borderWidth: 1, borderColor: '#31586B', backgroundColor: '#0C2534', opacity: 0.74 },
+  orderToken: {
+    position: 'absolute',
+    left: '13%',
+    bottom: '23%',
+    width: 50,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 25,
+    borderWidth: 2,
+    borderColor: '#47D7C3',
+    backgroundColor: '#0E3B3F',
+  },
+  orderTokenSummary: { left: '44%', top: '13%', bottom: undefined },
+  orderArrowStem: { width: 20, height: 4, borderRadius: 2, backgroundColor: '#8AEADD' },
+  orderArrowHead: {
+    position: 'absolute',
+    right: 11,
+    width: 10,
+    height: 10,
+    borderTopWidth: 3,
+    borderRightWidth: 3,
+    borderColor: '#8AEADD',
+    transform: [{ rotate: '45deg' }],
+  },
+  nodeRow: {
+    position: 'absolute',
+    left: '31%',
+    right: '10%',
+    bottom: '27%',
+    minHeight: 28,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  nodeRowSparse: { left: '43%', right: '18%' },
+  marketNode: {
+    width: 34,
+    height: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#31586B',
+    backgroundColor: '#102C3B',
+  },
+  marketNodeActive: {
+    width: 42,
+    height: 20,
+    borderRadius: 10,
+    borderColor: '#47D7C3',
+    backgroundColor: '#12464B',
+  },
+  marketNodeMuted: { opacity: 0.46 },
+  marketNodeCore: { width: 10, height: 4, borderRadius: 2, backgroundColor: '#66869A' },
+  marketNodeCoreActive: { width: 16, backgroundColor: '#8AEADD' },
+  quoteRow: {
+    position: 'absolute',
+    left: '30%',
+    right: '12%',
+    top: '19%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+  },
+  quoteChip: {
+    minWidth: 42,
+    height: 27,
+    paddingHorizontal: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#31586B',
+    backgroundColor: '#0C2534',
+    opacity: 0.74,
+  },
   quoteChipActive: { borderColor: '#47D7C3', backgroundColor: '#0E2E39', opacity: 1 },
   quoteText: { color: '#D6E7ED', fontSize: wide ? 12 : 10, fontWeight: '800' },
-  historyBackdrop: { position: 'absolute', left: '15%', right: '15%', top: '10%', height: '42%', flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-around', paddingHorizontal: 12, paddingBottom: 12, borderRadius: 18, borderWidth: 1, borderColor: '#294A5D', backgroundColor: 'rgba(16, 44, 61, 0.34)' },
+  historyBackdrop: {
+    position: 'absolute',
+    left: '15%',
+    right: '15%',
+    top: '10%',
+    height: '42%',
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    justifyContent: 'space-around',
+    paddingHorizontal: 12,
+    paddingBottom: 12,
+    borderRadius: 18,
+    borderWidth: 1,
+    borderColor: '#294A5D',
+    backgroundColor: 'rgba(16, 44, 61, 0.34)',
+  },
   historyBar: { width: '8%', maxWidth: 28, borderRadius: 7, backgroundColor: '#45687B', opacity: 0.34 },
-  rippleField: { position: 'absolute', width: '62%', aspectRatio: 1.85, left: '19%', top: '31%', alignItems: 'center', justifyContent: 'center' },
+  rippleField: {
+    position: 'absolute',
+    width: '62%',
+    aspectRatio: 1.85,
+    left: '19%',
+    top: '31%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   ripple: { position: 'absolute', borderWidth: 2, borderColor: '#2E6D75', borderRadius: 999 },
   rippleOuter: { width: '100%', height: '82%' },
   rippleMiddle: { width: '72%', height: '60%' },
   rippleInner: { width: '43%', height: '37%', borderColor: '#47D7C3' },
   rippleCenter: { width: 13, height: 13, borderRadius: 7, backgroundColor: '#8AEADD' },
-  orderDrop: { position: 'absolute', width: 44, height: 44, left: '45%', top: '13%', alignItems: 'center', justifyContent: 'center', borderRadius: 22, borderWidth: 2, borderColor: '#47D7C3', backgroundColor: '#0E3B3F' },
-  orderDropText: { color: '#8AEADD', fontSize: 26, lineHeight: 28, fontWeight: '500' },
+  summaryPulse: {
+    position: 'absolute',
+    width: 54,
+    height: 54,
+    left: '43.7%',
+    top: '46%',
+    borderRadius: 27,
+    borderWidth: 1,
+    borderColor: 'rgba(71, 215, 195, 0.35)',
+  },
   hiddenContext: { position: 'absolute', opacity: 0, width: 1, height: 1 },
 });
