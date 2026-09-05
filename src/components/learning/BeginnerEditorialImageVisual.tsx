@@ -23,13 +23,12 @@ type BeginnerEditorialImageEntry = {
 };
 
 /**
- * Registry for real generated beginner artwork.
+ * Registry for generated beginner artwork.
  *
- * The interactive lesson UI stays in React Native. Generated images live as
- * standalone assets and are mapped here to the exact lesson + teaching role.
- * Responsive sizing is also asset-specific: compact screens keep artwork large
- * enough to teach from, while desktop screens cap square artwork before it
- * overwhelms the copy or pushes the lesson action below the useful viewport.
+ * Editorial artwork must never be cropped or stretched to fill the lesson frame.
+ * Every asset keeps its source ratio and is rendered with `contain`. Scene-style
+ * SVG lessons that need a native fallback live in their dedicated visual
+ * component instead of this raster registry.
  */
 const beginnerEditorialImages: readonly BeginnerEditorialImageEntry[] = [
   {
@@ -38,9 +37,9 @@ const beginnerEditorialImages: readonly BeginnerEditorialImageEntry[] = [
     source: require('../../../assets/learning/beginner/markets/price-formation-hook.webp'),
     aspectRatio: 1.5,
     compactAspectRatio: 1.5,
-    resizeMode: 'cover',
-    desktopMaxWidth: 520,
-    compactMaxWidth: 420,
+    resizeMode: 'contain',
+    desktopMaxWidth: 620,
+    compactMaxWidth: 460,
   },
   {
     match: 'fiyat-piyasada-nasil-olusur',
@@ -48,9 +47,9 @@ const beginnerEditorialImages: readonly BeginnerEditorialImageEntry[] = [
     source: require('../../../assets/learning/beginner/markets/price-formation-concept.webp'),
     aspectRatio: 1.5,
     compactAspectRatio: 1.5,
-    resizeMode: 'cover',
-    desktopMaxWidth: 520,
-    compactMaxWidth: 420,
+    resizeMode: 'contain',
+    desktopMaxWidth: 620,
+    compactMaxWidth: 460,
   },
   {
     match: 'fiyat-piyasada-nasil-olusur',
@@ -58,9 +57,9 @@ const beginnerEditorialImages: readonly BeginnerEditorialImageEntry[] = [
     source: require('../../../assets/learning/beginner/markets/price-formation-practice.webp'),
     aspectRatio: 1.5,
     compactAspectRatio: 1.5,
-    resizeMode: 'cover',
-    desktopMaxWidth: 520,
-    compactMaxWidth: 420,
+    resizeMode: 'contain',
+    desktopMaxWidth: 620,
+    compactMaxWidth: 460,
   },
   {
     match: 'fiyat-piyasada-nasil-olusur',
@@ -68,9 +67,9 @@ const beginnerEditorialImages: readonly BeginnerEditorialImageEntry[] = [
     source: require('../../../assets/learning/beginner/markets/price-formation-misconception.webp'),
     aspectRatio: 1.5,
     compactAspectRatio: 1.5,
-    resizeMode: 'cover',
-    desktopMaxWidth: 520,
-    compactMaxWidth: 420,
+    resizeMode: 'contain',
+    desktopMaxWidth: 620,
+    compactMaxWidth: 460,
   },
   {
     match: 'fiyat-piyasada-nasil-olusur',
@@ -78,19 +77,9 @@ const beginnerEditorialImages: readonly BeginnerEditorialImageEntry[] = [
     source: require('../../../assets/learning/beginner/markets/price-formation-summary.webp'),
     aspectRatio: 1.5,
     compactAspectRatio: 1.5,
-    resizeMode: 'cover',
-    desktopMaxWidth: 520,
-    compactMaxWidth: 420,
-  },
-  {
-    match: 'likidite-neden-onemlidir',
-    role: 'hook',
-    source: require('../../../assets/learning/beginner/markets/liquidity-hook.webp'),
-    aspectRatio: 1.5,
-    compactAspectRatio: 1.5,
-    resizeMode: 'cover',
-    desktopMaxWidth: 520,
-    compactMaxWidth: 420,
+    resizeMode: 'contain',
+    desktopMaxWidth: 620,
+    compactMaxWidth: 460,
   },
 ] as const;
 
@@ -132,7 +121,7 @@ export function BeginnerEditorialImageVisual({
         styles.shell,
         {
           aspectRatio,
-          backgroundColor: entry.backgroundColor ?? '#071521',
+          backgroundColor: entry.backgroundColor ?? '#071522',
           maxWidth,
         },
       ]}
