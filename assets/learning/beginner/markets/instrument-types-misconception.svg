@@ -5,5 +5,5 @@
   <path d="M600 330V405M600 405L360 505M600 405L840 505" stroke="#31586B" stroke-width="4" stroke-linecap="round"/>
   <g transform="translate(340 545)"><path d="M-44 26V-4H44V26" fill="#405E72"/><path d="M-54-4L0-44 54-4Z" fill="#7894A6"/><rect x="-27" y="5" width="14" height="12" rx="2" fill="#B5CBD4"/><rect x="13" y="5" width="14" height="12" rx="2" fill="#B5CBD4"/></g>
   <g transform="translate(860 545)"><path d="M-55 18L-37-21H44L60 18Z" fill="#B58A42"/><path d="M-39 43L-22 11H58L72 43Z" fill="#8E6E37"/></g>
-  <text x="340" y="650" font-family="Arial, sans-serif" font-size="28" font-weight="900" text-anchor="middle" fill="#D6E4E9">STOCK</text><text x="860" y="650" font-family="Arial, sans-serif" font-size="28" font-weight="900" text-anchor="middle" fill="#D6E4E9">GOLD</text><text x="600" y="565" font-family="Arial, sans-serif" font-size="48" font-weight="900" text-anchor="middle" fill="#47D7C3">≠</text>
+  <text x="600" y="565" font-family="Arial, sans-serif" font-size="48" font-weight="900" text-anchor="middle" fill="#47D7C3">≠</text>
 </svg>
