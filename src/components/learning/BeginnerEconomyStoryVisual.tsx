@@ -51,6 +51,22 @@ const economySvgArtwork: Partial<Record<Topic, ArtworkSet>> = {
     risk: require('../../../assets/learning/beginner/economy/policy-misconception.svg'),
     summary: require('../../../assets/learning/beginner/economy/policy-summary.svg'),
   },
+  growth: {
+    hook: require('../../../assets/learning/beginner/economy/growth-hook.svg'),
+    concept: require('../../../assets/learning/beginner/economy/growth-concept.svg'),
+    practice: require('../../../assets/learning/beginner/economy/growth-practice.svg'),
+    misconception: require('../../../assets/learning/beginner/economy/growth-misconception.svg'),
+    risk: require('../../../assets/learning/beginner/economy/growth-misconception.svg'),
+    summary: require('../../../assets/learning/beginner/economy/growth-summary.svg'),
+  },
+  cycle: {
+    hook: require('../../../assets/learning/beginner/economy/cycle-hook.svg'),
+    concept: require('../../../assets/learning/beginner/economy/cycle-concept.svg'),
+    practice: require('../../../assets/learning/beginner/economy/cycle-practice.svg'),
+    misconception: require('../../../assets/learning/beginner/economy/cycle-misconception.svg'),
+    risk: require('../../../assets/learning/beginner/economy/cycle-misconception.svg'),
+    summary: require('../../../assets/learning/beginner/economy/cycle-summary.svg'),
+  },
 };
 
 function topicForAsset(assetRef: string): Topic | undefined {
