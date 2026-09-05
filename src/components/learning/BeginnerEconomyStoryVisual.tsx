@@ -43,6 +43,14 @@ const economySvgArtwork: Partial<Record<Topic, ArtworkSet>> = {
     risk: require('../../../assets/learning/beginner/economy/central-bank-misconception.svg'),
     summary: require('../../../assets/learning/beginner/economy/central-bank-summary.svg'),
   },
+  policy: {
+    hook: require('../../../assets/learning/beginner/economy/policy-hook.svg'),
+    concept: require('../../../assets/learning/beginner/economy/policy-concept.svg'),
+    practice: require('../../../assets/learning/beginner/economy/policy-practice.svg'),
+    misconception: require('../../../assets/learning/beginner/economy/policy-misconception.svg'),
+    risk: require('../../../assets/learning/beginner/economy/policy-misconception.svg'),
+    summary: require('../../../assets/learning/beginner/economy/policy-summary.svg'),
+  },
 };
 
 function topicForAsset(assetRef: string): Topic | undefined {
