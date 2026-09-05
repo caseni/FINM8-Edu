@@ -35,6 +35,14 @@ const economySvgArtwork: Partial<Record<Topic, ArtworkSet>> = {
     risk: require('../../../assets/learning/beginner/economy/rates-misconception.svg'),
     summary: require('../../../assets/learning/beginner/economy/rates-summary.svg'),
   },
+  centralBank: {
+    hook: require('../../../assets/learning/beginner/economy/central-bank-hook.svg'),
+    concept: require('../../../assets/learning/beginner/economy/central-bank-concept.svg'),
+    practice: require('../../../assets/learning/beginner/economy/central-bank-practice.svg'),
+    misconception: require('../../../assets/learning/beginner/economy/central-bank-misconception.svg'),
+    risk: require('../../../assets/learning/beginner/economy/central-bank-misconception.svg'),
+    summary: require('../../../assets/learning/beginner/economy/central-bank-summary.svg'),
+  },
 };
 
 function topicForAsset(assetRef: string): Topic | undefined {
@@ -70,10 +78,10 @@ export function BeginnerEconomyStoryVisual({ assetRef, alt, language, role, them
         {useSvg && webArtwork ? <Image source={webArtwork} resizeMode="contain" style={styles.webArtwork} /> : null}
         {!useSvg && topic === 'inflation' ? <InflationScene tr={tr} role={role} styles={styles} /> : null}
         {!useSvg && topic === 'rates' ? <RatesScene tr={tr} role={role} styles={styles} /> : null}
-        {topic === 'centralBank' ? <CentralBankScene tr={tr} role={role} styles={styles} /> : null}
-        {topic === 'policy' ? <PolicyScene tr={tr} role={role} styles={styles} /> : null}
-        {topic === 'growth' ? <GrowthScene tr={tr} role={role} styles={styles} /> : null}
-        {topic === 'cycle' ? <CycleScene tr={tr} role={role} styles={styles} /> : null}
+        {!useSvg && topic === 'centralBank' ? <CentralBankScene tr={tr} role={role} styles={styles} /> : null}
+        {!useSvg && topic === 'policy' ? <PolicyScene tr={tr} role={role} styles={styles} /> : null}
+        {!useSvg && topic === 'growth' ? <GrowthScene tr={tr} role={role} styles={styles} /> : null}
+        {!useSvg && topic === 'cycle' ? <CycleScene tr={tr} role={role} styles={styles} /> : null}
       </View>
     </View>
   );
