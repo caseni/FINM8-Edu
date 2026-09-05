@@ -203,9 +203,20 @@ async function assertThreeAcross(page, viewport, labels, label) {
   }
 }
 
-async function assertLiquidityComposition(page, viewport, step, label) {
+function assertEditorialLandscape(visualBox, label) {
+  const ratio = visualBox.width / visualBox.height;
+  if (ratio < 1.47 || ratio > 1.53) {
+    throw new Error(`${label}: editorial lesson image is distorted at ${ratio.toFixed(2)}:1; expected 3:2`);
+  }
+}
+
+async function assertLiquidityComposition(page, viewport, step, label, visualBox) {
   if (step === 1) {
-    await assertResponsivePair(page, viewport, 'likidite-senaryo-kalabalik', 'likidite-senaryo-sig', label);
+    assertEditorialLandscape(visualBox, label);
+    const legacyCards = page.locator('[aria-label="likidite-senaryo-kalabalik"], [aria-label="likidite-senaryo-sig"]');
+    if (await legacyCards.count()) {
+      throw new Error(`${label}: legacy many/few buyer card infographic must not replace the editorial scene`);
+    }
   }
   if (step === 3) {
     await assertResponsivePair(page, viewport, 'likidite-kucuk-emir', 'likidite-buyuk-emir', label);
@@ -329,8 +340,11 @@ try {
           if (lesson.key === 'market-instruments' && step === 2) {
             await assertInstrumentComposition(page, viewport, box, label);
           }
+          if (lesson.key === 'price-formation') {
+            assertEditorialLandscape(box, label);
+          }
           if (lesson.key === 'liquidity') {
-            await assertLiquidityComposition(page, viewport, step, label);
+            await assertLiquidityComposition(page, viewport, step, label, box);
           }
           if (lesson.key === 'bid-ask') {
             await assertBidAskComposition(page, viewport, step, label);
