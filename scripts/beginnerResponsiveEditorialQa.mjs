@@ -211,15 +211,23 @@ function assertEditorialLandscape(visualBox, label) {
 }
 
 async function assertLiquidityComposition(page, viewport, step, label, visualBox) {
-  if (step === 1) {
-    assertEditorialLandscape(visualBox, label);
-    const legacyCards = page.locator('[aria-label="likidite-senaryo-kalabalik"], [aria-label="likidite-senaryo-sig"]');
-    if (await legacyCards.count()) {
-      throw new Error(`${label}: legacy many/few buyer card infographic must not replace the editorial scene`);
-    }
+  assertEditorialLandscape(visualBox, label);
+
+  const legacyInfographics = page.locator([
+    '[aria-label="likidite-senaryo-kalabalik"]',
+    '[aria-label="likidite-senaryo-sig"]',
+    '[aria-label="likidite-kucuk-emir"]',
+    '[aria-label="likidite-buyuk-emir"]',
+  ].join(', '));
+  if (await legacyInfographics.count()) {
+    throw new Error(`${label}: legacy comparison-card infographic must not replace the editorial liquidity scene`);
   }
-  if (step === 3) {
-    await assertResponsivePair(page, viewport, 'likidite-kucuk-emir', 'likidite-buyuk-emir', label);
+
+  if (visualBox.width < viewport.minVisualWidth) {
+    throw new Error(`${label}: liquidity scene too narrow at ${visualBox.width.toFixed(1)}px`);
+  }
+  if (step < 1 || step > 5) {
+    throw new Error(`${label}: unexpected liquidity lesson step ${step}`);
   }
 }
 
