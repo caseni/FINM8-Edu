@@ -21,7 +21,8 @@ type Scene =
   | { kind: 'check'; labels: string[] }
   | { kind: 'candles'; zone?: 'gap' | 'block' }
   | { kind: 'clock' }
-  | { kind: 'chain' };
+  | { kind: 'chain' }
+  | { kind: 'confidenceGap' };
 
 export interface AcademyAdvancedCleanVisualProps {
   assetRef: string;
@@ -85,7 +86,7 @@ function sceneFor(assetRef: string, tr: boolean, role: NonHookRole): Scene | und
   if (assetRef.includes('kayip-korkusu-karari-nasil-bozar')) return { kind: 'compare', left: [52], right: [94], labels: [tx(tr,'KAZANÇ','GAIN'),tx(tr,'KAYIP','LOSS')] };
   if (assetRef.includes('ilk-fiyata-capalanmak')) return { kind: 'flow', labels: [tx(tr,'ESKİ','OLD'),'100',tx(tr,'YENİ KANIT','NEW DATA'),'80'], warnIndex: warn ? 0 : undefined };
   if (assetRef.includes('son-olay-her-sey-midir')) return { kind: 'timeline', count: 9, hot: [6,7,8] };
-  if (assetRef.includes('asiri-guven-nasil-fark-edilir')) return { kind: 'bars', values: [94,56,60], labels: [tx(tr,'GÜVEN','CONF.'),tx(tr,'KANIT','EVID.'),tx(tr,'LİMİT','LIMIT')], warnIndex: 0 };
+  if (assetRef.includes('asiri-guven-nasil-fark-edilir')) return { kind: 'confidenceGap' };
   if (assetRef.includes('revenge-trading-nedir')) return { kind: 'flow', labels: [tx(tr,'KAYIP','LOSS'),tx(tr,'DÜRTÜ','IMPULSE'),tx(tr,'ARA','PAUSE'),tx(tr,'KARAR','DECIDE')], warnIndex: warn ? 1 : undefined };
   if (assetRef.includes('iyi-sonuc-iyi-karar-midir')) return { kind: 'matrix', labels: [tx(tr,'İYİ SÜREÇ','GOOD PROC.'),tx(tr,'KÖTÜ SONUÇ','BAD OUT.'),tx(tr,'KÖTÜ SÜREÇ','BAD PROC.'),tx(tr,'İYİ SONUÇ','GOOD OUT.')] };
   if (assetRef.includes('kazanan-erken-kaybeden-gec')) return { kind: 'compare', left: [44,62], right: [92,84], labels: [tx(tr,'KAZANAN','WINNER'),tx(tr,'KAYBEDEN','LOSER')] };
@@ -157,6 +158,8 @@ function renderScene(scene: Scene, s: S, warn: boolean): React.ReactNode {
       return <Clock s={s} warn={warn} />;
     case 'chain':
       return <Chain s={s} warn={warn} />;
+    case 'confidenceGap':
+      return <ConfidenceGap s={s} />;
   }
 }
 
@@ -195,6 +198,18 @@ function Clock({ s, warn }: { s: S; warn: boolean }) {
   return <View style={s.clockWrap}><View style={s.clock}><View style={s.clockHand}/><View style={s.clockCore}/></View><View style={[s.eventPulse,warn&&s.eventPulseWarn]}/></View>;
 }
 
+function ConfidenceGap({ s }: { s: S }) {
+  return <View style={s.confidenceGap}>
+    <View style={s.confidenceAxis} />
+    <View style={s.confidenceBarGroup}>
+      <View style={s.confidenceSlot}><View style={[s.confidenceBar, s.confidenceBarWarn]} /><Text style={s.micro}>GÜVEN</Text></View>
+      <View style={s.confidenceSlot}><View style={s.confidenceBar} /><Text style={s.micro}>KANIT</Text></View>
+    </View>
+    <View style={s.confidenceLimit}><Text style={s.limitCaption}>LİMİT</Text></View>
+    <View style={s.confidenceGapMarker}><Text style={s.confidenceGapLabel}>FARK</Text></View>
+  </View>;
+}
+
 function Chain({ s, warn }: { s: S; warn: boolean }) {
   return <View style={s.chainWrap}><View style={s.chain}>{[0,1,2,3].map((index)=><React.Fragment key={index}><View style={[s.chainNode,index===2&&s.chainNodeGood]}/>{index<3?<View style={s.chainLink}/>:null}</React.Fragment>)}</View><View style={s.barrier}/><View style={[s.cloud,warn&&s.cloudWarn]}><View style={s.cloudDot}/><View style={[s.cloudDot,s.cloudDot2]}/><View style={[s.cloudDot,s.cloudDot3]}/></View></View>;
 }
@@ -206,6 +221,7 @@ const createStyles = (_theme: LearningTheme) => StyleSheet.create({
   node:{minWidth:60,minHeight:58,paddingHorizontal:8,borderRadius:14,borderWidth:1,borderColor:'#35566A',backgroundColor:'#102638',alignItems:'center',justifyContent:'center'},
   nodeGood:{borderColor:'#2E756D',backgroundColor:'#0E3334'},nodeWarn:{borderColor:'#805F45',backgroundColor:'#241D18'},nodeText:{color:'#E7EEF2',fontSize:9,fontWeight:'900',textAlign:'center'},arrow:{color:'#55D0BF',fontSize:18,fontWeight:'900'},
   bars:{minHeight:160,flexDirection:'row',alignItems:'flex-end',justifyContent:'space-around',paddingHorizontal:18,paddingBottom:10},barSlot:{flex:1,alignItems:'center',justifyContent:'flex-end',gap:7},bar:{width:'58%',minHeight:18,borderTopLeftRadius:8,borderTopRightRadius:8,backgroundColor:'#6C8999'},barGood:{backgroundColor:'#55D0BF'},barWarn:{backgroundColor:'#B87C52'},
+  confidenceGap:{height:172,position:'relative',justifyContent:'flex-end',paddingHorizontal:32,paddingBottom:21},confidenceAxis:{position:'absolute',left:31,right:31,bottom:37,height:1,backgroundColor:'#35566A'},confidenceBarGroup:{height:128,flexDirection:'row',alignItems:'flex-end',justifyContent:'space-around',paddingHorizontal:25},confidenceSlot:{width:56,alignItems:'center',justifyContent:'flex-end',gap:7},confidenceBar:{width:38,height:70,borderTopLeftRadius:9,borderTopRightRadius:9,backgroundColor:'#6C8999'},confidenceBarWarn:{height:122,backgroundColor:'#B87C52'},confidenceLimit:{position:'absolute',left:44,right:44,bottom:79,borderTopWidth:1,borderStyle:'dashed',borderColor:'#55D0BF',alignItems:'flex-end'},limitCaption:{marginTop:-17,color:'#5EEAD4',fontSize:8,fontWeight:'900',backgroundColor:'#081725',paddingLeft:5},confidenceGapMarker:{position:'absolute',left:'43%',top:26,height:46,borderLeftWidth:1,borderColor:'#B87C52',justifyContent:'center'},confidenceGapLabel:{marginLeft:6,color:'#D09263',fontSize:8,fontWeight:'900'},
   compare:{minHeight:160,flexDirection:'row',gap:10,alignItems:'stretch'},miniPanel:{flex:1,borderRadius:15,borderWidth:1,borderColor:'#35566A',backgroundColor:'#102638',padding:10,justifyContent:'space-between'},panelLabel:{color:'#A5B6C0',fontSize:8,fontWeight:'900',textAlign:'center'},miniBars:{flex:1,flexDirection:'row',alignItems:'flex-end',justifyContent:'space-around',paddingTop:10},miniBar:{width:16,minHeight:12,borderTopLeftRadius:5,borderTopRightRadius:5,backgroundColor:'#6C8999'},
   chart:{height:165,borderRadius:14,borderWidth:1,borderColor:'#28495C',backgroundColor:'#0A1C29',position:'relative',overflow:'hidden'},chartDot:{position:'absolute',width:11,height:11,borderRadius:6,backgroundColor:'#55D0BF'},chartDotWarn:{backgroundColor:'#B87C52'},chartLevel:{position:'absolute',left:'7%',right:'7%',top:'45%',height:2,backgroundColor:'#805F45'},meanLine:{position:'absolute',left:'7%',right:'7%',top:'50%',height:3,backgroundColor:'#537B87'},gapZone:{position:'absolute',left:'48%',top:'30%',width:'17%',height:'42%',borderLeftWidth:1,borderRightWidth:1,borderColor:'#8B6749',backgroundColor:'rgba(139,103,73,0.08)'},trackTwo:{position:'absolute',left:'7%',right:'7%',top:'48%',height:3,backgroundColor:'#5C7A8A'},trackThree:{position:'absolute',left:'7%',right:'7%',top:'58%',height:3,backgroundColor:'#9A704F'},
   split:{minHeight:150,flexDirection:'row',alignItems:'center',justifyContent:'center',gap:12},bridge:{minWidth:44,alignItems:'center',justifyContent:'center'},bridgeBlocked:{borderRadius:22,borderWidth:1,borderColor:'#805F45',height:44},block:{color:'#C78B5D',fontSize:19,fontWeight:'900'},
