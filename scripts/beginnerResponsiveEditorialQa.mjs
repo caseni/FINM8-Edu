@@ -148,61 +148,6 @@ async function assertTextLedInstrumentPractice(page, label) {
   }
 }
 
-async function pairedBoxes(page, leftLabel, rightLabel, label) {
-  const left = page.locator(`[aria-label="${leftLabel}"]`).first();
-  const right = page.locator(`[aria-label="${rightLabel}"]`).first();
-  await left.waitFor();
-  await right.waitFor();
-  const leftBox = await left.boundingBox();
-  const rightBox = await right.boundingBox();
-  if (!leftBox || !rightBox) throw new Error(`${label}: comparison cards have no measurable boxes`);
-  return [leftBox, rightBox];
-}
-
-async function assertResponsivePair(page, viewport, leftLabel, rightLabel, label) {
-  const [leftBox, rightBox] = await pairedBoxes(page, leftLabel, rightLabel, label);
-  const minCardWidth = viewport.sizeClass === 'mobile' ? 120 : 180;
-  for (const box of [leftBox, rightBox]) {
-    if (box.width < minCardWidth) {
-      throw new Error(`${label}: comparison card too narrow at ${box.width.toFixed(1)}px`);
-    }
-    if (box.x < -1 || box.x + box.width > viewport.width + 1) {
-      throw new Error(`${label}: comparison card escapes viewport`);
-    }
-  }
-  if (Math.abs(leftBox.y - rightBox.y) > 8) {
-    throw new Error(`${label}: comparison cards must remain aligned in one row`);
-  }
-  if (rightBox.x <= leftBox.x + leftBox.width) {
-    throw new Error(`${label}: comparison cards overlap`);
-  }
-}
-
-async function assertThreeAcross(page, viewport, labels, label) {
-  const boxes = [];
-  for (const itemLabel of labels) {
-    const node = page.locator(`[aria-label="${itemLabel}"]`).first();
-    await node.waitFor();
-    const box = await node.boundingBox();
-    if (!box) throw new Error(`${label}: ${itemLabel} has no measurable box`);
-    boxes.push(box);
-  }
-
-  const minWidth = viewport.sizeClass === 'mobile' ? 72 : 145;
-  for (const box of boxes) {
-    if (box.width < minWidth) throw new Error(`${label}: three-way card too narrow at ${box.width.toFixed(1)}px`);
-    if (box.x < -1 || box.x + box.width > viewport.width + 1) throw new Error(`${label}: three-way card escapes viewport`);
-  }
-  if (Math.max(...boxes.map((box) => box.y)) - Math.min(...boxes.map((box) => box.y)) > 8) {
-    throw new Error(`${label}: three-way comparison must remain on one row`);
-  }
-  for (let index = 1; index < boxes.length; index += 1) {
-    if (boxes[index].x <= boxes[index - 1].x + boxes[index - 1].width) {
-      throw new Error(`${label}: three-way cards overlap`);
-    }
-  }
-}
-
 function assertEditorialLandscape(visualBox, label) {
   const ratio = visualBox.width / visualBox.height;
   if (ratio < 1.47 || ratio > 1.53) {
@@ -256,52 +201,57 @@ async function assertBidAskComposition(page, viewport, step, label, visualBox) {
   }
 }
 
-async function assertOrderTypesComposition(page, viewport, step, label) {
-  if (step === 1) {
-    await assertThreeAcross(page, viewport, ['order-market-path', 'order-limit-boundary', 'order-stop-trigger'], label);
+async function assertOrderTypesComposition(page, viewport, step, label, visualBox) {
+  assertEditorialLandscape(visualBox, label);
+
+  const legacyInfographics = page.locator([
+    '[aria-label="order-market-path"]',
+    '[aria-label="order-limit-boundary"]',
+    '[aria-label="order-stop-trigger"]',
+    '[aria-label="order-concept-market"]',
+    '[aria-label="order-concept-limit"]',
+    '[aria-label="order-concept-stop"]',
+    '[aria-label="order-practice-limit"]',
+    '[aria-label="order-practice-stop"]',
+    '[aria-label="order-limit-no-fill"]',
+    '[aria-label="order-stop-not-exact-fill"]',
+  ].join(', '));
+  if (await legacyInfographics.count()) {
+    throw new Error(`${label}: legacy order-type card layout must not replace the editorial price-axis scene`);
   }
-  if (step === 2) {
-    await assertThreeAcross(page, viewport, ['order-concept-market', 'order-concept-limit', 'order-concept-stop'], label);
+
+  if (visualBox.width < viewport.minVisualWidth) {
+    throw new Error(`${label}: order-type scene too narrow at ${visualBox.width.toFixed(1)}px`);
   }
-  if (step === 3) {
-    const limit = page.locator('[aria-label="order-practice-limit"]').first();
-    const stop = page.locator('[aria-label="order-practice-stop"]').first();
-    await limit.waitFor();
-    await stop.waitFor();
-    const limitBox = await limit.boundingBox();
-    const stopBox = await stop.boundingBox();
-    if (!limitBox || !stopBox) throw new Error(`${label}: order practice levels are not measurable`);
-    if (stopBox.y <= limitBox.y + 20) throw new Error(`${label}: stop trigger must remain visibly below limit boundary`);
-  }
-  if (step === 4) {
-    await assertResponsivePair(page, viewport, 'order-limit-no-fill', 'order-stop-not-exact-fill', label);
+  if (step < 1 || step > 5) {
+    throw new Error(`${label}: unexpected order-type lesson step ${step}`);
   }
 }
 
-async function assertSlippageComposition(page, viewport, step, label) {
-  if (step === 1) {
-    await assertResponsivePair(page, viewport, 'slippage-hook-screen', 'slippage-hook-fill', label);
-    const process = page.locator('[aria-label="slippage-execution-process"]').first();
-    await process.waitFor();
-    const processBox = await process.boundingBox();
-    if (!processBox || processBox.width < (viewport.sizeClass === 'mobile' ? 70 : 140)) {
-      throw new Error(`${label}: execution process is too compressed`);
-    }
+async function assertSlippageComposition(page, viewport, step, label, visualBox) {
+  assertEditorialLandscape(visualBox, label);
+
+  const legacyInfographics = page.locator([
+    '[aria-label="slippage-hook-screen"]',
+    '[aria-label="slippage-hook-fill"]',
+    '[aria-label="slippage-execution-process"]',
+    '[aria-label="slippage-concept-expected"]',
+    '[aria-label="slippage-concept-actual"]',
+    '[aria-label="slippage-concept-depth"]',
+    '[aria-label="slippage-practice-expected"]',
+    '[aria-label="slippage-practice-actual"]',
+    '[aria-label="slippage-misconception-screen"]',
+    '[aria-label="slippage-misconception-market"]',
+  ].join(', '));
+  if (await legacyInfographics.count()) {
+    throw new Error(`${label}: legacy slippage comparison cards must not replace the editorial execution-path scene`);
   }
-  if (step === 2) {
-    await assertResponsivePair(page, viewport, 'slippage-concept-expected', 'slippage-concept-actual', label);
-    const depth = page.locator('[aria-label="slippage-concept-depth"]').first();
-    await depth.waitFor();
-    const depthBox = await depth.boundingBox();
-    if (!depthBox || depthBox.width < (viewport.sizeClass === 'mobile' ? 95 : 170)) {
-      throw new Error(`${label}: available price levels are too compressed`);
-    }
+
+  if (visualBox.width < viewport.minVisualWidth) {
+    throw new Error(`${label}: slippage scene too narrow at ${visualBox.width.toFixed(1)}px`);
   }
-  if (step === 3) {
-    await assertResponsivePair(page, viewport, 'slippage-practice-expected', 'slippage-practice-actual', label);
-  }
-  if (step === 4) {
-    await assertResponsivePair(page, viewport, 'slippage-misconception-screen', 'slippage-misconception-market', label);
+  if (step < 1 || step > 5) {
+    throw new Error(`${label}: unexpected slippage lesson step ${step}`);
   }
 }
 
@@ -353,10 +303,10 @@ try {
             await assertBidAskComposition(page, viewport, step, label, box);
           }
           if (lesson.key === 'order-types') {
-            await assertOrderTypesComposition(page, viewport, step, label);
+            await assertOrderTypesComposition(page, viewport, step, label, box);
           }
           if (lesson.key === 'slippage') {
-            await assertSlippageComposition(page, viewport, step, label);
+            await assertSlippageComposition(page, viewport, step, label, box);
           }
         }
 
