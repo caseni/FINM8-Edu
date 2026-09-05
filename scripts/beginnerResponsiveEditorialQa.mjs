@@ -10,7 +10,7 @@ const lessons = [
   {
     key: 'price-formation',
     title: 'Bir fiyat nasıl ortaya çıkar',
-    maxWidth: { mobile: 360, desktop: 520 },
+    maxWidth: { mobile: 360, desktop: 620 },
     maxHeightRatio: 0.68,
   },
   {
