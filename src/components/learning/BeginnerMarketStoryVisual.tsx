@@ -1,7 +1,6 @@
 import React from 'react';
 import { useWindowDimensions, View } from 'react-native';
 import { BeginnerBidAskStoryVisual } from './BeginnerBidAskStoryVisual';
-import { BeginnerEditorialImageVisual, hasBeginnerEditorialImage } from './BeginnerEditorialImageVisual';
 import { BeginnerInstrumentMisconceptionVisual } from './BeginnerInstrumentMisconceptionVisual';
 import { BeginnerInstrumentStoryVisual } from './BeginnerInstrumentStoryVisual';
 import { BeginnerLiquidityStoryVisual } from './BeginnerLiquidityStoryVisual';
@@ -45,17 +44,6 @@ export function BeginnerMarketStoryVisual(props: Props) {
           theme={props.theme}
         />
       </ResponsiveVisualFrame>
-    );
-  }
-
-  if (hasBeginnerEditorialImage(props.assetRef, props.role)) {
-    return (
-      <BeginnerEditorialImageVisual
-        assetRef={props.assetRef}
-        alt={props.alt}
-        role={props.role}
-        theme={props.theme}
-      />
     );
   }
 
