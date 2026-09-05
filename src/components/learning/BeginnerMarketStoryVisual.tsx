@@ -6,6 +6,7 @@ import { BeginnerInstrumentMisconceptionVisual } from './BeginnerInstrumentMisco
 import { BeginnerInstrumentStoryVisual } from './BeginnerInstrumentStoryVisual';
 import { BeginnerLiquidityStoryVisual } from './BeginnerLiquidityStoryVisual';
 import { BeginnerOrderTypesStoryVisual } from './BeginnerOrderTypesStoryVisual';
+import { BeginnerPriceFormationStoryVisual } from './BeginnerPriceFormationStoryVisual';
 import { BeginnerSlippageStoryVisual } from './BeginnerSlippageStoryVisual';
 import {
   BeginnerMarketStoryVisual as BeginnerMarketStoryVisualLegacy,
@@ -33,6 +34,19 @@ function ResponsiveVisualFrame({ wide, children }: { wide: boolean; children: Re
 export function BeginnerMarketStoryVisual(props: Props) {
   const { width } = useWindowDimensions();
   const wide = width >= 900;
+
+  if (props.assetRef.includes('fiyat-piyasada-nasil-olusur')) {
+    return (
+      <ResponsiveVisualFrame wide={wide}>
+        <BeginnerPriceFormationStoryVisual
+          alt={props.alt}
+          language={props.language}
+          role={props.role}
+          theme={props.theme}
+        />
+      </ResponsiveVisualFrame>
+    );
+  }
 
   if (hasBeginnerEditorialImage(props.assetRef, props.role)) {
     return (
