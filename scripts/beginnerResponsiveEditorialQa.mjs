@@ -231,33 +231,28 @@ async function assertLiquidityComposition(page, viewport, step, label, visualBox
   }
 }
 
-async function assertBidAskComposition(page, viewport, step, label) {
-  if (step === 1) {
-    await assertResponsivePair(page, viewport, 'bid-ask-buyer-side', 'bid-ask-seller-side', label);
+async function assertBidAskComposition(page, viewport, step, label, visualBox) {
+  assertEditorialLandscape(visualBox, label);
+
+  const legacyInfographics = page.locator([
+    '[aria-label="bid-ask-buyer-side"]',
+    '[aria-label="bid-ask-seller-side"]',
+    '[aria-label="bid-ask-concept-bid"]',
+    '[aria-label="bid-ask-concept-ask"]',
+    '[aria-label="bid-ask-buy-now"]',
+    '[aria-label="bid-ask-sell-now"]',
+    '[aria-label="bid-ask-last-trade"]',
+    '[aria-label="bid-ask-current-quotes"]',
+  ].join(', '));
+  if (await legacyInfographics.count()) {
+    throw new Error(`${label}: legacy bid/ask card layout must not replace the editorial price-rail scene`);
   }
-  if (step === 2) {
-    await assertResponsivePair(page, viewport, 'bid-ask-concept-bid', 'bid-ask-concept-ask', label);
-    const gap = page.locator('[aria-label="bid-ask-spread-gap"]').first();
-    await gap.waitFor();
-    const gapBox = await gap.boundingBox();
-    if (!gapBox || gapBox.width < 45) {
-      throw new Error(`${label}: spread gap must remain visibly readable`);
-    }
+
+  if (visualBox.width < viewport.minVisualWidth) {
+    throw new Error(`${label}: bid/ask scene too narrow at ${visualBox.width.toFixed(1)}px`);
   }
-  if (step === 3) {
-    await assertResponsivePair(page, viewport, 'bid-ask-buy-now', 'bid-ask-sell-now', label);
-  }
-  if (step === 4) {
-    const lastTrade = page.locator('[aria-label="bid-ask-last-trade"]').first();
-    const currentQuotes = page.locator('[aria-label="bid-ask-current-quotes"]').first();
-    await lastTrade.waitFor();
-    await currentQuotes.waitFor();
-    const lastTradeBox = await lastTrade.boundingBox();
-    const currentQuotesBox = await currentQuotes.boundingBox();
-    if (!lastTradeBox || !currentQuotesBox) throw new Error(`${label}: bid-ask misconception blocks are not measurable`);
-    if (currentQuotesBox.y <= lastTradeBox.y + lastTradeBox.height) {
-      throw new Error(`${label}: current quotes must remain visually separate below last trade`);
-    }
+  if (step < 1 || step > 5) {
+    throw new Error(`${label}: unexpected bid/ask lesson step ${step}`);
   }
 }
 
@@ -355,7 +350,7 @@ try {
             await assertLiquidityComposition(page, viewport, step, label, box);
           }
           if (lesson.key === 'bid-ask') {
-            await assertBidAskComposition(page, viewport, step, label);
+            await assertBidAskComposition(page, viewport, step, label, box);
           }
           if (lesson.key === 'order-types') {
             await assertOrderTypesComposition(page, viewport, step, label);
