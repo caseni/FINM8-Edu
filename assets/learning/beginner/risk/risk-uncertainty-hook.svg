@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid meet">
+  <defs>
+    <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#071522"/><stop offset="1" stop-color="#0A2030"/></linearGradient>
+    <radialGradient id="halo"><stop stop-color="#47D7C3" stop-opacity=".22"/><stop offset="1" stop-color="#47D7C3" stop-opacity="0"/></radialGradient>
+  </defs>
+  <rect width="1200" height="800" rx="44" fill="url(#bg)"/>
+  <circle cx="560" cy="405" r="350" fill="url(#halo)"/>
+  <circle cx="310" cy="400" r="44" fill="#0E3B3F" stroke="#47D7C3" stroke-width="5"/>
+  <path d="M354 400H500" stroke="#47D7C3" stroke-width="7" stroke-linecap="round"/>
+  <circle cx="530" cy="400" r="18" fill="#8AEADD"/>
+  <path d="M548 400C660 400 680 240 815 225" fill="none" stroke="#47D7C3" stroke-width="5" stroke-linecap="round"/>
+  <path d="M548 400H835" fill="none" stroke="#78909E" stroke-width="5" stroke-linecap="round"/>
+  <path d="M548 400C660 400 680 560 815 575" fill="none" stroke="#C78E79" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="855" cy="220" r="30" fill="#123B3A" stroke="#47D7C3" stroke-width="4"/>
+  <circle cx="875" cy="400" r="30" fill="#172C3A" stroke="#6E8794" stroke-width="4"/>
+  <circle cx="855" cy="580" r="30" fill="#3A292D" stroke="#C78E79" stroke-width="4"/>
+  <circle cx="530" cy="400" r="70" fill="none" stroke="#47D7C3" stroke-width="3" stroke-dasharray="8 14" opacity=".38"/>
+  <text x="530" y="420" text-anchor="middle" font-family="Arial, sans-serif" font-size="54" font-weight="800" fill="#EAF5F7">?</text>
+</svg>
