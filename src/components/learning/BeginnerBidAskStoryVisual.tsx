@@ -1,5 +1,13 @@
 import React from 'react';
-import { StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import {
+  Image,
+  Platform,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+  type ImageSourcePropType,
+} from 'react-native';
 import type { LearningLanguage } from '../../domain/learning/presentation';
 import { defaultLearningTheme, type LearningTheme } from '../../theme/learningTheme';
 import type { LessonSupportingVisualRole } from './LessonSupportingVisual';
@@ -11,8 +19,20 @@ export interface BeginnerBidAskStoryVisualProps {
   theme?: LearningTheme;
 }
 
-type Styles = ReturnType<typeof createStyles>;
+const bidAskSvgArtwork: Record<LessonSupportingVisualRole, ImageSourcePropType> = {
+  hook: require('../../../assets/learning/beginner/markets/bid-ask-hook.svg'),
+  concept: require('../../../assets/learning/beginner/markets/bid-ask-concept.svg'),
+  practice: require('../../../assets/learning/beginner/markets/bid-ask-practice.svg'),
+  misconception: require('../../../assets/learning/beginner/markets/bid-ask-misconception.svg'),
+  risk: require('../../../assets/learning/beginner/markets/bid-ask-misconception.svg'),
+  summary: require('../../../assets/learning/beginner/markets/bid-ask-summary.svg'),
+};
 
+/**
+ * Bid/ask is taught on one continuous price rail. The visual avoids buyer /
+ * seller character cards and repeated explanatory headings: the two quotes,
+ * their gap and the order direction carry the lesson meaning.
+ */
 export function BeginnerBidAskStoryVisual({
   alt,
   language,
@@ -21,203 +41,209 @@ export function BeginnerBidAskStoryVisual({
 }: BeginnerBidAskStoryVisualProps) {
   const { width } = useWindowDimensions();
   const wide = width >= 900;
-  const narrow = width < 420;
-  const styles = createStyles(theme, wide, narrow);
-  const tr = language === 'tr';
+  const styles = createStyles(theme, wide);
+
+  if (Platform.OS === 'web') {
+    return (
+      <View style={styles.shell} accessibilityRole="image" accessibilityLabel={alt}>
+        <Image source={bidAskSvgArtwork[role]} resizeMode="contain" style={styles.webImage} />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.shell} accessibilityRole="image" accessibilityLabel={alt}>
-      {role === 'hook' ? <HookScene tr={tr} styles={styles} />
-        : role === 'practice' ? <PracticeScene tr={tr} styles={styles} />
-          : role === 'misconception' ? <MisconceptionScene tr={tr} styles={styles} />
-            : role === 'summary' ? <SummaryScene tr={tr} styles={styles} />
-              : <ConceptScene tr={tr} styles={styles} />}
+      <NativeBidAskScene role={role} language={language} styles={styles} />
     </View>
   );
 }
 
-function Heading({ title, body, styles }: { title: string; body?: string; styles: Styles }) {
+type SceneStyles = ReturnType<typeof createStyles>;
+
+type SceneProps = {
+  role: LessonSupportingVisualRole;
+  language: LearningLanguage;
+  styles: SceneStyles;
+};
+
+function NativeBidAskScene({ role, language, styles }: SceneProps) {
+  const misconception = role === 'misconception' || role === 'risk';
+  const practice = role === 'practice';
+
   return (
-    <View style={styles.heading}>
-      <Text style={styles.headingTitle}>{title}</Text>
-      {body ? <Text style={styles.headingBody}>{body}</Text> : null}
+    <>
+      <View style={styles.glow} />
+      {misconception ? <LastTradeMarker styles={styles} /> : null}
+      <View style={[styles.rail, misconception && styles.railLower]} />
+      <View style={[styles.railLine, misconception && styles.railLineLower]} />
+      <QuoteMarker side="bid" styles={styles} lower={misconception} />
+      <QuoteMarker side="ask" styles={styles} lower={misconception} />
+      <SpreadGap styles={styles} lower={misconception} />
+      {practice ? <OrderRoutes styles={styles} /> : null}
+      <Text style={styles.hiddenContext} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
+        {language === 'tr' ? 'Alış satış fiyatı ve spread sahnesi' : 'Bid ask and spread scene'}
+      </Text>
+    </>
+  );
+}
+
+function QuoteMarker({ side, styles, lower }: { side: 'bid' | 'ask'; styles: SceneStyles; lower: boolean }) {
+  const bid = side === 'bid';
+  return (
+    <View style={[styles.quoteMarker, bid ? styles.bidMarker : styles.askMarker, lower && styles.quoteMarkerLower]}>
+      <Text style={[styles.quoteName, bid ? styles.bidText : styles.askText]}>{bid ? 'BID' : 'ASK'}</Text>
+      <Text style={styles.quotePrice}>{bid ? '99,90' : '100,10'}</Text>
+      <View style={[styles.quoteDot, bid ? styles.bidDot : styles.askDot]} />
     </View>
   );
 }
 
-function QuoteCard({
-  side,
-  label,
-  price,
-  hint,
-  accessibilityLabel,
-  styles,
-}: {
-  side: 'bid' | 'ask';
-  label: string;
-  price: string;
-  hint: string;
-  accessibilityLabel: string;
-  styles: Styles;
-}) {
+function SpreadGap({ styles, lower }: { styles: SceneStyles; lower: boolean }) {
   return (
-    <View style={[styles.quoteCard, side === 'bid' ? styles.bidCard : styles.askCard]} accessibilityLabel={accessibilityLabel}>
-      <View style={[styles.person, side === 'bid' ? styles.personBid : styles.personAsk]}>
-        <View style={styles.personHead} />
-        <View style={styles.personBody} />
+    <View style={[styles.spread, lower && styles.spreadLower]}>
+      <View style={styles.spreadDash} />
+      <Text style={styles.spreadValue}>0,20</Text>
+    </View>
+  );
+}
+
+function OrderRoutes({ styles }: { styles: SceneStyles }) {
+  return (
+    <View style={styles.orderRoutes}>
+      <View style={styles.orderOrigin} />
+      <View style={[styles.routeLine, styles.routeLeft]} />
+      <View style={[styles.routeLine, styles.routeRight]} />
+      <Text style={[styles.routeArrow, styles.routeArrowLeft]}>←</Text>
+      <Text style={[styles.routeArrow, styles.routeArrowRight]}>→</Text>
+    </View>
+  );
+}
+
+function LastTradeMarker({ styles }: { styles: SceneStyles }) {
+  return (
+    <View style={styles.lastTrade}>
+      <View style={styles.clockRing}>
+        <View style={styles.clockHandOne} />
+        <View style={styles.clockHandTwo} />
       </View>
-      <Text style={styles.quoteLabel}>{label}</Text>
-      <Text style={[styles.quotePrice, side === 'bid' ? styles.bidText : styles.askText]}>{price}</Text>
-      <Text style={styles.quoteHint}>{hint}</Text>
+      <Text style={styles.lastTradePrice}>100,00</Text>
     </View>
   );
 }
 
-function Gap({ tr, styles, compact = false }: { tr: boolean; styles: Styles; compact?: boolean }) {
-  return (
-    <View style={[styles.gap, compact && styles.gapCompact]} accessibilityLabel="bid-ask-spread-gap">
-      <Text style={styles.gapValue}>0,20</Text>
-      <View style={styles.gapLine} />
-      <Text style={styles.gapName}>{tr ? 'FARK' : 'GAP'}</Text>
-    </View>
-  );
-}
-
-function HookScene({ tr, styles }: { tr: boolean; styles: Styles }) {
-  return (
-    <View style={styles.scene}>
-      <View style={styles.quoteRow}>
-        <QuoteCard side="bid" label={tr ? 'ALICI' : 'BUYER'} price="99,90" hint={tr ? 'Ödemeye hazır' : 'Willing to pay'} accessibilityLabel="bid-ask-buyer-side" styles={styles} />
-        <Gap tr={tr} styles={styles} />
-        <QuoteCard side="ask" label={tr ? 'SATICI' : 'SELLER'} price="100,10" hint={tr ? 'Kabul etmeye hazır' : 'Willing to accept'} accessibilityLabel="bid-ask-seller-side" styles={styles} />
-      </View>
-    </View>
-  );
-}
-
-function ConceptScene({ tr, styles }: { tr: boolean; styles: Styles }) {
-  return (
-    <View style={styles.scene}>
-      <Heading styles={styles} title="BID · SPREAD · ASK" />
-      <View style={styles.quoteRow}>
-        <QuoteCard side="bid" label="BID" price="99,90" hint={tr ? 'Alıcının teklifi' : 'Buyer offer'} accessibilityLabel="bid-ask-concept-bid" styles={styles} />
-        <Gap tr={tr} styles={styles} compact />
-        <QuoteCard side="ask" label="ASK" price="100,10" hint={tr ? 'Satıcının teklifi' : 'Seller offer'} accessibilityLabel="bid-ask-concept-ask" styles={styles} />
-      </View>
-      <View style={styles.rule}><Text style={styles.ruleText}>{tr ? '100,10 − 99,90 = 0,20 spread' : '100.10 − 99.90 = 0.20 spread'}</Text></View>
-    </View>
-  );
-}
-
-function ActionCard({ kind, tr, styles }: { kind: 'buy' | 'sell'; tr: boolean; styles: Styles }) {
-  const buy = kind === 'buy';
-  return (
-    <View style={[styles.actionCard, buy ? styles.askCard : styles.bidCard]} accessibilityLabel={buy ? 'bid-ask-buy-now' : 'bid-ask-sell-now'}>
-      <Text style={styles.actionEyebrow}>{buy ? (tr ? 'HEMEN AL' : 'BUY NOW') : (tr ? 'HEMEN SAT' : 'SELL NOW')}</Text>
-      <View style={styles.actionArrowRow}>
-        <Text style={styles.actionArrow}>{buy ? '→' : '←'}</Text>
-        <Text style={[styles.actionPrice, buy ? styles.askText : styles.bidText]}>{buy ? '100,10' : '99,90'}</Text>
-      </View>
-      <Text style={styles.actionHint}>{buy ? (tr ? 'Ask tarafına gidersin' : 'You reach the ask') : (tr ? 'Bid tarafına gidersin' : 'You reach the bid')}</Text>
-    </View>
-  );
-}
-
-function PracticeScene({ tr, styles }: { tr: boolean; styles: Styles }) {
-  return (
-    <View style={styles.scene}>
-      <Heading
-        styles={styles}
-        title={tr ? '99,90 bid ve 100,10 ask varsa hangi fiyat sana dokunur?' : 'If bid is 99.90 and ask is 100.10, which price do you reach?'}
-        body={tr ? 'Piyasa emriyle yönün, karşı taraftaki fiyatı belirler.' : 'With a market order, your direction determines which side you reach.'}
-      />
-      <View style={styles.actionRow}>
-        <ActionCard kind="buy" tr={tr} styles={styles} />
-        <ActionCard kind="sell" tr={tr} styles={styles} />
-      </View>
-    </View>
-  );
-}
-
-function MisconceptionScene({ tr, styles }: { tr: boolean; styles: Styles }) {
-  return (
-    <View style={styles.scene}>
-      <Heading styles={styles} title={tr ? 'Son işlem fiyatı, şu anki bid ve ask ile aynı şey değildir.' : 'The last traded price is not the same thing as the current bid and ask.'} />
-      <View style={styles.lastTrade} accessibilityLabel="bid-ask-last-trade">
-        <Text style={styles.lastTradeLabel}>{tr ? 'SON İŞLEM' : 'LAST TRADE'}</Text>
-        <Text style={styles.lastTradePrice}>100,00</Text>
-        <Text style={styles.lastTradeHint}>{tr ? 'Geçmişte gerçekleşti' : 'Already happened'}</Text>
-      </View>
-      <View style={styles.currentQuotes} accessibilityLabel="bid-ask-current-quotes">
-        <View style={styles.currentSide}><Text style={styles.currentLabel}>BID</Text><Text style={[styles.currentPrice, styles.bidText]}>99,90</Text></View>
-        <Text style={styles.notEqual}>≠</Text>
-        <View style={styles.currentSide}><Text style={styles.currentLabel}>ASK</Text><Text style={[styles.currentPrice, styles.askText]}>100,10</Text></View>
-      </View>
-    </View>
-  );
-}
-
-function SummaryScene({ tr, styles }: { tr: boolean; styles: Styles }) {
-  return (
-    <View style={styles.scene}>
-      <View style={styles.summaryStrip}>
-        <View style={[styles.summaryCell, styles.bidCard]}><Text style={styles.summaryLabel}>BID</Text><Text style={[styles.summaryPrice, styles.bidText]}>99,90</Text><Text style={styles.summaryHint}>{tr ? 'Alıcı' : 'Buyer'}</Text></View>
-        <View style={styles.summaryGap}><Text style={styles.summaryGapValue}>0,20</Text><Text style={styles.summaryGapLabel}>SPREAD</Text></View>
-        <View style={[styles.summaryCell, styles.askCard]}><Text style={styles.summaryLabel}>ASK</Text><Text style={[styles.summaryPrice, styles.askText]}>100,10</Text><Text style={styles.summaryHint}>{tr ? 'Satıcı' : 'Seller'}</Text></View>
-      </View>
-    </View>
-  );
-}
-
-const createStyles = (theme: LearningTheme, wide: boolean, narrow: boolean) => StyleSheet.create({
-  shell: { width: '100%', minHeight: wide ? 300 : narrow ? 236 : 256, justifyContent: 'center', padding: wide ? 16 : narrow ? 6 : 14, overflow: 'hidden', borderRadius: wide ? 18 : 16, borderWidth: 1, borderColor: theme.colors.border, backgroundColor: '#081726' },
-  scene: { width: '100%', gap: wide ? 17 : narrow ? 9 : 12 },
-  heading: { gap: 5 },
-  headingTitle: { color: theme.colors.text, fontSize: wide ? 20 : narrow ? 15 : 17, lineHeight: wide ? 28 : narrow ? 21 : 24, fontWeight: '900' },
-  headingBody: { color: theme.colors.textMuted, fontSize: wide ? 12 : narrow ? 9 : 10, lineHeight: wide ? 18 : narrow ? 13 : 15 },
-  quoteRow: { flexDirection: 'row', alignItems: 'stretch', gap: wide ? 4 : narrow ? 2 : 8 },
-  quoteCard: { flex: 1, minWidth: 0, minHeight: wide ? 154 : narrow ? 110 : 132, alignItems: 'center', justifyContent: 'center', gap: narrow ? 4 : 7, padding: narrow ? 6 : 9, borderRadius: 14, borderWidth: 1 },
-  bidCard: { borderColor: '#2E716B', backgroundColor: '#0C2B31' },
-  askCard: { borderColor: '#725851', backgroundColor: '#2A2025' },
-  person: { width: narrow ? 30 : 40, height: narrow ? 30 : 40, alignItems: 'center', justifyContent: 'center', borderRadius: 20 },
-  personBid: { backgroundColor: '#143F42' },
-  personAsk: { backgroundColor: '#422D31' },
-  personHead: { width: narrow ? 8 : 11, height: narrow ? 8 : 11, borderRadius: 6, backgroundColor: '#C6D3D9' },
-  personBody: { width: narrow ? 16 : 21, height: narrow ? 9 : 12, marginTop: 2, borderTopLeftRadius: 9, borderTopRightRadius: 9, backgroundColor: '#8195A1' },
-  quoteLabel: { color: theme.colors.textMuted, fontSize: narrow ? 8 : 9, lineHeight: 12, fontWeight: '900', letterSpacing: 0.5 },
-  quotePrice: { fontSize: wide ? 22 : narrow ? 15 : 18, lineHeight: wide ? 28 : narrow ? 20 : 23, fontWeight: '900' },
-  quoteHint: { color: theme.colors.textMuted, fontSize: narrow ? 7 : 9, lineHeight: narrow ? 10 : 13, textAlign: 'center' },
-  bidText: { color: '#68C4B8' },
-  askText: { color: '#D29A86' },
-  gap: { width: wide ? 48 : narrow ? 45 : 54, alignItems: 'center', justifyContent: 'center', gap: narrow ? 2 : 4 },
-  gapCompact: { width: wide ? 48 : narrow ? 45 : 48 },
-  gapValue: { color: theme.colors.text, fontSize: wide ? 16 : narrow ? 9 : 12, fontWeight: '900' },
-  gapLine: { width: '86%', height: 2, borderRadius: 2, backgroundColor: '#667E8D' },
-  gapName: { color: theme.colors.primary, fontSize: narrow ? 6 : 8, fontWeight: '900', letterSpacing: 0.35 },
-  rule: { paddingHorizontal: wide ? 16 : 11, paddingVertical: wide ? 11 : narrow ? 8 : 9, borderRadius: 11, borderWidth: 1, borderColor: '#315A61', backgroundColor: '#0D2933' },
-  ruleText: { color: '#D7E4E8', fontSize: wide ? 12 : narrow ? 9 : 11, lineHeight: wide ? 18 : narrow ? 13 : 16, textAlign: 'center', fontWeight: '700' },
-  actionRow: { flexDirection: 'row', alignItems: 'stretch', gap: narrow ? 7 : 9 },
-  actionCard: { flex: 1, minWidth: 0, minHeight: wide ? 156 : narrow ? 112 : 132, alignItems: 'center', justifyContent: 'center', gap: narrow ? 6 : 9, padding: narrow ? 7 : 10, borderRadius: 14, borderWidth: 1 },
-  actionEyebrow: { color: theme.colors.text, fontSize: narrow ? 9 : 10, fontWeight: '900', letterSpacing: 0.5 },
-  actionArrowRow: { flexDirection: 'row', alignItems: 'center', gap: 6 },
-  actionArrow: { color: '#8398A5', fontSize: wide ? 20 : narrow ? 15 : 17, fontWeight: '900' },
-  actionPrice: { fontSize: wide ? 22 : narrow ? 16 : 18, fontWeight: '900' },
-  actionHint: { color: theme.colors.textMuted, fontSize: narrow ? 8 : 9, lineHeight: narrow ? 11 : 13, textAlign: 'center' },
-  lastTrade: { alignItems: 'center', justifyContent: 'center', gap: 3, paddingVertical: narrow ? 8 : 11, borderRadius: 12, borderWidth: 1, borderColor: '#344C5D', backgroundColor: '#102231' },
-  lastTradeLabel: { color: theme.colors.textMuted, fontSize: narrow ? 8 : 9, fontWeight: '900', letterSpacing: 0.5 },
-  lastTradePrice: { color: theme.colors.text, fontSize: wide ? 21 : narrow ? 15 : 18, fontWeight: '900' },
-  lastTradeHint: { color: theme.colors.textMuted, fontSize: narrow ? 8 : 9 },
-  currentQuotes: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: narrow ? 10 : 16, paddingVertical: narrow ? 7 : 10 },
-  currentSide: { alignItems: 'center', gap: 2 },
-  currentLabel: { color: theme.colors.textMuted, fontSize: narrow ? 8 : 9, fontWeight: '900' },
-  currentPrice: { fontSize: wide ? 19 : narrow ? 14 : 16, fontWeight: '900' },
-  notEqual: { color: theme.colors.primary, fontSize: wide ? 22 : 18, fontWeight: '900' },
-  summaryStrip: { flexDirection: 'row', alignItems: 'stretch', gap: narrow ? 5 : 8 },
-  summaryCell: { flex: 1, minWidth: 0, minHeight: wide ? 126 : narrow ? 90 : 108, alignItems: 'center', justifyContent: 'center', gap: 4, borderRadius: 13, borderWidth: 1 },
-  summaryLabel: { color: theme.colors.text, fontSize: narrow ? 9 : 10, fontWeight: '900' },
-  summaryPrice: { fontSize: wide ? 20 : narrow ? 14 : 17, fontWeight: '900' },
-  summaryHint: { color: theme.colors.textMuted, fontSize: narrow ? 8 : 9 },
-  summaryGap: { width: wide ? 88 : narrow ? 46 : 68, alignItems: 'center', justifyContent: 'center', gap: 3, borderRadius: 12, borderWidth: 1, borderColor: '#455765', backgroundColor: '#142331' },
-  summaryGapValue: { color: theme.colors.text, fontSize: wide ? 16 : narrow ? 10 : 13, fontWeight: '900' },
-  summaryGapLabel: { color: theme.colors.primary, fontSize: narrow ? 6 : 8, fontWeight: '900', letterSpacing: 0.4 },
+const createStyles = (theme: LearningTheme, wide: boolean) => StyleSheet.create({
+  shell: {
+    width: '100%',
+    maxWidth: wide ? 620 : 460,
+    aspectRatio: 1.5,
+    alignSelf: 'center',
+    overflow: 'hidden',
+    position: 'relative',
+    borderRadius: wide ? 18 : 16,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+    backgroundColor: '#071522',
+  },
+  webImage: { width: '100%', height: '100%' },
+  glow: {
+    position: 'absolute',
+    width: '62%',
+    aspectRatio: 1,
+    left: '19%',
+    top: '-6%',
+    borderRadius: 999,
+    backgroundColor: 'rgba(71, 215, 195, 0.07)',
+  },
+  rail: {
+    position: 'absolute',
+    left: '16%',
+    right: '16%',
+    top: '54%',
+    height: '18%',
+    borderRadius: 999,
+    backgroundColor: '#173B4C',
+    opacity: 0.8,
+  },
+  railLower: { top: '67%' },
+  railLine: {
+    position: 'absolute',
+    left: '19%',
+    right: '19%',
+    top: '63%',
+    height: 3,
+    borderRadius: 999,
+    backgroundColor: '#31586B',
+  },
+  railLineLower: { top: '76%' },
+  quoteMarker: {
+    position: 'absolute',
+    top: '31%',
+    width: '28%',
+    alignItems: 'center',
+    gap: 4,
+  },
+  quoteMarkerLower: { top: '47%' },
+  bidMarker: { left: '21%' },
+  askMarker: { right: '21%' },
+  quoteName: { fontSize: wide ? 13 : 11, lineHeight: wide ? 18 : 15, fontWeight: '900', letterSpacing: 0.6 },
+  quotePrice: { color: '#E7F2F4', fontSize: wide ? 22 : 18, lineHeight: wide ? 27 : 23, fontWeight: '900' },
+  bidText: { color: '#77CFC3' },
+  askText: { color: '#D3A18E' },
+  quoteDot: { marginTop: wide ? 28 : 20, width: wide ? 22 : 18, height: wide ? 22 : 18, borderRadius: 999, borderWidth: 3 },
+  bidDot: { backgroundColor: '#0F4948', borderColor: '#47D7C3' },
+  askDot: { backgroundColor: '#3A292D', borderColor: '#C78E79' },
+  spread: {
+    position: 'absolute',
+    left: '43%',
+    width: '14%',
+    top: '58%',
+    alignItems: 'center',
+    gap: 7,
+  },
+  spreadLower: { top: '71%' },
+  spreadDash: { width: '100%', borderTopWidth: 2, borderStyle: 'dashed', borderColor: '#78909E', opacity: 0.7 },
+  spreadValue: { color: '#C9DBE1', fontSize: wide ? 13 : 11, fontWeight: '800' },
+  orderRoutes: {
+    position: 'absolute',
+    left: '28%',
+    right: '28%',
+    top: '18%',
+    height: '36%',
+  },
+  orderOrigin: {
+    position: 'absolute',
+    left: '47%',
+    top: 0,
+    width: wide ? 24 : 20,
+    height: wide ? 24 : 20,
+    borderRadius: 999,
+    backgroundColor: '#8EA2AD',
+  },
+  routeLine: { position: 'absolute', top: '52%', width: '42%', height: 3, backgroundColor: '#6F8997', borderRadius: 999 },
+  routeLeft: { left: '8%', transform: [{ rotate: '-24deg' }] },
+  routeRight: { right: '8%', transform: [{ rotate: '24deg' }] },
+  routeArrow: { position: 'absolute', color: '#AFC5CE', fontSize: wide ? 22 : 18, fontWeight: '900' },
+  routeArrowLeft: { left: '4%', bottom: '2%' },
+  routeArrowRight: { right: '4%', bottom: '2%' },
+  lastTrade: {
+    position: 'absolute',
+    top: '12%',
+    left: '40%',
+    width: '20%',
+    alignItems: 'center',
+    gap: 7,
+    opacity: 0.5,
+  },
+  clockRing: {
+    width: wide ? 50 : 42,
+    height: wide ? 50 : 42,
+    borderRadius: 999,
+    borderWidth: 2,
+    borderColor: '#718894',
+    backgroundColor: '#102331',
+  },
+  clockHandOne: { position: 'absolute', width: 2, height: '26%', left: '49%', top: '24%', backgroundColor: '#A7BAC3' },
+  clockHandTwo: { position: 'absolute', width: '25%', height: 2, left: '49%', top: '49%', backgroundColor: '#A7BAC3', transform: [{ rotate: '28deg' }] },
+  lastTradePrice: { color: '#A7BAC3', fontSize: wide ? 18 : 15, fontWeight: '800' },
+  hiddenContext: { position: 'absolute', width: 1, height: 1, opacity: 0 },
 });
