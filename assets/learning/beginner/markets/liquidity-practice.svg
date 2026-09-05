@@ -1,25 +1,31 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid meet">
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#071522"/><stop offset="1" stop-color="#0A2030"/></linearGradient>
-    <radialGradient id="halo"><stop offset="0" stop-color="#47D7C3" stop-opacity=".30"/><stop offset=".62" stop-color="#47D7C3" stop-opacity=".08"/><stop offset="1" stop-color="#47D7C3" stop-opacity="0"/></radialGradient>
-    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="16" stdDeviation="18" flood-color="#000" flood-opacity=".34"/></filter>
+    <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#071522"/><stop offset="1" stop-color="#0A2030"/></linearGradient>
+    <radialGradient id="halo"><stop stop-color="#47D7C3" stop-opacity=".28"/><stop offset="1" stop-color="#47D7C3" stop-opacity="0"/></radialGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dy="14" stdDeviation="18" flood-opacity=".30"/></filter>
   </defs>
   <rect width="1200" height="800" rx="44" fill="url(#bg)"/>
-  <circle cx="600" cy="390" r="370" fill="url(#halo)"/>
-  <path d="M75 650 C300 605 410 698 610 642 S930 600 1130 648" fill="none" stroke="#16394B" stroke-width="2" opacity=".65"/>
-  <path d="M110 625 C330 560 540 560 1090 415" fill="none" stroke="#133748" stroke-width="132" stroke-linecap="round" opacity=".72"/>
-  <path d="M110 625 C330 560 540 560 1090 415" fill="none" stroke="#2C6170" stroke-width="3" stroke-dasharray="12 18" opacity=".75"/>
-  <g transform="translate(170 480) scale(.85)" filter="url(#shadow)">
-    <circle cx="0" cy="-74" r="28" fill="#D9C3A7"/><path d="M-34 -44 Q0 -64 34 -44 L48 76 Q0 104 -48 76 Z" fill="#124C4D" stroke="#47D7C3" stroke-width="4"/><path d="M28 -30 Q72 -5 104 24" fill="none" stroke="#D9C3A7" stroke-width="18" stroke-linecap="round"/><path d="M-28 77 L-18 145 M28 77 L18 145" stroke="#55758A" stroke-width="19" stroke-linecap="round"/><circle cx="106" cy="25" r="10" fill="#D9C3A7"/>
+  <circle cx="610" cy="390" r="365" fill="url(#halo)"/>
+
+  <path d="M145 585C325 540 500 510 665 430S930 320 1060 305" fill="none" stroke="#14394A" stroke-width="116" stroke-linecap="round" opacity=".78"/>
+  <path d="M155 580C335 535 505 505 665 425S930 315 1050 300" fill="none" stroke="#2A6170" stroke-width="4" stroke-linecap="round" stroke-dasharray="12 17" opacity=".9"/>
+
+  <g font-family="Arial, sans-serif" font-size="27" font-weight="700" text-anchor="middle" filter="url(#shadow)">
+    <g transform="translate(350 390)"><rect x="-57" y="-32" width="114" height="64" rx="19" fill="#0C2534" stroke="#31586B" stroke-width="3"/><text y="10" fill="#B9CDD7">99.8</text></g>
+    <g transform="translate(505 350)"><rect x="-57" y="-32" width="114" height="64" rx="19" fill="#0E2E39" stroke="#3CAFA4" stroke-width="3"/><text y="10" fill="#DDEDEF">99.9</text></g>
+    <g transform="translate(665 300)"><rect x="-60" y="-35" width="120" height="70" rx="21" fill="#0E303A" stroke="#47D7C3" stroke-width="4"/><text y="10" fill="#EAF5F7">100</text></g>
+    <g transform="translate(830 255)"><rect x="-62" y="-32" width="124" height="64" rx="19" fill="#0C2534" stroke="#31586B" stroke-width="3"/><text y="10" fill="#B9CDD7">100.1</text></g>
   </g>
-  <g opacity=".95" fill="#A9DED8" stroke="#3CAFA4" stroke-width="2">
-    <g transform="translate(320 515)"><circle cy="-24" r="13"/><path d="M-21 0 Q0 -19 21 0 L27 43 Q0 57 -27 43 Z" fill="#16464B"/></g><g transform="translate(450 515)"><circle cy="-24" r="13"/><path d="M-21 0 Q0 -19 21 0 L27 43 Q0 57 -27 43 Z" fill="#16464B"/></g><g transform="translate(580 515)"><circle cy="-24" r="13"/><path d="M-21 0 Q0 -19 21 0 L27 43 Q0 57 -27 43 Z" fill="#16464B"/></g><g transform="translate(710 515)"><circle cy="-24" r="13"/><path d="M-21 0 Q0 -19 21 0 L27 43 Q0 57 -27 43 Z" fill="#16464B"/></g><g transform="translate(840 515)"><circle cy="-24" r="13"/><path d="M-21 0 Q0 -19 21 0 L27 43 Q0 57 -27 43 Z" fill="#16464B"/></g>
+
+  <path d="M215 540C330 505 430 470 515 430S690 350 830 305" fill="none" stroke="#47D7C3" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="350" cy="500" r="11" fill="#8AEADD"/>
+  <circle cx="505" cy="445" r="11" fill="#8AEADD"/>
+  <circle cx="665" cy="375" r="14" fill="#8AEADD"/>
+  <circle cx="830" cy="305" r="10" fill="#8AEADD" opacity=".7"/>
+
+  <g transform="translate(175 555)" filter="url(#shadow)">
+    <circle r="50" fill="#0E3B3F" stroke="#47D7C3" stroke-width="4"/>
+    <path d="M-14 0H18M8-10L18 0 8 10" fill="none" stroke="#8AEADD" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
   </g>
-  <g opacity=".72" fill="#66869A" stroke="#294A5D" stroke-width="2">
-    <g transform="translate(385 515)"><circle cy="-24" r="13"/><path d="M-21 0 Q0 -19 21 0 L27 43 Q0 57 -27 43 Z" fill="#173244"/></g><g transform="translate(515 515)"><circle cy="-24" r="13"/><path d="M-21 0 Q0 -19 21 0 L27 43 Q0 57 -27 43 Z" fill="#173244"/></g><g transform="translate(645 515)"><circle cy="-24" r="13"/><path d="M-21 0 Q0 -19 21 0 L27 43 Q0 57 -27 43 Z" fill="#173244"/></g><g transform="translate(775 515)"><circle cy="-24" r="13"/><path d="M-21 0 Q0 -19 21 0 L27 43 Q0 57 -27 43 Z" fill="#173244"/></g>
-  </g>
-  <g font-family="Arial, sans-serif" font-weight="700" text-anchor="middle" fill="#EAF5F7">
-    <g transform="translate(365 300) scale(.58)" opacity=".7"><rect x="-58" y="-36" width="116" height="72" rx="22" fill="#0E2E39" stroke="#47D7C3" stroke-width="3"/><text y="12" font-size="34">99.8</text></g><g transform="translate(500 265) scale(.63)" opacity=".82"><rect x="-58" y="-36" width="116" height="72" rx="22" fill="#0E2E39" stroke="#47D7C3" stroke-width="3"/><text y="12" font-size="34">99.9</text></g><g transform="translate(635 240) scale(.7)" opacity=".98"><rect x="-58" y="-36" width="116" height="72" rx="22" fill="#0E2E39" stroke="#47D7C3" stroke-width="3"/><text y="12" font-size="34">100</text></g><g transform="translate(785 250) scale(.6)" opacity=".72"><rect x="-58" y="-36" width="116" height="72" rx="22" fill="#0C2534" stroke="#31586B" stroke-width="3"/><text y="12" font-size="34" fill="#B6C9D5">100.1</text></g>
-  </g>
-  <path d="M255 445 C360 400 500 365 640 330 S875 290 1015 260" fill="none" stroke="#47D7C3" stroke-width="8" stroke-linecap="round" opacity=".78"/><circle cx="1015" cy="260" r="13" fill="#8AEADD"/><circle cx="1015" cy="260" r="30" fill="none" stroke="#47D7C3" stroke-width="3" opacity=".45"/>
+  <g transform="translate(900 285)" opacity=".55"><circle r="34" fill="none" stroke="#47D7C3" stroke-width="3"/><circle r="13" fill="#8AEADD"/></g>
 </svg>
