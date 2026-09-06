@@ -10,7 +10,7 @@ Code-drawn visual components are temporary fallback only and do not count as com
 3. Generate a standalone lesson asset.
 4. Store it under `assets/learning/...`.
 5. Register the asset by exact lesson + role (`hook`, `concept`, `practice`, `misconception`, `risk`, `summary`).
-6. Adjust the slide copy so it complements the image instead of repeating it.
+6. Adjust slide copy only when necessary so it complements the image instead of repeating it.
 7. Render the interactive lesson in mobile and desktop Visual QA.
 8. Keep the asset only if it is legible, correctly cropped, contextually accurate and visually balanced.
 
@@ -28,23 +28,23 @@ Code-drawn visual components are temporary fallback only and do not count as com
 
 ## Current measurable coverage
 
-The executable rollout plan covers **24/24 beginner lessons**. Current real-asset state:
+The executable rollout plan covers **24/24 beginner lessons**. Current real-asset state after Beginner Markets migration:
 
-- beginner real-image mappings: **5**
+- beginner real-image mappings: **29**
 - Academy real-image mappings: **8**
-- total real-image mappings: **13**
-- beginner lessons with at least one real image: **1/24**
+- total real-image mappings: **37**
+- beginner lessons with at least one real image: **6/24**
 - Academy lessons with at least one real image: **8/120**
-- active lessons with at least one real image: **9/144**
-- beginner planned real-image roles physically integrated: **5/115**
+- active lessons with at least one real image: **14/144**
+- beginner planned real-image roles physically integrated: **29/115**
 
 The remaining code-drawn visuals are fallback, not completion evidence.
 
 ## Completed real-image integrations
 
-### Beginner — Piyasalar Nasıl Çalışır?
+### Beginner — Piyasalar Nasıl Çalışır? — 6/6 lessons
 
-**Fiyat piyasada nasıl oluşur?**
+#### `fiyat-piyasada-nasil-olusur`
 
 - hook → `assets/learning/beginner/markets/price-formation-hook.webp`
 - concept → `assets/learning/beginner/markets/price-formation-concept.webp`
@@ -52,7 +52,57 @@ The remaining code-drawn visuals are fallback, not completion evidence.
 - misconception → `assets/learning/beginner/markets/price-formation-misconception.webp`
 - summary → `assets/learning/beginner/markets/price-formation-summary.webp`
 
-Status: **5/5 planned real-image roles integrated and rendered in the interactive lesson.**
+Status: **5/5 planned physical roles integrated.**
+
+#### `piyasa-araclari-ayni-degildir`
+
+- hook → `assets/learning/beginner/markets/asset-classes-hook.webp`
+- concept → `assets/learning/beginner/markets/asset-classes-concept.webp`
+- practice → intentionally example-only; no physical image
+- misconception → `assets/learning/beginner/markets/asset-classes-misconception.webp`
+- summary → `assets/learning/beginner/markets/asset-classes-summary.webp`
+
+Status: **4/4 planned physical roles integrated; practice intentionally remains example-only.**
+
+#### `likidite-neden-onemlidir`
+
+- hook → `assets/learning/beginner/markets/liquidity-hook.webp`
+- concept → `assets/learning/beginner/markets/liquidity-concept.webp`
+- practice → `assets/learning/beginner/markets/liquidity-practice.webp`
+- misconception → `assets/learning/beginner/markets/liquidity-misconception.webp`
+- summary → `assets/learning/beginner/markets/liquidity-summary.webp`
+
+Status: **5/5 planned physical roles integrated.**
+
+#### `bid-ask-spread-nedir`
+
+- hook → `assets/learning/beginner/markets/bid-ask-hook.webp`
+- concept → `assets/learning/beginner/markets/bid-ask-concept.webp`
+- practice → `assets/learning/beginner/markets/bid-ask-practice.webp`
+- misconception → `assets/learning/beginner/markets/bid-ask-misconception.webp`
+- summary → `assets/learning/beginner/markets/bid-ask-summary.webp`
+
+Status: **5/5 planned physical roles integrated.**
+
+#### `piyasa-limit-stop-emirleri`
+
+- hook → `assets/learning/beginner/markets/order-types-hook.webp`
+- concept → `assets/learning/beginner/markets/order-types-concept.webp`
+- practice → `assets/learning/beginner/markets/order-types-practice.webp`
+- misconception → `assets/learning/beginner/markets/order-types-misconception.webp`
+- summary → `assets/learning/beginner/markets/order-types-summary.webp`
+
+Status: **5/5 planned physical roles integrated.**
+
+#### `gerceklesme-fiyati-kayma`
+
+- hook → `assets/learning/beginner/markets/slippage-hook.webp`
+- concept → `assets/learning/beginner/markets/slippage-concept.webp`
+- practice → `assets/learning/beginner/markets/slippage-practice.webp`
+- misconception → `assets/learning/beginner/markets/slippage-misconception.webp`
+- summary → `assets/learning/beginner/markets/slippage-summary.webp`
+
+Status: **5/5 planned physical roles integrated.**
 
 ### Academy — existing generated hook assets
 
@@ -65,81 +115,15 @@ Status: **5/5 planned real-image roles integrated and rendered in the interactiv
 - `marjlar-ne-anlatir` → hook
 - `borc-ve-likidite-nasil-okunur` → hook
 
-Status: **8 Academy real-image mappings already active.**
+Status: **8 Academy real-image mappings active.**
 
-## Next exact integration — `piyasa-araclari-ayni-degildir`
-
-This lesson deliberately uses **four image roles, not five**.
-
-### hook
-
-Expected asset:
-
-`assets/learning/beginner/markets/asset-classes-hook.webp`
-
-Teaching job: distinguish stock, bond, FX and commodity at a glance without turning the image into a text-heavy table.
-
-### concept
-
-Expected asset:
-
-`assets/learning/beginner/markets/asset-classes-concept.webp`
-
-Teaching job: show what the learner is economically buying:
-
-- stock → ownership in a company
-- bond → lending to an issuer
-- FX → relative value between two currencies
-- commodity → exposure to a physical/raw product
-
-The slide copy should stay shorter than the image explanation rather than repeat every visual detail.
-
-### practice — example only
-
-No real image is required for this role.
-
-Existing practical example:
-
-> Buying a BIST share means company ownership; buying gold is exposure to another asset type, not company ownership.
-
-This is intentionally kept as a short real-world example so the lesson does not become an icon grid on every step.
-
-### misconception
-
-Expected asset:
-
-`assets/learning/beginner/markets/asset-classes-misconception.webp`
-
-Teaching job: visually demonstrate **similar-looking charts ≠ same instrument / same risk**.
-
-### summary
-
-Expected asset:
-
-`assets/learning/beginner/markets/asset-classes-summary.webp`
-
-Teaching job: a calm four-part memory visual with almost no explanatory text baked into the artwork.
-
-The lesson stays `planned` until all four files physically exist, are registered in `BeginnerEditorialImageVisual.tsx`, render in the interactive lesson and pass Visual QA. Do not add static `require()` entries before the files exist.
-
-## Remaining Piyasalar queue
-
-After asset classes:
-
-1. `likidite-neden-onemlidir` — hook / concept / practice / misconception / summary
-2. `bid-ask-spread-nedir` — hook / concept / practice / misconception / summary
-3. `piyasa-limit-stop-emirleri` — hook / concept / practice / misconception / summary
-4. `gerceklesme-fiyati-kayma` — hook / concept / practice / misconception / summary
-
-Each asset is produced as a standalone teaching image, added to the repository, then registered to the exact lesson role. No UI screenshot/mockup is an accepted lesson asset.
-
-## Remaining beginner rollout
+## Next beginner rollout
 
 The canonical role plan for all 24 beginner lessons is in:
 
 `docs/BEGINNER_EDITORIAL_IMAGE_PLAN.json`
 
-After Piyasalar:
+With Beginner Markets complete, continue in this order:
 
 1. Para ve Ekonomi — 6 lessons
 2. Grafikleri Korkmadan Oku — 6 lessons
@@ -166,7 +150,7 @@ Recommended school order:
 
 ## CI protection
 
-`scripts/editorialImageCoverage.mjs` now verifies:
+`scripts/editorialImageCoverage.mjs` verifies:
 
 - every registered real editorial image points to a physical repository asset,
 - no lesson/role pair is registered twice,
@@ -177,6 +161,8 @@ Recommended school order:
 - beginner real-image mappings cannot exist outside the declared rollout plan.
 
 The Quality workflow runs this audit on every PR update.
+
+`beginnerResponsiveEditorialQa.mjs` traverses all six Beginner Markets lessons at 360 × 800, 390 × 844 and 1440 × 900. It checks visual sizing, horizontal overflow, 3:2 editorial-image geometry, legacy fallback leakage and the intentionally text-led asset-classes practice role.
 
 ## Definition of done
 
