@@ -9,6 +9,11 @@ type LessonPolish = {
   readonly taskChoiceLabels?: readonly CopyPair[];
 };
 
+type QuizQuestionPolish = {
+  readonly prompt?: CopyPair;
+  readonly optionLabels?: Readonly<Record<number, CopyPair>>;
+};
+
 const POLISH: Readonly<Record<string, LessonPolish>> = {
   'lesson.economy.growth.001': {
     hook: {
@@ -69,31 +74,89 @@ const POLISH: Readonly<Record<string, LessonPolish>> = {
   },
 };
 
+const QUIZ_POLISH: Readonly<Record<string, QuizQuestionPolish>> = {
+  'question.enflasyon-satin-alma-gucu.1': {
+    optionLabels: {
+      1: { tr: 'Paranın üzerinde yazan nominal tutarı', en: 'The nominal amount printed on the money' },
+    },
+  },
+  'question.faiz-orani-ne-anlatir.1': {
+    optionLabels: {
+      1: { tr: 'Kredinin vadesini tek başına', en: 'The loan term by itself' },
+      2: { tr: 'Borç alınan ana para tutarını tek başına', en: 'The principal amount by itself' },
+    },
+  },
+  'question.likidite-neden-onemlidir.1': {
+    optionLabels: {
+      1: { tr: 'Fiyatın hangi yöne gideceğini', en: 'Which direction price will move' },
+      2: { tr: 'Varlığın uzun vadeli değerini', en: 'The asset’s long-term value' },
+    },
+  },
+  'question.bir-mum-bize-ne-soyler.1': {
+    optionLabels: {
+      2: { tr: 'Şirketin temel değerini', en: 'The company’s fundamental value' },
+    },
+  },
+  'question.momentum-ne-anlatir.1': {
+    optionLabels: {
+      2: { tr: 'Hareketin yalnız hangi yönde olduğunu', en: 'Only the direction of the move' },
+    },
+  },
+  'question.volatilite-once-risktir.1': {
+    optionLabels: {
+      2: { tr: 'Varlığın uzun vadeli değerini', en: 'The asset’s long-term value' },
+    },
+  },
+  'question.pozisyon-buyuklugu-once-gelir.1': {
+    optionLabels: {
+      2: { tr: 'Varlığın uzun vadeli değerini', en: 'The asset’s long-term value' },
+    },
+  },
+  'question.pozisyon-buyuklugu-once-gelir.3': {
+    optionLabels: {
+      1: { tr: 'Fiyat geçmişte hangi yöne gitti ve hedef ne kadar büyük?', en: 'Which way did price move in the past and how large is the target?' },
+    },
+  },
+  'question.risk-getiri-tek-basina-yetmez.2': {
+    prompt: {
+      tr: 'Kâğıt üzerindeki hedef ile gerçek işlem sonucunu hangisi farklılaştırabilir?',
+      en: 'What can make the real trade result differ from the target written on paper?',
+    },
+    optionLabels: {
+      1: { tr: 'Yalnız hedef ile stop arasındaki teorik oran', en: 'Only the theoretical ratio between target and stop' },
+      2: { tr: 'Yalnız hedefin giriş fiyatının üstünde veya altında olması', en: 'Only whether the target is above or below the entry price' },
+    },
+  },
+};
+
 function localized(value: CopyPair): LocalizedText {
   return { tr: value.tr, en: value.en };
 }
 
 export function normalizeBeginnerProductQuality(lesson: MicroLesson): MicroLesson {
   const polish = POLISH[lesson.id];
-  if (!polish) return lesson;
+  const hasQuizPolish = lesson.quiz.questions.some((question) => Boolean(QUIZ_POLISH[question.id]));
+  if (!polish && !hasQuizPolish) return lesson;
 
-  const contentBlocks = lesson.contentBlocks.map((block) => {
-    if (polish.hook && block.kind === 'prompt') {
-      return {
-        ...block,
-        copy: {
-          ...block.copy,
-          normal: localized(polish.hook),
-        },
-      };
-    }
-    if (polish.visualAlt && block.kind === 'visual') {
-      return { ...block, alt: localized(polish.visualAlt) };
-    }
-    return block;
-  });
+  const contentBlocks = polish
+    ? lesson.contentBlocks.map((block) => {
+        if (polish.hook && block.kind === 'prompt') {
+          return {
+            ...block,
+            copy: {
+              ...block.copy,
+              normal: localized(polish.hook),
+            },
+          };
+        }
+        if (polish.visualAlt && block.kind === 'visual') {
+          return { ...block, alt: localized(polish.visualAlt) };
+        }
+        return block;
+      })
+    : lesson.contentBlocks;
 
-  const practicalTask = polish.taskPrompt || polish.taskChoiceLabels
+  const practicalTask = polish && (polish.taskPrompt || polish.taskChoiceLabels)
     ? {
         ...lesson.practicalTask,
         prompt: polish.taskPrompt
@@ -111,9 +174,28 @@ export function normalizeBeginnerProductQuality(lesson: MicroLesson): MicroLesso
       }
     : lesson.practicalTask;
 
+  const quiz = hasQuizPolish
+    ? {
+        ...lesson.quiz,
+        questions: lesson.quiz.questions.map((question) => {
+          const questionPolish = QUIZ_POLISH[question.id];
+          if (!questionPolish) return question;
+          return {
+            ...question,
+            prompt: questionPolish.prompt ? localized(questionPolish.prompt) : question.prompt,
+            options: question.options.map((option, optionIndex) => {
+              const label = questionPolish.optionLabels?.[optionIndex];
+              return label ? { ...option, label: localized(label) } : option;
+            }),
+          };
+        }),
+      }
+    : lesson.quiz;
+
   return {
     ...lesson,
     contentBlocks,
     practicalTask,
+    quiz,
   };
 }
