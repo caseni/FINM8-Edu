@@ -1,3 +1,4 @@
+import { normalizeAcademyExpansionAssessmentFinalQuality } from './academyExpansionAssessmentFinalQuality';
 import { normalizeAcademyExpansionAssessmentQuality } from './academyExpansionAssessmentQuality';
 import { normalizeAcademyFoundationAssessmentQuality } from './academyFoundationAssessmentQuality';
 import { normalizeAcademyFundamentalEditorial } from './academyFundamentalEditorial';
@@ -101,7 +102,8 @@ export const MICRO_LESSON_CATALOG: readonly MicroLesson[] = MICRO_LESSON_CANDIDA
   .map(normalizeQuizExplanationQuality)
   .map(normalizeBeginnerProductQuality)
   .map(normalizeAcademyFoundationAssessmentQuality)
-  .map(normalizeAcademyExpansionAssessmentQuality);
+  .map(normalizeAcademyExpansionAssessmentQuality)
+  .map(normalizeAcademyExpansionAssessmentFinalQuality);
 
 export function getMicroLessonById(lessonId: string): MicroLesson | undefined {
   return MICRO_LESSON_CATALOG.find((lesson) => lesson.id === lessonId);
