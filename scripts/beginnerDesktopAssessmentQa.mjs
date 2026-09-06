@@ -17,6 +17,14 @@ async function capture(page, label) {
   await page.screenshot({ path: `visual-qa/${label}.png`, fullPage: true });
 }
 
+async function optionPosition(page, label) {
+  const options = page.getByRole('radio');
+  for (let index = 0; index < await options.count(); index += 1) {
+    if ((await options.nth(index).getAttribute('aria-label')) === label) return index;
+  }
+  throw new Error(`Quiz option not found for position check: ${label}`);
+}
+
 async function openPriceFormationLesson(page) {
   await page.goto(baseUrl, { waitUntil: 'networkidle' });
   await page.getByText('Öğrenmeye Başla', { exact: true }).waitFor({ timeout: 10000 });
@@ -52,16 +60,17 @@ try {
   await advanceLessonToTask(page);
 
   await page.getByText('ÖNCE SEN ÇÖZ', { exact: true }).waitFor();
+  await page.getByText(/Bir alıcı 100 TL ödemeye hazır, satıcı da 100 TL’den satmayı kabul ediyor/i).waitFor();
   await capture(page, 'beginner-desktop-assessment-task-start');
 
-  await page.getByText('Şirketin her dakika yeni fiyat seçmesi', { exact: true }).click();
+  await page.getByText('Fiyatı şirket tek başına belirler', { exact: true }).click();
   await page.getByRole('button', { name: 'Kontrol et' }).click();
   await page.getByText('Henüz değil. Senaryodaki ipuçlarını birlikte değerlendir.', { exact: true }).waitFor();
   await capture(page, 'beginner-desktop-assessment-task-wrong');
 
   await page.getByRole('button', { name: 'Tekrar dene' }).click();
   await page.getByText('ÖNCE SEN ÇÖZ', { exact: true }).waitFor();
-  await page.getByText('Alıcı ve satıcının aynı fiyatta buluşması', { exact: true }).click();
+  await page.getByText('100 TL’de işlem gerçekleşebilir', { exact: true }).click();
   await page.getByRole('button', { name: 'Kontrol et' }).click();
   await page.getByText('Doğru. Seçimin senaryodaki kanıtlarla uyumlu.', { exact: true }).waitFor();
   await capture(page, 'beginner-desktop-assessment-task-correct');
@@ -71,15 +80,32 @@ try {
   await page.getByText('Bir işlem ne zaman oluşur?', { exact: true }).waitFor();
   await capture(page, 'beginner-desktop-assessment-quiz-start');
 
+  const correctPositions = [];
+  correctPositions.push(await optionPosition(page, 'Alıcı ve satıcı aynı fiyatta buluştuğunda'));
+
   await page.getByText('Şirket yeni fiyat yazdığında', { exact: true }).click();
   await page.getByRole('button', { name: 'Cevabı kontrol et' }).click();
   await page.getByText('Bu kez değil', { exact: true }).waitFor();
   await capture(page, 'beginner-desktop-assessment-quiz-feedback');
+  await page.getByRole('button', { name: 'Sonraki soru' }).click();
+
+  await page.getByText('Ekrandaki son fiyat neyi gösterir?', { exact: true }).waitFor();
+  correctPositions.push(await optionPosition(page, 'Gerçekleşmiş son işlemin fiyatını'));
+  await page.getByText('Gerçekleşmiş son işlemin fiyatını', { exact: true }).click();
+  await page.getByRole('button', { name: 'Cevabı kontrol et' }).click();
+  await page.getByText('✓ Doğru', { exact: true }).waitFor();
+  await page.getByRole('button', { name: 'Sonraki soru' }).click();
+
+  await page.getByText('Yeni alıcılar ve satıcılar gelirse ne olabilir?', { exact: true }).waitFor();
+  correctPositions.push(await optionPosition(page, 'Fiyat değişebilir'));
+  if (new Set(correctPositions).size !== correctPositions.length) {
+    throw new Error(`Beginner quiz correct-option positions must vary across the three questions; got ${correctPositions.join(', ')}`);
+  }
 
   if (diagnostics.length > 0) {
     throw new Error(`Desktop beginner assessment diagnostics:\n${diagnostics.join('\n')}`);
   }
-  console.log('Desktop beginner assessment: task + quiz feedback PASS');
+  console.log(`Desktop beginner assessment: task + quiz feedback + balanced correct positions ${correctPositions.join('/')} PASS`);
 } finally {
   await browser.close();
 }
