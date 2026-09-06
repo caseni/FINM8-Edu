@@ -61,8 +61,8 @@ const beginnerEndToEndCases = [
     section: 'Piyasalar Nasıl Çalışır',
     lesson: 'Bir fiyat nasıl ortaya çıkar',
     lessonId: 'lesson.market.price-formation.001',
-    taskWrong: 'Şirketin her dakika yeni fiyat seçmesi',
-    taskCorrect: ['Alıcı ve satıcının aynı fiyatta buluşması'],
+    taskWrong: 'Fiyatı şirket tek başına belirler',
+    taskCorrect: ['100 TL’de işlem gerçekleşebilir'],
     quizOptionIndexes: [1, 1, 0],
   },
   {
