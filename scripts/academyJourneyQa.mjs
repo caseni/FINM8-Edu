@@ -172,7 +172,7 @@ async function completeQuiz(page, prefix, firstLessonName) {
     if (optionCount < 2) throw new Error(`${prefix}: question ${question} has too few options`);
     await options.nth(0).click();
     await page.getByRole('button', { name: 'Cevabı kontrol et', exact: true }).click();
-    await page.getByText(/✓ Doğru|× Senin seçimin:/).waitFor();
+    await page.getByRole('status').waitFor();
     await assertNoHorizontalOverflow(page, `${prefix}-quiz-${question}`);
     if (question === 1) {
       await page.screenshot({ path: `visual-qa/${prefix}-quiz-feedback.png`, fullPage: true });
