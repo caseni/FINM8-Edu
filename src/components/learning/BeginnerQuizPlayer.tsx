@@ -25,6 +25,21 @@ export function BeginnerQuizPlayer({ quiz, language, reinforcementVisual, theme 
   const advancingRef = useRef(false);
   const styles = useMemo(() => createStyles(theme, wide), [theme, wide]);
   const question = quiz.questions[questionIndex];
+  const displayedOptions = useMemo(() => {
+    const options = [...question.options];
+    if (options.length < 2) return options;
+
+    let hash = 0;
+    for (const character of question.id) {
+      hash = ((hash * 31) + character.charCodeAt(0)) >>> 0;
+    }
+    const targetCorrectIndex = (hash + questionIndex) % options.length;
+    const authoredCorrectIndex = options.findIndex((option) => option.id === question.correctOptionId);
+    if (authoredCorrectIndex < 0) return options;
+
+    const leftShift = (authoredCorrectIndex - targetCorrectIndex + options.length) % options.length;
+    return [...options.slice(leftShift), ...options.slice(0, leftShift)];
+  }, [question, questionIndex]);
   const selectedIsCorrect = selectedOptionId === question.correctOptionId;
   const selectedOption = question.options.find((option) => option.id === selectedOptionId);
   const correctOption = question.options.find((option) => option.id === question.correctOptionId);
@@ -76,7 +91,7 @@ export function BeginnerQuizPlayer({ quiz, language, reinforcementVisual, theme 
           <Text style={styles.question}>{selectLocalizedText(question.prompt, language)}</Text>
 
           <View style={styles.options}>
-            {question.options.map((option) => {
+            {displayedOptions.map((option) => {
               const selected = option.id === selectedOptionId;
               const correct = revealed && option.id === question.correctOptionId;
               const incorrect = revealed && selected && !correct;
