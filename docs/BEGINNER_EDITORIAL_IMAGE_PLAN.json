@@ -19,7 +19,7 @@
     {"slug":"fiyat-piyasada-nasil-olusur","assetDir":"assets/learning/beginner/markets","assetPrefix":"price-formation","roles":["hook","concept","practice","misconception","summary"],"exampleOnlyRoles":[],"status":"integrated"},
     {"slug":"piyasa-araclari-ayni-degildir","assetDir":"assets/learning/beginner/markets","assetPrefix":"asset-classes","roles":["hook","concept","misconception","summary"],"exampleOnlyRoles":["practice"],"status":"integrated"},
     {"slug":"likidite-neden-onemlidir","assetDir":"assets/learning/beginner/markets","assetPrefix":"liquidity","roles":["hook","concept","practice","misconception","summary"],"exampleOnlyRoles":[],"status":"integrated"},
-    {"slug":"bid-ask-spread-nedir","assetDir":"assets/learning/beginner/markets","assetPrefix":"bid-ask","roles":["hook","concept","practice","misconception","summary"],"exampleOnlyRoles":[],"status":"planned"},
+    {"slug":"bid-ask-spread-nedir","assetDir":"assets/learning/beginner/markets","assetPrefix":"bid-ask","roles":["hook","concept","practice","misconception","summary"],"exampleOnlyRoles":[],"status":"integrated"},
     {"slug":"piyasa-limit-stop-emirleri","assetDir":"assets/learning/beginner/markets","assetPrefix":"order-types","roles":["hook","concept","practice","misconception","summary"],"exampleOnlyRoles":[],"status":"planned"},
     {"slug":"gerceklesme-fiyati-kayma","assetDir":"assets/learning/beginner/markets","assetPrefix":"slippage","roles":["hook","concept","practice","misconception","summary"],"exampleOnlyRoles":[],"status":"planned"},
 
