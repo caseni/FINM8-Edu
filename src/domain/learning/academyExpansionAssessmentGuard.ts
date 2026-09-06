@@ -27,8 +27,12 @@ export interface AcademyExpansionAssessmentIssue {
 export interface AcademyExpansionAssessmentReport {
   readonly expansionLessonCount: number;
   readonly questionCount: number;
+  readonly coverageIssues: readonly string[];
   readonly issues: readonly AcademyExpansionAssessmentIssue[];
 }
+
+const EXPECTED_EXPANSION_LESSONS = 60;
+const EXPECTED_EXPANSION_QUESTIONS = 180;
 
 const EXPANSION_LESSONS: Readonly<Record<AcademyTrackId, readonly MicroLesson[]>> = {
   economy: ECONOMY_EXPANSION_LESSONS,
@@ -52,6 +56,10 @@ const PLACEHOLDER_PATTERNS: readonly RegExp[] = [
   /treat the relationship as a certain rule regardless of context/i,
   /yüzeysel görsel biçimi kavramın ana nedeni/i,
   /superficial visual appearance as the main cause/i,
+  /her zaman;\s*koşullar ve istisnalar değişse bile sonucun aynı olacağını varsaymak/i,
+  /always;\s*assume the same outcome regardless of conditions or exceptions/i,
+  /asla;\s*koşullar değişse bile bunun gerçekleşemeyeceğini varsaymak/i,
+  /never;\s*assume it cannot occur even when conditions change/i,
 ];
 
 const BINARY_PREFIX = /^(Hayır|Evet|Her zaman|Asla|No|Yes|Always|Never)[;:,]\s*(.+)$/i;
@@ -60,12 +68,44 @@ function comparable(value: string): string {
   return value.trim().replace(/\s+/g, ' ').replace(/[.!?]+$/, '').toLocaleLowerCase('tr-TR');
 }
 
+function tokens(value: string): readonly string[] {
+  return comparable(value)
+    .replace(/[^\p{L}\p{N}%]+/gu, ' ')
+    .split(' ')
+    .filter((token) => token.length > 2);
+}
+
+function isMaterialNearEcho(answer: string, explanation: string): boolean {
+  const answerTokens = new Set(tokens(answer));
+  const explanationTokens = new Set(tokens(explanation));
+  if (answerTokens.size < 6 || explanationTokens.size < 6) return false;
+
+  let shared = 0;
+  for (const token of answerTokens) {
+    if (explanationTokens.has(token)) shared += 1;
+  }
+
+  const smaller = Math.min(answerTokens.size, explanationTokens.size);
+  const larger = Math.max(answerTokens.size, explanationTokens.size);
+  return shared / smaller >= 0.9 && smaller / larger >= 0.75;
+}
+
+function repeatsExplanation(label: string, explanation: string): boolean {
+  const match = BINARY_PREFIX.exec(label.trim());
+  const candidates = match ? [match[2], label] : [label];
+  return candidates.some(
+    (candidate) =>
+      comparable(candidate) === comparable(explanation) || isMaterialNearEcho(candidate, explanation),
+  );
+}
+
 function isPlaceholder(value: string): boolean {
   return PLACEHOLDER_PATTERNS.some((pattern) => pattern.test(value));
 }
 
 export function getAcademyExpansionAssessmentReport(): AcademyExpansionAssessmentReport {
   const catalogById = new Map(MICRO_LESSON_CATALOG.map((lesson) => [lesson.id, lesson]));
+  const coverageIssues: string[] = [];
   const issues: AcademyExpansionAssessmentIssue[] = [];
   let expansionLessonCount = 0;
   let questionCount = 0;
@@ -73,7 +113,10 @@ export function getAcademyExpansionAssessmentReport(): AcademyExpansionAssessmen
   for (const trackId of ACADEMY_TRACK_IDS) {
     for (const stub of EXPANSION_LESSONS[trackId]) {
       const lesson = catalogById.get(stub.id);
-      if (!lesson) continue;
+      if (!lesson) {
+        coverageIssues.push(`${trackId} ${stub.id}: rendered expansion lesson missing from catalog`);
+        continue;
+      }
       expansionLessonCount += 1;
 
       for (const question of lesson.quiz.questions) {
@@ -86,15 +129,14 @@ export function getAcademyExpansionAssessmentReport(): AcademyExpansionAssessmen
             ['en', correct.label.en, question.explanation.en],
           ] as const) {
             if (!label || !explanation) continue;
-            const match = BINARY_PREFIX.exec(label.trim());
-            if (match && comparable(match[2]) === comparable(explanation)) {
+            if (repeatsExplanation(label, explanation)) {
               issues.push({
                 trackId,
                 lessonId: lesson.id,
                 targetId: question.id,
                 optionId: correct.id,
                 reason: 'explanation_echo',
-                detail: `correct option repeats the ${language} explanation verbatim`,
+                detail: `correct option materially repeats the ${language} explanation`,
               });
             }
           }
@@ -129,5 +171,16 @@ export function getAcademyExpansionAssessmentReport(): AcademyExpansionAssessmen
     }
   }
 
-  return { expansionLessonCount, questionCount, issues };
+  if (expansionLessonCount !== EXPECTED_EXPANSION_LESSONS) {
+    coverageIssues.push(
+      `expected ${EXPECTED_EXPANSION_LESSONS} rendered expansion lessons, found ${expansionLessonCount}`,
+    );
+  }
+  if (questionCount !== EXPECTED_EXPANSION_QUESTIONS) {
+    coverageIssues.push(
+      `expected ${EXPECTED_EXPANSION_QUESTIONS} expansion quiz questions, found ${questionCount}`,
+    );
+  }
+
+  return { expansionLessonCount, questionCount, coverageIssues, issues };
 }
