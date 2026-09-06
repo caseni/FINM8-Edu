@@ -75,8 +75,8 @@ const ACADEMY_FOUNDATION_ASSESSMENT_OVERRIDES: Readonly<
   'lesson.markets.etf.001': {
     taskChoices: {
       label: copy(
-        'Yalnız fonu çıkaran kurumun tanınırlığı',
-        'Only the brand recognition of the issuing firm',
+        'Yalnız son bir aylık fiyat performansına',
+        'Only its price performance over the last month',
       ),
     },
   },
@@ -84,8 +84,8 @@ const ACADEMY_FOUNDATION_ASSESSMENT_OVERRIDES: Readonly<
     questionOptions: {
       'question.tahvil-fiyati-ve-getirisi.2': {
         c: copy(
-          'Yalnız ihraççının tanınırlığı değiştiği için',
-          'Because only the issuer’s brand recognition changes',
+          'Yalnız ihraç sırasında belirlenen nominal değer değiştiği için',
+          'Only because the face value set at issuance changes',
         ),
       },
     },
@@ -161,8 +161,8 @@ const ACADEMY_FOUNDATION_ASSESSMENT_OVERRIDES: Readonly<
   'lesson.fundamental.income-statement.001': {
     taskChoices: {
       ticker: copy(
-        'Şirketin marka görünümü yenilendi mi?',
-        'Has the company refreshed its brand appearance?',
+        'Satış arttığı için kârın da otomatik artması gerekmiyor mu?',
+        'Doesn’t higher sales automatically mean profit should rise too?',
       ),
     },
   },
@@ -170,8 +170,8 @@ const ACADEMY_FOUNDATION_ASSESSMENT_OVERRIDES: Readonly<
     questionOptions: {
       'question.marjlar-ne-anlatir.1': {
         c: copy(
-          'Şirketin marka bilinirliğini',
-          'The company’s brand recognition',
+          'Şirketin toplam satış tutarını',
+          'The company’s total sales amount',
         ),
       },
     },
@@ -267,8 +267,8 @@ const ACADEMY_FOUNDATION_ASSESSMENT_OVERRIDES: Readonly<
   'lesson.portfolio.risk-budget.001': {
     taskChoices: {
       equal: copy(
-        'Portföyün geri kalanıyla daha zayıf ilişkisi olan daha sakin pozisyon',
-        'The calmer position with a weaker relationship to the rest of the portfolio',
+        'Yalnız varlıkların birim fiyatları farklı olduğu için',
+        'Only because the assets have different unit prices',
       ),
     },
   },
