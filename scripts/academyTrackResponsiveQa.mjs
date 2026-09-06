@@ -1,3 +1,4 @@
+import { mkdir } from 'node:fs/promises';
 import { chromium } from 'playwright-core';
 
 const baseUrl = 'http://127.0.0.1:4173/';
@@ -142,17 +143,37 @@ async function assertMobileVerticalBalance(page, visual, label, step, total) {
   const actionBox = await primaryAction.boundingBox();
   if (!actionBox) throw new Error(`${label}: primary lesson action is not measurable`);
 
-  // Visual-only steps can carry a teaching example below the image. Measure from
-  // the lowest rendered teaching content so explanatory copy is never counted as
-  // empty space while the 220px composition budget remains unchanged.
+  const viewportHeight = page.viewportSize().height;
+  if (actionBox.y < -1 || actionBox.y + actionBox.height > viewportHeight + 1) {
+    throw new Error(`${label}: primary lesson action escapes the viewport`);
+  }
+
+  // Measure rendered teaching text and the illustration, not the layout wrapper:
+  // a flexible wrapper can include empty space below its last meaningful child.
+  // This also includes mini examples below visual-only steps.
   const lessonContent = page.getByTestId('lesson-step-content');
-  const contentBox = (await lessonContent.count()) > 0
-    ? await lessonContent.boundingBox()
-    : undefined;
+  const textBottom = (await lessonContent.count()) > 0
+    ? await lessonContent.evaluate((node) => {
+      const walker = document.createTreeWalker(node, NodeFilter.SHOW_TEXT);
+      let bottom = 0;
+      while (walker.nextNode()) {
+        const text = walker.currentNode;
+        if (!text.textContent?.trim()) continue;
+        const parent = text.parentElement;
+        if (!parent || parent.closest('[aria-hidden="true"]')) continue;
+        const style = getComputedStyle(parent);
+        if (style.visibility === 'hidden' || style.display === 'none') continue;
+        const range = document.createRange();
+        range.selectNodeContents(text);
+        for (const rect of range.getClientRects()) {
+          if (rect.width > 0 && rect.height > 0) bottom = Math.max(bottom, rect.bottom);
+        }
+      }
+      return bottom;
+    })
+    : 0;
   const visualBottom = visual.y + visual.height;
-  let teachingBottom = contentBox
-    ? Math.max(visualBottom, contentBox.y + contentBox.height)
-    : visualBottom;
+  let teachingBottom = Math.max(visualBottom, textBottom);
   let safetyBox;
   if (step === total) {
     const safetyLabel = page.getByText('EĞİTİM NOTU', { exact: true });
@@ -168,6 +189,7 @@ async function assertMobileVerticalBalance(page, visual, label, step, total) {
   }
 
   const contentGap = actionBox.y - teachingBottom;
+  console.log(`${label}: vertical balance ${JSON.stringify({ teachingBottom, actionTop: actionBox.y, actionBottom: actionBox.y + actionBox.height, contentGap, viewportHeight })}`);
   if (contentGap > MAX_MOBILE_CONTENT_TO_ACTION_GAP) {
     throw new Error(`${label}: ${contentGap.toFixed(1)}px dead zone below the teaching content; mobile budget is ${MAX_MOBILE_CONTENT_TO_ACTION_GAP}px`);
   }
@@ -187,6 +209,7 @@ async function assertNoOverflow(page, label) {
   if (d.page > d.viewport + 1) throw new Error(`${label}: horizontal overflow ${d.page}px > ${d.viewport}px`);
 }
 
+await mkdir('visual-qa', { recursive: true });
 const browser = await chromium.launch({ executablePath: process.env.CHROME_BIN, headless: true });
 try {
   for (const viewport of viewports) {
@@ -210,24 +233,32 @@ try {
 
       for (let step = 1; step <= total; step += 1) {
         const label = `academy-${slug(trackTitle)}-${viewport.name}-${slug(title)}-step-${step}`;
-        await assertNoOverflow(page, label);
-        const visual = await largestImage(page);
-        if (!visual) throw new Error(`${label}: no visible lesson visual`);
-        if (visual.width < viewport.minVisualWidth) throw new Error(`${label}: visual too narrow at ${visual.width.toFixed(1)}px`);
-        if (visual.width > (viewport.sizeClass === 'mobile' ? 360 : 700) + 1) throw new Error(`${label}: visual too wide at ${visual.width.toFixed(1)}px`);
-        if (visual.x < -1 || visual.x + visual.width > viewport.width + 1) throw new Error(`${label}: visual escapes viewport`);
-        if (visual.height > viewport.height * 0.75) throw new Error(`${label}: visual too tall at ${visual.height.toFixed(1)}px`);
-        if (viewport.name === 'mobile-390') {
-          await assertVisualTeachingCopy(page, visual, label, step, total);
-          await assertMobileVerticalBalance(page, visual, label, step, total);
-        }
+        try {
+          await assertNoOverflow(page, label);
+          const visual = await largestImage(page);
+          if (!visual) throw new Error(`${label}: no visible lesson visual`);
+          if (visual.width < viewport.minVisualWidth) throw new Error(`${label}: visual too narrow at ${visual.width.toFixed(1)}px`);
+          if (visual.width > (viewport.sizeClass === 'mobile' ? 360 : 700) + 1) throw new Error(`${label}: visual too wide at ${visual.width.toFixed(1)}px`);
+          if (visual.x < -1 || visual.x + visual.width > viewport.width + 1) throw new Error(`${label}: visual escapes viewport`);
+          if (visual.height > viewport.height * 0.75) throw new Error(`${label}: visual too tall at ${visual.height.toFixed(1)}px`);
+          if (viewport.sizeClass === 'mobile') {
+            await assertVisualTeachingCopy(page, visual, label, step, total);
+            await assertMobileVerticalBalance(page, visual, label, step, total);
+          }
 
-        if (step === 1 || step === 3 || step === total) {
-          await page.screenshot({ path: `visual-qa/${label}.png`, fullPage: true });
-        }
-        if (step < total) {
-          await page.getByRole('button', { name: /Sonraki adıma geç/i }).click();
-          await page.getByText(new RegExp(`Adım ${step + 1}\\/${total}`)).waitFor();
+          if (step === 1 || step === 3 || step === total) {
+            await page.screenshot({ path: `visual-qa/${label}.png`, fullPage: true });
+          }
+          if (step < total) {
+            await page.getByRole('button', { name: /Sonraki adıma geç/i }).click();
+            await page.getByText(new RegExp(`Adım ${step + 1}\\/${total}`)).waitFor();
+          }
+        } catch (error) {
+          // Preserve the failing step, including steps 2/4 and layout/DOM errors.
+          // Screenshot trouble must never replace the original product failure.
+          await page.screenshot({ path: `visual-qa/${label}-failure.png`, fullPage: true })
+            .catch((captureError) => console.error(`${label}: failure screenshot unavailable: ${captureError.message}`));
+          throw error;
         }
       }
 
