@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid meet">
+  <defs>
+    <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#071522"/><stop offset="1" stop-color="#0A2030"/></linearGradient>
+    <radialGradient id="halo"><stop stop-color="#47D7C3" stop-opacity=".20"/><stop offset="1" stop-color="#47D7C3" stop-opacity="0"/></radialGradient>
+  </defs>
+  <rect width="1200" height="800" rx="44" fill="url(#bg)"/>
+  <circle cx="600" cy="400" r="350" fill="url(#halo)"/>
+  <path d="M220 430H980" stroke="#173B4C" stroke-width="92" stroke-linecap="round" opacity=".76"/>
+  <circle cx="315" cy="430" r="42" fill="#0E3B3F" stroke="#47D7C3" stroke-width="5"/>
+  <path d="M357 430H500" stroke="#47D7C3" stroke-width="7" stroke-linecap="round"/>
+  <circle cx="555" cy="430" r="62" fill="none" stroke="#47D7C3" stroke-width="4" stroke-dasharray="10 14"/>
+  <text x="555" y="450" text-anchor="middle" font-family="Arial, sans-serif" font-size="52" font-weight="800" fill="#E8F4F5">?</text>
+  <path d="M617 430H790" stroke="#78909E" stroke-width="6" stroke-linecap="round"/>
+  <circle cx="850" cy="430" r="40" fill="#172C3A" stroke="#718894" stroke-width="4"/>
+  <path d="M810 350C850 315 900 300 945 292" fill="none" stroke="#47D7C3" stroke-width="4" stroke-linecap="round" opacity=".65"/>
+  <path d="M810 510C850 545 900 560 945 568" fill="none" stroke="#C78E79" stroke-width="4" stroke-linecap="round" opacity=".65"/>
+  <circle cx="955" cy="290" r="12" fill="#8AEADD"/>
+  <circle cx="955" cy="570" r="12" fill="#D0A08D"/>
+</svg>

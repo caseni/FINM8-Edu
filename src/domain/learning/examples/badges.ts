@@ -28,7 +28,7 @@ export const INITIAL_BADGES: readonly LearningBadge[] = [
       },
     ],
     disclaimer: {
-      tr: 'Bu badge bir öğrenme başarısıdır; sertifika veya mesleki yeterlilik değildir.',
+      tr: 'Bu rozet bir öğrenme başarısıdır; sertifika veya mesleki yeterlilik değildir.',
       en: 'This badge is a learning achievement, not a certificate or professional qualification.',
     },
   },
@@ -36,8 +36,8 @@ export const INITIAL_BADGES: readonly LearningBadge[] = [
     id: 'badge.market-foundations.module',
     title: { tr: 'Piyasa Mekaniği', en: 'Market Mechanics' },
     description: {
-      tr: 'Piyasa Temelleri modülünü ve uygulamalı challenge’ını tamamla.',
-      en: 'Complete the Market Foundations module and its applied challenge.',
+      tr: 'Piyasa Temelleri modülünü ve bölüm sonu uygulamasını tamamla.',
+      en: 'Complete the Market Foundations module and its module wrap-up.',
     },
     credentialType: 'learning_achievement',
     definitionVersion: '0.1.0',
@@ -49,7 +49,7 @@ export const INITIAL_BADGES: readonly LearningBadge[] = [
       },
     ],
     disclaimer: {
-      tr: 'Bu badge bir öğrenme başarısıdır; sertifika veya mesleki yeterlilik değildir.',
+      tr: 'Bu rozet bir öğrenme başarısıdır; sertifika veya mesleki yeterlilik değildir.',
       en: 'This badge is a learning achievement, not a certificate or professional qualification.',
     },
   },
@@ -57,11 +57,11 @@ export const INITIAL_BADGES: readonly LearningBadge[] = [
     id: 'badge.market-literacy.foundation',
     title: { tr: 'Piyasa Okuryazarı', en: 'Market Literate' },
     description: {
-      tr: 'Piyasa Okuryazarlığı yolundaki dört modül challenge’ını tamamla.',
-      en: 'Complete all four module challenges in the Market Literacy path.',
+      tr: 'Piyasa Okuryazarlığı yolundaki beş bölüm sonu uygulamasını tamamla.',
+      en: 'Complete all five module wrap-ups in the Market Literacy path.',
     },
     credentialType: 'learning_achievement',
-    definitionVersion: '0.1.0',
+    definitionVersion: '0.2.0',
     requirements: [
       {
         kind: 'challenge_completion',
@@ -75,6 +75,11 @@ export const INITIAL_BADGES: readonly LearningBadge[] = [
       },
       {
         kind: 'challenge_completion',
+        targetId: 'challenge.market-structure.intermediate',
+        threshold: 1,
+      },
+      {
+        kind: 'challenge_completion',
         targetId: 'challenge.risk.foundation',
         threshold: 1,
       },
@@ -85,7 +90,7 @@ export const INITIAL_BADGES: readonly LearningBadge[] = [
       },
     ],
     disclaimer: {
-      tr: 'Bu badge bir öğrenme başarısıdır; sertifika veya mesleki yeterlilik değildir.',
+      tr: 'Bu rozet bir öğrenme başarısıdır; sertifika veya mesleki yeterlilik değildir.',
       en: 'This badge is a learning achievement, not a certificate or professional qualification.',
     },
   },
@@ -93,8 +98,8 @@ export const INITIAL_BADGES: readonly LearningBadge[] = [
     id: 'badge.chart-literacy.module',
     title: { tr: 'Grafik Dedektifi', en: 'Chart Detective' },
     description: {
-      tr: 'Grafik Okuryazarlığı modülünü ve uygulamalı challenge’ını tamamla.',
-      en: 'Complete the Chart Literacy module and its applied challenge.',
+      tr: 'Grafik Okuryazarlığı modülünü ve bölüm sonu uygulamasını tamamla.',
+      en: 'Complete the Chart Literacy module and its module wrap-up.',
     },
     credentialType: 'learning_achievement',
     definitionVersion: '0.1.0',
@@ -106,7 +111,28 @@ export const INITIAL_BADGES: readonly LearningBadge[] = [
       },
     ],
     disclaimer: {
-      tr: 'Bu badge bir öğrenme başarısıdır; sertifika veya mesleki yeterlilik değildir.',
+      tr: 'Bu rozet bir öğrenme başarısıdır; sertifika veya mesleki yeterlilik değildir.',
+      en: 'This badge is a learning achievement, not a certificate or professional qualification.',
+    },
+  },
+  {
+    id: 'badge.market-structure.intermediate',
+    title: { tr: 'Yapı Okuyucusu', en: 'Structure Reader' },
+    description: {
+      tr: 'BOS ve CHoCH’u tek taşmadan ayırıp Piyasa Yapısı bölüm sonu uygulamasını tamamla.',
+      en: 'Distinguish BOS and CHoCH from simple overshoots and complete the Market Structure module wrap-up.',
+    },
+    credentialType: 'learning_achievement',
+    definitionVersion: '0.1.0',
+    requirements: [
+      {
+        kind: 'challenge_completion',
+        targetId: 'challenge.market-structure.intermediate',
+        threshold: 1,
+      },
+    ],
+    disclaimer: {
+      tr: 'Bu rozet bir öğrenme başarısıdır; sertifika veya mesleki yeterlilik değildir.',
       en: 'This badge is a learning achievement, not a certificate or professional qualification.',
     },
   },
@@ -114,8 +140,8 @@ export const INITIAL_BADGES: readonly LearningBadge[] = [
     id: 'badge.risk-guardian.foundation',
     title: { tr: 'Risk Koruyucusu', en: 'Risk Guardian' },
     description: {
-      tr: 'Temel risk görevlerini ve final challenge’ını tamamla.',
-      en: 'Complete the foundation risk tasks and final challenge.',
+      tr: 'Temel risk görevlerini ve bölüm sonu uygulamasını tamamla.',
+      en: 'Complete the foundation risk tasks and module wrap-up.',
     },
     credentialType: 'learning_achievement',
     definitionVersion: '0.1.0',
@@ -127,7 +153,7 @@ export const INITIAL_BADGES: readonly LearningBadge[] = [
       },
     ],
     disclaimer: {
-      tr: 'Bu badge bir öğrenme başarısıdır; sertifika veya mesleki yeterlilik değildir.',
+      tr: 'Bu rozet bir öğrenme başarısıdır; sertifika veya mesleki yeterlilik değildir.',
       en: 'This badge is a learning achievement, not a certificate or professional qualification.',
     },
   },
@@ -135,8 +161,8 @@ export const INITIAL_BADGES: readonly LearningBadge[] = [
     id: 'badge.evidence-detective.foundation',
     title: { tr: 'Kanıt Dedektifi', en: 'Evidence Detective' },
     description: {
-      tr: 'Davranış ve Kanıt modülünü ve uygulamalı challenge’ını tamamla.',
-      en: 'Complete the Behavior and Evidence module and its applied challenge.',
+      tr: 'Davranış ve Kanıt modülünü ve bölüm sonu uygulamasını tamamla.',
+      en: 'Complete the Behavior and Evidence module and its module wrap-up.',
     },
     credentialType: 'learning_achievement',
     definitionVersion: '0.1.0',
@@ -148,7 +174,7 @@ export const INITIAL_BADGES: readonly LearningBadge[] = [
       },
     ],
     disclaimer: {
-      tr: 'Bu badge bir öğrenme başarısıdır; sertifika veya mesleki yeterlilik değildir.',
+      tr: 'Bu rozet bir öğrenme başarısıdır; sertifika veya mesleki yeterlilik değildir.',
       en: 'This badge is a learning achievement, not a certificate or professional qualification.',
     },
   },

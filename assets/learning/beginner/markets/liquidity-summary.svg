@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid meet">
+  <defs>
+    <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#071522"/><stop offset="1" stop-color="#0A2030"/></linearGradient>
+    <radialGradient id="halo"><stop stop-color="#47D7C3" stop-opacity=".30"/><stop offset="1" stop-color="#47D7C3" stop-opacity="0"/></radialGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dy="14" stdDeviation="18" flood-opacity=".30"/></filter>
+  </defs>
+  <rect width="1200" height="800" rx="44" fill="url(#bg)"/>
+  <circle cx="600" cy="400" r="365" fill="url(#halo)"/>
+
+  <ellipse cx="600" cy="505" rx="365" ry="150" fill="#0A2B3A" stroke="#234E61" stroke-width="4"/>
+  <ellipse cx="600" cy="505" rx="278" ry="112" fill="none" stroke="#2D6670" stroke-width="4" opacity=".78"/>
+  <ellipse cx="600" cy="505" rx="184" ry="72" fill="none" stroke="#47D7C3" stroke-width="5" opacity=".9"/>
+  <circle cx="600" cy="505" r="18" fill="#8AEADD"/>
+
+  <g fill="#4C7585" opacity=".78">
+    <circle cx="315" cy="505" r="11"/>
+    <circle cx="390" cy="438" r="11"/>
+    <circle cx="468" cy="400" r="11"/>
+    <circle cx="732" cy="400" r="11"/>
+    <circle cx="810" cy="438" r="11"/>
+    <circle cx="885" cy="505" r="11"/>
+  </g>
+  <g fill="#8AEADD">
+    <circle cx="500" cy="470" r="12"/>
+    <circle cx="700" cy="470" r="12"/>
+  </g>
+
+  <g transform="translate(600 165)" filter="url(#shadow)">
+    <circle r="52" fill="#0E3B3F" stroke="#47D7C3" stroke-width="4"/>
+    <path d="M0-17V17M-10 8L0 18 10 8" fill="none" stroke="#8AEADD" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <path d="M600 225V435" stroke="#47D7C3" stroke-width="6" stroke-linecap="round" opacity=".82"/>
+
+  <g font-family="Arial, sans-serif" font-size="27" font-weight="700" text-anchor="middle" filter="url(#shadow)">
+    <g transform="translate(390 305)"><rect x="-50" y="-29" width="100" height="58" rx="18" fill="#0C2534" stroke="#31586B" stroke-width="3"/><text y="9" fill="#B9CDD7">99</text></g>
+    <g transform="translate(600 300)"><rect x="-57" y="-33" width="114" height="66" rx="20" fill="#0E303A" stroke="#47D7C3" stroke-width="4"/><text y="10" fill="#EAF5F7">100</text></g>
+    <g transform="translate(810 305)"><rect x="-50" y="-29" width="100" height="58" rx="18" fill="#0C2534" stroke="#31586B" stroke-width="3"/><text y="9" fill="#B9CDD7">101</text></g>
+  </g>
+</svg>

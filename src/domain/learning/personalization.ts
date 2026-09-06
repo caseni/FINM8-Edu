@@ -3,9 +3,9 @@ import type { LearningProfile, LearningStage, LocalizedText } from './types';
 export type LearningGoal = LearningProfile['goals'][number];
 
 export const LEARNING_STAGE_LABELS: Readonly<Record<LearningStage, LocalizedText>> = {
-  foundation: { tr: 'Temel profil', en: 'Foundation profile' },
-  intermediate: { tr: 'Orta seviye profil', en: 'Intermediate profile' },
-  advanced: { tr: 'İleri seviye profil', en: 'Advanced profile' },
+  foundation: { tr: 'Başlangıç seviyesi', en: 'Beginner level' },
+  intermediate: { tr: 'Orta seviye', en: 'Intermediate level' },
+  advanced: { tr: 'İleri seviye', en: 'Advanced level' },
 };
 
 export const LEARNING_GOAL_LABELS: Readonly<Record<LearningGoal, LocalizedText>> = {

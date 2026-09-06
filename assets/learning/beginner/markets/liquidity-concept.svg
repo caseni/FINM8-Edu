@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid meet">
+  <defs>
+    <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#071522"/><stop offset="1" stop-color="#0A2030"/></linearGradient>
+    <radialGradient id="halo"><stop stop-color="#47D7C3" stop-opacity=".30"/><stop offset="1" stop-color="#47D7C3" stop-opacity="0"/></radialGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dy="14" stdDeviation="18" flood-opacity=".30"/></filter>
+  </defs>
+  <rect width="1200" height="800" rx="44" fill="url(#bg)"/>
+  <circle cx="600" cy="405" r="360" fill="url(#halo)"/>
+
+  <ellipse cx="600" cy="485" rx="365" ry="150" fill="#0A2B3A" stroke="#234E61" stroke-width="4"/>
+  <ellipse cx="600" cy="485" rx="270" ry="106" fill="none" stroke="#2C6870" stroke-width="4" opacity=".78"/>
+  <ellipse cx="600" cy="485" rx="170" ry="64" fill="none" stroke="#47D7C3" stroke-width="5" opacity=".9"/>
+  <circle cx="600" cy="485" r="18" fill="#8AEADD"/>
+
+  <g font-family="Arial, sans-serif" font-size="30" font-weight="700" text-anchor="middle" filter="url(#shadow)">
+    <g transform="translate(340 345)"><rect x="-52" y="-31" width="104" height="62" rx="20" fill="#0C2534" stroke="#31586B" stroke-width="3"/><text y="10" fill="#B9CDD7">99</text></g>
+    <g transform="translate(600 300)"><rect x="-60" y="-36" width="120" height="72" rx="22" fill="#0E303A" stroke="#47D7C3" stroke-width="4"/><text y="10" fill="#EAF5F7">100</text></g>
+    <g transform="translate(860 345)"><rect x="-52" y="-31" width="104" height="62" rx="20" fill="#0C2534" stroke="#31586B" stroke-width="3"/><text y="10" fill="#B9CDD7">101</text></g>
+  </g>
+
+  <path d="M355 389C430 426 492 448 548 470" fill="none" stroke="#315E69" stroke-width="4" stroke-linecap="round"/>
+  <path d="M845 389C770 426 708 448 652 470" fill="none" stroke="#315E69" stroke-width="4" stroke-linecap="round"/>
+
+  <g transform="translate(600 150)" filter="url(#shadow)">
+    <circle r="48" fill="#0E3B3F" stroke="#47D7C3" stroke-width="4"/>
+    <path d="M0-16V16M-10 7L0 17 10 7" fill="none" stroke="#8AEADD" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <path d="M600 205V265" stroke="#47D7C3" stroke-width="6" stroke-linecap="round" opacity=".82"/>
+</svg>

@@ -37,7 +37,12 @@ export function LearningReviewScreen({ navigation }: Props) {
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.topRow}>
-          <Pressable accessibilityRole="button" onPress={() => navigation.goBack()} style={styles.backButton}>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={language === 'tr' ? 'M8 Learn’e dön' : 'Return to M8 Learn'}
+            onPress={() => navigation.goBack()}
+            style={styles.backButton}
+          >
             <Text style={styles.backText}>‹</Text>
           </Pressable>
           <View style={styles.headingCopy}>
@@ -46,7 +51,7 @@ export function LearningReviewScreen({ navigation }: Props) {
           </View>
         </View>
 
-        <View style={styles.notice}>
+        <View style={styles.notice} accessibilityRole="summary">
           <Text style={styles.noticeTitle}>{language === 'tr' ? 'Güvenli önizleme' : 'Safe preview'}</Text>
           <Text style={styles.noticeText}>{language === 'tr' ? 'Buradan açılan ekranlar XP, badge veya gerçek ilerleme kaydetmez. Bu merkez yalnız geliştirme sürümünde görünür.' : 'Screens opened here do not save XP, badges, or real progress. This center is visible only in development.'}</Text>
         </View>
@@ -58,7 +63,16 @@ export function LearningReviewScreen({ navigation }: Props) {
           </View>
           <View style={styles.segmented}>
             {(['normal', 'pro'] as const).map((mode: PresentationMode) => (
-              <Pressable accessibilityRole="button" accessibilityState={{ selected: presentationMode === mode }} key={mode} onPress={() => setPresentationMode(mode)} style={[styles.segment, presentationMode === mode && styles.segmentActive]}>
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel={language === 'tr'
+                  ? `Anlatım modu: ${mode === 'normal' ? 'Normal' : 'Pro'}`
+                  : `Presentation mode: ${mode === 'normal' ? 'Normal' : 'Pro'}`}
+                accessibilityState={{ selected: presentationMode === mode }}
+                key={mode}
+                onPress={() => setPresentationMode(mode)}
+                style={[styles.segment, presentationMode === mode && styles.segmentActive]}
+              >
                 <Text style={[styles.segmentText, presentationMode === mode && styles.segmentTextActive]}>{mode === 'normal' ? 'Normal' : 'Pro'}</Text>
               </Pressable>
             ))}
@@ -67,12 +81,21 @@ export function LearningReviewScreen({ navigation }: Props) {
 
         {reviewModules.map((module) => {
           const expanded = expandedModule === module.number;
+          const moduleTitle = selectLocalizedText(module.title, language);
           return (
             <View key={module.number} style={styles.moduleCard}>
-              <Pressable accessibilityRole="button" accessibilityState={{ expanded }} onPress={() => setExpandedModule(expanded ? 0 : module.number)} style={styles.moduleHeader}>
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel={language === 'tr'
+                  ? `${moduleTitle}. ${module.lessons.length} ders ve 1 challenge.`
+                  : `${moduleTitle}. ${module.lessons.length} lessons and 1 challenge.`}
+                accessibilityState={{ expanded }}
+                onPress={() => setExpandedModule(expanded ? 0 : module.number)}
+                style={styles.moduleHeader}
+              >
                 <View style={styles.moduleNumber}><Text style={styles.moduleNumberText}>{String(module.number).padStart(2, '0')}</Text></View>
                 <View style={styles.headingCopy}>
-                  <Text style={styles.moduleTitle}>{selectLocalizedText(module.title, language)}</Text>
+                  <Text style={styles.moduleTitle}>{moduleTitle}</Text>
                   <Text style={styles.moduleMeta}>{module.lessons.length} {language === 'tr' ? 'ders · 1 challenge' : 'lessons · 1 challenge'}</Text>
                 </View>
                 <Text style={styles.expandText}>{expanded ? '−' : '+'}</Text>
@@ -80,21 +103,43 @@ export function LearningReviewScreen({ navigation }: Props) {
 
               {expanded ? (
                 <View style={styles.lessonList}>
-                  {module.lessons.map((lesson, index) => (
-                    <View key={lesson.id} style={styles.lessonRow}>
-                      <View style={styles.lessonNumber}><Text style={styles.lessonNumberText}>{index + 1}</Text></View>
-                      <View style={styles.lessonCopy}>
-                        <Text style={styles.lessonTitle}>{selectLocalizedText(lesson.title, language)}</Text>
-                        <Text style={styles.lessonMeta}>{lesson.learningStage} · {lesson.estimatedMinutes} {language === 'tr' ? 'dk' : 'min'}</Text>
-                        <View style={styles.actions}>
-                          <ReviewAction label={language === 'tr' ? 'Slayt' : 'Slides'} onPress={() => navigation.navigate('MicroLesson', { lessonId: lesson.id, review: true })} />
-                          <ReviewAction label={language === 'tr' ? 'Görev' : 'Task'} onPress={() => navigation.navigate('PracticalTask', { lessonId: lesson.id, review: true })} />
-                          <ReviewAction label="Quiz" onPress={() => navigation.navigate('LessonQuiz', { lessonId: lesson.id, review: true })} />
+                  {module.lessons.map((lesson, index) => {
+                    const lessonTitle = selectLocalizedText(lesson.title, language);
+                    return (
+                      <View key={lesson.id} style={styles.lessonRow}>
+                        <View style={styles.lessonNumber}><Text style={styles.lessonNumberText}>{index + 1}</Text></View>
+                        <View style={styles.lessonCopy}>
+                          <Text style={styles.lessonTitle}>{lessonTitle}</Text>
+                          <Text style={styles.lessonMeta}>{lesson.learningStage} · {lesson.estimatedMinutes} {language === 'tr' ? 'dk' : 'min'}</Text>
+                          <View style={styles.actions}>
+                            <ReviewAction
+                              label={language === 'tr' ? 'Slayt' : 'Slides'}
+                              accessibilityLabel={language === 'tr' ? `${lessonTitle} slayt önizlemesi` : `${lessonTitle} slides preview`}
+                              onPress={() => navigation.navigate('MicroLesson', { lessonId: lesson.id, review: true })}
+                            />
+                            <ReviewAction
+                              label={language === 'tr' ? 'Görev' : 'Task'}
+                              accessibilityLabel={language === 'tr' ? `${lessonTitle} görev önizlemesi` : `${lessonTitle} task preview`}
+                              onPress={() => navigation.navigate('PracticalTask', { lessonId: lesson.id, review: true })}
+                            />
+                            <ReviewAction
+                              label="Quiz"
+                              accessibilityLabel={language === 'tr' ? `${lessonTitle} quiz önizlemesi` : `${lessonTitle} quiz preview`}
+                              onPress={() => navigation.navigate('LessonQuiz', { lessonId: lesson.id, review: true })}
+                            />
+                          </View>
                         </View>
                       </View>
-                    </View>
-                  ))}
-                  <Pressable accessibilityRole="button" onPress={() => navigation.navigate('LearningChallenge', { challengeId: module.challenge.id, review: true })} style={styles.challengeButton}>
+                    );
+                  })}
+                  <Pressable
+                    accessibilityRole="button"
+                    accessibilityLabel={language === 'tr'
+                      ? `${selectLocalizedText(module.challenge.title, language)} challenge önizlemesini aç`
+                      : `Open ${selectLocalizedText(module.challenge.title, language)} challenge preview`}
+                    onPress={() => navigation.navigate('LearningChallenge', { challengeId: module.challenge.id, review: true })}
+                    style={styles.challengeButton}
+                  >
                     <Text style={styles.challengeMark}>◆</Text>
                     <View style={styles.headingCopy}>
                       <Text style={styles.challengeTitle}>{selectLocalizedText(module.challenge.title, language)}</Text>
@@ -112,8 +157,12 @@ export function LearningReviewScreen({ navigation }: Props) {
   );
 }
 
-function ReviewAction({ label, onPress }: { label: string; onPress: () => void }) {
-  return <Pressable accessibilityRole="button" onPress={onPress} style={styles.actionButton}><Text style={styles.actionText}>{label}</Text></Pressable>;
+function ReviewAction({ label, accessibilityLabel, onPress }: { label: string; accessibilityLabel: string; onPress: () => void }) {
+  return (
+    <Pressable accessibilityRole="button" accessibilityLabel={accessibilityLabel} onPress={onPress} style={styles.actionButton}>
+      <Text style={styles.actionText}>{label}</Text>
+    </Pressable>
+  );
 }
 
 const styles = StyleSheet.create({

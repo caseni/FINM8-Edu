@@ -29,6 +29,7 @@ const overtrading = createFoundationLesson({
   explanation: 'Aşırı işlem, işlem sayısının tek başına yüksek olması değil; kararların plan, kanıt ve risk sınırından kopmasıdır. Kayıptan hemen sonra geri kazanma isteği, sık kriter değiştirme ve zayıf kanıtla tekrar giriş önemli işaretlerdir. Daha fazla işlem maliyet ve hata maruziyetini artırabilir.',
   proExplanation: 'Overtrading; turnover, plan dışı giriş oranı, cooldown ihlali ve işlem başına kanıt kalitesiyle izlenebilir. Gamification işlem sıklığını değil, bekleme ve kaliteli karar davranışını ödüllendirmelidir.',
   misconception: 'Yaygın hata: Ekranda daha uzun kalmayı ve daha çok tıklamayı disiplin sanmak.', takeaway: 'İşlem sayısı başarı ölçütü değildir; planla uyumlu karar kalitesi önemlidir.',
+  visualAlt: 'Az sayıda planlı karar ile hızla artan plansız işlem sayısını karşılaştıran şema', visualAltEn: 'Diagram comparing a few planned decisions with rapidly increasing unplanned trade count',
   prerequisiteConceptKeys: ['behavior.fomo'], relatedConceptKeys: ['behavior.decision_journal', 'risk.position_sizing'],
   taskPrompt: 'Hangileri aşırı işlem riski için güçlü işarettir?',
   taskChoices: [{ id: 'revenge', label: 'Kayıptan hemen sonra plansız geri kazanma işlemi' }, { id: 'weak', label: 'Kriter oluşmadan tekrar tekrar giriş' }, { id: 'planned', label: 'Önceden tanımlı tek planı uygulamak' }, { id: 'pause', label: 'Cooldown süresine uymak' }], taskCorrectIds: ['revenge', 'weak'],
@@ -47,6 +48,7 @@ const confirmationBias = createFoundationLesson({
   explanation: 'Onaylama yanlılığı, mevcut görüşü destekleyen bilgiyi arama ve karşı kanıtı küçümseme eğilimidir. İyi karar süreci yalnız “neden doğruyum?” değil, “hangi kanıt beni yanlış çıkarır?” sorusunu da içerir. Görüş ile gözlemi ayrı kaydetmek bu hatayı görünür kılar.',
   proExplanation: 'Pre-mortem, disconfirming evidence alanı ve önceden tanımlı invalidation kriteri, tez değiştirmenin duygusal maliyetini azaltır. Karşı kanıt sonradan yeniden yazılmamalıdır.',
   misconception: 'Yaygın hata: Çok sayıda aynı yönlü kaynak görmeyi bağımsız doğrulama sanmak.', takeaway: 'Güçlü tez, karşı kanıttan kaçmayan tezdir.',
+  visualAlt: 'Bir görüşü destekleyen ve onu zorlayan kanıtların birlikte aranmasını gösteren şema', visualAltEn: 'Diagram showing evidence that supports and challenges a view being sought together',
   prerequisiteConceptKeys: ['behavior.fomo'], relatedConceptKeys: ['evidence.data_quality', 'behavior.decision_journal'],
   taskPrompt: 'Bir yükseliş tezi için sağlıklı iki kontrolü seç.',
   taskChoices: [{ id: 'against', label: 'Teze karşı olan veriyi özellikle ara' }, { id: 'invalidate', label: 'Tezi hangi koşulun geçersiz kılacağını yaz' }, { id: 'only-support', label: 'Yalnız destekleyen hesapları takip et' }, { id: 'hide', label: 'Olumsuz veriyi kayıttan çıkar' }], taskCorrectIds: ['against', 'invalidate'],
@@ -65,6 +67,7 @@ const dataQuality = createFoundationLesson({
   explanation: 'Veri kalitesi; kaynağın kimliği, ölçüm yöntemi, kapsam, tutarlılık, eksik alanlar ve doğrulanabilirlikle değerlendirilir. Tek bir ekran görüntüsü veya kaynağı belirsiz sayı bağlamdan kopuk olabilir. Eksik veri “olumsuz kanıt yok” anlamına gelmez; bilinmeyen olarak işaretlenmelidir.',
   proExplanation: 'FINM8 kanıtı provenance, provider, observedAt, market/timeframe kapsamı ve quality flag ile taşır. Kaynaklar birleşmeden önce semantik uyum ve çelişki kontrolü gerekir.',
   misconception: 'Yaygın hata: Sayısal hassasiyeti veri doğruluğuyla karıştırmak.', takeaway: 'Kesin görünen sayı değil, izlenebilir ve bağlamı belli veri güçlü kanıttır.',
+  visualAlt: 'Kaynak, bağlam ve eksik veri durumunu farklı güven düzeyleriyle gösteren şema', visualAltEn: 'Diagram showing source, context, and missing data at different confidence levels',
   prerequisiteConceptKeys: [], relatedConceptKeys: ['evidence.freshness', 'behavior.confirmation_bias'],
   taskPrompt: 'Hangileri daha güçlü veri kalitesi kanıtıdır?',
   taskChoices: [{ id: 'source', label: 'Kaynak ve ölçüm yönteminin belli olması' }, { id: 'scope', label: 'Piyasa, zaman dilimi ve gözlem zamanının belirtilmesi' }, { id: 'screenshot', label: 'Kaynağı olmayan kırpılmış ekran görüntüsü' }, { id: 'precision', label: 'Çok ondalıklı ama doğrulanamayan sayı' }], taskCorrectIds: ['source', 'scope'],
@@ -83,6 +86,7 @@ const freshness = createFoundationLesson({
   explanation: 'Veri üretildiği anda doğru olabilir fakat piyasa, zaman dilimi ve karar türüne göre hızla eskir. Güncellik yalnız takvim yaşı değildir; verinin temsil ettiği koşulun hâlâ geçerli olup olmadığıdır. Her kanıt gözlem zamanı ve kapsamıyla birlikte okunmalıdır.',
   proExplanation: 'Freshness threshold source × timeframe × market bağlamına göre değişir. Stale veri silinmek yerine observedAt ve stale flag ile saklanır; yeni gerçek gibi sunulmaz.',
   misconception: 'Yaygın hata: Kaynak güvenilir olduğu için verinin süresiz geçerli olduğunu düşünmek.', takeaway: 'Güvenilir kaynak eski veri üretebilir; kanıtın zamanı bağlamın parçasıdır.',
+  visualAlt: 'Gözlem zamanı ile şimdi arasındaki farkı ve eski verinin yeniden doğrulanması gerektiğini gösteren zaman çizelgesi', visualAltEn: 'Timeline showing the gap between observation time and now, and the need to re-check stale data',
   prerequisiteConceptKeys: ['evidence.data_quality'], relatedConceptKeys: ['market.chart.timeframes', 'market.timeframe.alignment'],
   taskPrompt: 'Bir verinin güncelliğini değerlendirirken hangi iki bilgi gerekir?',
   taskChoices: [{ id: 'observed', label: 'Gözlem zamanı' }, { id: 'scope', label: 'Piyasa ve zaman dilimi kapsamı' }, { id: 'logo', label: 'Kaynağın logo rengi' }, { id: 'followers', label: 'Paylaşanın takipçi sayısı' }], taskCorrectIds: ['observed', 'scope'],
@@ -101,6 +105,7 @@ const decisionJournal = createFoundationLesson({
   explanation: 'İyi karar kötü sonuç, kötü karar iyi sonuç üretebilir. Karar günlüğü; o anda bilinen gözlemleri, bunlardan çıkarılan yorumu, karşı kanıtı, risk sınırını ve daha sonra gerçekleşen sonucu ayrı kaydeder. Böylece sonuç yanlılığı yerine süreç kalitesi incelenir.',
   proExplanation: 'Decision record immutable decision-time snapshot, thesis, invalidation, evidence refs ve evaluation horizon içermelidir. Sonuç verisi sonradan eklenir; ilk gerekçe geriye dönük değiştirilmez.',
   misconception: 'Yaygın hata: Yalnız kâr/zarar tutarını kaydedip karar anındaki kanıtı silmek.', takeaway: 'Sonuç öğrenme verisidir; karar kalitesi karar anındaki süreçle ölçülür.',
+  visualAlt: 'Kanıt, risk ve geçersizlik koşulunu içeren kısa karar günlüğü kontrol listesini gösteren şema', visualAltEn: 'Diagram showing a concise decision-journal checklist for evidence, risk, and invalidation',
   prerequisiteConceptKeys: ['behavior.confirmation_bias'], relatedConceptKeys: ['evidence.data_quality', 'evidence.freshness'],
   taskPrompt: 'Karar günlüğünde karar anında kaydedilmesi gereken iki öğeyi seç.',
   taskChoices: [{ id: 'evidence', label: 'Gözlem ve kanıt referansları' }, { id: 'invalidation', label: 'Tezi geçersiz kılacak koşul ve risk sınırı' }, { id: 'rewrite', label: 'Sonuca göre geçmiş gerekçeyi yeniden yazmak' }, { id: 'profit-only', label: 'Yalnız kâr/zarar tutarı' }], taskCorrectIds: ['evidence', 'invalidation'],
@@ -112,5 +117,5 @@ const decisionJournal = createFoundationLesson({
 });
 
 export const WAVE1_BEHAVIOR_EVIDENCE_LESSONS: readonly MicroLesson[] = [
-  fomo, overtrading, confirmationBias, dataQuality, freshness, decisionJournal,
+  fomo, overtrading, confirmationBias, dataQuality, decisionJournal, freshness,
 ];

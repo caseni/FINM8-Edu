@@ -4,7 +4,10 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/navigation';
 import { HomeScreen } from '../screens/home/HomeScreen';
 import { CourseDetailScreen } from '../screens/course/CourseDetailScreen';
-import { LearnHomeScreen } from '../screens/learn/LearnHomeScreen';
+import { AcademyHomeScreen } from '../screens/learn/AcademyHomeScreen';
+import { BeginnerSectionScreen } from '../screens/learn/BeginnerSectionScreen';
+import { LearnLandingScreen } from '../screens/learn/LearnLandingScreen';
+import { LearnSearchScreen } from '../screens/learn/LearnSearchScreen';
 import { LearningOnboardingScreen } from '../screens/learn/LearningOnboardingScreen';
 import { MicroLessonScreen } from '../screens/learn/MicroLessonScreen';
 import { LessonQuizScreen } from '../screens/learn/LessonQuizScreen';
@@ -31,11 +34,14 @@ export const AppNavigator: React.FC = () => {
       >
         <Stack.Screen
           name="Home"
-          component={LearnHomeScreen}
+          component={LearnLandingScreen}
           options={{
             headerShown: false,
           }}
         />
+        <Stack.Screen name="BeginnerSection" component={BeginnerSectionScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="Academy" component={AcademyHomeScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="LearnSearch" component={LearnSearchScreen} options={{ headerShown: false }} />
         <Stack.Screen name="LearningOnboarding" component={LearningOnboardingScreen} options={{ headerShown: false }} />
         <Stack.Screen name="MicroLesson" component={MicroLessonScreen} options={{ headerShown: false }} />
         <Stack.Screen name="PracticalTask" component={PracticalTaskScreen} options={{ headerShown: false, gestureEnabled: false }} />

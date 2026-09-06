@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid meet">
+  <defs>
+    <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#071522"/><stop offset="1" stop-color="#0A2030"/></linearGradient>
+    <radialGradient id="halo"><stop stop-color="#47D7C3" stop-opacity=".26"/><stop offset="1" stop-color="#47D7C3" stop-opacity="0"/></radialGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dy="14" stdDeviation="18" flood-opacity=".30"/></filter>
+  </defs>
+  <rect width="1200" height="800" rx="44" fill="url(#bg)"/>
+  <circle cx="600" cy="405" r="330" fill="url(#halo)"/>
+
+  <path d="M235 450C360 420 445 402 525 398" fill="none" stroke="#47D7C3" stroke-width="8" stroke-linecap="round"/>
+  <path d="M965 450C840 420 755 402 675 398" fill="none" stroke="#6D8EA2" stroke-width="8" stroke-linecap="round"/>
+  <path d="M510 378L535 398 509 416" fill="none" stroke="#47D7C3" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M690 378L665 398 691 416" fill="none" stroke="#9CB4C2" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <g font-family="Arial, sans-serif" font-size="34" font-weight="700" text-anchor="middle" filter="url(#shadow)">
+    <g transform="translate(245 335)"><rect x="-64" y="-38" width="128" height="76" rx="22" fill="#0C2534" stroke="#31586B" stroke-width="3"/><text y="12" fill="#D2E2E8">98</text></g>
+    <g transform="translate(955 335)"><rect x="-64" y="-38" width="128" height="76" rx="22" fill="#0C2534" stroke="#31586B" stroke-width="3"/><text y="12" fill="#D2E2E8">102</text></g>
+  </g>
+
+  <g transform="translate(600 400)" filter="url(#shadow)">
+    <circle r="102" fill="#0D2F3A" stroke="#47D7C3" stroke-width="5"/>
+    <circle r="76" fill="none" stroke="#2B6970" stroke-width="3" stroke-dasharray="8 13"/>
+    <text y="15" font-family="Arial, sans-serif" font-size="48" font-weight="800" text-anchor="middle" fill="#EAF5F7">100</text>
+  </g>
+  <circle cx="600" cy="400" r="132" fill="none" stroke="#47D7C3" stroke-width="2" opacity=".24"/>
+</svg>

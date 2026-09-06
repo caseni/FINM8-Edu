@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid meet">
+  <defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#071522"/><stop offset="1" stop-color="#0A2030"/></linearGradient><radialGradient id="halo"><stop stop-color="#47D7C3" stop-opacity=".22"/><stop offset="1" stop-color="#47D7C3" stop-opacity="0"/></radialGradient></defs>
+  <rect width="1200" height="800" rx="44" fill="url(#bg)"/><circle cx="600" cy="410" r="330" fill="url(#halo)"/>
+  <path d="M350 155V650" stroke="#31586B" stroke-width="6" stroke-linecap="round"/>
+  <circle cx="350" cy="290" r="18" fill="#8AEADD"/><path d="M205 290H320" stroke="#47D7C3" stroke-width="8" stroke-linecap="round"/><path d="M296 268L324 290 296 312" fill="none" stroke="#47D7C3" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M350 445H910" stroke="#7897A9" stroke-width="8" stroke-linecap="round"/><rect x="655" y="418" width="14" height="54" rx="7" fill="#B7CBD5"/>
+  <path d="M350 560H910" stroke="#B48663" stroke-width="8" stroke-dasharray="14 16" stroke-linecap="round"/><circle cx="760" cy="560" r="23" fill="none" stroke="#D5B497" stroke-width="6"/><circle cx="760" cy="560" r="8" fill="#D5B497"/>
+  <g font-family="Arial, sans-serif" font-size="31" font-weight="900"><text x="395" y="280" fill="#8AEADD">MARKET</text><text x="395" y="435" fill="#C5D5DC">LIMIT</text><text x="395" y="550" fill="#D5B497">STOP</text></g>
+</svg>

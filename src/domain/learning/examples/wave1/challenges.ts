@@ -1,6 +1,9 @@
 import { learningChallengeSchema } from '../../progressionSchemas';
 import { WAVE1_MARKET_FOUNDATION_LESSONS } from './marketFoundationsLessons';
-import { WAVE1_CHART_LITERACY_LESSONS } from './chartLiteracyLessons';
+import {
+  WAVE1_CHART_LITERACY_CORE_LESSONS,
+  WAVE1_MARKET_STRUCTURE_LESSONS,
+} from './levelledLessonGroups';
 import { WAVE1_RISK_MANAGEMENT_LESSONS } from './riskManagementLessons';
 import { WAVE1_BEHAVIOR_EVIDENCE_LESSONS } from './behaviorEvidenceLessons';
 import type { LearningChallenge } from '../../types';
@@ -12,7 +15,7 @@ const challengeQuestions = WAVE1_MARKET_FOUNDATION_LESSONS.map((lesson, index) =
 
 export const MARKET_FOUNDATIONS_CHALLENGE = learningChallengeSchema.parse({
   id: 'challenge.market-foundations.foundation',
-  title: { tr: 'Piyasa Mekaniği Challenge' },
+  title: { tr: 'Piyasa Mekaniği · Bölüm Sonu Uygulaması', en: 'Market Mechanics · Module Wrap-Up' },
   description: {
     tr: 'Fiyat oluşumu, likidite, spread, emir türleri ve gerçekleşme riskini birlikte değerlendir.',
   },
@@ -35,29 +38,29 @@ export const MARKET_FOUNDATIONS_CHALLENGE = learningChallengeSchema.parse({
   badgeId: 'badge.market-foundations.module',
 });
 
-const chartQuestions = WAVE1_CHART_LITERACY_LESSONS.map((lesson, index) => ({
+const chartQuestions = WAVE1_CHART_LITERACY_CORE_LESSONS.map((lesson, index) => ({
   ...lesson.quiz.questions[0],
   id: `question.challenge.chart-literacy.${index + 1}`,
 }));
 
 export const CHART_LITERACY_CHALLENGE = learningChallengeSchema.parse({
   id: 'challenge.chart-literacy.foundation',
-  title: { tr: 'Grafik Dedektifi Challenge' },
+  title: { tr: 'Grafik Dedektifi · Bölüm Sonu Uygulaması', en: 'Chart Detective · Module Wrap-Up' },
   description: {
-    tr: 'Mum, zaman dilimi, trend, tepki bölgesi, BOS ve CHoCH kanıtlarını birlikte değerlendir.',
+    tr: 'Mum, zaman dilimi, trend ve destek/direnç bölgesini birlikte değerlendir.',
   },
   stage: 'foundation',
-  skillIds: ['skill.chart-literacy', 'skill.market-structure'],
-  prerequisiteLessonIds: WAVE1_CHART_LITERACY_LESSONS.map((lesson) => lesson.id),
+  skillIds: ['skill.chart-literacy'],
+  prerequisiteLessonIds: WAVE1_CHART_LITERACY_CORE_LESSONS.map((lesson) => lesson.id),
   questions: chartQuestions,
   practicalTasks: [
     {
-      ...WAVE1_CHART_LITERACY_LESSONS[2].practicalTask,
+      ...WAVE1_CHART_LITERACY_CORE_LESSONS[2].practicalTask,
       id: 'task.challenge.chart-literacy.trend',
     },
     {
-      ...WAVE1_CHART_LITERACY_LESSONS[5].practicalTask,
-      id: 'task.challenge.chart-literacy.structure-change',
+      ...WAVE1_CHART_LITERACY_CORE_LESSONS[3].practicalTask,
+      id: 'task.challenge.chart-literacy.support-resistance',
     },
   ],
   passingScore: 75,
@@ -65,14 +68,54 @@ export const CHART_LITERACY_CHALLENGE = learningChallengeSchema.parse({
   badgeId: 'badge.chart-literacy.module',
 });
 
+const marketStructureQuestions = WAVE1_MARKET_STRUCTURE_LESSONS.map((lesson, index) => ({
+  ...lesson.quiz.questions[0],
+  id: `question.challenge.market-structure.${index + 1}`,
+}));
+
+export const MARKET_STRUCTURE_CHALLENGE = learningChallengeSchema.parse({
+  id: 'challenge.market-structure.intermediate',
+  title: { tr: 'Piyasa Yapısı · Bölüm Sonu Uygulaması', en: 'Market Structure · Module Wrap-Up' },
+  description: {
+    tr: 'BOS ve CHoCH kavramlarını anlamlı salınım seviyeleri, kapanış ve bağlam üzerinden ayırt et.',
+    en: 'Distinguish BOS and CHoCH through meaningful swings, closes, and context.',
+  },
+  stage: 'intermediate',
+  skillIds: ['skill.market-structure'],
+  prerequisiteLessonIds: WAVE1_MARKET_STRUCTURE_LESSONS.map((lesson) => lesson.id),
+  questions: marketStructureQuestions,
+  practicalTasks: [
+    {
+      ...WAVE1_MARKET_STRUCTURE_LESSONS[0].practicalTask,
+      id: 'task.challenge.market-structure.bos',
+    },
+    {
+      ...WAVE1_MARKET_STRUCTURE_LESSONS[1].practicalTask,
+      id: 'task.challenge.market-structure.choch',
+    },
+  ],
+  passingScore: 75,
+  xpReward: 100,
+  badgeId: 'badge.market-structure.intermediate',
+});
+
 const riskQuestions = WAVE1_RISK_MANAGEMENT_LESSONS.map((lesson, index) => ({
   ...lesson.quiz.questions[0],
   id: `question.challenge.risk-management.${index + 1}`,
 }));
+const riskPositionSizingLesson = WAVE1_RISK_MANAGEMENT_LESSONS.find(
+  (lesson) => lesson.id === 'lesson.risk.position-sizing.001'
+);
+const riskDiversificationLesson = WAVE1_RISK_MANAGEMENT_LESSONS.find(
+  (lesson) => lesson.id === 'lesson.portfolio.diversification.001'
+);
+if (!riskPositionSizingLesson || !riskDiversificationLesson) {
+  throw new Error('Risk management challenge source lessons are missing');
+}
 
 export const RISK_MANAGEMENT_CHALLENGE = learningChallengeSchema.parse({
   id: 'challenge.risk.foundation',
-  title: { tr: 'Risk Koruyucusu Challenge' },
+  title: { tr: 'Risk Koruyucusu · Bölüm Sonu Uygulaması', en: 'Risk Guardian · Module Wrap-Up' },
   description: {
     tr: 'Belirsizlik, volatilite, pozisyon boyutu, stop sınırlamaları ve çeşitlendirmeyi tek risk planında değerlendir.',
   },
@@ -82,11 +125,11 @@ export const RISK_MANAGEMENT_CHALLENGE = learningChallengeSchema.parse({
   questions: riskQuestions,
   practicalTasks: [
     {
-      ...WAVE1_RISK_MANAGEMENT_LESSONS[2].practicalTask,
+      ...riskPositionSizingLesson.practicalTask,
       id: 'task.challenge.risk-management.position-size',
     },
     {
-      ...WAVE1_RISK_MANAGEMENT_LESSONS[5].practicalTask,
+      ...riskDiversificationLesson.practicalTask,
       id: 'task.challenge.risk-management.diversification',
     },
   ],
@@ -99,10 +142,19 @@ const behaviorEvidenceQuestions = WAVE1_BEHAVIOR_EVIDENCE_LESSONS.map((lesson, i
   ...lesson.quiz.questions[0],
   id: `question.challenge.behavior-evidence.${index + 1}`,
 }));
+const behaviorConfirmationBiasLesson = WAVE1_BEHAVIOR_EVIDENCE_LESSONS.find(
+  (lesson) => lesson.id === 'lesson.behavior.confirmation-bias.001'
+);
+const behaviorDecisionJournalLesson = WAVE1_BEHAVIOR_EVIDENCE_LESSONS.find(
+  (lesson) => lesson.id === 'lesson.behavior.decision-journal.001'
+);
+if (!behaviorConfirmationBiasLesson || !behaviorDecisionJournalLesson) {
+  throw new Error('Behavior/evidence challenge source lessons are missing');
+}
 
 export const BEHAVIOR_EVIDENCE_CHALLENGE = learningChallengeSchema.parse({
   id: 'challenge.behavior-evidence.foundation',
-  title: { tr: 'Kanıt Dedektifi Challenge' },
+  title: { tr: 'Kanıt Dedektifi · Bölüm Sonu Uygulaması', en: 'Evidence Detective · Module Wrap-Up' },
   description: {
     tr: 'FOMO, aşırı işlem, doğrulama yanlılığı, veri kalitesi, güncellik ve karar günlüğünü birlikte değerlendir.',
   },
@@ -112,11 +164,11 @@ export const BEHAVIOR_EVIDENCE_CHALLENGE = learningChallengeSchema.parse({
   questions: behaviorEvidenceQuestions,
   practicalTasks: [
     {
-      ...WAVE1_BEHAVIOR_EVIDENCE_LESSONS[2].practicalTask,
+      ...behaviorConfirmationBiasLesson.practicalTask,
       id: 'task.challenge.behavior-evidence.confirmation-bias',
     },
     {
-      ...WAVE1_BEHAVIOR_EVIDENCE_LESSONS[5].practicalTask,
+      ...behaviorDecisionJournalLesson.practicalTask,
       id: 'task.challenge.behavior-evidence.decision-journal',
     },
   ],
@@ -128,6 +180,7 @@ export const BEHAVIOR_EVIDENCE_CHALLENGE = learningChallengeSchema.parse({
 export const LEARNING_CHALLENGE_CATALOG: readonly LearningChallenge[] = [
   MARKET_FOUNDATIONS_CHALLENGE,
   CHART_LITERACY_CHALLENGE,
+  MARKET_STRUCTURE_CHALLENGE,
   RISK_MANAGEMENT_CHALLENGE,
   BEHAVIOR_EVIDENCE_CHALLENGE,
 ];

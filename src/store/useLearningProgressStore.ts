@@ -11,6 +11,11 @@ import {
   type QuizResult,
   type QuizSubmission,
 } from '../domain/learning/progressionEngine';
+import type { CurrentQuizAnswerEvidence } from '../domain/learning/currentQuizLearningGain';
+import {
+  createCurrentQuizReviewCompletion,
+  type CurrentQuizReviewCompletion,
+} from '../domain/learning/currentQuizReview';
 import { trackedProgressStorage } from './progressPersistence';
 import type {
   BadgeAward,
@@ -39,6 +44,12 @@ interface LearningProgressState {
   badgeAwards: BadgeAward[];
   streak: LearningStreak;
   lessonCheckpoints: Record<string, LessonCheckpoint>;
+  /**
+   * Reserved for the owner-reviewed current-quiz runtime. There is deliberately
+   * no public writer while live retrieval and publication remain disabled.
+   */
+  currentQuizAnswerEvidence: CurrentQuizAnswerEvidence[];
+  currentQuizReviewCompletions: CurrentQuizReviewCompletion[];
   setProfile: (profile: LearningProfile) => void;
   completeLesson: (lesson: MicroLesson, completedAt: string) => void;
   submitQuiz: (
@@ -56,6 +67,12 @@ interface LearningProgressState {
   tryAwardBadge: (badge: LearningBadge, awardedAt: string) => boolean;
   saveLessonCheckpoint: (lessonId: string, stage: LessonJourneyStage, stepIndex?: number) => void;
   clearLessonCheckpoint: (lessonId: string) => void;
+  completeCurrentQuizReview: (input: {
+    conceptKey: CurrentQuizReviewCompletion['conceptKey'];
+    lessonId: string;
+    reviewedEvidenceThroughAt: string;
+    completedAt: string;
+  }) => void;
   resetLocalProgress: () => void;
   setHydrationState: (
     hasHydrated: boolean,
@@ -98,6 +115,8 @@ export const useLearningProgressStore = create<LearningProgressState>()(
       badgeAwards: [],
       streak: initialStreak,
       lessonCheckpoints: {},
+      currentQuizAnswerEvidence: [],
+      currentQuizReviewCompletions: [],
 
       setHydrationState: (hasHydrated, hydrationError) =>
         set({ hasHydrated, hydrationError }),
@@ -333,6 +352,24 @@ export const useLearningProgressStore = create<LearningProgressState>()(
           ),
         })),
 
+      completeCurrentQuizReview: (input) =>
+        set((state) => {
+          const completion = createCurrentQuizReviewCompletion(input);
+          if (
+            state.currentQuizReviewCompletions.some(
+              (existing) => existing.id === completion.id
+            )
+          ) {
+            return state;
+          }
+          return {
+            currentQuizReviewCompletions: [
+              ...state.currentQuizReviewCompletions,
+              completion,
+            ],
+          };
+        }),
+
       resetLocalProgress: () =>
         set({
           profile: initialProfile,
@@ -347,6 +384,8 @@ export const useLearningProgressStore = create<LearningProgressState>()(
           badgeAwards: [],
           streak: initialStreak,
           lessonCheckpoints: {},
+          currentQuizAnswerEvidence: [],
+          currentQuizReviewCompletions: [],
         }),
     }),
     {

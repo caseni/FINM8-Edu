@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid meet">
+  <defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#071522"/><stop offset="1" stop-color="#0A2030"/></linearGradient><radialGradient id="halo"><stop stop-color="#47D7C3" stop-opacity=".20"/><stop offset="1" stop-color="#47D7C3" stop-opacity="0"/></radialGradient></defs>
+  <rect width="1200" height="800" rx="44" fill="url(#bg)"/><circle cx="640" cy="405" r="330" fill="url(#halo)"/>
+  <g opacity=".48"><circle cx="300" cy="360" r="84" fill="#0C2534" stroke="#617987" stroke-width="4"/><text x="300" y="372" font-family="Arial, sans-serif" font-size="34" font-weight="900" text-anchor="middle" fill="#C6D4DA">100.00</text></g>
+  <path d="M410 480C535 455 625 415 710 372S845 305 925 285" fill="none" stroke="#31586B" stroke-width="12" stroke-linecap="round"/>
+  <path d="M420 476C540 452 630 412 710 372S845 307 912 290" fill="none" stroke="#47D7C3" stroke-width="6" stroke-linecap="round"/>
+  <g font-family="Arial, sans-serif" font-size="27" font-weight="800" fill="#C7D7DD" text-anchor="middle"><text x="560" y="350">100.05</text><text x="690" y="300">100.10</text><text x="910" y="235" fill="#8AEADD">100.15</text></g>
+  <circle cx="912" cy="290" r="23" fill="#8AEADD"/><circle cx="912" cy="290" r="46" fill="none" stroke="#47D7C3" stroke-width="3" opacity=".3"/>
+  <path d="M300 250V205" stroke="#7E94A0" stroke-width="5" stroke-linecap="round" opacity=".45"/><circle cx="300" cy="190" r="18" fill="none" stroke="#7E94A0" stroke-width="4" opacity=".45"/>
+</svg>

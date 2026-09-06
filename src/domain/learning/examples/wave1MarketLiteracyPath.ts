@@ -7,6 +7,7 @@ import {
 const MODULES = {
   markets: 'module.wave1.market-foundations',
   charts: 'module.wave1.chart-literacy',
+  structure: 'module.wave1.market-structure',
   risk: 'module.wave1.risk-management',
   behavior: 'module.wave1.behavior-evidence',
 } as const;
@@ -93,15 +94,15 @@ export const WAVE1_LESSON_BLUEPRINTS = [
     sourceIds: ['source.cme.technical-analysis', 'source.finm8.methodology.support-resistance'], readiness: 'draft',
   },
   {
-    id: 'lesson.market-structure.bos.001', moduleId: MODULES.charts, order: 11,
+    id: 'lesson.market-structure.bos.001', moduleId: MODULES.structure, order: 11,
     conceptKey: 'market.structure.bos', title: { tr: 'BOS: Yapı ne zaman gerçekten kırılır?' },
     learningObjective: { tr: 'Yapı kırılımını sıradan fiyat taşmasından ayırır.' },
-    learningStage: 'foundation', estimatedMinutes: 3, prerequisiteLessonIds: ['lesson.chart.support-resistance.001'],
+    learningStage: 'intermediate', estimatedMinutes: 3, prerequisiteLessonIds: ['lesson.chart.support-resistance.001'],
     legacyRefs: ['course:5/module:Destek ve Direnç'], practiceKind: 'chart_identification', requiresVisual: true,
     sourceIds: ['source.finm8.methodology.market-structure'], readiness: 'draft',
   },
   {
-    id: 'lesson.market-structure.choch.001', moduleId: MODULES.charts, order: 12,
+    id: 'lesson.market-structure.choch.001', moduleId: MODULES.structure, order: 12,
     conceptKey: 'market.structure.choch', title: { tr: 'CHoCH: Değişim ihtimali nasıl okunur?' },
     learningObjective: { tr: 'Karakter değişimini kesin dönüş iddiasından ayırır.' },
     learningStage: 'intermediate', estimatedMinutes: 5, prerequisiteLessonIds: ['lesson.market-structure.bos.001'],
@@ -208,16 +209,17 @@ export const WAVE1_LESSON_BLUEPRINTS = [
 
 export const WAVE1_MODULES = [
   { id: MODULES.markets, title: { tr: 'Piyasa Temelleri' }, description: { tr: 'Fiyat, araçlar, likidite ve emirlerin çalışma mantığı.' }, order: 1, lessonIds: WAVE1_LESSON_BLUEPRINTS.slice(0, 6).map((item) => item.id), prerequisiteModuleIds: [] },
-  { id: MODULES.charts, title: { tr: 'Grafik Okuryazarlığı' }, description: { tr: 'Mum, zaman dilimi, trend ve piyasa yapısını okuma.' }, order: 2, lessonIds: WAVE1_LESSON_BLUEPRINTS.slice(6, 12).map((item) => item.id), prerequisiteModuleIds: [MODULES.markets] },
-  { id: MODULES.risk, title: { tr: 'Risk Yönetimi' }, description: { tr: 'Belirsizlik, volatilite, boyutlandırma ve çeşitlendirme.' }, order: 3, lessonIds: WAVE1_LESSON_BLUEPRINTS.slice(12, 18).map((item) => item.id), prerequisiteModuleIds: [MODULES.charts] },
-  { id: MODULES.behavior, title: { tr: 'Davranış ve Kanıt' }, description: { tr: 'Karar hatalarını ve kanıt kalitesini fark etme.' }, order: 4, lessonIds: WAVE1_LESSON_BLUEPRINTS.slice(18, 24).map((item) => item.id), prerequisiteModuleIds: [MODULES.risk] },
+  { id: MODULES.charts, title: { tr: 'Grafik Okuryazarlığı' }, description: { tr: 'Mum, zaman dilimi, trend ve destek/direnç okuma.' }, order: 2, lessonIds: WAVE1_LESSON_BLUEPRINTS.slice(6, 10).map((item) => item.id), prerequisiteModuleIds: [MODULES.markets] },
+  { id: MODULES.structure, title: { tr: 'Piyasa Yapısı' }, description: { tr: 'Anlamlı swing seviyeleri, BOS ve CHoCH ile yapısal değişimi okuma.' }, order: 3, lessonIds: WAVE1_LESSON_BLUEPRINTS.slice(10, 12).map((item) => item.id), prerequisiteModuleIds: [MODULES.charts] },
+  { id: MODULES.risk, title: { tr: 'Risk Yönetimi' }, description: { tr: 'Belirsizlik, volatilite, boyutlandırma ve çeşitlendirme.' }, order: 4, lessonIds: WAVE1_LESSON_BLUEPRINTS.slice(12, 18).map((item) => item.id), prerequisiteModuleIds: [MODULES.structure] },
+  { id: MODULES.behavior, title: { tr: 'Davranış ve Kanıt' }, description: { tr: 'Karar hatalarını ve kanıt kalitesini fark etme.' }, order: 5, lessonIds: WAVE1_LESSON_BLUEPRINTS.slice(18, 24).map((item) => item.id), prerequisiteModuleIds: [MODULES.risk] },
 ].map((module) => learningModuleSchema.parse(module));
 
 export const WAVE1_MARKET_LITERACY_PATH = learningPathSchema.parse({
   id: 'path.market-literacy.tr.wave1',
   slug: 'piyasa-okuryazarligi',
   title: { tr: 'Piyasa Okuryazarlığı' },
-  description: { tr: 'Piyasayı, grafiği, riski ve kendi kararlarını birlikte okumayı öğren.' },
+  description: { tr: 'Piyasayı, grafiği, piyasa yapısını, riski ve kendi kararlarını kademe kademe okumayı öğren.' },
   startingStage: 'foundation',
   goals: ['financial_literacy', 'trading', 'risk_management', 'data_literacy'],
   status: 'draft',

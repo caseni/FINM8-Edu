@@ -1,5 +1,6 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { LEARNING_STAGE_LABELS } from '../../domain/learning/personalization';
 import { selectLocalizedText, type LearningLanguage } from '../../domain/learning/presentation';
 import type { LearningChallenge, MicroLesson } from '../../domain/learning/types';
 import { defaultLearningTheme, type LearningTheme } from '../../theme/learningTheme';
@@ -13,7 +14,6 @@ interface LearningModuleCardProps {
   completedLessonIds: readonly string[];
   challengeCompleted: boolean;
   unlocked: boolean;
-  unlockMessage: string;
   expanded: boolean;
   activeLessonId?: string;
   language: LearningLanguage;
@@ -21,6 +21,40 @@ interface LearningModuleCardProps {
   onOpenLesson: (lessonId: string) => void;
   onOpenChallenge: (challengeId: string) => void;
   theme?: LearningTheme;
+}
+
+function selectLessonListTitle(lesson: MicroLesson, language: LearningLanguage): string {
+  if (lesson.id === 'lesson.market.liquidity.001') {
+    return language === 'tr'
+      ? 'Likidite · Alıp satmak ne kadar kolay?'
+      : 'Liquidity · How easy is it to buy or sell?';
+  }
+
+  if (lesson.id === 'lesson.market.bid-ask.001') {
+    return language === 'tr'
+      ? 'Alış (bid), satış (ask) ve aradaki fark (spread)'
+      : 'Buy (bid), sell (ask), and the gap (spread)';
+  }
+
+  if (lesson.id === 'lesson.market.order-types.001') {
+    return language === 'tr'
+      ? 'Emir türleri · Piyasa, limit ve stop'
+      : 'Order types · Market, limit, and stop';
+  }
+
+  if (lesson.id === 'lesson.risk.volatility.001') {
+    return language === 'tr'
+      ? 'Volatilite · Fiyat ne kadar sert dalgalanıyor?'
+      : 'Volatility · How widely is price moving?';
+  }
+
+  if (lesson.id === 'lesson.behavior.fomo.001') {
+    return language === 'tr'
+      ? 'FOMO · Fırsatı kaçırma korkusu kararını nasıl bozar?'
+      : 'FOMO · How can fear of missing out distort a decision?';
+  }
+
+  return selectLocalizedText(lesson.title, language);
 }
 
 export function LearningModuleCard({
@@ -32,7 +66,6 @@ export function LearningModuleCard({
   completedLessonIds,
   challengeCompleted,
   unlocked,
-  unlockMessage,
   expanded,
   activeLessonId,
   language,
@@ -45,6 +78,13 @@ export function LearningModuleCard({
   const completedCount = lessons.filter((lesson) => completedLessonIds.includes(lesson.id)).length;
   const lessonsCompleted = completedCount === lessons.length;
   const progress = lessons.length === 0 ? 0 : completedCount / lessons.length;
+  const moduleStage = lessons[0]?.learningStage;
+  const hasSingleStage = Boolean(
+    moduleStage && lessons.every((lesson) => lesson.learningStage === moduleStage)
+  );
+  const stageLabel = hasSingleStage && moduleStage
+    ? selectLocalizedText(LEARNING_STAGE_LABELS[moduleStage], language)
+    : undefined;
   const status = challengeCompleted
     ? language === 'tr' ? 'Tamamlandı' : 'Completed'
     : unlocked
@@ -66,14 +106,15 @@ export function LearningModuleCard({
         <View style={styles.headerCopy}>
           <View style={styles.titleRow}>
             <Text style={styles.title}>{title}</Text>
-            <View style={[styles.statusPill, challengeCompleted && styles.statusComplete]}>
-              <Text style={styles.statusText}>{status}</Text>
-            </View>
+            {unlocked ? <Text style={styles.expandText}>{expanded ? '−' : '+'}</Text> : null}
           </View>
-          <Text style={styles.description}>{description}</Text>
+          {!expanded ? <Text style={styles.description}>{description}</Text> : null}
           <View style={styles.progressMeta}>
             <Text style={styles.progressText}>{completedCount}/{lessons.length} {language === 'tr' ? 'ders' : 'lessons'}</Text>
-            {unlocked ? <Text style={styles.expandText}>{expanded ? '−' : '+'}</Text> : null}
+            <View style={styles.statusGroup}>
+              {stageLabel ? <Text style={styles.stageText}>{stageLabel}</Text> : null}
+              <Text style={[styles.statusText, challengeCompleted && styles.statusCompleteText]}>{status}</Text>
+            </View>
           </View>
           <View style={styles.progressTrack}>
             <View style={[styles.progressFill, { width: `${progress * 100}%` }]} />
@@ -81,13 +122,22 @@ export function LearningModuleCard({
         </View>
       </Pressable>
 
-      {!unlocked ? <Text style={styles.unlockMessage}>{unlockMessage}</Text> : null}
+      {!unlocked ? (
+        <Text style={styles.unlockMessage}>
+          {language === 'tr'
+            ? 'Önceki modülün bölüm sonu uygulaması tamamlanınca açılır.'
+            : 'Unlocks after the previous module wrap-up is completed.'}
+        </Text>
+      ) : null}
 
       {unlocked && expanded ? (
         <View style={styles.details}>
           {lessons.map((lesson, index) => {
             const completed = completedLessonIds.includes(lesson.id);
             const active = lesson.id === activeLessonId;
+            const lessonStageLabel = hasSingleStage
+              ? undefined
+              : selectLocalizedText(LEARNING_STAGE_LABELS[lesson.learningStage], language);
             return (
               <Pressable
                 accessibilityRole="button"
@@ -99,8 +149,10 @@ export function LearningModuleCard({
                   <Text style={styles.lessonMarkerText}>{completed ? '✓' : index + 1}</Text>
                 </View>
                 <View style={styles.lessonCopy}>
-                  <Text style={styles.lessonTitle}>{selectLocalizedText(lesson.title, language)}</Text>
-                  <Text style={styles.lessonMeta}>{lesson.estimatedMinutes} {language === 'tr' ? 'dk' : 'min'} · +90 XP</Text>
+                  <Text style={styles.lessonTitle}>{selectLessonListTitle(lesson, language)}</Text>
+                  <Text style={styles.lessonMeta}>
+                    {lessonStageLabel ? `${lessonStageLabel} · ` : ''}{lesson.estimatedMinutes} {language === 'tr' ? 'dk' : 'min'}
+                  </Text>
                 </View>
                 <Text style={styles.openText}>{active ? (language === 'tr' ? 'Devam' : 'Continue') : '›'}</Text>
               </Pressable>
@@ -119,7 +171,9 @@ export function LearningModuleCard({
               <Text style={styles.challengeTitle}>{selectLocalizedText(challenge.title, language)}</Text>
               <Text style={styles.lessonMeta}>
                 {lessonsCompleted
-                  ? language === 'tr' ? '2 uygulama · 6 soru · +100 XP' : '2 tasks · 6 questions · +100 XP'
+                  ? language === 'tr'
+                    ? `${challenge.practicalTasks.length} uygulama · ${challenge.questions.length} soru`
+                    : `${challenge.practicalTasks.length} tasks · ${challenge.questions.length} questions`
                   : language === 'tr' ? 'Tüm derslerden sonra açılır' : 'Unlocks after every lesson'}
               </Text>
             </View>
@@ -134,37 +188,38 @@ export function LearningModuleCard({
 const createStyles = (theme: LearningTheme) => StyleSheet.create({
   card: { overflow: 'hidden', borderRadius: theme.radius.large, borderWidth: 1, borderColor: theme.colors.border, backgroundColor: theme.colors.surface },
   cardLocked: { opacity: 0.72 },
-  header: { flexDirection: 'row', alignItems: 'flex-start', gap: theme.spacing.md, padding: theme.spacing.lg },
-  number: { width: 48, height: 48, borderRadius: 16, alignItems: 'center', justifyContent: 'center', backgroundColor: theme.colors.surfaceMuted, borderWidth: 1, borderColor: theme.colors.border },
+  header: { flexDirection: 'row', alignItems: 'flex-start', gap: theme.spacing.md, padding: theme.spacing.md },
+  number: { width: 42, height: 42, borderRadius: 14, alignItems: 'center', justifyContent: 'center', backgroundColor: theme.colors.surfaceMuted, borderWidth: 1, borderColor: theme.colors.border },
   numberComplete: { backgroundColor: '#123B42', borderColor: theme.colors.success },
-  numberText: { color: theme.colors.primary, fontSize: 13, fontWeight: '900' },
-  headerCopy: { flex: 1, gap: 7 },
+  numberText: { color: theme.colors.primary, fontSize: 12, fontWeight: '900' },
+  headerCopy: { flex: 1, gap: 6 },
   titleRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: theme.spacing.sm },
-  title: { flex: 1, color: theme.colors.text, fontSize: 18, fontWeight: '900' },
-  statusPill: { paddingVertical: 5, paddingHorizontal: 9, borderRadius: 99, backgroundColor: theme.colors.surfaceMuted },
-  statusComplete: { backgroundColor: '#123B42' },
-  statusText: { color: theme.colors.textMuted, fontSize: 10, fontWeight: '800' },
-  description: { color: theme.colors.textMuted, fontSize: 13, lineHeight: 19 },
-  progressMeta: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  title: { flex: 1, color: theme.colors.text, fontSize: 17, fontWeight: '900' },
+  description: { color: theme.colors.textMuted, fontSize: 13, lineHeight: 18 },
+  progressMeta: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: theme.spacing.sm },
   progressText: { color: theme.colors.textMuted, fontSize: 11, fontWeight: '700' },
+  statusGroup: { flexDirection: 'row', alignItems: 'center', gap: 7 },
+  stageText: { color: theme.colors.textMuted, fontSize: 10, fontWeight: '800' },
+  statusText: { color: theme.colors.primary, fontSize: 10, fontWeight: '900' },
+  statusCompleteText: { color: theme.colors.success },
   expandText: { color: theme.colors.primary, fontSize: 20, lineHeight: 20, fontWeight: '500' },
-  progressTrack: { height: 6, overflow: 'hidden', borderRadius: 6, backgroundColor: theme.colors.background },
-  progressFill: { height: 6, borderRadius: 6, backgroundColor: theme.colors.primary },
-  unlockMessage: { marginHorizontal: theme.spacing.lg, marginBottom: theme.spacing.lg, color: theme.colors.warning, fontSize: 12, lineHeight: 18 },
-  details: { paddingHorizontal: theme.spacing.lg, paddingBottom: theme.spacing.lg },
-  lessonRow: { minHeight: 64, flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 10, borderTopWidth: 1, borderTopColor: theme.colors.border },
-  lessonRowActive: { marginHorizontal: -8, paddingHorizontal: 8, borderRadius: theme.radius.medium, backgroundColor: theme.colors.surfaceMuted },
-  lessonMarker: { width: 32, height: 32, borderRadius: 11, alignItems: 'center', justifyContent: 'center', backgroundColor: theme.colors.background, borderWidth: 1, borderColor: theme.colors.border },
+  progressTrack: { height: 5, overflow: 'hidden', borderRadius: 5, backgroundColor: theme.colors.background },
+  progressFill: { height: 5, borderRadius: 5, backgroundColor: theme.colors.primary },
+  unlockMessage: { marginHorizontal: theme.spacing.md, marginBottom: theme.spacing.md, color: theme.colors.warning, fontSize: 12, lineHeight: 18 },
+  details: { paddingHorizontal: theme.spacing.md, paddingBottom: theme.spacing.md },
+  lessonRow: { minHeight: 56, flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 8, borderTopWidth: 1, borderTopColor: theme.colors.border },
+  lessonRowActive: { marginHorizontal: -6, paddingHorizontal: 6, borderRadius: theme.radius.medium, backgroundColor: theme.colors.surfaceMuted },
+  lessonMarker: { width: 30, height: 30, borderRadius: 10, alignItems: 'center', justifyContent: 'center', backgroundColor: theme.colors.background, borderWidth: 1, borderColor: theme.colors.border },
   lessonMarkerComplete: { backgroundColor: '#123B42', borderColor: theme.colors.success },
   lessonMarkerActive: { borderColor: theme.colors.primary, borderWidth: 2 },
   lessonMarkerText: { color: theme.colors.primary, fontSize: 11, fontWeight: '900' },
-  lessonCopy: { flex: 1, gap: 4 },
+  lessonCopy: { flex: 1, gap: 3 },
   lessonTitle: { color: theme.colors.text, fontSize: 14, lineHeight: 19, fontWeight: '700' },
   lessonMeta: { color: theme.colors.textMuted, fontSize: 11 },
   openText: { color: theme.colors.primary, fontSize: 13, fontWeight: '900' },
-  challenge: { flexDirection: 'row', alignItems: 'center', gap: 12, marginTop: 8, padding: 14, borderRadius: theme.radius.medium, backgroundColor: '#123B42', borderWidth: 1, borderColor: theme.colors.primary },
+  challenge: { flexDirection: 'row', alignItems: 'center', gap: 10, marginTop: 8, padding: 12, borderRadius: theme.radius.medium, backgroundColor: '#123B42', borderWidth: 1, borderColor: theme.colors.primary },
   challengeLocked: { backgroundColor: theme.colors.surfaceMuted, borderColor: theme.colors.border, opacity: 0.7 },
-  challengeMark: { width: 36, height: 36, borderRadius: 12, alignItems: 'center', justifyContent: 'center', backgroundColor: theme.colors.background },
-  challengeMarkText: { color: theme.colors.warning, fontSize: 17 },
+  challengeMark: { width: 34, height: 34, borderRadius: 11, alignItems: 'center', justifyContent: 'center', backgroundColor: theme.colors.background },
+  challengeMarkText: { color: theme.colors.warning, fontSize: 16 },
   challengeTitle: { color: theme.colors.text, fontSize: 14, fontWeight: '900' },
 });

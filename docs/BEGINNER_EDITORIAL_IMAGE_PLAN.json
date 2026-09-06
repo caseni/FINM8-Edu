@@ -1,0 +1,40 @@
+{
+  "version": 3,
+  "principles": {
+    "uiMockupsAreAssets": false,
+    "codeDrawnVisualsCountAsComplete": false,
+    "practiceCanBeExampleOnly": true,
+    "imageMustTeachOrClarify": true,
+    "notEveryRoleNeedsAnImage": true,
+    "physicalAssetMustBeRegistered": true
+  },
+  "lessons": [
+    {"slug":"enflasyon-satin-alma-gucu","assetDir":"assets/learning/beginner/economy","assetPrefix":"inflation-purchasing-power","roles":["hook","concept","practice","misconception","summary"],"exampleOnlyRoles":[],"status":"planned"},
+    {"slug":"faiz-orani-ne-anlatir","assetDir":"assets/learning/beginner/economy","assetPrefix":"interest-rate","roles":["hook","concept","practice","summary"],"exampleOnlyRoles":["misconception"],"status":"planned"},
+    {"slug":"merkez-bankasi-ne-yapar","assetDir":"assets/learning/beginner/economy","assetPrefix":"central-bank","roles":["hook","concept","misconception","summary"],"exampleOnlyRoles":["practice"],"status":"planned"},
+    {"slug":"faiz-karari-ekonomiye-nasil-yansir","assetDir":"assets/learning/beginner/economy","assetPrefix":"rate-transmission","roles":["hook","concept","practice","summary"],"exampleOnlyRoles":["misconception"],"status":"planned"},
+    {"slug":"gsyh-buyume-ne-anlatir","assetDir":"assets/learning/beginner/economy","assetPrefix":"gdp-growth","roles":["hook","concept","misconception","summary"],"exampleOnlyRoles":["practice"],"status":"planned"},
+    {"slug":"ekonomik-dongu-resesyon","assetDir":"assets/learning/beginner/economy","assetPrefix":"business-cycle","roles":["hook","concept","practice","misconception","summary"],"exampleOnlyRoles":[],"status":"planned"},
+
+    {"slug":"fiyat-piyasada-nasil-olusur","assetDir":"assets/learning/beginner/markets","assetPrefix":"price-formation","roles":["hook","concept","practice","misconception","summary"],"exampleOnlyRoles":[],"status":"integrated"},
+    {"slug":"piyasa-araclari-ayni-degildir","assetDir":"assets/learning/beginner/markets","assetPrefix":"asset-classes","roles":["hook","concept","misconception","summary"],"exampleOnlyRoles":["practice"],"status":"planned"},
+    {"slug":"likidite-neden-onemlidir","assetDir":"assets/learning/beginner/markets","assetPrefix":"liquidity","roles":["hook","concept","practice","misconception","summary"],"exampleOnlyRoles":[],"status":"planned"},
+    {"slug":"bid-ask-spread-nedir","assetDir":"assets/learning/beginner/markets","assetPrefix":"bid-ask","roles":["hook","concept","practice","misconception","summary"],"exampleOnlyRoles":[],"status":"planned"},
+    {"slug":"piyasa-limit-stop-emirleri","assetDir":"assets/learning/beginner/markets","assetPrefix":"order-types","roles":["hook","concept","practice","misconception","summary"],"exampleOnlyRoles":[],"status":"planned"},
+    {"slug":"gerceklesme-fiyati-kayma","assetDir":"assets/learning/beginner/markets","assetPrefix":"slippage","roles":["hook","concept","practice","misconception","summary"],"exampleOnlyRoles":[],"status":"planned"},
+
+    {"slug":"bir-mum-bize-ne-soyler","assetDir":"assets/learning/beginner/charts","assetPrefix":"candlestick","roles":["hook","concept","practice","misconception","summary"],"exampleOnlyRoles":[],"status":"planned"},
+    {"slug":"zaman-dilimi-neyi-degistirir","assetDir":"assets/learning/beginner/charts","assetPrefix":"timeframes","roles":["hook","concept","practice","misconception","summary"],"exampleOnlyRoles":[],"status":"planned"},
+    {"slug":"trend-yon-mu-yapi-mi","assetDir":"assets/learning/beginner/charts","assetPrefix":"trend-structure","roles":["hook","concept","practice","misconception","summary"],"exampleOnlyRoles":[],"status":"planned"},
+    {"slug":"destek-direnc-bolgedir","assetDir":"assets/learning/beginner/charts","assetPrefix":"support-resistance-zone","roles":["hook","concept","practice","misconception","summary"],"exampleOnlyRoles":[],"status":"planned"},
+    {"slug":"momentum-ne-anlatir","assetDir":"assets/learning/beginner/charts","assetPrefix":"momentum","roles":["hook","concept","practice","misconception","summary"],"exampleOnlyRoles":[],"status":"planned"},
+    {"slug":"hareketli-ortalama-ne-yapar","assetDir":"assets/learning/beginner/charts","assetPrefix":"moving-average","roles":["hook","concept","practice","misconception","summary"],"exampleOnlyRoles":[],"status":"planned"},
+
+    {"slug":"risk-belirsizlik-kayip","assetDir":"assets/learning/beginner/risk","assetPrefix":"risk-uncertainty","roles":["hook","concept","practice","misconception","summary"],"exampleOnlyRoles":[],"status":"planned"},
+    {"slug":"volatilite-once-risktir","assetDir":"assets/learning/beginner/risk","assetPrefix":"volatility-risk","roles":["hook","concept","practice","misconception","summary"],"exampleOnlyRoles":[],"status":"planned"},
+    {"slug":"pozisyon-buyuklugu-once-gelir","assetDir":"assets/learning/beginner/risk","assetPrefix":"position-sizing","roles":["hook","concept","practice","misconception","summary"],"exampleOnlyRoles":[],"status":"planned"},
+    {"slug":"risk-getiri-tek-basina-yetmez","assetDir":"assets/learning/beginner/risk","assetPrefix":"risk-reward","roles":["hook","concept","practice","misconception","summary"],"exampleOnlyRoles":[],"status":"planned"},
+    {"slug":"stop-emri-garanti-midir","assetDir":"assets/learning/beginner/risk","assetPrefix":"stop-order","roles":["hook","concept","practice","misconception","summary"],"exampleOnlyRoles":[],"status":"planned"},
+    {"slug":"cok-varlik-cesitlendirme-degildir","assetDir":"assets/learning/beginner/risk","assetPrefix":"diversification","roles":["hook","concept","practice","misconception","summary"],"exampleOnlyRoles":[],"status":"planned"}
+  ]
+}

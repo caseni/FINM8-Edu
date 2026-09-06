@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid meet">
+  <defs>
+    <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#071522"/><stop offset="1" stop-color="#0A2030"/></linearGradient>
+    <radialGradient id="halo"><stop stop-color="#47D7C3" stop-opacity=".28"/><stop offset="1" stop-color="#47D7C3" stop-opacity="0"/></radialGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dy="14" stdDeviation="18" flood-opacity=".30"/></filter>
+  </defs>
+  <rect width="1200" height="800" rx="44" fill="url(#bg)"/>
+  <circle cx="610" cy="390" r="365" fill="url(#halo)"/>
+
+  <path d="M145 585C325 540 500 510 665 430S930 320 1060 305" fill="none" stroke="#14394A" stroke-width="116" stroke-linecap="round" opacity=".78"/>
+  <path d="M155 580C335 535 505 505 665 425S930 315 1050 300" fill="none" stroke="#2A6170" stroke-width="4" stroke-linecap="round" stroke-dasharray="12 17" opacity=".9"/>
+
+  <g font-family="Arial, sans-serif" font-size="27" font-weight="700" text-anchor="middle" filter="url(#shadow)">
+    <g transform="translate(350 390)"><rect x="-57" y="-32" width="114" height="64" rx="19" fill="#0C2534" stroke="#31586B" stroke-width="3"/><text y="10" fill="#B9CDD7">99.8</text></g>
+    <g transform="translate(505 350)"><rect x="-57" y="-32" width="114" height="64" rx="19" fill="#0E2E39" stroke="#3CAFA4" stroke-width="3"/><text y="10" fill="#DDEDEF">99.9</text></g>
+    <g transform="translate(665 300)"><rect x="-60" y="-35" width="120" height="70" rx="21" fill="#0E303A" stroke="#47D7C3" stroke-width="4"/><text y="10" fill="#EAF5F7">100</text></g>
+    <g transform="translate(830 255)"><rect x="-62" y="-32" width="124" height="64" rx="19" fill="#0C2534" stroke="#31586B" stroke-width="3"/><text y="10" fill="#B9CDD7">100.1</text></g>
+  </g>
+
+  <path d="M215 540C330 505 430 470 515 430S690 350 830 305" fill="none" stroke="#47D7C3" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="350" cy="500" r="11" fill="#8AEADD"/>
+  <circle cx="505" cy="445" r="11" fill="#8AEADD"/>
+  <circle cx="665" cy="375" r="14" fill="#8AEADD"/>
+  <circle cx="830" cy="305" r="10" fill="#8AEADD" opacity=".7"/>
+
+  <g transform="translate(175 555)" filter="url(#shadow)">
+    <circle r="50" fill="#0E3B3F" stroke="#47D7C3" stroke-width="4"/>
+    <path d="M-14 0H18M8-10L18 0 8 10" fill="none" stroke="#8AEADD" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <g transform="translate(900 285)" opacity=".55"><circle r="34" fill="none" stroke="#47D7C3" stroke-width="3"/><circle r="13" fill="#8AEADD"/></g>
+</svg>

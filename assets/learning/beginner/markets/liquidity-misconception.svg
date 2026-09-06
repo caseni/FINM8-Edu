@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid meet">
+  <defs>
+    <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#071522"/><stop offset="1" stop-color="#0A2030"/></linearGradient>
+    <radialGradient id="halo"><stop stop-color="#47D7C3" stop-opacity=".22"/><stop offset="1" stop-color="#47D7C3" stop-opacity="0"/></radialGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dy="14" stdDeviation="18" flood-opacity=".30"/></filter>
+  </defs>
+  <rect width="1200" height="800" rx="44" fill="url(#bg)"/>
+  <circle cx="650" cy="410" r="340" fill="url(#halo)"/>
+
+  <g transform="translate(180 90)" opacity=".22">
+    <rect width="840" height="245" rx="40" fill="#102C3D" stroke="#365B6E" stroke-width="3"/>
+    <g fill="#5E879D">
+      <rect x="70" y="155" width="48" height="90" rx="11"/>
+      <rect x="165" y="100" width="48" height="145" rx="11"/>
+      <rect x="260" y="132" width="48" height="113" rx="11"/>
+      <rect x="355" y="65" width="48" height="180" rx="11"/>
+      <rect x="450" y="92" width="48" height="153" rx="11"/>
+      <rect x="545" y="45" width="48" height="200" rx="11"/>
+      <rect x="640" y="82" width="48" height="163" rx="11"/>
+      <rect x="735" y="58" width="48" height="187" rx="11"/>
+    </g>
+  </g>
+
+  <path d="M245 575H955" stroke="#183B4C" stroke-width="88" stroke-linecap="round" opacity=".72"/>
+  <path d="M260 575H460" stroke="#47D7C3" stroke-width="6" stroke-linecap="round" opacity=".82"/>
+  <path d="M740 575H940" stroke="#31586B" stroke-width="6" stroke-linecap="round" opacity=".72"/>
+  <path d="M485 575H715" stroke="#6B8494" stroke-width="4" stroke-dasharray="12 18" opacity=".45"/>
+
+  <g font-family="Arial, sans-serif" font-size="30" font-weight="700" text-anchor="middle" filter="url(#shadow)">
+    <g transform="translate(430 455)"><rect x="-54" y="-32" width="108" height="64" rx="20" fill="#0E303A" stroke="#47D7C3" stroke-width="4"/><text y="10" fill="#EAF5F7">99</text></g>
+    <g transform="translate(770 455)"><rect x="-54" y="-32" width="108" height="64" rx="20" fill="#0C2534" stroke="#31586B" stroke-width="3"/><text y="10" fill="#B9CDD7">103</text></g>
+  </g>
+
+  <g transform="translate(295 575)" filter="url(#shadow)">
+    <circle r="47" fill="#0E3B3F" stroke="#47D7C3" stroke-width="4"/>
+    <path d="M-13 0H17M7-10L17 0 7 10" fill="none" stroke="#8AEADD" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <circle cx="470" cy="575" r="15" fill="#8AEADD"/>
+  <path d="M493 575H705" stroke="#7D909B" stroke-width="3" stroke-dasharray="8 17" opacity=".55"/>
+</svg>

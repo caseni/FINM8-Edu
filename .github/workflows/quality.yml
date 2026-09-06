@@ -6,6 +6,9 @@ on:
     branches:
       - main
 
+permissions:
+  contents: read
+
 jobs:
   typecheck:
     runs-on: ubuntu-latest
@@ -22,8 +25,41 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Runtime dependency audit snapshot (read-only)
+        run: npm audit --omit=dev --json > runtime-audit.json || true
+
+      - name: Full dependency audit snapshot (read-only)
+        run: npm audit --json > full-audit.json || true
+
+      - name: Dependency audit summary
+        run: node scripts/dependencyAuditSummary.cjs runtime-audit.json full-audit.json
+
+      - name: Runtime critical vulnerability gate
+        run: npm audit --omit=dev --audit-level=critical
+
       - name: Typecheck
         run: npm run typecheck
+
+      - name: Content quality audit
+        run: npm run quality:content
+
+      - name: Academy visual routing audit
+        run: node scripts/academyVisualRoutingAudit.mjs
+
+      - name: Learning auxiliary accessibility audit
+        run: node scripts/learningAuxiliaryAccessibilityAudit.mjs
+
+      - name: Real editorial image asset audit
+        run: node scripts/editorialImageCoverage.mjs
+
+      - name: Academy editorial batch audit
+        run: node scripts/academyEditorialBatchAudit.mjs
+
+      - name: Academy expansion editorial audit
+        run: node scripts/academyExpansionEditorialBatchAudit.mjs
+
+      - name: Unified real-image rollout status audit
+        run: node scripts/editorialImageRolloutStatus.mjs
 
       - name: Build web bundle
         run: npm run build:web

@@ -13,9 +13,38 @@ import {
   defaultLearningTheme,
   type LearningTheme,
 } from '../../theme/learningTheme';
-import { LearningVisual } from './LearningVisual';
+import { BidAskSpreadVisual } from './BidAskSpreadVisual';
+import { BreakOfStructureVisual } from './BreakOfStructureVisual';
+import { CandleAnatomyVisual } from './CandleAnatomyVisual';
+import { ChangeOfCharacterVisual } from './ChangeOfCharacterVisual';
+import { ConfirmationBiasVisual } from './ConfirmationBiasVisual';
+import { DecisionJournalVisual } from './DecisionJournalVisual';
+import { DiversificationVisual } from './DiversificationVisual';
+import { FomoDecisionVisual } from './FomoDecisionVisual';
+import {
+  LessonSupportingVisual,
+  type LessonSupportingVisualRole,
+} from './LessonSupportingVisual';
+import { LiquidityImpactVisual } from './LiquidityImpactVisual';
+import { OrderTypesVisual } from './OrderTypesVisual';
+import { OvertradingDecisionVisual } from './OvertradingDecisionVisual';
+import { PositionSizingVisual } from './PositionSizingVisual';
+import { PriceFormationVisual } from './PriceFormationVisual';
+import { RiskBasicsVisual } from './RiskBasicsVisual';
+import { RiskRewardVisual } from './RiskRewardVisual';
+import { SlippageExecutionVisual } from './SlippageExecutionVisual';
+import { StopOrderVisual } from './StopOrderVisual';
+import { SupportResistanceZoneVisual } from './SupportResistanceZoneVisual';
+import { TimeframeContextVisual } from './TimeframeContextVisual';
+import { TrendStructureVisual } from './TrendStructureVisual';
+import { VolatilityRangeVisual } from './VolatilityRangeVisual';
 
 type VisualBlock = Extract<ContentBlock, { kind: 'visual' }>;
+
+interface SupportingVisual {
+  readonly assetRef: string;
+  readonly alt: string;
+}
 
 export interface LessonBlockRendererProps {
   block: ContentBlock;
@@ -23,6 +52,17 @@ export interface LessonBlockRendererProps {
   presentationMode: PresentationMode;
   theme?: LearningTheme;
   renderVisual?: (block: VisualBlock) => React.ReactNode;
+  supportingVisual?: SupportingVisual;
+}
+
+function roleForBlock(block: Exclude<ContentBlock, VisualBlock>): LessonSupportingVisualRole {
+  if (block.kind === 'prompt') return 'hook';
+  if (block.kind === 'misconception') return 'misconception';
+  if (block.kind === 'callout') {
+    if (block.tone === 'risk') return 'risk';
+    if (block.tone === 'evidence') return 'practice';
+  }
+  return 'concept';
 }
 
 export function LessonBlockRenderer({
@@ -31,6 +71,7 @@ export function LessonBlockRenderer({
   presentationMode,
   theme = defaultLearningTheme,
   renderVisual,
+  supportingVisual,
 }: LessonBlockRendererProps) {
   const styles = createStyles(theme);
 
@@ -50,20 +91,98 @@ export function LessonBlockRenderer({
             </Text>
           </View>
         ))}
+        {supportingVisual ? (
+          <LessonSupportingVisual
+            assetRef={supportingVisual.assetRef}
+            alt={supportingVisual.alt}
+            language={language}
+            role={roleForBlock(block)}
+            theme={theme}
+          />
+        ) : null}
       </View>
     );
   }
 
   if (block.kind === 'visual') {
+    const alt = selectLocalizedText(block.alt, language);
+    const isPriceFormationVisual = block.assetRef.includes('fiyat-piyasada-nasil-olusur');
+    const isLiquidityImpactVisual = block.assetRef.includes('likidite-neden-onemlidir');
+    const isBidAskSpreadVisual = block.assetRef.includes('bid-ask-spread-nedir');
+    const isOrderTypesVisual = block.assetRef.includes('piyasa-limit-stop-emirleri');
+    const isSlippageExecutionVisual = block.assetRef.includes('gerceklesme-fiyati-kayma');
+    const isTimeframeContextVisual = block.assetRef.includes('zaman-dilimi-neyi-degistirir');
+    const isTrendStructureVisual = block.assetRef.includes('trend-yon-mu-yapi-mi');
+    const isSupportResistanceZoneVisual = block.assetRef.includes('destek-direnc-bolgedir');
+    const isBreakOfStructureVisual = block.assetRef.includes('bos-starter');
+    const isChangeOfCharacterVisual =
+      block.assetRef.includes('choch-degisim-ihtimali') ||
+      block.assetRef.includes('edu://charts/choch-001');
+    const isVolatilityRangeVisual = block.assetRef.includes('volatilite-once-risktir');
+    const isPositionSizingVisual = block.assetRef.includes('pozisyon-buyuklugu-once-gelir');
+    const isRiskRewardVisual = block.assetRef.includes('risk-getiri-tek-basina-yetmez');
+    const isStopOrderVisual = block.assetRef.includes('stop-emri-garanti-midir');
+    const isDiversificationVisual = block.assetRef.includes('cok-varlik-cesitlendirme-degildir');
+    const isFomoDecisionVisual = block.assetRef.includes('fomo-karari-nasil-bozar');
+    const isOvertradingDecisionVisual = block.assetRef.includes('asiri-islem-nasil-fark-edilir');
+    const isConfirmationBiasVisual = block.assetRef.includes('sadece-hakli-cikaran-kanit');
+    const isDecisionJournalVisual = block.assetRef.includes('sonucu-degil-karari-kaydet');
+    const isRiskBasicsVisual = block.assetRef.includes('risk-belirsizlik-kayip');
+    const isCandleAnatomyVisual =
+      block.assetRef.includes('bir-mum') || block.assetRef.includes('candle-ohlc');
+
     return (
       <View style={styles.block}>
         {renderVisual ? (
           renderVisual(block)
+        ) : isPriceFormationVisual ? (
+          <PriceFormationVisual alt={alt} language={language} theme={theme} />
+        ) : isLiquidityImpactVisual ? (
+          <LiquidityImpactVisual alt={alt} language={language} theme={theme} />
+        ) : isBidAskSpreadVisual ? (
+          <BidAskSpreadVisual alt={alt} language={language} theme={theme} />
+        ) : isOrderTypesVisual ? (
+          <OrderTypesVisual alt={alt} language={language} theme={theme} />
+        ) : isSlippageExecutionVisual ? (
+          <SlippageExecutionVisual alt={alt} language={language} theme={theme} />
+        ) : isTimeframeContextVisual ? (
+          <TimeframeContextVisual alt={alt} language={language} theme={theme} />
+        ) : isTrendStructureVisual ? (
+          <TrendStructureVisual alt={alt} language={language} theme={theme} />
+        ) : isSupportResistanceZoneVisual ? (
+          <SupportResistanceZoneVisual alt={alt} language={language} theme={theme} />
+        ) : isBreakOfStructureVisual ? (
+          <BreakOfStructureVisual alt={alt} language={language} theme={theme} />
+        ) : isChangeOfCharacterVisual ? (
+          <ChangeOfCharacterVisual alt={alt} language={language} theme={theme} />
+        ) : isVolatilityRangeVisual ? (
+          <VolatilityRangeVisual alt={alt} language={language} theme={theme} />
+        ) : isPositionSizingVisual ? (
+          <PositionSizingVisual alt={alt} language={language} theme={theme} />
+        ) : isRiskRewardVisual ? (
+          <RiskRewardVisual alt={alt} language={language} theme={theme} />
+        ) : isStopOrderVisual ? (
+          <StopOrderVisual alt={alt} language={language} theme={theme} />
+        ) : isDiversificationVisual ? (
+          <DiversificationVisual alt={alt} language={language} theme={theme} />
+        ) : isFomoDecisionVisual ? (
+          <FomoDecisionVisual alt={alt} language={language} theme={theme} />
+        ) : isOvertradingDecisionVisual ? (
+          <OvertradingDecisionVisual alt={alt} language={language} theme={theme} />
+        ) : isConfirmationBiasVisual ? (
+          <ConfirmationBiasVisual alt={alt} language={language} theme={theme} />
+        ) : isDecisionJournalVisual ? (
+          <DecisionJournalVisual alt={alt} language={language} theme={theme} />
+        ) : isRiskBasicsVisual ? (
+          <RiskBasicsVisual alt={alt} language={language} theme={theme} />
+        ) : isCandleAnatomyVisual ? (
+          <CandleAnatomyVisual alt={alt} language={language} theme={theme} />
         ) : (
-          <LearningVisual
+          <LessonSupportingVisual
             assetRef={block.assetRef}
-            alt={selectLocalizedText(block.alt, language)}
+            alt={alt}
             language={language}
+            role="practice"
             theme={theme}
           />
         )}
@@ -95,6 +214,15 @@ export function LessonBlockRenderer({
       ) : (
         <Text style={styles.body}>{copy}</Text>
       )}
+      {supportingVisual ? (
+        <LessonSupportingVisual
+          assetRef={supportingVisual.assetRef}
+          alt={supportingVisual.alt}
+          language={language}
+          role={roleForBlock(block)}
+          theme={theme}
+        />
+      ) : null}
     </View>
   );
 }
@@ -109,7 +237,7 @@ const createStyles = (theme: LearningTheme) =>
       fontWeight: '800',
       lineHeight: 36,
     },
-    body: { color: theme.colors.text, fontSize: 18, lineHeight: 28, flex: 1 },
+    body: { color: theme.colors.text, fontSize: 18, lineHeight: 28 },
     caption: { color: theme.colors.textMuted, fontSize: 14, lineHeight: 20 },
     bulletRow: { flexDirection: 'row', gap: theme.spacing.sm },
     bullet: { color: theme.colors.primary, fontSize: 20, fontWeight: '800' },

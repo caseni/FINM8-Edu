@@ -1,0 +1,148 @@
+import React from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import type { LearningLanguage } from '../../domain/learning/presentation';
+import { defaultLearningTheme, type LearningTheme } from '../../theme/learningTheme';
+import { AcademyAdvancedCleanVisual, isAcademyAdvancedCleanAsset } from './AcademyAdvancedCleanVisual';
+import { AcademyAssetPremiumHookVisual, isAcademyAssetPremiumHookAsset } from './AcademyAssetPremiumHookVisual';
+import { AcademyCoreExpansionCleanVisual, isAcademyCoreExpansionCleanAsset } from './AcademyCoreExpansionCleanVisual';
+import { AcademyEconomyPremiumHookVisual, isAcademyEconomyPremiumHookAsset } from './AcademyEconomyPremiumHookVisual';
+import { AcademyEditorialImageVisual, hasAcademyEditorialImage } from './AcademyEditorialImageVisual';
+import { AcademyFoundationCleanVisual, isAcademyFoundationCleanAsset } from './AcademyFoundationCleanVisual';
+import { AcademyFundamentalStoryVisual, isAcademyFundamentalStoryAsset } from './AcademyFundamentalStoryVisual';
+import { AcademyMarketsStoryVisual, isAcademyMarketsStoryAsset } from './AcademyMarketsStoryVisual';
+import { AcademyPremiumHookVisual, isAcademyPremiumHookAsset } from './AcademyPremiumHookVisual';
+import { AcademyPsychologyPremiumHookVisual, isAcademyPsychologyPremiumHookAsset } from './AcademyPsychologyPremiumHookVisual';
+import { AcademyQuantPremiumHookVisual, isAcademyQuantPremiumHookAsset } from './AcademyQuantPremiumHookVisual';
+import { AcademyRiskPortfolioStoryVisual, isAcademyRiskPortfolioStoryAsset } from './AcademyRiskPortfolioStoryVisual';
+import { AcademySmcPremiumHookVisual, isAcademySmcPremiumHookAsset } from './AcademySmcPremiumHookVisual';
+import { AcademyStrategyPremiumHookVisual, isAcademyStrategyPremiumHookAsset } from './AcademyStrategyPremiumHookVisual';
+import { AcademyTechnicalPremiumHookVisual, isAcademyTechnicalPremiumHookAsset } from './AcademyTechnicalPremiumHookVisual';
+import { AlgoQuantSlideVisual, isAlgoQuantSlideAsset } from './AlgoQuantSlideVisual';
+import { AssetSchoolSlideVisual, isAssetSchoolSlideAsset } from './AssetSchoolSlideVisual';
+import { BehaviorEvidenceSlideVisual, isBehaviorEvidenceSlideAsset } from './BehaviorEvidenceSlideVisual';
+import { BeginnerAppliedChartStoryVisual, isBeginnerAppliedChartStoryAsset } from './BeginnerAppliedChartStoryVisual';
+import { BeginnerChartStoryVisual, isBeginnerChartStoryAsset } from './BeginnerChartStoryVisual';
+import { BeginnerCoreChartStoryVisual, isBeginnerCoreChartStoryAsset } from './BeginnerCoreChartStoryVisual';
+import { BeginnerEconomyStoryVisual, isBeginnerEconomyStoryAsset } from './BeginnerEconomyStoryVisual';
+import { BeginnerMarketStoryVisual, isBeginnerMarketStoryAsset } from './BeginnerMarketStoryVisual';
+import { BeginnerRiskStoryVisual, isBeginnerRiskStoryAsset } from './BeginnerRiskStoryVisual';
+import { BeginnerRiskUncertaintyVisual } from './BeginnerRiskUncertaintyVisual';
+import { ChartLessonSlideVisual, isChartLessonSlideAsset } from './ChartLessonSlideVisual';
+import { EconomyExpansionSlideVisual, isEconomyExpansionSlideAsset } from './EconomyExpansionSlideVisual';
+import { EconomySlideVisual, isEconomySlideAsset } from './EconomySlideVisual';
+import { FinancialMarketsExpansionSlideVisual, isFinancialMarketsExpansionSlideAsset } from './FinancialMarketsExpansionSlideVisual';
+import { FinancialMarketsSlideVisual, isFinancialMarketsSlideAsset } from './FinancialMarketsSlideVisual';
+import { FundamentalAnalysisExpansionSlideVisual, isFundamentalAnalysisExpansionSlideAsset } from './FundamentalAnalysisExpansionSlideVisual';
+import { FundamentalAnalysisSlideVisual, isFundamentalAnalysisSlideAsset } from './FundamentalAnalysisSlideVisual';
+import { LearningVisual } from './LearningVisual';
+import { isMarketFoundationSlideAsset, MarketFoundationSlideVisual } from './MarketFoundationSlideVisual';
+import { isMarketPsychologySlideAsset, MarketPsychologySlideVisual } from './MarketPsychologySlideVisual';
+import { isRiskLessonSlideAsset, RiskLessonSlideVisual } from './RiskLessonSlideVisual';
+import { isRiskPortfolioExpansionSlideAsset, RiskPortfolioExpansionSlideVisual } from './RiskPortfolioExpansionSlideVisual';
+import { isRiskPortfolioSlideAsset, RiskPortfolioSlideVisual } from './RiskPortfolioSlideVisual';
+import { isSmcIctSlideAsset, SmcIctSlideVisual } from './SmcIctSlideVisual';
+import { isStrategySlideAsset, StrategySlideVisual } from './StrategySlideVisual';
+import { isTechnicalAnalysisExpansionSlideAsset, TechnicalAnalysisExpansionSlideVisual } from './TechnicalAnalysisExpansionSlideVisual';
+import { isTechnicalAnalysisSlideAsset, TechnicalAnalysisSlideVisual } from './TechnicalAnalysisSlideVisual';
+
+export type LessonSupportingVisualRole = 'hook' | 'concept' | 'practice' | 'misconception' | 'risk' | 'summary';
+export interface LessonSupportingVisualProps { assetRef: string; alt: string; language: LearningLanguage; role: LessonSupportingVisualRole; theme?: LearningTheme; }
+
+const ROLE_LABELS: Readonly<Record<LessonSupportingVisualRole, { tr: string; en: string }>> = {
+  hook: { tr: 'GÖRSEL İPUCU', en: 'VISUAL CUE' }, concept: { tr: 'KAVRAM GÖRSELİ', en: 'CONCEPT VISUAL' },
+  practice: { tr: 'PRATİK BAĞLAM', en: 'PRACTICAL CONTEXT' }, misconception: { tr: 'YAYGIN HATA', en: 'COMMON MISTAKE' },
+  risk: { tr: 'RİSK BAĞLAMI', en: 'RISK CONTEXT' }, summary: { tr: 'DERS ÖZETİ', en: 'LESSON SUMMARY' },
+};
+
+export function LessonSupportingVisual({ assetRef, alt, language, role, theme = defaultLearningTheme }: LessonSupportingVisualProps) {
+  const styles = createStyles(theme);
+  const label = ROLE_LABELS[role][language];
+  const labelStyle = role === 'misconception' ? styles.warningLabel : role === 'risk' ? styles.riskLabel : role === 'practice' ? styles.successLabel : role === 'hook' || role === 'summary' ? styles.primaryLabel : undefined;
+  const hasPremiumHook = role === 'hook' && isAcademyPremiumHookAsset(assetRef);
+  const hasEconomyPremiumHook = role === 'hook' && isAcademyEconomyPremiumHookAsset(assetRef);
+  const hasTechnicalPremiumHook = role === 'hook' && isAcademyTechnicalPremiumHookAsset(assetRef);
+  const hasSmcPremiumHook = role === 'hook' && isAcademySmcPremiumHookAsset(assetRef);
+  const hasQuantPremiumHook = role === 'hook' && isAcademyQuantPremiumHookAsset(assetRef);
+  const hasStrategyPremiumHook = role === 'hook' && isAcademyStrategyPremiumHookAsset(assetRef);
+  const hasPsychologyPremiumHook = role === 'hook' && isAcademyPsychologyPremiumHookAsset(assetRef);
+  const hasAssetPremiumHook = role === 'hook' && isAcademyAssetPremiumHookAsset(assetRef);
+  const hasCoreExpansionCleanVisual = isAcademyCoreExpansionCleanAsset(assetRef);
+  const hasFoundationCleanVisual = role !== 'hook' && isAcademyFoundationCleanAsset(assetRef);
+  const hasAdvancedCleanVisual = role !== 'hook' && isAcademyAdvancedCleanAsset(assetRef);
+  const hasEditorialImage = !hasCoreExpansionCleanVisual && !hasFoundationCleanVisual && !hasAdvancedCleanVisual && hasAcademyEditorialImage(assetRef, role);
+  const isBeginnerEconomy = isBeginnerEconomyStoryAsset(assetRef);
+  const isBeginnerRisk = isBeginnerRiskStoryAsset(assetRef);
+  const isBeginnerRiskUncertainty = assetRef.includes('risk-belirsizlik-kayip');
+  const isBeginnerCoreChart = isBeginnerCoreChartStoryAsset(assetRef);
+  const isBeginnerAppliedChart = isBeginnerAppliedChartStoryAsset(assetRef);
+  const isBeginnerChart = isBeginnerChartStoryAsset(assetRef);
+  const isBeginnerMarket = isBeginnerMarketStoryAsset(assetRef);
+  const isAcademyMarketFoundation = isAcademyMarketsStoryAsset(assetRef);
+  const isAcademyFundamentalFoundation = isAcademyFundamentalStoryAsset(assetRef);
+  const isAcademyRiskPortfolioFoundation = isAcademyRiskPortfolioStoryAsset(assetRef);
+  const isEconomy = isEconomySlideAsset(assetRef);
+  const preferBeginnerEconomy = assetRef.includes('#beginner-economy');
+  const preferBeginnerChart = assetRef.includes('#beginner-chart');
+  const emphasizeCleanPractice = !preferBeginnerEconomy && !preferBeginnerChart && role === 'practice' && (hasCoreExpansionCleanVisual || hasFoundationCleanVisual || hasAdvancedCleanVisual);
+  const hideEditorialLabel = hasEditorialImage || hasPremiumHook || hasEconomyPremiumHook || hasTechnicalPremiumHook || hasSmcPremiumHook || hasQuantPremiumHook || hasStrategyPremiumHook || hasPsychologyPremiumHook || hasAssetPremiumHook || hasCoreExpansionCleanVisual || hasFoundationCleanVisual || hasAdvancedCleanVisual || isBeginnerEconomy || isBeginnerRisk || isBeginnerCoreChart || isBeginnerAppliedChart || isBeginnerChart || isBeginnerMarket || isAcademyMarketFoundation || isAcademyFundamentalFoundation || isAcademyRiskPortfolioFoundation || isEconomy;
+  const visual = preferBeginnerEconomy && isBeginnerEconomy ? <BeginnerEconomyStoryVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
+    : preferBeginnerChart && isBeginnerCoreChart ? <BeginnerCoreChartStoryVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
+    : preferBeginnerChart && isBeginnerAppliedChart ? <BeginnerAppliedChartStoryVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
+    : preferBeginnerChart && isBeginnerChart ? <BeginnerChartStoryVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
+    : hasEditorialImage ? <AcademyEditorialImageVisual assetRef={assetRef} alt={alt} role={role} theme={theme} />
+    : hasPremiumHook ? <AcademyPremiumHookVisual assetRef={assetRef} alt={alt} theme={theme} />
+    : hasEconomyPremiumHook ? <AcademyEconomyPremiumHookVisual assetRef={assetRef} alt={alt} theme={theme} />
+    : hasTechnicalPremiumHook ? <AcademyTechnicalPremiumHookVisual assetRef={assetRef} alt={alt} theme={theme} />
+    : hasSmcPremiumHook ? <AcademySmcPremiumHookVisual assetRef={assetRef} alt={alt} theme={theme} />
+    : hasQuantPremiumHook ? <AcademyQuantPremiumHookVisual assetRef={assetRef} alt={alt} theme={theme} />
+    : hasStrategyPremiumHook ? <AcademyStrategyPremiumHookVisual assetRef={assetRef} alt={alt} theme={theme} />
+    : hasPsychologyPremiumHook ? <AcademyPsychologyPremiumHookVisual assetRef={assetRef} alt={alt} theme={theme} />
+    : hasAssetPremiumHook ? <AcademyAssetPremiumHookVisual assetRef={assetRef} alt={alt} theme={theme} />
+    : hasCoreExpansionCleanVisual ? <AcademyCoreExpansionCleanVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
+    : hasFoundationCleanVisual ? <AcademyFoundationCleanVisual assetRef={assetRef} alt={alt} language={language} role={role as Exclude<LessonSupportingVisualRole, 'hook'>} theme={theme} />
+    : hasAdvancedCleanVisual ? <AcademyAdvancedCleanVisual assetRef={assetRef} alt={alt} language={language} role={role as Exclude<LessonSupportingVisualRole, 'hook'>} theme={theme} />
+    : isBeginnerEconomy ? <BeginnerEconomyStoryVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
+    : isBeginnerRiskUncertainty ? <BeginnerRiskUncertaintyVisual alt={alt} language={language} role={role} theme={theme} />
+    : isBeginnerRisk ? <BeginnerRiskStoryVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
+    : isBeginnerCoreChart ? <BeginnerCoreChartStoryVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
+    : isBeginnerAppliedChart ? <BeginnerAppliedChartStoryVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
+    : isBeginnerChart ? <BeginnerChartStoryVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
+    : isBeginnerMarket ? <BeginnerMarketStoryVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
+    : isAcademyMarketFoundation ? <AcademyMarketsStoryVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
+    : isAcademyFundamentalFoundation ? <AcademyFundamentalStoryVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
+    : isAcademyRiskPortfolioFoundation ? <AcademyRiskPortfolioStoryVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
+    : isMarketFoundationSlideAsset(assetRef) ? <MarketFoundationSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
+    : isChartLessonSlideAsset(assetRef) ? <ChartLessonSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
+    : isRiskLessonSlideAsset(assetRef) ? <RiskLessonSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
+    : isBehaviorEvidenceSlideAsset(assetRef) ? <BehaviorEvidenceSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
+    : isEconomy ? <EconomySlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
+    : isEconomyExpansionSlideAsset(assetRef) ? <EconomyExpansionSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
+    : isFinancialMarketsSlideAsset(assetRef) ? <FinancialMarketsSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
+    : isFinancialMarketsExpansionSlideAsset(assetRef) ? <FinancialMarketsExpansionSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
+    : isTechnicalAnalysisSlideAsset(assetRef) ? <TechnicalAnalysisSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
+    : isTechnicalAnalysisExpansionSlideAsset(assetRef) ? <TechnicalAnalysisExpansionSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
+    : isFundamentalAnalysisSlideAsset(assetRef) ? <FundamentalAnalysisSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
+    : isFundamentalAnalysisExpansionSlideAsset(assetRef) ? <FundamentalAnalysisExpansionSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
+    : isRiskPortfolioSlideAsset(assetRef) ? <RiskPortfolioSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
+    : isRiskPortfolioExpansionSlideAsset(assetRef) ? <RiskPortfolioExpansionSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
+    : isMarketPsychologySlideAsset(assetRef) ? <MarketPsychologySlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
+    : isStrategySlideAsset(assetRef) ? <StrategySlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
+    : isAlgoQuantSlideAsset(assetRef) ? <AlgoQuantSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
+    : isSmcIctSlideAsset(assetRef) ? <SmcIctSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
+    : isAssetSchoolSlideAsset(assetRef) ? <AssetSchoolSlideVisual assetRef={assetRef} alt={alt} language={language} role={role} theme={theme} />
+    : <LearningVisual assetRef={`${assetRef}#${role}`} alt={alt} language={language} theme={theme} />;
+
+  const presentedVisual = emphasizeCleanPractice
+    ? <View style={styles.practiceFrame}><View style={styles.practiceScale}>{visual}</View></View>
+    : visual;
+
+  return <View style={styles.wrapper}>{hideEditorialLabel ? null : <Text style={[styles.eyebrow, labelStyle]}>{label}</Text>}{presentedVisual}</View>;
+}
+
+const createStyles = (theme: LearningTheme) => StyleSheet.create({
+  wrapper: { width: '100%', maxWidth: 640, alignSelf: 'center', gap: 6, marginTop: 0 },
+  practiceFrame: { minHeight: 240, alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
+  practiceScale: { width: '94%', transform: [{ scale: 1.02 }] },
+  eyebrow: { color: theme.colors.textMuted, fontSize: 10, fontWeight: '900', letterSpacing: 0.8 },
+  primaryLabel: { color: theme.colors.primary }, successLabel: { color: theme.colors.success }, warningLabel: { color: theme.colors.warning }, riskLabel: { color: theme.colors.risk },
+});

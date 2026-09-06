@@ -1,0 +1,135 @@
+{
+  "version": 1,
+  "batches": [
+    {
+      "id": "academy-markets-foundation-hooks",
+      "school": "markets",
+      "status": "active",
+      "lessons": [
+        { "slug": "borsa-ve-islem-yeri-nedir", "role": "hook", "assetDir": "assets/learning/academy/markets", "assetPrefix": "markets-exchange", "status": "integrated" },
+        { "slug": "borsa-endeksi-ne-anlatir", "role": "hook", "assetDir": "assets/learning/academy/markets", "assetPrefix": "markets-index", "status": "integrated" },
+        { "slug": "etf-nedir-nasil-calisir", "role": "hook", "assetDir": "assets/learning/academy/markets", "assetPrefix": "markets-etf", "status": "planned" },
+        { "slug": "tahvil-fiyati-ve-getirisi", "role": "hook", "assetDir": "assets/learning/academy/markets", "assetPrefix": "markets-bond", "status": "planned" },
+        { "slug": "forex-piyasasi-nasil-calisir", "role": "hook", "assetDir": "assets/learning/academy/markets", "assetPrefix": "markets-forex", "status": "planned" },
+        { "slug": "emtia-piyasalari-nasil-calisir", "role": "hook", "assetDir": "assets/learning/academy/markets", "assetPrefix": "markets-commodity", "status": "planned" }
+      ]
+    },
+    {
+      "id": "academy-fundamental-existing-hooks",
+      "school": "fundamental",
+      "status": "integrated",
+      "lessons": [
+        { "slug": "finansal-tablolar-birlikte-ne-anlatir", "role": "hook", "assetDir": "assets/learning/academy/fundamental", "assetPrefix": "fundamental-statements-profit-cash", "status": "integrated" },
+        { "slug": "gelir-tablosu-nasil-okunur", "role": "hook", "assetDir": "assets/learning/academy/fundamental", "assetPrefix": "fundamental-income-sales-costs", "status": "integrated" },
+        { "slug": "bilanco-ne-anlatir", "role": "hook", "assetDir": "assets/learning/academy/fundamental", "assetPrefix": "fundamental-balance-sheet", "status": "integrated" },
+        { "slug": "nakit-akisi-neden-farklidir", "role": "hook", "assetDir": "assets/learning/academy/fundamental", "assetPrefix": "fundamental-cash-flow", "status": "integrated" },
+        { "slug": "marjlar-ne-anlatir", "role": "hook", "assetDir": "assets/learning/academy/fundamental", "assetPrefix": "fundamental-profitability", "status": "integrated" },
+        { "slug": "borc-ve-likidite-nasil-okunur", "role": "hook", "assetDir": "assets/learning/academy/fundamental", "assetPrefix": "fundamental-debt-liquidity", "status": "integrated" }
+      ]
+    },
+    {
+      "id": "academy-risk-portfolio-foundation-hooks",
+      "school": "risk-portfolio",
+      "status": "planned",
+      "lessons": [
+        { "slug": "korelasyon-ne-anlatir", "role": "hook", "assetDir": "assets/learning/academy/risk-portfolio", "assetPrefix": "risk-correlation", "status": "planned" },
+        { "slug": "drawdown-nedir", "role": "hook", "assetDir": "assets/learning/academy/risk-portfolio", "assetPrefix": "risk-drawdown", "status": "planned" },
+        { "slug": "kaldirac-riski-nasil-buyutur", "role": "hook", "assetDir": "assets/learning/academy/risk-portfolio", "assetPrefix": "risk-leverage", "status": "planned" },
+        { "slug": "yogunlasma-riski-nedir", "role": "hook", "assetDir": "assets/learning/academy/risk-portfolio", "assetPrefix": "risk-concentration", "status": "planned" },
+        { "slug": "risk-butcesi-nedir", "role": "hook", "assetDir": "assets/learning/academy/risk-portfolio", "assetPrefix": "risk-budget", "status": "planned" },
+        { "slug": "portfoy-nasil-kurulur", "role": "hook", "assetDir": "assets/learning/academy/risk-portfolio", "assetPrefix": "risk-portfolio-construction", "status": "planned" }
+      ]
+    },
+    {
+      "id": "academy-technical-foundation-hooks",
+      "school": "technical",
+      "status": "planned",
+      "lessons": [
+        { "slug": "breakout-ne-zaman-anlamli", "role": "hook", "assetDir": "assets/learning/academy/technical", "assetPrefix": "technical-breakout", "status": "planned" },
+        { "slug": "false-breakout-nasil-okunur", "role": "hook", "assetDir": "assets/learning/academy/technical", "assetPrefix": "technical-false-breakout", "status": "planned" },
+        { "slug": "pullback-trend-donusu-degildir", "role": "hook", "assetDir": "assets/learning/academy/technical", "assetPrefix": "technical-pullback", "status": "planned" },
+        { "slug": "range-konsolidasyon-nasil-okunur", "role": "hook", "assetDir": "assets/learning/academy/technical", "assetPrefix": "technical-range", "status": "planned" },
+        { "slug": "momentum-ne-anlatir", "role": "hook", "assetDir": "assets/learning/academy/technical", "assetPrefix": "technical-momentum", "status": "planned" },
+        { "slug": "hareketli-ortalama-ne-yapar", "role": "hook", "assetDir": "assets/learning/academy/technical", "assetPrefix": "technical-moving-average", "status": "planned" }
+      ]
+    },
+    {
+      "id": "academy-economy-foundation-hooks",
+      "school": "economy",
+      "status": "planned",
+      "lessons": [
+        { "slug": "enflasyon-satin-alma-gucu", "role": "hook", "assetDir": "assets/learning/academy/economy", "assetPrefix": "economy-inflation", "status": "planned" },
+        { "slug": "faiz-orani-ne-anlatir", "role": "hook", "assetDir": "assets/learning/academy/economy", "assetPrefix": "economy-interest-rate", "status": "planned" },
+        { "slug": "merkez-bankasi-ne-yapar", "role": "hook", "assetDir": "assets/learning/academy/economy", "assetPrefix": "economy-central-bank", "status": "planned" },
+        { "slug": "faiz-karari-ekonomiye-nasil-yansir", "role": "hook", "assetDir": "assets/learning/academy/economy", "assetPrefix": "economy-monetary-policy", "status": "planned" },
+        { "slug": "gsyh-buyume-ne-anlatir", "role": "hook", "assetDir": "assets/learning/academy/economy", "assetPrefix": "economy-growth", "status": "planned" },
+        { "slug": "ekonomik-dongu-resesyon", "role": "hook", "assetDir": "assets/learning/academy/economy", "assetPrefix": "economy-business-cycle", "status": "planned" }
+      ]
+    },
+    {
+      "id": "academy-psychology-foundation-hooks",
+      "school": "market-psychology",
+      "status": "planned",
+      "lessons": [
+        { "slug": "kayip-korkusu-karari-nasil-bozar", "role": "hook", "assetDir": "assets/learning/academy/market-psychology", "assetPrefix": "psychology-loss-aversion", "status": "planned" },
+        { "slug": "ilk-fiyata-capalanmak", "role": "hook", "assetDir": "assets/learning/academy/market-psychology", "assetPrefix": "psychology-anchoring", "status": "planned" },
+        { "slug": "son-olay-her-sey-midir", "role": "hook", "assetDir": "assets/learning/academy/market-psychology", "assetPrefix": "psychology-recency", "status": "planned" },
+        { "slug": "asiri-guven-nasil-fark-edilir", "role": "hook", "assetDir": "assets/learning/academy/market-psychology", "assetPrefix": "psychology-overconfidence", "status": "planned" },
+        { "slug": "revenge-trading-nedir", "role": "hook", "assetDir": "assets/learning/academy/market-psychology", "assetPrefix": "psychology-revenge-trading", "status": "planned" },
+        { "slug": "iyi-sonuc-iyi-karar-midir", "role": "hook", "assetDir": "assets/learning/academy/market-psychology", "assetPrefix": "psychology-outcome-bias", "status": "planned" }
+      ]
+    },
+    {
+      "id": "academy-strategy-foundation-hooks",
+      "school": "strategy",
+      "status": "planned",
+      "lessons": [
+        { "slug": "strateji-amaci-ve-zaman-ufku", "role": "hook", "assetDir": "assets/learning/academy/strategy", "assetPrefix": "strategy-horizon-objective", "status": "planned" },
+        { "slug": "trend-following-nasil-dusunur", "role": "hook", "assetDir": "assets/learning/academy/strategy", "assetPrefix": "strategy-trend-following", "status": "planned" },
+        { "slug": "mean-reversion-ne-varsayar", "role": "hook", "assetDir": "assets/learning/academy/strategy", "assetPrefix": "strategy-mean-reversion", "status": "planned" },
+        { "slug": "breakout-stratejisi-ne-yapar", "role": "hook", "assetDir": "assets/learning/academy/strategy", "assetPrefix": "strategy-breakout", "status": "planned" },
+        { "slug": "momentum-stratejisi-ne-yapar", "role": "hook", "assetDir": "assets/learning/academy/strategy", "assetPrefix": "strategy-momentum", "status": "planned" },
+        { "slug": "swing-ve-position-farki", "role": "hook", "assetDir": "assets/learning/academy/strategy", "assetPrefix": "strategy-swing-position", "status": "planned" }
+      ]
+    },
+    {
+      "id": "academy-algo-quant-foundation-hooks",
+      "school": "algo-quant",
+      "status": "planned",
+      "lessons": [
+        { "slug": "olaslikla-dusunmek", "role": "hook", "assetDir": "assets/learning/academy/algo-quant", "assetPrefix": "quant-probability", "status": "planned" },
+        { "slug": "expectancy-nedir", "role": "hook", "assetDir": "assets/learning/academy/algo-quant", "assetPrefix": "quant-expectancy", "status": "planned" },
+        { "slug": "win-rate-payoff-dengesi", "role": "hook", "assetDir": "assets/learning/academy/algo-quant", "assetPrefix": "quant-winrate-payoff", "status": "planned" },
+        { "slug": "backtest-ne-soyler", "role": "hook", "assetDir": "assets/learning/academy/algo-quant", "assetPrefix": "quant-backtest", "status": "planned" },
+        { "slug": "orneklem-ve-out-of-sample", "role": "hook", "assetDir": "assets/learning/academy/algo-quant", "assetPrefix": "quant-out-of-sample", "status": "planned" },
+        { "slug": "backtestte-islem-maliyetleri", "role": "hook", "assetDir": "assets/learning/academy/algo-quant", "assetPrefix": "quant-transaction-costs", "status": "planned" }
+      ]
+    },
+    {
+      "id": "academy-smc-ict-foundation-hooks",
+      "school": "smc-ict",
+      "status": "planned",
+      "lessons": [
+        { "slug": "smc-ict-dili-neden-metodolojiye-bagli", "role": "hook", "assetDir": "assets/learning/academy/smc-ict", "assetPrefix": "smc-methodology", "status": "planned" },
+        { "slug": "liquidity-sweep-nedir", "role": "hook", "assetDir": "assets/learning/academy/smc-ict", "assetPrefix": "smc-liquidity-sweep", "status": "planned" },
+        { "slug": "liquidity-grab-ve-sweep-farki", "role": "hook", "assetDir": "assets/learning/academy/smc-ict", "assetPrefix": "smc-grab-sweep", "status": "planned" },
+        { "slug": "inducement-ne-anlatir", "role": "hook", "assetDir": "assets/learning/academy/smc-ict", "assetPrefix": "smc-inducement", "status": "planned" },
+        { "slug": "displacement-nasil-okunur", "role": "hook", "assetDir": "assets/learning/academy/smc-ict", "assetPrefix": "smc-displacement", "status": "planned" },
+        { "slug": "fvg-smc-baglaminda-nasil-okunur", "role": "hook", "assetDir": "assets/learning/academy/smc-ict", "assetPrefix": "smc-fvg", "status": "planned" }
+      ]
+    },
+    {
+      "id": "academy-asset-schools-foundation-hooks",
+      "school": "asset-schools",
+      "status": "planned",
+      "lessons": [
+        { "slug": "ayni-grafik-farkli-piyasa", "role": "hook", "assetDir": "assets/learning/academy/asset-schools", "assetPrefix": "asset-cross-market", "status": "planned" },
+        { "slug": "hisselerde-corporate-actions", "role": "hook", "assetDir": "assets/learning/academy/asset-schools", "assetPrefix": "asset-corporate-actions", "status": "planned" },
+        { "slug": "hisselerde-earnings-gap-riski", "role": "hook", "assetDir": "assets/learning/academy/asset-schools", "assetPrefix": "asset-earnings-gap", "status": "planned" },
+        { "slug": "etf-nav-ve-tracking-farki", "role": "hook", "assetDir": "assets/learning/academy/asset-schools", "assetPrefix": "asset-etf-nav-tracking", "status": "planned" },
+        { "slug": "kaldiracli-ve-ters-etf-gunluk-reset", "role": "hook", "assetDir": "assets/learning/academy/asset-schools", "assetPrefix": "asset-leveraged-etf", "status": "planned" },
+        { "slug": "fx-carry-ve-rollover", "role": "hook", "assetDir": "assets/learning/academy/asset-schools", "assetPrefix": "asset-fx-carry", "status": "planned" }
+      ]
+    }
+  ]
+}

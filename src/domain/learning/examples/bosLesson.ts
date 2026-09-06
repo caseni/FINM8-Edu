@@ -17,7 +17,7 @@ const bosLessonDraft = {
     en: 'The learner can distinguish a break of structure from a simple price overshoot.',
   },
   estimatedMinutes: 3,
-  learningStage: 'foundation',
+  learningStage: 'intermediate',
   accessTier: 'free',
   marketScopes: ['general'],
   prerequisiteConceptKeys: ['market.structure.support_resistance'],
@@ -61,19 +61,32 @@ const bosLessonDraft = {
       kind: 'visual',
       assetRef: 'edu://charts/bos-starter-001',
       alt: {
-        tr: 'Önceki tepe ve teyit kapanışını gösteren sade BOS grafiği',
-        en: 'Simple BOS chart showing the previous high and confirming close',
+        tr: 'Fitil taşması ile anlamlı tepe üzerindeki teyit kapanışını karşılaştıran sade BOS görseli',
+        en: 'Simple BOS visual comparing a wick overshoot with a confirming close above a meaningful high',
       },
       caption: {
         normal: {
-          tr: 'Önemli olan yalnızca seviyenin aşılması değil, kırılımın bağlamıdır.',
-          en: 'What matters is not only crossing the level, but the context of the break.',
+          tr: 'Önemli olan yalnızca seviyenin aşılması değil, hangi seviyenin kırıldığı ve kapanışın nerede oluştuğudur.',
+          en: 'What matters is not only crossing a level, but which level broke and where the candle closed.',
+        },
+      },
+    },
+    {
+      id: 'bos.trader-tip',
+      order: 3,
+      audience: 'all',
+      kind: 'callout',
+      tone: 'evidence',
+      copy: {
+        normal: {
+          tr: 'TRADER PRATİK NOTU — BOS etiketi vermeden önce kırılan tepenin veya dibin gerçekten ana salınımda anlamlı olup olmadığına bak. Küçük iç yapı kırılımını ana yapı kırılımı sanmak grafiği gereksiz gürültülü hale getirir. Kapanış teyidi kanıtı güçlendirir; garanti oluşturmaz.',
+          en: 'TRADER PRACTICAL NOTE — Before labeling a BOS, check whether the broken high or low is actually meaningful in the main swing structure. Treating a minor internal break as a major structure break adds noise. A confirming close strengthens the evidence; it does not create a guarantee.',
         },
       },
     },
     {
       id: 'bos.misconception',
-      order: 3,
+      order: 4,
       audience: 'all',
       kind: 'misconception',
       copy: {
@@ -85,7 +98,7 @@ const bosLessonDraft = {
     },
     {
       id: 'bos.risk',
-      order: 4,
+      order: 5,
       audience: 'all',
       kind: 'callout',
       tone: 'risk',
@@ -125,46 +138,56 @@ const bosLessonDraft = {
         id: 'question.bos.001',
         kind: 'single_choice',
         conceptKey: 'market.structure.bos',
-        prompt: { tr: 'BOS için en anlamlı kanıt hangisidir?' },
+        prompt: { tr: 'BOS için en anlamlı kanıt hangisidir?', en: 'Which is the most meaningful evidence for a BOS?' },
+        visual: {
+          assetRef: 'edu://charts/bos-starter-001',
+          alt: {
+            tr: 'Fitil taşması ile anlamlı tepe üzerindeki teyit kapanışını karşılaştıran sade BOS görseli',
+            en: 'Simple BOS visual comparing a wick overshoot with a confirming close above a meaningful high',
+          },
+        },
         options: [
-          { id: 'a', label: { tr: 'Rastgele küçük bir fiyat hareketi' } },
+          { id: 'a', label: { tr: 'Rastgele küçük bir fiyat hareketi', en: 'A random small price move' } },
           {
             id: 'b',
-            label: { tr: 'Anlamlı yapısal seviyenin bağlamla birlikte kırılması' },
+            label: { tr: 'Anlamlı yapısal seviyenin bağlamla birlikte kırılması', en: 'A meaningful structural level breaking together with its context' },
           },
-          { id: 'c', label: { tr: 'Sadece işlem hacminin artması' } },
+          { id: 'c', label: { tr: 'Sadece işlem hacminin artması', en: 'An increase in volume alone' } },
         ],
         correctOptionId: 'b',
         explanation: {
           tr: 'BOS, anlamlı bir yapısal seviye ve kırılım bağlamı gerektirir.',
+          en: 'A BOS requires a meaningful structural level and the context of its break.',
         },
       },
       {
         id: 'question.bos.002',
         kind: 'true_false',
         conceptKey: 'market.structure.bos',
-        prompt: { tr: 'Tek bir fitil her zaman BOS kanıtıdır.' },
+        prompt: { tr: 'Tek bir fitil her zaman BOS kanıtıdır.', en: 'A single wick is always evidence of a BOS.' },
         options: [
-          { id: 'true', label: { tr: 'Doğru' } },
-          { id: 'false', label: { tr: 'Yanlış' } },
+          { id: 'true', label: { tr: 'Doğru', en: 'True' } },
+          { id: 'false', label: { tr: 'Yanlış', en: 'False' } },
         ],
         correctOptionId: 'false',
         explanation: {
           tr: 'Fitil bir taşma olabilir; seviye, kapanış ve bağlam birlikte değerlendirilir.',
+          en: 'A wick can be an overshoot; the level, close, and context are assessed together.',
         },
       },
       {
         id: 'question.bos.003',
         kind: 'true_false',
         conceptKey: 'market.structure.bos',
-        prompt: { tr: 'BOS tek başına işlem talimatı değildir.' },
+        prompt: { tr: 'BOS tek başına işlem talimatı değildir.', en: 'A BOS is not a trade instruction by itself.' },
         options: [
-          { id: 'true', label: { tr: 'Doğru' } },
-          { id: 'false', label: { tr: 'Yanlış' } },
+          { id: 'true', label: { tr: 'Doğru', en: 'True' } },
+          { id: 'false', label: { tr: 'Yanlış', en: 'False' } },
         ],
         correctOptionId: 'true',
         explanation: {
           tr: 'BOS bir piyasa gözlemidir; risk ve diğer kanıtlar ayrıca değerlendirilir.',
+          en: 'A BOS is a market observation; risk and other evidence are assessed separately.',
         },
       },
     ],

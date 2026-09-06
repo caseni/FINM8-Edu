@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid meet">
+  <defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#071522"/><stop offset="1" stop-color="#0A2030"/></linearGradient><radialGradient id="halo"><stop stop-color="#47D7C3" stop-opacity=".22"/><stop offset="1" stop-color="#47D7C3" stop-opacity="0"/></radialGradient></defs>
+  <rect width="1200" height="800" rx="44" fill="url(#bg)"/><circle cx="600" cy="410" r="335" fill="url(#halo)"/>
+  <path d="M255 540C405 500 505 450 610 405S815 315 945 285" fill="none" stroke="#274A5C" stroke-width="18" stroke-linecap="round"/>
+  <path d="M270 535C410 498 510 448 610 405S805 320 925 290" fill="none" stroke="#47D7C3" stroke-width="6" stroke-linecap="round"/>
+  <g fill="#0C2534" stroke="#31586B" stroke-width="3"><rect x="205" y="250" width="145" height="64" rx="20"/><rect x="405" y="215" width="145" height="64" rx="20"/><rect x="650" y="180" width="145" height="64" rx="20"/><rect x="855" y="145" width="145" height="64" rx="20"/></g>
+  <g font-family="Arial, sans-serif" font-size="28" font-weight="800" text-anchor="middle" fill="#C8D8DE"><text x="277" y="291">100.00</text><text x="477" y="256">100.05</text><text x="722" y="221">100.10</text><text x="927" y="186" fill="#8AEADD">100.15</text></g>
+  <circle cx="270" cy="535" r="18" fill="#B7C8D0"/><circle cx="925" cy="290" r="22" fill="#8AEADD"/>
+  <path d="M325 520C470 485 585 432 700 382" fill="none" stroke="#8AEADD" stroke-width="3" stroke-dasharray="10 13" opacity=".7"/>
+  <text x="610" y="605" font-family="Arial, sans-serif" font-size="30" font-weight="900" text-anchor="middle" fill="#9FDCD4">SLIPPAGE +0.15</text>
+</svg>

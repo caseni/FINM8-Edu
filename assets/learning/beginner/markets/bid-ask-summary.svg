@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid meet">
+  <defs>
+    <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#071522"/><stop offset="1" stop-color="#0A2030"/></linearGradient>
+    <radialGradient id="halo"><stop stop-color="#47D7C3" stop-opacity=".20"/><stop offset="1" stop-color="#47D7C3" stop-opacity="0"/></radialGradient>
+  </defs>
+  <rect width="1200" height="800" rx="44" fill="url(#bg)"/>
+  <circle cx="600" cy="400" r="350" fill="url(#halo)"/>
+
+  <path d="M190 475H1010" stroke="#173B4C" stroke-width="94" stroke-linecap="round" opacity=".78"/>
+  <path d="M220 475H980" stroke="#31586B" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="455" cy="475" r="25" fill="#0F4948" stroke="#47D7C3" stroke-width="5"/>
+  <circle cx="745" cy="475" r="25" fill="#3A292D" stroke="#C78E79" stroke-width="5"/>
+  <path d="M490 475H710" stroke="#78909E" stroke-width="4" stroke-dasharray="10 15" opacity=".68"/>
+
+  <g font-family="Arial, sans-serif" text-anchor="middle" font-weight="700">
+    <text x="455" y="330" font-size="24" fill="#77CFC3">BID</text>
+    <text x="455" y="385" font-size="38" fill="#E7F2F4">99.90</text>
+    <text x="745" y="330" font-size="24" fill="#D3A18E">ASK</text>
+    <text x="745" y="385" font-size="38" fill="#E7F2F4">100.10</text>
+    <text x="600" y="585" font-size="24" fill="#9EB4BF">SPREAD</text>
+    <text x="600" y="630" font-size="32" fill="#D7E8EB">0.20</text>
+  </g>
+
+  <path d="M330 475H410" stroke="#47D7C3" stroke-width="6" stroke-linecap="round"/>
+  <path d="M397 464L412 475 397 486" fill="none" stroke="#8AEADD" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M870 475H790" stroke="#C78E79" stroke-width="6" stroke-linecap="round"/>
+  <path d="M803 464L788 475 803 486" fill="none" stroke="#DAB09F" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
