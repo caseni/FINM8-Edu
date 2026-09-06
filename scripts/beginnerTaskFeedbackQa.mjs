@@ -17,7 +17,7 @@ async function openPriceFormationTask(page) {
     await page.getByText(new RegExp(`Adım ${step + 1}\\/${totalSteps}`)).waitFor();
   }
   await page.getByRole('button', { name: /Göreve geç/i }).click();
-  await page.getByText('Alıcı ve satıcının aynı fiyatta buluşması', { exact: true }).waitFor();
+  await page.getByText('100 TL’de işlem gerçekleşebilir', { exact: true }).waitFor();
 }
 
 async function feedbackGeometry(page) {
@@ -78,13 +78,13 @@ try {
 
   await openPriceFormationTask(page);
 
-  await page.getByText('Şirketin her dakika yeni fiyat seçmesi', { exact: true }).click();
+  await page.getByText('Fiyatı şirket tek başına belirler', { exact: true }).click();
   await page.getByRole('button', { name: 'Kontrol et' }).click();
   await page.getByText('Henüz değil. Senaryodaki ipuçlarını birlikte değerlendir.', { exact: true }).waitFor();
   await assertLiveFeedback(page, 'Henüz değil. Senaryodaki ipuçlarını birlikte değerlendir.', 'Task incorrect feedback');
   await page.getByRole('button', { name: 'Tekrar dene', exact: true }).click();
 
-  await page.getByText('Alıcı ve satıcının aynı fiyatta buluşması', { exact: true }).click();
+  await page.getByText('100 TL’de işlem gerçekleşebilir', { exact: true }).click();
   await page.getByRole('button', { name: 'Kontrol et' }).click();
   await page.getByText('Doğru. Seçimin senaryodaki kanıtlarla uyumlu.', { exact: true }).waitFor();
   await assertLiveFeedback(page, 'Doğru. Seçimin senaryodaki kanıtlarla uyumlu.', 'Task correct feedback');
