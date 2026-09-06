@@ -46,6 +46,46 @@ const RESIDUAL_QUESTION_OPTIONS: Readonly<Record<string, Readonly<Record<string,
       ),
     },
   },
+  'lesson.behavior.precommitment.001': {
+    'question.karari-onceden-kurmak.2': {
+      b: copy(
+        'Asla; önceden yazılan kural her koşulda aynen kalmalıdır',
+        'Never; a predefined rule should remain unchanged under every condition',
+      ),
+    },
+  },
+  'lesson.strategy.hypothesis.001': {
+    'question.strateji-hipotezi-nedir.2': {
+      b: copy(
+        'Evet; geçmiş sonuçlara uyan bir açıklama tek başına hipotez sayılır',
+        'Yes; an explanation that fits past results is enough to count as a hypothesis',
+      ),
+    },
+  },
+  'lesson.strategy.rules.001': {
+    'question.giris-cikis-invalidation-kurallari.2': {
+      a: copy(
+        'Hayır; stop riski sınırlarken tez farklı bir noktada geçersizleşebilir',
+        'No; a stop can limit risk before the thesis itself is invalidated',
+      ),
+    },
+  },
+  'lesson.asset.commodity.spot-futures.001': {
+    'question.emtiada-spot-ve-vadeli-fiyat.1': {
+      a: copy(
+        'Evet; vadeli kontrat taşıma maliyetini ve teslim zamanını fiyatlayabilir',
+        'Yes; futures can price carrying costs and time to delivery',
+      ),
+    },
+  },
+  'lesson.asset.crypto.onchain-limits.001': {
+    'question.onchain-veri-ne-soyler-ne-soylemez.1': {
+      a: copy(
+        'Hayır; zincirde görülen hareket niyetin kendisi değildir',
+        'No; observable blockchain activity does not by itself reveal intent',
+      ),
+    },
+  },
   'lesson.risk.loss-recovery.001': {
     'question.buyuk-kayip-neden-zor-toparlanir.2': {
       a: copy(
