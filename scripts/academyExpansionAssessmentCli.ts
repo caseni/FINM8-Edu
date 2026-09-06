@@ -37,8 +37,8 @@ if (report.issues.length > 0) {
     }
     if (lesson.practicalTask.id === targetId) {
       console.log(`CONTEXT ${lessonId} ${targetId}`);
-      console.log(`TR STEM: ${lesson.practicalTask.prompt.tr}`);
-      console.log(`EN STEM: ${lesson.practicalTask.prompt.en ?? ''}`);
+      console.log(`TR STEM: ${lesson.practicalTask.prompt.normal.tr}`);
+      console.log(`EN STEM: ${lesson.practicalTask.prompt.normal.en ?? ''}`);
       console.log(`EVIDENCE: ${lesson.practicalTask.expectedEvidence.join(',')}`);
       for (const choice of lesson.practicalTask.choices ?? []) {
         console.log(`OPT ${choice.id} TR: ${choice.label.tr}`);
