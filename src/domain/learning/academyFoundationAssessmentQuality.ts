@@ -75,7 +75,7 @@ const ACADEMY_FOUNDATION_ASSESSMENT_OVERRIDES: Readonly<
   'lesson.markets.etf.001': {
     taskChoices: {
       label: copy(
-        'Yalnız son bir aylık fiyat performansına',
+        'Yalnız son bir aylık fiyat performansı',
         'Only its price performance over the last month',
       ),
     },
@@ -267,8 +267,8 @@ const ACADEMY_FOUNDATION_ASSESSMENT_OVERRIDES: Readonly<
   'lesson.portfolio.risk-budget.001': {
     taskChoices: {
       equal: copy(
-        'Yalnız varlıkların birim fiyatları farklı olduğu için',
-        'Only because the assets have different unit prices',
+        'Birim fiyatı daha yüksek olan pozisyon',
+        'The position with the higher unit price',
       ),
     },
   },
