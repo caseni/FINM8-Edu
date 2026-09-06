@@ -9,7 +9,7 @@
     "web": "expo start --web",
     "build:web": "expo export --platform web",
     "typecheck": "tsc --noEmit",
-    "quality:content": "tsc scripts/contentQualityCli.ts --outDir .quality-build --module commonjs --moduleResolution node --target es2020 --esModuleInterop --skipLibCheck && node .quality-build/scripts/contentQualityCli.js",
+    "quality:content": "tsc scripts/contentQualityCli.ts scripts/academyExpansionAssessmentCli.ts --outDir .quality-build --module commonjs --moduleResolution node --target es2020 --esModuleInterop --skipLibCheck && node .quality-build/scripts/contentQualityCli.js && node .quality-build/scripts/academyExpansionAssessmentCli.js",
     "check": "npm run typecheck && npm run quality:content"
   },
   "dependencies": {
