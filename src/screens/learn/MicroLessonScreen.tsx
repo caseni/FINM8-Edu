@@ -101,6 +101,7 @@ export function MicroLessonScreen({ route, navigation }: Props) {
   return (
     <LessonPlayer
       lesson={lessonForPlayer}
+      lessonSource={lessonSource}
       language={language}
       presentationMode={presentationMode}
       renderVisual={
