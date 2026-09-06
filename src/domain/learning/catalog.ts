@@ -9,6 +9,7 @@ import { normalizeBeginnerChartExplanationQuality } from './beginnerChartExplana
 import { normalizeBeginnerChartTaskQuality } from './beginnerChartTaskQuality';
 import { normalizeBeginnerMarketEditorial } from './beginnerMarketEditorial';
 import { ensureBeginnerMarketVisualStep } from './beginnerMarketVisualStep';
+import { normalizeBeginnerProductQuality } from './beginnerProductQuality';
 import { normalizeBeginnerRiskEditorial } from './beginnerRiskEditorial';
 import { normalizeBeginnerRiskTaskQuality } from './beginnerRiskTaskQuality';
 import { normalizeBehaviorEvidenceEnglishEditorial } from './behaviorEvidenceEnglishEditorial';
@@ -95,7 +96,8 @@ export const MICRO_LESSON_CATALOG: readonly MicroLesson[] = MICRO_LESSON_CANDIDA
   .map(normalizeAcademyRiskPortfolioEditorial)
   .map(normalizeBehaviorEvidenceEnglishEditorial)
   .map(normalizeAssessmentSignalQuality)
-  .map(normalizeQuizExplanationQuality);
+  .map(normalizeQuizExplanationQuality)
+  .map(normalizeBeginnerProductQuality);
 
 export function getMicroLessonById(lessonId: string): MicroLesson | undefined {
   return MICRO_LESSON_CATALOG.find((lesson) => lesson.id === lessonId);
