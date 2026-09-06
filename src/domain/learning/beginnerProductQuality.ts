@@ -130,6 +130,7 @@ const QUIZ_POLISH: Readonly<Record<string, QuizQuestionPolish>> = {
       en: 'What can make the real trade result differ from the target written on paper?',
     },
     optionLabels: {
+      0: { tr: 'Gerçekleşme olasılığı, maliyetler ve gerçekleşme koşulları', en: 'Execution probability, costs, and execution conditions' },
       1: { tr: 'Yalnız hedef ile stop arasındaki teorik oran', en: 'Only the theoretical ratio between target and stop' },
       2: { tr: 'Yalnız hedefin giriş fiyatının üstünde veya altında olması', en: 'Only whether the target is above or below the entry price' },
     },
