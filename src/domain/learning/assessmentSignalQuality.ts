@@ -1,5 +1,10 @@
+import { BEGINNER_SECTIONS } from './beginnerJourney';
 import { microLessonSchema } from './schemas';
 import type { LocalizedText, MicroLesson } from './types';
+
+const BEGINNER_LESSON_IDS = new Set(
+  Object.values(BEGINNER_SECTIONS).flatMap((section) => [...section.lessonIds])
+);
 
 const BINARY_LABELS_TR = new Set([
   'evet',
@@ -104,13 +109,14 @@ function improveOption(
   option: { readonly id: string; readonly label: LocalizedText },
   correctOptionId: string,
   explanation: LocalizedText,
+  preserveConciseBinary: boolean,
 ): LocalizedText {
   const cleaned = replaceTrivialDistractor(option.label);
   const normalizedTr = normalize(cleaned.tr);
   const normalizedEn = cleaned.en?.trim().toLowerCase();
   const isBinary = BINARY_LABELS_TR.has(normalizedTr) || Boolean(normalizedEn && BINARY_LABELS_EN.has(normalizedEn));
 
-  if (!isBinary) return cleaned;
+  if (!isBinary || preserveConciseBinary) return cleaned;
   return option.id === correctOptionId
     ? contextualCorrectLabel(cleaned, explanation)
     : contextualWrongBinaryLabel(cleaned);
@@ -128,12 +134,18 @@ function improvePrompt(questionId: string, prompt: LocalizedText): LocalizedText
 }
 
 export function normalizeAssessmentSignalQuality(lesson: MicroLesson): MicroLesson {
+  const preserveConciseBinary = BEGINNER_LESSON_IDS.has(lesson.id);
   const questions = lesson.quiz.questions.map((question) => ({
     ...question,
     prompt: improvePrompt(question.id, question.prompt),
     options: question.options.map((option) => ({
       ...option,
-      label: improveOption(option, question.correctOptionId, question.explanation),
+      label: improveOption(
+        option,
+        question.correctOptionId,
+        question.explanation,
+        preserveConciseBinary,
+      ),
     })),
   }));
 
