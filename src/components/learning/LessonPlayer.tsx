@@ -43,6 +43,7 @@ export interface LessonPlayerProps {
   language: LearningLanguage;
   presentationMode: PresentationMode;
   entryContext?: LearningEntryContext;
+  lessonSource?: 'beginner' | 'academy';
   theme?: LearningTheme;
   renderVisual?: (block: VisualBlock) => React.ReactNode;
   onExit?: () => void;
@@ -57,6 +58,7 @@ export function LessonPlayer({
   language,
   presentationMode,
   entryContext,
+  lessonSource = 'beginner',
   theme = defaultLearningTheme,
   renderVisual,
   onExit,
@@ -277,6 +279,7 @@ export function LessonPlayer({
                 theme={theme}
                 renderVisual={renderVisual}
                 supportingVisual={lessonVisual}
+                academyRhythm={lessonSource === 'academy'}
               />
             )
           ) : null}
