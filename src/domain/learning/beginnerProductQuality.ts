@@ -102,6 +102,13 @@ const QUIZ_POLISH: Readonly<Record<string, QuizQuestionPolish>> = {
       2: { tr: 'Hareketin yalnız hangi yönde olduğunu', en: 'Only the direction of the move' },
     },
   },
+  'question.momentum-ne-anlatir.2': {
+    optionLabels: {
+      0: { tr: 'Evet; bu iki gözlem birlikte görülebilir', en: 'Yes; these two observations can appear together' },
+      1: { tr: 'Hayır; yükseliş varsa momentum da güçlenmek zorundadır', en: 'No; if price is rising, momentum must also strengthen' },
+      2: { tr: 'Yalnız tek bir piyasa türünde görülebilir', en: 'It can happen only in one type of market' },
+    },
+  },
   'question.volatilite-once-risktir.1': {
     optionLabels: {
       2: { tr: 'Varlığın uzun vadeli değerini', en: 'The asset’s long-term value' },
