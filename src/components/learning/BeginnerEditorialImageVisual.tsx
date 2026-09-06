@@ -31,146 +31,25 @@ type BeginnerEditorialImageEntry = {
  * component instead of this raster registry.
  */
 const beginnerEditorialImages: readonly BeginnerEditorialImageEntry[] = [
-  {
-    match: 'fiyat-piyasada-nasil-olusur',
-    role: 'hook',
-    source: require('../../../assets/learning/beginner/markets/price-formation-hook.webp'),
-    aspectRatio: 1.5,
-    compactAspectRatio: 1.5,
-    resizeMode: 'contain',
-    desktopMaxWidth: 620,
-    compactMaxWidth: 460,
-  },
-  {
-    match: 'fiyat-piyasada-nasil-olusur',
-    role: 'concept',
-    source: require('../../../assets/learning/beginner/markets/price-formation-concept.webp'),
-    aspectRatio: 1.5,
-    compactAspectRatio: 1.5,
-    resizeMode: 'contain',
-    desktopMaxWidth: 620,
-    compactMaxWidth: 460,
-  },
-  {
-    match: 'fiyat-piyasada-nasil-olusur',
-    role: 'practice',
-    source: require('../../../assets/learning/beginner/markets/price-formation-practice.webp'),
-    aspectRatio: 1.5,
-    compactAspectRatio: 1.5,
-    resizeMode: 'contain',
-    desktopMaxWidth: 620,
-    compactMaxWidth: 460,
-  },
-  {
-    match: 'fiyat-piyasada-nasil-olusur',
-    role: 'misconception',
-    source: require('../../../assets/learning/beginner/markets/price-formation-misconception.webp'),
-    aspectRatio: 1.5,
-    compactAspectRatio: 1.5,
-    resizeMode: 'contain',
-    desktopMaxWidth: 620,
-    compactMaxWidth: 460,
-  },
-  {
-    match: 'fiyat-piyasada-nasil-olusur',
-    role: 'summary',
-    source: require('../../../assets/learning/beginner/markets/price-formation-summary.webp'),
-    aspectRatio: 1.5,
-    compactAspectRatio: 1.5,
-    resizeMode: 'contain',
-    desktopMaxWidth: 620,
-    compactMaxWidth: 460,
-  },
-  {
-    match: 'piyasa-araclari-ayni-degildir',
-    role: 'hook',
-    source: require('../../../assets/learning/beginner/markets/asset-classes-hook.webp'),
-    aspectRatio: 1.5,
-    compactAspectRatio: 1.5,
-    resizeMode: 'contain',
-    desktopMaxWidth: 620,
-    compactMaxWidth: 460,
-  },
-  {
-    match: 'piyasa-araclari-ayni-degildir',
-    role: 'concept',
-    source: require('../../../assets/learning/beginner/markets/asset-classes-concept.webp'),
-    aspectRatio: 1.5,
-    compactAspectRatio: 1.5,
-    resizeMode: 'contain',
-    desktopMaxWidth: 620,
-    compactMaxWidth: 460,
-  },
-  {
-    match: 'piyasa-araclari-ayni-degildir',
-    role: 'misconception',
-    source: require('../../../assets/learning/beginner/markets/asset-classes-misconception.webp'),
-    aspectRatio: 1.5,
-    compactAspectRatio: 1.5,
-    resizeMode: 'contain',
-    desktopMaxWidth: 620,
-    compactMaxWidth: 460,
-  },
-  {
-    match: 'piyasa-araclari-ayni-degildir',
-    role: 'summary',
-    source: require('../../../assets/learning/beginner/markets/asset-classes-summary.webp'),
-    aspectRatio: 1.5,
-    compactAspectRatio: 1.5,
-    resizeMode: 'contain',
-    desktopMaxWidth: 620,
-    compactMaxWidth: 460,
-  },
-  {
-    match: 'likidite-neden-onemlidir',
-    role: 'hook',
-    source: require('../../../assets/learning/beginner/markets/liquidity-hook.webp'),
-    aspectRatio: 1.5,
-    compactAspectRatio: 1.5,
-    resizeMode: 'contain',
-    desktopMaxWidth: 620,
-    compactMaxWidth: 460,
-  },
-  {
-    match: 'likidite-neden-onemlidir',
-    role: 'concept',
-    source: require('../../../assets/learning/beginner/markets/liquidity-concept.webp'),
-    aspectRatio: 1.5,
-    compactAspectRatio: 1.5,
-    resizeMode: 'contain',
-    desktopMaxWidth: 620,
-    compactMaxWidth: 460,
-  },
-  {
-    match: 'likidite-neden-onemlidir',
-    role: 'practice',
-    source: require('../../../assets/learning/beginner/markets/liquidity-practice.webp'),
-    aspectRatio: 1.5,
-    compactAspectRatio: 1.5,
-    resizeMode: 'contain',
-    desktopMaxWidth: 620,
-    compactMaxWidth: 460,
-  },
-  {
-    match: 'likidite-neden-onemlidir',
-    role: 'misconception',
-    source: require('../../../assets/learning/beginner/markets/liquidity-misconception.webp'),
-    aspectRatio: 1.5,
-    compactAspectRatio: 1.5,
-    resizeMode: 'contain',
-    desktopMaxWidth: 620,
-    compactMaxWidth: 460,
-  },
-  {
-    match: 'likidite-neden-onemlidir',
-    role: 'summary',
-    source: require('../../../assets/learning/beginner/markets/liquidity-summary.webp'),
-    aspectRatio: 1.5,
-    compactAspectRatio: 1.5,
-    resizeMode: 'contain',
-    desktopMaxWidth: 620,
-    compactMaxWidth: 460,
-  },
+  { match: 'fiyat-piyasada-nasil-olusur', role: 'hook', source: require('../../../assets/learning/beginner/markets/price-formation-hook.webp'), aspectRatio: 1.5, compactAspectRatio: 1.5, resizeMode: 'contain', desktopMaxWidth: 620, compactMaxWidth: 460 },
+  { match: 'fiyat-piyasada-nasil-olusur', role: 'concept', source: require('../../../assets/learning/beginner/markets/price-formation-concept.webp'), aspectRatio: 1.5, compactAspectRatio: 1.5, resizeMode: 'contain', desktopMaxWidth: 620, compactMaxWidth: 460 },
+  { match: 'fiyat-piyasada-nasil-olusur', role: 'practice', source: require('../../../assets/learning/beginner/markets/price-formation-practice.webp'), aspectRatio: 1.5, compactAspectRatio: 1.5, resizeMode: 'contain', desktopMaxWidth: 620, compactMaxWidth: 460 },
+  { match: 'fiyat-piyasada-nasil-olusur', role: 'misconception', source: require('../../../assets/learning/beginner/markets/price-formation-misconception.webp'), aspectRatio: 1.5, compactAspectRatio: 1.5, resizeMode: 'contain', desktopMaxWidth: 620, compactMaxWidth: 460 },
+  { match: 'fiyat-piyasada-nasil-olusur', role: 'summary', source: require('../../../assets/learning/beginner/markets/price-formation-summary.webp'), aspectRatio: 1.5, compactAspectRatio: 1.5, resizeMode: 'contain', desktopMaxWidth: 620, compactMaxWidth: 460 },
+  { match: 'piyasa-araclari-ayni-degildir', role: 'hook', source: require('../../../assets/learning/beginner/markets/asset-classes-hook.webp'), aspectRatio: 1.5, compactAspectRatio: 1.5, resizeMode: 'contain', desktopMaxWidth: 620, compactMaxWidth: 460 },
+  { match: 'piyasa-araclari-ayni-degildir', role: 'concept', source: require('../../../assets/learning/beginner/markets/asset-classes-concept.webp'), aspectRatio: 1.5, compactAspectRatio: 1.5, resizeMode: 'contain', desktopMaxWidth: 620, compactMaxWidth: 460 },
+  { match: 'piyasa-araclari-ayni-degildir', role: 'misconception', source: require('../../../assets/learning/beginner/markets/asset-classes-misconception.webp'), aspectRatio: 1.5, compactAspectRatio: 1.5, resizeMode: 'contain', desktopMaxWidth: 620, compactMaxWidth: 460 },
+  { match: 'piyasa-araclari-ayni-degildir', role: 'summary', source: require('../../../assets/learning/beginner/markets/asset-classes-summary.webp'), aspectRatio: 1.5, compactAspectRatio: 1.5, resizeMode: 'contain', desktopMaxWidth: 620, compactMaxWidth: 460 },
+  { match: 'likidite-neden-onemlidir', role: 'hook', source: require('../../../assets/learning/beginner/markets/liquidity-hook.webp'), aspectRatio: 1.5, compactAspectRatio: 1.5, resizeMode: 'contain', desktopMaxWidth: 620, compactMaxWidth: 460 },
+  { match: 'likidite-neden-onemlidir', role: 'concept', source: require('../../../assets/learning/beginner/markets/liquidity-concept.webp'), aspectRatio: 1.5, compactAspectRatio: 1.5, resizeMode: 'contain', desktopMaxWidth: 620, compactMaxWidth: 460 },
+  { match: 'likidite-neden-onemlidir', role: 'practice', source: require('../../../assets/learning/beginner/markets/liquidity-practice.webp'), aspectRatio: 1.5, compactAspectRatio: 1.5, resizeMode: 'contain', desktopMaxWidth: 620, compactMaxWidth: 460 },
+  { match: 'likidite-neden-onemlidir', role: 'misconception', source: require('../../../assets/learning/beginner/markets/liquidity-misconception.webp'), aspectRatio: 1.5, compactAspectRatio: 1.5, resizeMode: 'contain', desktopMaxWidth: 620, compactMaxWidth: 460 },
+  { match: 'likidite-neden-onemlidir', role: 'summary', source: require('../../../assets/learning/beginner/markets/liquidity-summary.webp'), aspectRatio: 1.5, compactAspectRatio: 1.5, resizeMode: 'contain', desktopMaxWidth: 620, compactMaxWidth: 460 },
+  { match: 'bid-ask-spread-nedir', role: 'hook', source: require('../../../assets/learning/beginner/markets/bid-ask-hook.webp'), aspectRatio: 1.5, compactAspectRatio: 1.5, resizeMode: 'contain', desktopMaxWidth: 620, compactMaxWidth: 460 },
+  { match: 'bid-ask-spread-nedir', role: 'concept', source: require('../../../assets/learning/beginner/markets/bid-ask-concept.webp'), aspectRatio: 1.5, compactAspectRatio: 1.5, resizeMode: 'contain', desktopMaxWidth: 620, compactMaxWidth: 460 },
+  { match: 'bid-ask-spread-nedir', role: 'practice', source: require('../../../assets/learning/beginner/markets/bid-ask-practice.webp'), aspectRatio: 1.5, compactAspectRatio: 1.5, resizeMode: 'contain', desktopMaxWidth: 620, compactMaxWidth: 460 },
+  { match: 'bid-ask-spread-nedir', role: 'misconception', source: require('../../../assets/learning/beginner/markets/bid-ask-misconception.webp'), aspectRatio: 1.5, compactAspectRatio: 1.5, resizeMode: 'contain', desktopMaxWidth: 620, compactMaxWidth: 460 },
+  { match: 'bid-ask-spread-nedir', role: 'summary', source: require('../../../assets/learning/beginner/markets/bid-ask-summary.webp'), aspectRatio: 1.5, compactAspectRatio: 1.5, resizeMode: 'contain', desktopMaxWidth: 620, compactMaxWidth: 460 },
 ] as const;
 
 function entryFor(assetRef: string, role: LessonSupportingVisualRole): BeginnerEditorialImageEntry | undefined {
@@ -188,41 +67,23 @@ export interface BeginnerEditorialImageVisualProps {
   theme?: LearningTheme;
 }
 
-export function BeginnerEditorialImageVisual({
-  assetRef,
-  alt,
-  role,
-  theme = defaultLearningTheme,
-}: BeginnerEditorialImageVisualProps) {
+export function BeginnerEditorialImageVisual({ assetRef, alt, role, theme = defaultLearningTheme }: BeginnerEditorialImageVisualProps) {
   const { width } = useWindowDimensions();
   const wide = width >= 900;
   const entry = entryFor(assetRef, role);
   if (!entry) return null;
 
   const styles = createStyles(theme, wide);
-  const aspectRatio = wide
-    ? entry.aspectRatio ?? 1
-    : entry.compactAspectRatio ?? entry.aspectRatio ?? 1;
+  const aspectRatio = wide ? entry.aspectRatio ?? 1 : entry.compactAspectRatio ?? entry.aspectRatio ?? 1;
   const maxWidth = wide ? entry.desktopMaxWidth : entry.compactMaxWidth;
 
   return (
     <View
-      style={[
-        styles.shell,
-        {
-          aspectRatio,
-          backgroundColor: entry.backgroundColor ?? '#071522',
-          maxWidth,
-        },
-      ]}
+      style={[styles.shell, { aspectRatio, backgroundColor: entry.backgroundColor ?? '#071522', maxWidth }]}
       accessibilityRole="image"
       accessibilityLabel={alt}
     >
-      <Image
-        source={entry.source}
-        resizeMode={entry.resizeMode ?? 'contain'}
-        style={styles.image}
-      />
+      <Image source={entry.source} resizeMode={entry.resizeMode ?? 'contain'} style={styles.image} />
     </View>
   );
 }
@@ -236,8 +97,5 @@ const createStyles = (theme: LearningTheme, wide: boolean) => StyleSheet.create(
     borderWidth: 1,
     borderColor: theme.colors.border,
   },
-  image: {
-    width: '100%',
-    height: '100%',
-  },
+  image: { width: '100%', height: '100%' },
 });
