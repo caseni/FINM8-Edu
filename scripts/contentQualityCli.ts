@@ -1,3 +1,4 @@
+import { getAcademyFoundationAssessmentReport } from '../src/domain/learning/academyFoundationAssessmentGuard';
 import { getAcademyJourneyQualityReport } from '../src/domain/learning/academyJourneyQuality';
 import { getBeginnerJourneyQualityReport } from '../src/domain/learning/beginnerJourneyQuality';
 import { getContentQualitySnapshot } from '../src/domain/learning/contentQuality';
@@ -5,6 +6,7 @@ import { getContentQualitySnapshot } from '../src/domain/learning/contentQuality
 const snapshot = getContentQualitySnapshot();
 const beginnerJourney = getBeginnerJourneyQualityReport();
 const academyJourney = getAcademyJourneyQualityReport();
+const academyFoundationAssessment = getAcademyFoundationAssessmentReport();
 const { assessment, curriculumOverlap, editorialDepth, english, visualCoverage } = snapshot;
 
 console.log('FINM8 EDU content quality audit');
@@ -28,6 +30,11 @@ console.log(`beginner journey issues: ${beginnerJourney.issues.length}`);
 console.log(`academy tracks: ${academyJourney.trackCount}/10`);
 console.log(`academy lessons: ${academyJourney.lessonCount}/${academyJourney.expectedLessonCount}`);
 console.log(`academy journey issues: ${academyJourney.issues.length}`);
+console.log(
+  `academy foundation assessment: ${academyFoundationAssessment.foundationLessonCount} lessons, `
+    + `${academyFoundationAssessment.questionCount} questions, `
+    + `${academyFoundationAssessment.issues.length} issues`,
+);
 
 const topThinLessons = editorialDepth.thinTeachingLessons
   .slice(0, 5)
@@ -212,6 +219,18 @@ if (academyJourney.lessonCount !== academyJourney.expectedLessonCount) {
 
 if (academyJourney.issues.length > 0) {
   blockers.push(`academy journey quality issues: ${academyJourney.issues.length}`);
+}
+
+if (academyFoundationAssessment.issues.length > 0) {
+  console.log('Academy foundation assessment issues:');
+  for (const issue of academyFoundationAssessment.issues) {
+    console.log(
+      `- [${issue.reason}] ${issue.trackId} ${issue.targetId} (${issue.optionId}): ${issue.detail}`,
+    );
+  }
+  blockers.push(
+    `academy foundation assessment issues: ${academyFoundationAssessment.issues.length}`,
+  );
 }
 
 if (blockers.length > 0) {
