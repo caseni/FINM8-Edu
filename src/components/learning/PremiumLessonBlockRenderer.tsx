@@ -25,6 +25,7 @@ export interface PremiumLessonBlockRendererProps {
   theme?: LearningTheme;
   renderVisual?: (block: VisualBlock) => React.ReactNode;
   supportingVisual?: SupportingVisual;
+  academyRhythm?: boolean;
 }
 
 type LessonExample = {
@@ -188,15 +189,17 @@ export function PremiumLessonBlockRenderer({
   theme = defaultLearningTheme,
   renderVisual,
   supportingVisual,
+  academyRhythm = false,
 }: PremiumLessonBlockRendererProps) {
   const { width } = useWindowDimensions();
   const wide = width >= 900;
   const styles = createStyles(theme, wide);
+  const rhythmStyle = academyRhythm && !wide ? styles.academyRhythm : undefined;
 
   if (block.kind === 'visual') {
     const example = exampleForAsset(block.assetRef, language);
     return (
-      <View testID="lesson-step-content" style={styles.visualStep}>
+      <View testID="lesson-step-content" style={[styles.visualStep, rhythmStyle]}>
         <LessonBlockRenderer
           block={block}
           language={language}
@@ -246,7 +249,8 @@ export function PremiumLessonBlockRenderer({
         : undefined;
 
   return (
-    <View testID="lesson-step-content" style={[styles.block, toneStyle]}>
+    <View testID="lesson-step-content" style={[styles.block, toneStyle, rhythmStyle]}>
+      <View style={styles.teachingCopy}>
       {label ? (
         <Text style={[
           styles.eyebrow,
@@ -256,6 +260,7 @@ export function PremiumLessonBlockRenderer({
         ]}>{label}</Text>
       ) : null}
       <Text style={block.kind === 'prompt' ? styles.prompt : styles.body}>{copy}</Text>
+      </View>
       {supportingVisual ? (
         <View style={styles.visualFrame}>
           <LessonSupportingVisual
@@ -274,6 +279,11 @@ export function PremiumLessonBlockRenderer({
 const createStyles = (theme: LearningTheme, wide: boolean) => StyleSheet.create({
   block: { gap: wide ? 13 : 11 },
   visualStep: { gap: 10 },
+  // Keep copy together, then give the illustration its own breathing room.
+  // Only surplus height is shared; long steps keep their intrinsic flow and scroll.
+  // Beginner scenes retain the compact reading layout.
+  academyRhythm: { flexGrow: 1, justifyContent: 'space-evenly' },
+  teachingCopy: { gap: wide ? 13 : 11 },
   eyebrow: { color: theme.colors.primary, fontSize: 11, lineHeight: 15, fontWeight: '900', letterSpacing: 0.9 },
   eyebrowWarning: { color: theme.colors.warning },
   eyebrowRisk: { color: theme.colors.risk },
