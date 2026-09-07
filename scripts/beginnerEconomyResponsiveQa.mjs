@@ -150,9 +150,17 @@ try {
         if (visual.width > (viewport.sizeClass === 'mobile' ? 360 : 700) + 1) throw new Error(`${label}: visual too wide at ${visual.width.toFixed(1)}px`);
         if (visual.x < -1 || visual.x + visual.width > viewport.width + 1) throw new Error(`${label}: visual escapes viewport`);
         if (visual.height > viewport.height * 0.72) throw new Error(`${label}: visual too tall at ${visual.height.toFixed(1)}px`);
-        await semanticBoard(page, viewport, lesson.key, step, label);
         const role = stepRoles[step - 1];
         const shouldHavePhysicalImage = !exampleOnlyRoles[lesson.key].includes(role);
+        if (!shouldHavePhysicalImage) {
+          // Example-only roles still render through the pre-existing shell/board
+          // scene, which carries this semantic aria-label. Mapped roles now render
+          // through the canonical BeginnerEditorialImageVisual component instead,
+          // which doesn't (and shouldn't) emit this board-specific label — those are
+          // covered by the general visual sizing checks above plus the raster
+          // assertion below.
+          await semanticBoard(page, viewport, lesson.key, step, label);
+        }
         await assertPhysicalEditorialImage(locator, label, { shouldExist: shouldHavePhysicalImage });
 
         if (step === 2 || step === 3 || step === total) {

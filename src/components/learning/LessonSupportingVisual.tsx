@@ -24,6 +24,7 @@ import { BeginnerAppliedChartStoryVisual, isBeginnerAppliedChartStoryAsset } fro
 import { BeginnerChartStoryVisual, isBeginnerChartStoryAsset } from './BeginnerChartStoryVisual';
 import { BeginnerCoreChartStoryVisual, isBeginnerCoreChartStoryAsset } from './BeginnerCoreChartStoryVisual';
 import { BeginnerEconomyStoryVisual, isBeginnerEconomyStoryAsset } from './BeginnerEconomyStoryVisual';
+import { hasBeginnerEditorialImage } from './BeginnerEditorialImageVisual';
 import { BeginnerMarketStoryVisual, isBeginnerMarketStoryAsset } from './BeginnerMarketStoryVisual';
 import { BeginnerRiskStoryVisual, isBeginnerRiskStoryAsset } from './BeginnerRiskStoryVisual';
 import { BeginnerRiskUncertaintyVisual } from './BeginnerRiskUncertaintyVisual';
@@ -68,9 +69,17 @@ export function LessonSupportingVisual({ assetRef, alt, language, role, theme = 
   const hasAssetPremiumHook = role === 'hook' && isAcademyAssetPremiumHookAsset(assetRef);
   const hasCoreExpansionCleanVisual = isAcademyCoreExpansionCleanAsset(assetRef);
   const hasFoundationCleanVisual = role !== 'hook' && isAcademyFoundationCleanAsset(assetRef);
-  const hasAdvancedCleanVisual = role !== 'hook' && isAcademyAdvancedCleanAsset(assetRef);
-  const hasEditorialImage = !hasCoreExpansionCleanVisual && !hasFoundationCleanVisual && !hasAdvancedCleanVisual && hasAcademyEditorialImage(assetRef, role);
   const isBeginnerEconomy = isBeginnerEconomyStoryAsset(assetRef);
+  // The six Wave1 Economy foundation lessons are reused by both the Beginner journey
+  // and the Academy "Ekonomiyi Anla" track. When a non-hook role has a real physical
+  // editorial image registered for it, the Academy surface must render the same
+  // canonical physical asset (via BeginnerEconomyStoryVisual, which itself defers to
+  // BeginnerEditorialImageVisual) instead of letting AcademyAdvancedCleanVisual's
+  // code-drawn scene intercept it first. Roles with no physical mapping (the four
+  // intentionally example-only ones) keep the existing Academy fallback untouched.
+  const isBeginnerEconomyMappedPhysical = isBeginnerEconomy && role !== 'hook' && hasBeginnerEditorialImage(assetRef, role);
+  const hasAdvancedCleanVisual = role !== 'hook' && !isBeginnerEconomyMappedPhysical && isAcademyAdvancedCleanAsset(assetRef);
+  const hasEditorialImage = !hasCoreExpansionCleanVisual && !hasFoundationCleanVisual && !hasAdvancedCleanVisual && hasAcademyEditorialImage(assetRef, role);
   const isBeginnerRisk = isBeginnerRiskStoryAsset(assetRef);
   const isBeginnerRiskUncertainty = assetRef.includes('risk-belirsizlik-kayip');
   const isBeginnerCoreChart = isBeginnerCoreChartStoryAsset(assetRef);
