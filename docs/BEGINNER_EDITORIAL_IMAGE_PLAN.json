@@ -23,12 +23,12 @@
     {"slug":"piyasa-limit-stop-emirleri","assetDir":"assets/learning/beginner/markets","assetPrefix":"order-types","roles":["hook","concept","practice","misconception","summary"],"exampleOnlyRoles":[],"status":"integrated"},
     {"slug":"gerceklesme-fiyati-kayma","assetDir":"assets/learning/beginner/markets","assetPrefix":"slippage","roles":["hook","concept","practice","misconception","summary"],"exampleOnlyRoles":[],"status":"integrated"},
 
-    {"slug":"bir-mum-bize-ne-soyler","assetDir":"assets/learning/beginner/charts","assetPrefix":"candlestick","roles":["hook","concept","practice","misconception","summary"],"exampleOnlyRoles":[],"status":"planned"},
-    {"slug":"zaman-dilimi-neyi-degistirir","assetDir":"assets/learning/beginner/charts","assetPrefix":"timeframes","roles":["hook","concept","practice","misconception","summary"],"exampleOnlyRoles":[],"status":"planned"},
-    {"slug":"trend-yon-mu-yapi-mi","assetDir":"assets/learning/beginner/charts","assetPrefix":"trend-structure","roles":["hook","concept","practice","misconception","summary"],"exampleOnlyRoles":[],"status":"planned"},
-    {"slug":"destek-direnc-bolgedir","assetDir":"assets/learning/beginner/charts","assetPrefix":"support-resistance-zone","roles":["hook","concept","practice","misconception","summary"],"exampleOnlyRoles":[],"status":"planned"},
-    {"slug":"momentum-ne-anlatir","assetDir":"assets/learning/beginner/charts","assetPrefix":"momentum","roles":["hook","concept","practice","misconception","summary"],"exampleOnlyRoles":[],"status":"planned"},
-    {"slug":"hareketli-ortalama-ne-yapar","assetDir":"assets/learning/beginner/charts","assetPrefix":"moving-average","roles":["hook","concept","practice","misconception","summary"],"exampleOnlyRoles":[],"status":"planned"},
+    {"slug":"bir-mum-bize-ne-soyler","assetDir":"assets/learning/beginner/charts","assetPrefix":"candlestick","roles":["hook","concept","practice","misconception","summary"],"exampleOnlyRoles":[],"status":"integrated"},
+    {"slug":"zaman-dilimi-neyi-degistirir","assetDir":"assets/learning/beginner/charts","assetPrefix":"timeframes","roles":["hook","concept","practice","misconception","summary"],"exampleOnlyRoles":[],"status":"integrated"},
+    {"slug":"trend-yon-mu-yapi-mi","assetDir":"assets/learning/beginner/charts","assetPrefix":"trend-structure","roles":["hook","concept","practice","misconception","summary"],"exampleOnlyRoles":[],"status":"integrated"},
+    {"slug":"destek-direnc-bolgedir","assetDir":"assets/learning/beginner/charts","assetPrefix":"support-resistance-zone","roles":["hook","concept","practice","misconception","summary"],"exampleOnlyRoles":[],"status":"integrated"},
+    {"slug":"momentum-ne-anlatir","assetDir":"assets/learning/beginner/charts","assetPrefix":"momentum","roles":["hook","concept","practice","misconception","summary"],"exampleOnlyRoles":[],"status":"integrated"},
+    {"slug":"hareketli-ortalama-ne-yapar","assetDir":"assets/learning/beginner/charts","assetPrefix":"moving-average","roles":["hook","concept","practice","misconception","summary"],"exampleOnlyRoles":[],"status":"integrated"},
 
     {"slug":"risk-belirsizlik-kayip","assetDir":"assets/learning/beginner/risk","assetPrefix":"risk-uncertainty","roles":["hook","concept","practice","misconception","summary"],"exampleOnlyRoles":[],"status":"planned"},
     {"slug":"volatilite-once-risktir","assetDir":"assets/learning/beginner/risk","assetPrefix":"volatility-risk","roles":["hook","concept","practice","misconception","summary"],"exampleOnlyRoles":[],"status":"planned"},
