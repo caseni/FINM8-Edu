@@ -56,11 +56,18 @@ for (const registryPath of registries) {
 
 const seen = new Set();
 const entryByKey = new Map();
+const beginnerEntryByKey = new Map();
+const academyEntryByKey = new Map();
 for (const entry of entries) {
   const key = `${entry.lessonMatch}::${entry.role}`;
   if (seen.has(key)) issues.push(`Duplicate editorial mapping: ${entry.lessonMatch} · ${entry.role}`);
   seen.add(key);
   entryByKey.set(key, entry);
+  // Beginner and Academy lessons can share the same slug (e.g. Wave1 foundation
+  // lessons feed both the Beginner journey and an Academy track), so registry
+  // lookups must stay scoped per source file rather than a single shared map.
+  if (entry.registryPath.includes('BeginnerEditorial')) beginnerEntryByKey.set(key, entry);
+  if (entry.registryPath.includes('AcademyEditorial')) academyEntryByKey.set(key, entry);
 }
 
 const beginnerPlan = JSON.parse(fs.readFileSync(beginnerPlanPath, 'utf8'));
@@ -111,7 +118,7 @@ for (const lesson of beginnerPlan.lessons ?? []) {
     plannedRoleCount += 1;
 
     const existingCandidateAssets = physicalCandidates(lesson.assetDir, lesson.assetPrefix, role);
-    const registeredEntry = entryByKey.get(key);
+    const registeredEntry = beginnerEntryByKey.get(key);
 
     if (existingCandidateAssets.length > 1) {
       issues.push(`Multiple physical assets exist for one beginner role: ${lesson.slug} · ${role} -> ${existingCandidateAssets.join(', ')}`);
@@ -214,7 +221,7 @@ for (const batch of academyBatchPlan.batches ?? []) {
       issues.push(`Multiple physical assets exist for one Academy planned role: ${slug} · ${role} -> ${existingCandidateAssets.join(', ')}`);
     }
     const physicalAsset = existingCandidateAssets[0];
-    const registeredEntry = entryByKey.get(key);
+    const registeredEntry = academyEntryByKey.get(key);
     if (physicalAsset) academyPlannedPhysicalCount += 1;
 
     if (physicalAsset && !registeredEntry) {

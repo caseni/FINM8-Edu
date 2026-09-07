@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import type { LearningLanguage } from '../../domain/learning/presentation';
 import { defaultLearningTheme, type LearningTheme } from '../../theme/learningTheme';
+import { beginnerEditorialImageSource } from './BeginnerEditorialImageVisual';
 import type { LessonSupportingVisualRole } from './LessonSupportingVisual';
 
 type Topic = 'inflation' | 'rates' | 'centralBank' | 'policy' | 'growth' | 'cycle';
@@ -92,20 +93,22 @@ export function BeginnerEconomyStoryVisual({ assetRef, alt, language, role, them
   const styles = createStyles(theme, wide, phone);
   const tr = language === 'tr';
   const semanticRole = roleKey(role);
+  const photoSource = beginnerEditorialImageSource(assetRef, role);
   const webArtwork = economySvgArtwork[topic]?.[role];
-  const useSvg = Platform.OS === 'web' && Boolean(webArtwork);
+  const useSvg = !photoSource && Platform.OS === 'web' && Boolean(webArtwork);
 
   return (
     <View style={styles.shell} accessibilityRole="image" accessibilityLabel={alt}>
       <View style={styles.glow} />
-      <View style={[styles.board, useSvg && styles.svgBoard]} accessibilityLabel={`economy-${topicKey(topic)}-${semanticRole}-board`}>
-        {useSvg && webArtwork ? <Image source={webArtwork} resizeMode="contain" style={styles.webArtwork} /> : null}
-        {!useSvg && topic === 'inflation' ? <InflationScene tr={tr} role={role} styles={styles} /> : null}
-        {!useSvg && topic === 'rates' ? <RatesScene tr={tr} role={role} styles={styles} /> : null}
-        {!useSvg && topic === 'centralBank' ? <CentralBankScene tr={tr} role={role} styles={styles} /> : null}
-        {!useSvg && topic === 'policy' ? <PolicyScene tr={tr} role={role} styles={styles} /> : null}
-        {!useSvg && topic === 'growth' ? <GrowthScene tr={tr} role={role} styles={styles} /> : null}
-        {!useSvg && topic === 'cycle' ? <CycleScene tr={tr} role={role} styles={styles} /> : null}
+      <View style={[styles.board, Boolean(useSvg || photoSource) && styles.svgBoard]} accessibilityLabel={`economy-${topicKey(topic)}-${semanticRole}-board`}>
+        {photoSource ? <Image source={photoSource} resizeMode="contain" style={styles.webArtwork} /> : null}
+        {!photoSource && useSvg && webArtwork ? <Image source={webArtwork} resizeMode="contain" style={styles.webArtwork} /> : null}
+        {!photoSource && !useSvg && topic === 'inflation' ? <InflationScene tr={tr} role={role} styles={styles} /> : null}
+        {!photoSource && !useSvg && topic === 'rates' ? <RatesScene tr={tr} role={role} styles={styles} /> : null}
+        {!photoSource && !useSvg && topic === 'centralBank' ? <CentralBankScene tr={tr} role={role} styles={styles} /> : null}
+        {!photoSource && !useSvg && topic === 'policy' ? <PolicyScene tr={tr} role={role} styles={styles} /> : null}
+        {!photoSource && !useSvg && topic === 'growth' ? <GrowthScene tr={tr} role={role} styles={styles} /> : null}
+        {!photoSource && !useSvg && topic === 'cycle' ? <CycleScene tr={tr} role={role} styles={styles} /> : null}
       </View>
     </View>
   );
