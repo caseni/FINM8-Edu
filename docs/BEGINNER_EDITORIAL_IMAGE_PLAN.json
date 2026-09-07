@@ -9,12 +9,12 @@
     "physicalAssetMustBeRegistered": true
   },
   "lessons": [
-    {"slug":"enflasyon-satin-alma-gucu","assetDir":"assets/learning/beginner/economy","assetPrefix":"inflation-purchasing-power","roles":["hook","concept","practice","misconception","summary"],"exampleOnlyRoles":[],"status":"planned"},
-    {"slug":"faiz-orani-ne-anlatir","assetDir":"assets/learning/beginner/economy","assetPrefix":"interest-rate","roles":["hook","concept","practice","summary"],"exampleOnlyRoles":["misconception"],"status":"planned"},
-    {"slug":"merkez-bankasi-ne-yapar","assetDir":"assets/learning/beginner/economy","assetPrefix":"central-bank","roles":["hook","concept","misconception","summary"],"exampleOnlyRoles":["practice"],"status":"planned"},
-    {"slug":"faiz-karari-ekonomiye-nasil-yansir","assetDir":"assets/learning/beginner/economy","assetPrefix":"rate-transmission","roles":["hook","concept","practice","summary"],"exampleOnlyRoles":["misconception"],"status":"planned"},
-    {"slug":"gsyh-buyume-ne-anlatir","assetDir":"assets/learning/beginner/economy","assetPrefix":"gdp-growth","roles":["hook","concept","misconception","summary"],"exampleOnlyRoles":["practice"],"status":"planned"},
-    {"slug":"ekonomik-dongu-resesyon","assetDir":"assets/learning/beginner/economy","assetPrefix":"business-cycle","roles":["hook","concept","practice","misconception","summary"],"exampleOnlyRoles":[],"status":"planned"},
+    {"slug":"enflasyon-satin-alma-gucu","assetDir":"assets/learning/beginner/economy","assetPrefix":"inflation-purchasing-power","roles":["hook","concept","practice","misconception","summary"],"exampleOnlyRoles":[],"status":"integrated"},
+    {"slug":"faiz-orani-ne-anlatir","assetDir":"assets/learning/beginner/economy","assetPrefix":"interest-rate","roles":["hook","concept","practice","summary"],"exampleOnlyRoles":["misconception"],"status":"integrated"},
+    {"slug":"merkez-bankasi-ne-yapar","assetDir":"assets/learning/beginner/economy","assetPrefix":"central-bank","roles":["hook","concept","misconception","summary"],"exampleOnlyRoles":["practice"],"status":"integrated"},
+    {"slug":"faiz-karari-ekonomiye-nasil-yansir","assetDir":"assets/learning/beginner/economy","assetPrefix":"rate-transmission","roles":["hook","concept","practice","summary"],"exampleOnlyRoles":["misconception"],"status":"integrated"},
+    {"slug":"gsyh-buyume-ne-anlatir","assetDir":"assets/learning/beginner/economy","assetPrefix":"gdp-growth","roles":["hook","concept","misconception","summary"],"exampleOnlyRoles":["practice"],"status":"integrated"},
+    {"slug":"ekonomik-dongu-resesyon","assetDir":"assets/learning/beginner/economy","assetPrefix":"business-cycle","roles":["hook","concept","practice","misconception","summary"],"exampleOnlyRoles":[],"status":"integrated"},
 
     {"slug":"fiyat-piyasada-nasil-olusur","assetDir":"assets/learning/beginner/markets","assetPrefix":"price-formation","roles":["hook","concept","practice","misconception","summary"],"exampleOnlyRoles":[],"status":"integrated"},
     {"slug":"piyasa-araclari-ayni-degildir","assetDir":"assets/learning/beginner/markets","assetPrefix":"asset-classes","roles":["hook","concept","misconception","summary"],"exampleOnlyRoles":["practice"],"status":"integrated"},

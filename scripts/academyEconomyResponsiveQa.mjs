@@ -37,15 +37,81 @@ async function openLesson(page, title) {
 }
 
 async function largestImage(page) {
+  const { box } = await largestImageLocator(page);
+  return box;
+}
+
+async function largestImageLocator(page) {
   const images = page.locator('[role="img"]');
   let largest;
+  let largestLocator;
   for (let i = 0; i < await images.count(); i += 1) {
     const image = images.nth(i);
     if (!(await image.isVisible())) continue;
     const box = await image.boundingBox();
-    if (box && (!largest || box.width * box.height > largest.width * largest.height)) largest = box;
+    if (box && (!largest || box.width * box.height > largest.width * largest.height)) {
+      largest = box;
+      largestLocator = image;
+    }
   }
-  return largest;
+  return { locator: largestLocator, box: largest };
+}
+
+// The six Wave1 Economy foundation lessons are reused by both the Beginner journey
+// and this Academy track. Non-hook roles with a real physical mapping must now
+// render the same physical Beginner Economy raster through the canonical routing
+// fix in LessonSupportingVisual.tsx; the four intentionally example-only roles
+// must keep showing the pre-existing code-drawn/SVG fallback, never a raster image.
+const reusedEconomyExampleOnlyRoles = {
+  inflation: [],
+  rates: ['misconception'],
+  'central-bank': ['practice'],
+  'monetary-policy': ['misconception'],
+  growth: ['practice'],
+  cycle: [],
+};
+const stepRoles = ['hook', 'concept', 'practice', 'misconception', 'summary'];
+
+// Guards against the false-positive where a code-drawn scene (a plain View with a
+// hardcoded aspectRatio style) satisfies sizing checks without any real physical
+// editorial asset behind it. A pre-existing SVG fallback also renders through a
+// real <img> tag (and can declare a 1200x800 viewBox), so only a raster
+// (webp/png/jpg) src reliably indicates an actual physical editorial asset.
+async function assertPhysicalEditorialImage(locator, label, { shouldExist }) {
+  const rasterImg = locator.locator('img[src$=".webp"], img[src*=".webp?"], img[src$=".png"], img[src*=".png?"], img[src$=".jpg"], img[src*=".jpg?"], img[src$=".jpeg"], img[src*=".jpeg?"]').first();
+  const rasterCount = await rasterImg.count();
+
+  if (!shouldExist) {
+    if (rasterCount) throw new Error(`${label}: expected no physical editorial <img> for this example-only role, but found one`);
+    return;
+  }
+
+  if (!rasterCount) {
+    throw new Error(`${label}: expected a real physical editorial <img> inside the lesson visual, found a code-drawn scene instead`);
+  }
+  await rasterImg.evaluate((el) => {
+    if (el.complete) return true;
+    return new Promise((resolve) => {
+      el.addEventListener('load', resolve, { once: true });
+      el.addEventListener('error', resolve, { once: true });
+      setTimeout(resolve, 5000);
+    });
+  });
+  const natural = await rasterImg.evaluate((el) => ({
+    src: el.currentSrc || el.src,
+    naturalWidth: el.naturalWidth,
+    naturalHeight: el.naturalHeight,
+  }));
+  if (!natural.naturalWidth || !natural.naturalHeight) {
+    throw new Error(`${label}: physical editorial image failed to decode (natural size 0x0)`);
+  }
+  if (natural.naturalWidth < 1200 || natural.naturalHeight < 800) {
+    throw new Error(`${label}: physical editorial image below the 1200x800 minimum (${natural.naturalWidth}x${natural.naturalHeight})`);
+  }
+  const ratio = natural.naturalWidth / natural.naturalHeight;
+  if (Math.abs(ratio - 1.5) > 0.002) {
+    throw new Error(`${label}: physical editorial image is not exact 3:2 (${natural.naturalWidth}x${natural.naturalHeight}, ratio ${ratio.toFixed(4)})`);
+  }
 }
 
 async function assertNoOverflow(page, label) {
@@ -70,12 +136,18 @@ try {
       for (let step = 1; step <= total; step += 1) {
         const label = `academy-economy-${viewport.name}-${lesson.key}-step-${step}`;
         await assertNoOverflow(page, label);
-        const visual = await largestImage(page);
+        const { locator, box: visual } = await largestImageLocator(page);
         if (!visual) throw new Error(`${label}: no visible lesson visual`);
         if (visual.width < viewport.minVisualWidth) throw new Error(`${label}: visual too narrow at ${visual.width.toFixed(1)}px`);
         if (visual.width > (viewport.sizeClass === 'mobile' ? 360 : 700) + 1) throw new Error(`${label}: visual too wide at ${visual.width.toFixed(1)}px`);
         if (visual.x < -1 || visual.x + visual.width > viewport.width + 1) throw new Error(`${label}: visual escapes viewport`);
         if (visual.height > viewport.height * 0.75) throw new Error(`${label}: visual too tall at ${visual.height.toFixed(1)}px`);
+
+        const reusedExampleOnly = reusedEconomyExampleOnlyRoles[lesson.key];
+        if (reusedExampleOnly && step > 1) {
+          const role = stepRoles[step - 1];
+          await assertPhysicalEditorialImage(locator, label, { shouldExist: !reusedExampleOnly.includes(role) });
+        }
 
         if (step === 1 && lesson.hook) {
           const hook = page.locator(`[aria-label="${lesson.hook}"]`).first();

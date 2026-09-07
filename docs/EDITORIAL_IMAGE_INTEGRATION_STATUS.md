@@ -28,15 +28,15 @@ Code-drawn visual components are temporary fallback only and do not count as com
 
 ## Current measurable coverage
 
-The executable rollout plan covers **24/24 beginner lessons**. Current real-asset state after Beginner Markets migration:
+The executable rollout plan covers **24/24 beginner lessons**. Current real-asset state after Beginner Economy migration:
 
-- beginner real-image mappings: **29**
+- beginner real-image mappings: **55**
 - Academy real-image mappings: **8**
-- total real-image mappings: **37**
-- beginner lessons with at least one real image: **6/24**
+- total real-image mappings: **63**
+- beginner lessons with at least one real image: **12/24**
 - Academy lessons with at least one real image: **8/120**
-- active lessons with at least one real image: **14/144**
-- beginner planned real-image roles physically integrated: **29/115**
+- active lessons with at least one real image: **20/144**
+- beginner planned real-image roles physically integrated: **55/115**
 
 The remaining code-drawn visuals are fallback, not completion evidence.
 
@@ -104,6 +104,70 @@ Status: **5/5 planned physical roles integrated.**
 
 Status: **5/5 planned physical roles integrated.**
 
+### Beginner — Para ve Ekonomi — 6/6 lessons
+
+#### `enflasyon-satin-alma-gucu`
+
+- hook → `assets/learning/beginner/economy/inflation-purchasing-power-hook.webp`
+- concept → `assets/learning/beginner/economy/inflation-purchasing-power-concept.webp`
+- practice → `assets/learning/beginner/economy/inflation-purchasing-power-practice.webp`
+- misconception → `assets/learning/beginner/economy/inflation-purchasing-power-misconception.webp`
+- summary → `assets/learning/beginner/economy/inflation-purchasing-power-summary.webp`
+
+Status: **5/5 planned physical roles integrated.**
+
+#### `faiz-orani-ne-anlatir`
+
+- hook → `assets/learning/beginner/economy/interest-rate-hook.webp`
+- concept → `assets/learning/beginner/economy/interest-rate-concept.webp`
+- practice → `assets/learning/beginner/economy/interest-rate-practice.webp`
+- misconception → intentionally example-only; no physical image
+- summary → `assets/learning/beginner/economy/interest-rate-summary.webp`
+
+Status: **4/4 planned physical roles integrated; misconception intentionally remains example-only.**
+
+#### `merkez-bankasi-ne-yapar`
+
+- hook → `assets/learning/beginner/economy/central-bank-hook.webp`
+- concept → `assets/learning/beginner/economy/central-bank-concept.webp`
+- practice → intentionally example-only; no physical image
+- misconception → `assets/learning/beginner/economy/central-bank-misconception.webp`
+- summary → `assets/learning/beginner/economy/central-bank-summary.webp`
+
+Status: **4/4 planned physical roles integrated; practice intentionally remains example-only.**
+
+#### `faiz-karari-ekonomiye-nasil-yansir`
+
+- hook → `assets/learning/beginner/economy/rate-transmission-hook.webp`
+- concept → `assets/learning/beginner/economy/rate-transmission-concept.webp`
+- practice → `assets/learning/beginner/economy/rate-transmission-practice.webp`
+- misconception → intentionally example-only; no physical image
+- summary → `assets/learning/beginner/economy/rate-transmission-summary.webp`
+
+Status: **4/4 planned physical roles integrated; misconception intentionally remains example-only.**
+
+#### `gsyh-buyume-ne-anlatir`
+
+- hook → `assets/learning/beginner/economy/gdp-growth-hook.webp`
+- concept → `assets/learning/beginner/economy/gdp-growth-concept.webp`
+- practice → intentionally example-only; no physical image
+- misconception → `assets/learning/beginner/economy/gdp-growth-misconception.webp`
+- summary → `assets/learning/beginner/economy/gdp-growth-summary.webp`
+
+Status: **4/4 planned physical roles integrated; practice intentionally remains example-only.**
+
+#### `ekonomik-dongu-resesyon`
+
+- hook → `assets/learning/beginner/economy/business-cycle-hook.webp`
+- concept → `assets/learning/beginner/economy/business-cycle-concept.webp`
+- practice → `assets/learning/beginner/economy/business-cycle-practice.webp`
+- misconception → `assets/learning/beginner/economy/business-cycle-misconception.webp`
+- summary → `assets/learning/beginner/economy/business-cycle-summary.webp`
+
+Status: **5/5 planned physical roles integrated.**
+
+These lessons render inside `BeginnerEconomyStoryVisual`, which now checks the shared `BeginnerEditorialImageVisual` registry first and falls back to the pre-existing SVG (web) / hand-drawn native scene only for the four intentionally example-only roles above. The same lesson records are also used by the Academy "Ekonomiyi Anla" track (`ECONOMY_FOUNDATION_LESSONS`), so these five roles per lesson render there too outside the `hook` step, which keeps its separate `AcademyEconomyPremiumHookVisual`.
+
 ### Academy — existing generated hook assets
 
 - `borsa-ve-islem-yeri-nedir` → hook
@@ -123,11 +187,10 @@ The canonical role plan for all 24 beginner lessons is in:
 
 `docs/BEGINNER_EDITORIAL_IMAGE_PLAN.json`
 
-With Beginner Markets complete, continue in this order:
+With Beginner Markets and Beginner Economy complete, continue in this order:
 
-1. Para ve Ekonomi — 6 lessons
-2. Grafikleri Korkmadan Oku — 6 lessons
-3. Riskten Korun — 6 lessons
+1. Grafikleri Korkmadan Oku — 6 lessons
+2. Riskten Korun — 6 lessons
 
 For every lesson, choose images by teaching role rather than forcing five identical-looking assets.
 
@@ -163,6 +226,8 @@ Recommended school order:
 The Quality workflow runs this audit on every PR update.
 
 `beginnerResponsiveEditorialQa.mjs` traverses all six Beginner Markets lessons at 360 × 800, 390 × 844 and 1440 × 900. It checks visual sizing, horizontal overflow, 3:2 editorial-image geometry, legacy fallback leakage and the intentionally text-led asset-classes practice role.
+
+`beginnerEconomyResponsiveQa.mjs` traverses all six Beginner Economy lessons at the same three viewports. It checks visual sizing, horizontal overflow and the `economy-<topic>-<role>-board` semantic board for every step, so it validates whichever content that board holds — the new physical editorial images for registered roles, and the text-led example-only fallback for the four intentionally example-only roles.
 
 ## Definition of done
 

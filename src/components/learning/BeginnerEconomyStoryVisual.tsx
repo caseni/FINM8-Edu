@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import type { LearningLanguage } from '../../domain/learning/presentation';
 import { defaultLearningTheme, type LearningTheme } from '../../theme/learningTheme';
+import { BeginnerEditorialImageVisual, hasBeginnerEditorialImage } from './BeginnerEditorialImageVisual';
 import type { LessonSupportingVisualRole } from './LessonSupportingVisual';
 
 type Topic = 'inflation' | 'rates' | 'centralBank' | 'policy' | 'growth' | 'cycle';
@@ -89,6 +90,20 @@ export function BeginnerEconomyStoryVisual({ assetRef, alt, language, role, them
   const { width } = useWindowDimensions();
   const wide = width >= 900;
   const phone = width < 420;
+
+  // Canonical physical rendering path: when a role has a real editorial image
+  // registered, defer to the shared BeginnerEditorialImageVisual (same component
+  // Markets uses) instead of rendering the WebP through a second, ad hoc <Image>
+  // here. Falls through to the pre-existing SVG/native scene fallback below for
+  // the four intentionally example-only roles that have no registry entry.
+  if (hasBeginnerEditorialImage(assetRef, role)) {
+    return (
+      <View style={{ width: '100%', maxWidth: wide ? 680 : undefined, alignSelf: 'center' }}>
+        <BeginnerEditorialImageVisual assetRef={assetRef} alt={alt} role={role} theme={theme} />
+      </View>
+    );
+  }
+
   const styles = createStyles(theme, wide, phone);
   const tr = language === 'tr';
   const semanticRole = roleKey(role);
