@@ -54,18 +54,65 @@ async function openMarketLesson(page, lessonTitle) {
   await page.getByText(/Adım 1\//).waitFor();
 }
 
-async function largestVisibleImageBox(page) {
+async function largestVisibleImageLocator(page) {
   const images = page.locator('[role="img"]');
   const count = await images.count();
   let largest;
+  let largestLocator;
   for (let index = 0; index < count; index += 1) {
     const image = images.nth(index);
     if (!(await image.isVisible())) continue;
     const box = await image.boundingBox();
     if (!box) continue;
-    if (!largest || box.width * box.height > largest.width * largest.height) largest = box;
+    if (!largest || box.width * box.height > largest.width * largest.height) {
+      largest = box;
+      largestLocator = image;
+    }
   }
-  return largest;
+  return { locator: largestLocator, box: largest };
+}
+
+// Guards against the false-positive where a code-drawn scene (a plain View with a
+// hardcoded aspectRatio style) satisfies the 3:2 bounding-box check without any real
+// physical editorial asset behind it. This asserts an actual decoded <img> exists
+// inside the largest visible [role="img"] container, at a real photographic
+// resolution and exact 3:2 ratio. Markets/Economy physical assets are committed at
+// 1200x800 or larger (the pre-existing price-formation-*.webp set is 1536x1024), so
+// this checks "at least 1200x800 and exact 3:2" rather than an exact pixel match,
+// which would otherwise fail on that legitimate larger asset.
+async function assertPhysicalEditorialImage(locator, label) {
+  if (!locator) throw new Error(`${label}: no visible lesson visual to inspect for a physical image`);
+  const img = locator.locator('img').first();
+  const imgCount = await img.count();
+  if (!imgCount) {
+    throw new Error(`${label}: expected a real physical editorial <img> inside the lesson visual, found a code-drawn scene instead`);
+  }
+  await img.evaluate((el) => {
+    if (el.complete) return true;
+    return new Promise((resolve) => {
+      el.addEventListener('load', resolve, { once: true });
+      el.addEventListener('error', resolve, { once: true });
+      setTimeout(resolve, 5000);
+    });
+  });
+  const natural = await img.evaluate((el) => ({
+    src: el.currentSrc || el.src,
+    naturalWidth: el.naturalWidth,
+    naturalHeight: el.naturalHeight,
+  }));
+  if (!/\.(webp|png|jpe?g)(\?|$)/i.test(natural.src)) {
+    throw new Error(`${label}: physical editorial image src does not look like a real raster asset: ${natural.src}`);
+  }
+  if (!natural.naturalWidth || !natural.naturalHeight) {
+    throw new Error(`${label}: physical editorial image failed to decode (natural size 0x0)`);
+  }
+  if (natural.naturalWidth < 1200 || natural.naturalHeight < 800) {
+    throw new Error(`${label}: physical editorial image below the 1200x800 minimum (${natural.naturalWidth}x${natural.naturalHeight})`);
+  }
+  const ratio = natural.naturalWidth / natural.naturalHeight;
+  if (Math.abs(ratio - 1.5) > 0.002) {
+    throw new Error(`${label}: physical editorial image is not exact 3:2 (${natural.naturalWidth}x${natural.naturalHeight}, ratio ${ratio.toFixed(4)})`);
+  }
 }
 
 async function assertNoHorizontalOverflow(page, label) {
@@ -276,8 +323,9 @@ try {
         if (textLedInstrumentPractice) {
           await assertTextLedInstrumentPractice(page, label);
         } else {
-          const box = await largestVisibleImageBox(page);
+          const { locator, box } = await largestVisibleImageLocator(page);
           if (!box) throw new Error(`${label}: no visible lesson visual found`);
+          await assertPhysicalEditorialImage(locator, label);
           if (box.width < viewport.minVisualWidth) {
             throw new Error(`${label}: lesson visual too small at ${box.width.toFixed(1)}px`);
           }

@@ -1,6 +1,7 @@
 import React from 'react';
 import { useWindowDimensions, View } from 'react-native';
 import { BeginnerBidAskStoryVisual } from './BeginnerBidAskStoryVisual';
+import { BeginnerEditorialImageVisual, hasBeginnerEditorialImage } from './BeginnerEditorialImageVisual';
 import { BeginnerInstrumentMisconceptionVisual } from './BeginnerInstrumentMisconceptionVisual';
 import { BeginnerInstrumentStoryVisual } from './BeginnerInstrumentStoryVisual';
 import { BeginnerLiquidityStoryVisual } from './BeginnerLiquidityStoryVisual';
@@ -33,6 +34,19 @@ function ResponsiveVisualFrame({ wide, children }: { wide: boolean; children: Re
 export function BeginnerMarketStoryVisual(props: Props) {
   const { width } = useWindowDimensions();
   const wide = width >= 900;
+
+  if (hasBeginnerEditorialImage(props.assetRef, props.role)) {
+    return (
+      <ResponsiveVisualFrame wide={wide}>
+        <BeginnerEditorialImageVisual
+          assetRef={props.assetRef}
+          alt={props.alt}
+          role={props.role}
+          theme={props.theme}
+        />
+      </ResponsiveVisualFrame>
+    );
+  }
 
   if (props.assetRef.includes('fiyat-piyasada-nasil-olusur')) {
     return (
