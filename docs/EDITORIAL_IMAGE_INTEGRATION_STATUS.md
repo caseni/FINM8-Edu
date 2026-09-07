@@ -28,15 +28,15 @@ Code-drawn visual components are temporary fallback only and do not count as com
 
 ## Current measurable coverage
 
-The executable rollout plan covers **24/24 beginner lessons**. Current real-asset state after Beginner Economy migration:
+The executable rollout plan covers **24/24 beginner lessons**. Current real-asset state after Beginner Charts migration:
 
-- beginner real-image mappings: **55**
+- beginner real-image mappings: **85**
 - Academy real-image mappings: **8**
-- total real-image mappings: **63**
-- beginner lessons with at least one real image: **12/24**
+- total real-image mappings: **93**
+- beginner lessons with at least one real image: **18/24**
 - Academy lessons with at least one real image: **8/120**
-- active lessons with at least one real image: **20/144**
-- beginner planned real-image roles physically integrated: **55/115**
+- active lessons with at least one real image: **26/144**
+- beginner planned real-image roles physically integrated: **85/115**
 
 The remaining code-drawn visuals are fallback, not completion evidence.
 
@@ -168,6 +168,72 @@ Status: **5/5 planned physical roles integrated.**
 
 These lessons render inside `BeginnerEconomyStoryVisual`, which now checks the shared `BeginnerEditorialImageVisual` registry first and falls back to the pre-existing SVG (web) / hand-drawn native scene only for the four intentionally example-only roles above. The same lesson records are also used by the Academy "Ekonomiyi Anla" track (`ECONOMY_FOUNDATION_LESSONS`), so these five roles per lesson render there too outside the `hook` step, which keeps its separate `AcademyEconomyPremiumHookVisual`.
 
+### Beginner — Grafikleri Korkmadan Oku — 6/6 lessons
+
+#### `bir-mum-bize-ne-soyler`
+
+- hook → `assets/learning/beginner/charts/candlestick-hook.webp`
+- concept → `assets/learning/beginner/charts/candlestick-concept.webp`
+- practice → `assets/learning/beginner/charts/candlestick-practice.webp`
+- misconception → `assets/learning/beginner/charts/candlestick-misconception.webp`
+- summary → `assets/learning/beginner/charts/candlestick-summary.webp`
+
+Status: **5/5 planned physical roles integrated.**
+
+#### `zaman-dilimi-neyi-degistirir`
+
+- hook → `assets/learning/beginner/charts/timeframes-hook.webp`
+- concept → `assets/learning/beginner/charts/timeframes-concept.webp`
+- practice → `assets/learning/beginner/charts/timeframes-practice.webp`
+- misconception → `assets/learning/beginner/charts/timeframes-misconception.webp`
+- summary → `assets/learning/beginner/charts/timeframes-summary.webp`
+
+Status: **5/5 planned physical roles integrated.**
+
+#### `trend-yon-mu-yapi-mi`
+
+- hook → `assets/learning/beginner/charts/trend-structure-hook.webp`
+- concept → `assets/learning/beginner/charts/trend-structure-concept.webp`
+- practice → `assets/learning/beginner/charts/trend-structure-practice.webp`
+- misconception → `assets/learning/beginner/charts/trend-structure-misconception.webp`
+- summary → `assets/learning/beginner/charts/trend-structure-summary.webp`
+
+Status: **5/5 planned physical roles integrated.**
+
+#### `destek-direnc-bolgedir`
+
+- hook → `assets/learning/beginner/charts/support-resistance-zone-hook.webp`
+- concept → `assets/learning/beginner/charts/support-resistance-zone-concept.webp`
+- practice → `assets/learning/beginner/charts/support-resistance-zone-practice.webp`
+- misconception → `assets/learning/beginner/charts/support-resistance-zone-misconception.webp`
+- summary → `assets/learning/beginner/charts/support-resistance-zone-summary.webp`
+
+Status: **5/5 planned physical roles integrated.** This lesson's first quiz question previously carried a stale `FIRST_QUESTION_VISUALS` assetRef (`edu://wave1/destek-direnc-cizgi-degildir`, a leftover working title) that did not contain the canonical `destek-direnc-bolgedir` slug, so it silently bypassed the physical registry and every chart-routing check. Fixed narrowly in `foundationLessonFactory.ts` to point at the canonical `edu://wave1/destek-direnc-bolgedir` slug; no other IDs, content, or scoring changed.
+
+#### `momentum-ne-anlatir`
+
+- hook → `assets/learning/beginner/charts/momentum-hook.webp`
+- concept → `assets/learning/beginner/charts/momentum-concept.webp`
+- practice → `assets/learning/beginner/charts/momentum-practice.webp`
+- misconception → `assets/learning/beginner/charts/momentum-misconception.webp`
+- summary → `assets/learning/beginner/charts/momentum-summary.webp`
+
+Status: **5/5 planned physical roles integrated.**
+
+#### `hareketli-ortalama-ne-yapar`
+
+- hook → `assets/learning/beginner/charts/moving-average-hook.webp`
+- concept → `assets/learning/beginner/charts/moving-average-concept.webp`
+- practice → `assets/learning/beginner/charts/moving-average-practice.webp`
+- misconception → `assets/learning/beginner/charts/moving-average-misconception.webp`
+- summary → `assets/learning/beginner/charts/moving-average-summary.webp`
+
+Status: **5/5 planned physical roles integrated.**
+
+These lessons render inside `BeginnerCoreChartStoryVisual` (candles/timeframes/trend) and `BeginnerAppliedChartStoryVisual` (support-resistance zone/momentum/moving average), both of which now check the shared `BeginnerEditorialImageVisual` registry first and fall back to the pre-existing SVG (web) / hand-drawn native scene only when no physical image is registered for a role (not applicable in this slice — all five roles are physical for all six lessons).
+
+`momentum-ne-anlatir` and `hareketli-ortalama-ne-yapar` are also reused, unchanged, by the Academy "Teknik Analiz" foundation track (`TECHNICAL_ANALYSIS_FOUNDATION_LESSONS`), whose own code-drawn `AcademyFoundationCleanVisual` previously intercepted these two lessons for any call site reaching `LessonSupportingVisual` without the Beginner-journey `#beginner-chart` marker (concretely: the Beginner Quiz and Practical Task screens, which never inject that marker). `LessonSupportingVisual` now excludes `hasFoundationCleanVisual` for a non-hook role once that role has a real Beginner physical image mapped, mirroring the existing `isBeginnerEconomyMappedPhysical` guard used for `hasAdvancedCleanVisual`. The Academy hook step is untouched (`AcademyTechnicalPremiumHookVisual` still owns `role === 'hook'` when reached outside the Beginner journey). No Academy registry mappings or duplicated assets were added — this is a runtime routing precedence fix only.
+
 ### Academy — existing generated hook assets
 
 - `borsa-ve-islem-yeri-nedir` → hook
@@ -187,10 +253,9 @@ The canonical role plan for all 24 beginner lessons is in:
 
 `docs/BEGINNER_EDITORIAL_IMAGE_PLAN.json`
 
-With Beginner Markets and Beginner Economy complete, continue in this order:
+With Beginner Markets, Beginner Economy and Beginner Charts complete, continue in this order:
 
-1. Grafikleri Korkmadan Oku — 6 lessons
-2. Riskten Korun — 6 lessons
+1. Riskten Korun — 6 lessons
 
 For every lesson, choose images by teaching role rather than forcing five identical-looking assets.
 
@@ -228,6 +293,8 @@ The Quality workflow runs this audit on every PR update.
 `beginnerResponsiveEditorialQa.mjs` traverses all six Beginner Markets lessons at 360 × 800, 390 × 844 and 1440 × 900. It checks visual sizing, horizontal overflow, 3:2 editorial-image geometry, legacy fallback leakage and the intentionally text-led asset-classes practice role.
 
 `beginnerEconomyResponsiveQa.mjs` traverses all six Beginner Economy lessons at the same three viewports. It checks visual sizing, horizontal overflow and the `economy-<topic>-<role>-board` semantic board for every step, so it validates whichever content that board holds — the new physical editorial images for registered roles, and the text-led example-only fallback for the four intentionally example-only roles.
+
+`beginnerCoreChartResponsiveQa.mjs` and `beginnerAppliedChartResponsiveQa.mjs` traverse all six Beginner Charts lessons (candles/timeframes/trend via Core, support-resistance zone/momentum/moving average via Applied) at the same three viewports, for all five steps. Both scripts now require the largest learner-facing visual to be a real decoded raster `<img>` (`.webp`/`.png`/`.jpg`/`.jpeg`) at native `naturalWidth >= 1200` / `naturalHeight >= 800` with ratio ≈ 1.5 — an SVG or code-drawn native scene no longer passes, since every role in this lesson group is now physical.
 
 ## Definition of done
 

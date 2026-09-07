@@ -68,7 +68,19 @@ export function LessonSupportingVisual({ assetRef, alt, language, role, theme = 
   const hasPsychologyPremiumHook = role === 'hook' && isAcademyPsychologyPremiumHookAsset(assetRef);
   const hasAssetPremiumHook = role === 'hook' && isAcademyAssetPremiumHookAsset(assetRef);
   const hasCoreExpansionCleanVisual = isAcademyCoreExpansionCleanAsset(assetRef);
-  const hasFoundationCleanVisual = role !== 'hook' && isAcademyFoundationCleanAsset(assetRef);
+  // Momentum and moving-average are reused by both the Beginner Charts journey and
+  // the Academy "Teknik Analiz" foundation track. When a non-hook role has a real
+  // physical editorial image registered for it, the Academy surface must render the
+  // same canonical physical asset (via BeginnerCoreChartStoryVisual/
+  // BeginnerAppliedChartStoryVisual, which defer to BeginnerEditorialImageVisual)
+  // instead of letting AcademyFoundationCleanVisual's code-drawn scene intercept it
+  // first (this matters for call sites, like the Beginner Quiz/Practical Task
+  // screens, that reach LessonSupportingVisual without the #beginner-chart marker).
+  const isBeginnerChartMappedPhysical =
+    (isBeginnerCoreChartStoryAsset(assetRef) || isBeginnerAppliedChartStoryAsset(assetRef)) &&
+    role !== 'hook' &&
+    hasBeginnerEditorialImage(assetRef, role);
+  const hasFoundationCleanVisual = role !== 'hook' && !isBeginnerChartMappedPhysical && isAcademyFoundationCleanAsset(assetRef);
   const isBeginnerEconomy = isBeginnerEconomyStoryAsset(assetRef);
   // The six Wave1 Economy foundation lessons are reused by both the Beginner journey
   // and the Academy "Ekonomiyi Anla" track. When a non-hook role has a real physical

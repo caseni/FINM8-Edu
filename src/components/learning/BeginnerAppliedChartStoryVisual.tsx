@@ -2,6 +2,7 @@ import React from 'react';
 import { Image, Platform, StyleSheet, Text, useWindowDimensions, View, type ImageSourcePropType } from 'react-native';
 import type { LearningLanguage } from '../../domain/learning/presentation';
 import { defaultLearningTheme, type LearningTheme } from '../../theme/learningTheme';
+import { BeginnerEditorialImageVisual, hasBeginnerEditorialImage } from './BeginnerEditorialImageVisual';
 import type { LessonSupportingVisualRole } from './LessonSupportingVisual';
 
 type Topic = 'zones' | 'momentum' | 'average';
@@ -16,6 +17,16 @@ function topicForAsset(assetRef: string): Topic | undefined { if (assetRef.inclu
 export function isBeginnerAppliedChartStoryAsset(assetRef: string): boolean { return Boolean(topicForAsset(assetRef)); }
 export function BeginnerAppliedChartStoryVisual({ assetRef, alt, language, role, theme = defaultLearningTheme }: Props) {
   const topic = topicForAsset(assetRef); if (!topic) return null; const { width } = useWindowDimensions(); const compact = width < 520; const styles = createStyles(theme, compact);
+  // Canonical physical rendering path: when a role has a real editorial image
+  // registered, defer to the shared BeginnerEditorialImageVisual (same component
+  // Markets/Economy use) instead of the SVG/native scene fallback below.
+  if (hasBeginnerEditorialImage(assetRef, role)) {
+    return (
+      <View style={{ width: '100%', maxWidth: 620, alignSelf: 'center' }}>
+        <BeginnerEditorialImageVisual assetRef={assetRef} alt={alt} role={role} theme={theme} />
+      </View>
+    );
+  }
   if (Platform.OS === 'web') return <View style={styles.shell} accessibilityRole="image" accessibilityLabel={alt}><Image source={artwork[topic][role]} style={styles.artwork} resizeMode="contain" accessible={false} /></View>;
   return <View style={styles.shell} accessibilityRole="image" accessibilityLabel={alt}><NativeScene topic={topic} role={role} language={language} styles={styles} /></View>;
 }
