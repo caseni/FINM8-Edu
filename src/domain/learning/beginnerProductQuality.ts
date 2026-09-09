@@ -18,7 +18,7 @@ const POLISH: Readonly<Record<string, LessonPolish>> = {
   'lesson.economy.growth.001': {
     hook: {
       tr: 'Tek bir şirketin değil, ekonomide üretilen mal ve hizmetlerin toplamına bakılır.',
-      en: 'Look at the total goods and services produced across the economy, not just one company.',
+      en: 'Look at total goods and services produced across the economy, not one company.',
     },
   },
   'lesson.market.price-formation.001': {
@@ -50,8 +50,8 @@ const POLISH: Readonly<Record<string, LessonPolish>> = {
   },
   'lesson.market.bid-ask.001': {
     hook: {
-      tr: 'Alıcıların ödemek istediği fiyat ile satıcıların kabul ettiği fiyat aynı olmak zorunda değildir.',
-      en: 'The price buyers are willing to pay does not have to match the price sellers are willing to accept.',
+      tr: 'Alıcı ve satıcı neden aynı varlık için farklı fiyatlar söyleyebilir?',
+      en: 'Why can buyers and sellers quote different prices for the same asset?',
     },
   },
   'lesson.chart.support-resistance.001': {
@@ -68,8 +68,8 @@ const POLISH: Readonly<Record<string, LessonPolish>> = {
   },
   'lesson.risk.reward.001': {
     hook: {
-      tr: '1:5 oranı hedef büyüklüğünü gösterir; hedefe ulaşma ihtimalini veya maliyeti göstermez.',
-      en: 'A 1:5 ratio shows target size; it does not show the chance of reaching it or the trading cost.',
+      tr: '1:5 oranı hedef büyüklüğünü gösterir; olasılığı veya maliyeti göstermez.',
+      en: 'A 1:5 ratio shows target size, not probability or trading cost.',
     },
   },
 };
