@@ -33,17 +33,17 @@ function sectionOutcome(sectionId: keyof typeof BEGINNER_SECTIONS, language: Lea
   }
   if (sectionId === 'markets') {
     return language === 'tr'
-      ? 'Fiyatın nasıl oluştuğunu, ne aldığını, alış-satış farkını ve işlem fiyatının neden değişebildiğini ayırt edebileceksin.'
-      : 'You will recognize how price forms, what you are buying, the buy-sell gap, and why execution price can differ.';
+      ? 'Fiyatın nasıl oluştuğunu, ne aldığını, endeks ile ETF farkını ve işlemin nasıl gerçekleştiğini ayırt edebileceksin.'
+      : 'You will distinguish how prices form, what you own, how an index differs from an ETF, and how execution works.';
   }
   if (sectionId === 'charts') {
     return language === 'tr'
-      ? 'Zaman dilimini, genel yönü, tepki bölgelerini ve yardımcı çizgilerin sınırlarını temel düzeyde okuyabileceksin.'
-      : 'You will read timeframes, broader direction, reaction areas, and the limits of helper lines at a basic level.';
+      ? 'Mumu, zaman ölçeğini, trend yapısını ve tepki bölgelerini temel düzeyde okuyabileceksin.'
+      : 'You will read candles, time scales, trend structure, and reaction zones at a basic level.';
   }
   return language === 'tr'
-    ? 'Riski kayıptan önce fark etmeyi, miktarın etkisini ve kontrollü çıkışın temelini ayırt edebileceksin.'
-    : 'You will recognize risk before loss, the effect of position size, and the basics of controlled exits.';
+    ? 'Riski, pozisyon etkisini, stop sınırlarını, çeşitlendirmeyi ve duygusal karar baskısını ayırt edebileceksin.'
+    : 'You will recognize risk, position impact, stop limitations, diversification, and emotional pressure on decisions.';
 }
 
 export function BeginnerSectionScreen() {
@@ -135,7 +135,9 @@ export function BeginnerSectionScreen() {
 
         <View style={styles.hero} accessibilityRole="summary" accessibilityLabel={sectionProgressAccessibilityLabel}>
           <View style={styles.heroCopy}>
-            <Text style={styles.heroEyebrow}>{language === 'tr' ? 'BAŞLANGIÇ · 6 KISA DERS' : 'BEGINNER · 6 SHORT LESSONS'}</Text>
+            <Text style={styles.heroEyebrow}>
+              {language === 'tr' ? `BAŞLANGIÇ · ${lessons.length} KISA DERS` : `BEGINNER · ${lessons.length} SHORT LESSONS`}
+            </Text>
             <Text style={styles.heroTitle}>
               {sectionComplete
                 ? language === 'tr' ? 'Bu bölümü tamamladın.' : 'You completed this section.'
@@ -237,8 +239,8 @@ export function BeginnerSectionScreen() {
             style={styles.completionCard}
             accessibilityRole="summary"
             accessibilityLabel={language === 'tr'
-              ? `${sectionTitle} bölümü tamamlandı. 6/6 ders.`
-              : `${sectionTitle} section complete. 6 of 6 lessons.`}
+              ? `${sectionTitle} bölümü tamamlandı. ${lessons.length}/${lessons.length} ders.`
+              : `${sectionTitle} section complete. ${lessons.length} of ${lessons.length} lessons.`}
           >
             <View style={styles.completionCopy}>
               <Text style={styles.completionEyebrow}>{language === 'tr' ? 'BÖLÜM TAMAMLANDI' : 'SECTION COMPLETE'}</Text>
