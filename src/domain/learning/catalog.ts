@@ -44,6 +44,8 @@ import { STRATEGY_EXPANSION_LESSONS } from './examples/academy/strategyExpansion
 import { STRATEGY_FOUNDATION_LESSONS } from './examples/academy/strategyFoundationLessons';
 import { TECHNICAL_ANALYSIS_EXPANSION_LESSONS } from './examples/academy/technicalAnalysisExpansionLessons';
 import { TECHNICAL_ANALYSIS_FOUNDATION_LESSONS } from './examples/academy/technicalAnalysisFoundationLessons';
+import { BEGINNER_MARKET_SUPPLEMENT_LESSONS } from './examples/beginner/beginnerMarketSupplementLessons';
+import { BEGINNER_PRELUDE_LESSONS } from './examples/beginner/beginnerPreludeLessons';
 import { WAVE1_MARKET_FOUNDATION_LESSONS } from './examples/wave1/marketFoundationsLessons';
 import { normalizeMarketFoundationAssessmentQuality } from './examples/wave1/marketFoundationAssessmentQuality';
 import { normalizeChartFoundationAssessmentQuality } from './examples/wave1/chartFoundationAssessmentQuality';
@@ -57,7 +59,9 @@ import type { MicroLesson } from './types';
 import { validateLearningCatalog } from './catalogIntegrity';
 
 const MICRO_LESSON_CANDIDATES: readonly MicroLesson[] = [
+  ...BEGINNER_PRELUDE_LESSONS,
   ...WAVE1_MARKET_FOUNDATION_LESSONS.map(normalizeMarketFoundationAssessmentQuality),
+  ...BEGINNER_MARKET_SUPPLEMENT_LESSONS,
   ...WAVE1_CHART_LITERACY_CORE_LESSONS.map(normalizeChartFoundationAssessmentQuality),
   ...WAVE1_MARKET_STRUCTURE_LESSONS,
   ...WAVE1_RISK_MANAGEMENT_LESSONS.map(normalizeRiskAssessmentQuality),
