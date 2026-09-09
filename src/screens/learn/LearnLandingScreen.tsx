@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { LearningLanguageSwitch } from '../../components/learning/LearningLanguageSwitch';
 import { LearnHubNav } from '../../components/learning/LearnHubNav';
-import { BEGINNER_SECTION_IDS, BEGINNER_SECTIONS, type BeginnerSectionId } from '../../domain/learning/beginnerJourney';
+import { BEGINNER_LESSON_IDS, BEGINNER_PRELUDE_LESSON_IDS, BEGINNER_SECTION_IDS, BEGINNER_SECTIONS, type BeginnerSectionId } from '../../domain/learning/beginnerJourney';
 import { MICRO_LESSON_CATALOG } from '../../domain/learning/catalog';
 import { selectLocalizedText, type LearningLanguage } from '../../domain/learning/presentation';
 import { useLanguageStore } from '../../store/useLanguageStore';
@@ -15,9 +15,9 @@ type Navigation = NativeStackNavigationProp<RootStackParamList, 'Home'>;
 
 const SECTION_SHORT_LABELS: Record<BeginnerSectionId, { tr: string; en: string }> = {
   money_economy: { tr: 'Para · faiz · ekonomi', en: 'Money · rates · economy' },
-  markets: { tr: 'Fiyat · ürün · emir', en: 'Price · assets · orders' },
+  markets: { tr: 'Fiyat · ETF · emir', en: 'Price · ETF · orders' },
   charts: { tr: 'Mum · trend · bölgeler', en: 'Candles · trend · zones' },
-  risk: { tr: 'Miktar · çıkış · çeşitlendirme', en: 'Size · exits · diversification' },
+  risk: { tr: 'Miktar · çıkış · davranış', en: 'Size · exits · behavior' },
 };
 
 const GOAL_RECOMMENDATIONS: Readonly<Record<string, { tr: string; en: string }>> = {
@@ -58,7 +58,8 @@ export function LearnLandingScreen() {
   const lessonCheckpoints = useLearningProgressStore((state) => state.lessonCheckpoints);
   const profile = useLearningProgressStore((state) => state.profile);
 
-  const beginnerLessonIds = BEGINNER_SECTION_IDS.flatMap((sectionId) => BEGINNER_SECTIONS[sectionId].lessonIds);
+  const beginnerLessonIds: readonly string[] = BEGINNER_LESSON_IDS;
+  const preludeLessonIds: readonly string[] = BEGINNER_PRELUDE_LESSON_IDS;
   const completedBeginnerCount = beginnerLessonIds.filter((lessonId) => completedLessonIds.includes(lessonId)).length;
   const beginnerComplete = beginnerLessonIds.length > 0 && completedBeginnerCount === beginnerLessonIds.length;
   const beginnerProgress = beginnerLessonIds.length ? completedBeginnerCount / beginnerLessonIds.length : 0;
@@ -68,29 +69,40 @@ export function LearnLandingScreen() {
   const nextLessonId = recentBeginnerCheckpoint?.lessonId
     ?? beginnerLessonIds.find((lessonId) => !completedLessonIds.includes(lessonId));
   const nextLesson = nextLessonId ? MICRO_LESSON_CATALOG.find((lesson) => lesson.id === nextLessonId) : undefined;
+  const nextIsPrelude = nextLessonId ? preludeLessonIds.includes(nextLessonId) : false;
   const nextSection = nextLessonId
     ? BEGINNER_SECTION_IDS.map((sectionId) => BEGINNER_SECTIONS[sectionId]).find((section) => section.lessonIds.includes(nextLessonId))
     : undefined;
   const checkpoint = nextLessonId ? lessonCheckpoints[nextLessonId] : undefined;
+  const preludeLessons = preludeLessonIds
+    .map((lessonId) => MICRO_LESSON_CATALOG.find((lesson) => lesson.id === lessonId))
+    .filter((lesson) => lesson !== undefined);
+  const preludeCompletedCount = preludeLessonIds.filter((lessonId) => completedLessonIds.includes(lessonId)).length;
+  const preludeComplete = preludeLessonIds.length > 0 && preludeCompletedCount === preludeLessonIds.length;
   const profileReady = Boolean(profile.onboardingCompletedAt);
   const profileRecommendation = profileReady
     ? GOAL_RECOMMENDATIONS[profile.goals[0] ?? 'financial_literacy']
     : undefined;
+
+  const openLesson = (lessonId: string) => {
+    const lessonCheckpoint = lessonCheckpoints[lessonId];
+    if (lessonCheckpoint?.stage === 'task') {
+      navigation.navigate('PracticalTask', { lessonId, source: 'beginner' });
+      return;
+    }
+    if (lessonCheckpoint?.stage === 'quiz') {
+      navigation.navigate('LessonQuiz', { lessonId, source: 'beginner' });
+      return;
+    }
+    navigation.navigate('MicroLesson', { lessonId, source: 'beginner' });
+  };
 
   const openNext = () => {
     if (!nextLessonId) {
       navigation.navigate('Academy');
       return;
     }
-    if (checkpoint?.stage === 'task') {
-      navigation.navigate('PracticalTask', { lessonId: nextLessonId, source: 'beginner' });
-      return;
-    }
-    if (checkpoint?.stage === 'quiz') {
-      navigation.navigate('LessonQuiz', { lessonId: nextLessonId, source: 'beginner' });
-      return;
-    }
-    navigation.navigate('MicroLesson', { lessonId: nextLessonId, source: 'beginner' });
+    openLesson(nextLessonId);
   };
 
   const nextActionLabel = beginnerComplete
@@ -129,8 +141,8 @@ export function LearnLandingScreen() {
           accessibilityRole={beginnerComplete ? 'summary' : undefined}
           accessibilityLabel={beginnerComplete
             ? language === 'tr'
-              ? 'Temel okuryazarlık yolu tamamlandı. 24/24 ders tamamlandı.'
-              : 'Foundation literacy path complete. 24 of 24 lessons completed.'
+              ? `Temel okuryazarlık yolu tamamlandı. ${beginnerLessonIds.length}/${beginnerLessonIds.length} ders tamamlandı.`
+              : `Foundation literacy path complete. ${beginnerLessonIds.length} of ${beginnerLessonIds.length} lessons completed.`
             : undefined}
         >
           <View style={styles.heroCopy}>
@@ -145,20 +157,20 @@ export function LearnLandingScreen() {
             <Text style={styles.subtitle}>
               {beginnerComplete
                 ? language === 'tr'
-                  ? 'Para, piyasa, grafik ve risk temelini bitirdin. Bundan sonra yolunu ilgine göre seçebilirsin.'
-                  : 'You finished the foundations of money, markets, charts, and risk. Choose what to deepen next.'
-                : nextLesson && nextSection
-                  ? language === 'tr'
+                  ? 'Para, piyasa, grafik, risk ve karar temelini bitirdin. Bundan sonra yolunu ilgine göre seçebilirsin.'
+                  : 'You finished the foundations of money, markets, charts, risk, and decisions. Choose what to deepen next.'
+                : nextLesson && nextIsPrelude
+                  ? `${language === 'tr' ? 'Başlamadan Önce' : 'Before You Begin'} · ${selectLocalizedText(nextLesson.title, language)}`
+                  : nextLesson && nextSection
                     ? `${selectLocalizedText(nextSection.title, language)} · ${selectLocalizedText(nextLesson.title, language)}`
-                    : `${selectLocalizedText(nextSection.title, language)} · ${selectLocalizedText(nextLesson.title, language)}`
-                  : language === 'tr'
-                    ? 'Hiç bilmesen de olur. Finansın temelini adım adım öğreneceksin.'
-                    : 'You do not need prior knowledge. Learn finance step by step.'}
+                    : language === 'tr'
+                      ? 'Hiç bilmesen de olur. Finansın temelini adım adım öğreneceksin.'
+                      : 'You do not need prior knowledge. Learn finance step by step.'}
             </Text>
             {!beginnerComplete && nextLesson ? (
               <View style={styles.heroMetaRow}>
                 <View style={styles.metaPill}><Text style={styles.metaPillText}>{nextLesson.estimatedMinutes} {language === 'tr' ? 'dk' : 'min'}</Text></View>
-                <View style={styles.metaPill}><Text style={styles.metaPillText}>{completedBeginnerCount}/24 {language === 'tr' ? 'ders' : 'lessons'}</Text></View>
+                <View style={styles.metaPill}><Text style={styles.metaPillText}>{completedBeginnerCount}/{beginnerLessonIds.length} {language === 'tr' ? 'ders' : 'lessons'}</Text></View>
                 {checkpoint?.stage ? <View style={styles.metaPillStrong}><Text style={styles.metaPillStrongText}>{checkpoint.stage === 'task' ? (language === 'tr' ? 'GÖREV' : 'TASK') : checkpoint.stage === 'quiz' ? 'QUIZ' : (language === 'tr' ? 'DERS' : 'LESSON')}</Text></View> : null}
               </View>
             ) : null}
@@ -216,12 +228,58 @@ export function LearnLandingScreen() {
           </View>
         ) : null}
 
+        <View style={[styles.preludeCard, preludeComplete && styles.preludeCardComplete]}>
+          <View style={styles.preludeHeading}>
+            <View style={styles.preludeHeadingCopy}>
+              <Text style={styles.preludeEyebrow}>{language === 'tr' ? 'BAŞLAMADAN ÖNCE' : 'BEFORE YOU BEGIN'}</Text>
+              <Text style={styles.preludeTitle}>{language === 'tr' ? 'Önce karar çerçeveni kur' : 'Set your decision frame first'}</Text>
+              <Text style={styles.preludeBody}>
+                {language === 'tr'
+                  ? 'İki kısa ders, yatırım ile al-sat farkını ve hedef–zaman–risk ilişkisini netleştirir.'
+                  : 'Two short lessons clarify investing versus trading and the link between goals, time, and risk.'}
+              </Text>
+            </View>
+            <Text style={styles.preludeProgress}>{preludeCompletedCount}/{preludeLessonIds.length}</Text>
+          </View>
+          <View style={styles.preludeList}>
+            {preludeLessons.map((lesson, index) => {
+              const completed = completedLessonIds.includes(lesson.id);
+              const lessonCheckpoint = lessonCheckpoints[lesson.id];
+              const resume = Boolean(lessonCheckpoint) && !completed;
+              const lessonTitle = selectLocalizedText(lesson.title, language);
+              const state = completed
+                ? language === 'tr' ? 'Tamamlandı' : 'Complete'
+                : resume
+                  ? language === 'tr' ? 'Devam et' : 'Continue'
+                  : `${lesson.estimatedMinutes} ${language === 'tr' ? 'dk' : 'min'}`;
+              return (
+                <Pressable
+                  key={lesson.id}
+                  accessibilityRole="button"
+                  accessibilityLabel={`${lessonTitle}. ${state}.`}
+                  onPress={() => openLesson(lesson.id)}
+                  style={({ pressed }) => [styles.preludeLesson, index > 0 && styles.preludeLessonBorder, pressed && styles.preludeLessonPressed]}
+                >
+                  <View style={[styles.preludeNumber, completed && styles.preludeNumberComplete]}>
+                    <Text style={styles.preludeNumberText}>{completed ? '✓' : String(index + 1).padStart(2, '0')}</Text>
+                  </View>
+                  <View style={styles.preludeLessonCopy}>
+                    <Text style={styles.preludeLessonTitle}>{lessonTitle}</Text>
+                    <Text style={styles.preludeLessonMeta}>{state}</Text>
+                  </View>
+                  <Text style={styles.preludeOpen}>›</Text>
+                </Pressable>
+              );
+            })}
+          </View>
+        </View>
+
         <View style={styles.sectionHeading}>
           <View>
             <Text style={styles.sectionKicker}>{language === 'tr' ? 'ÖĞRENME YOLUN' : 'YOUR LEARNING PATH'}</Text>
-            <Text style={styles.sectionTitle}>{language === 'tr' ? 'Dört adımda temel okuryazarlık' : 'Four steps to basic financial literacy'}</Text>
+            <Text style={styles.sectionTitle}>{language === 'tr' ? 'Temelden başlayıp dört bölümde ilerle' : 'Start with the basics, then progress through four sections'}</Text>
           </View>
-          <Text style={styles.sectionBody}>{language === 'tr' ? '24 kısa ders · kendi hızında ilerle' : '24 short lessons · learn at your pace'}</Text>
+          <Text style={styles.sectionBody}>{language === 'tr' ? `${beginnerLessonIds.length} kısa ders · kendi hızında ilerle` : `${beginnerLessonIds.length} short lessons · learn at your pace`}</Text>
         </View>
 
         <View style={styles.sectionList}>
@@ -355,6 +413,26 @@ const createStyles = (wide: boolean) => StyleSheet.create({
   promiseCopy: { flex: 1, gap: 3 },
   promiseTitle: { color: '#EAF1F5', fontSize: 13, fontWeight: '900' },
   promiseBody: { color: '#8098A8', fontSize: 11, lineHeight: 16 },
+
+  preludeCard: { overflow: 'hidden', borderRadius: 22, borderWidth: 1, borderColor: '#2D5366', backgroundColor: '#081A29' },
+  preludeCardComplete: { borderColor: '#2D6965', backgroundColor: '#0A2027' },
+  preludeHeading: { flexDirection: wide ? 'row' : 'column', alignItems: wide ? 'center' : 'flex-start', justifyContent: 'space-between', gap: 10, padding: 17 },
+  preludeHeadingCopy: { flex: 1, gap: 4 },
+  preludeEyebrow: { color: '#55DCCC', fontSize: 9, fontWeight: '900', letterSpacing: 1.05 },
+  preludeTitle: { color: '#F4F8FA', fontSize: wide ? 18 : 17, lineHeight: 23, fontWeight: '900' },
+  preludeBody: { maxWidth: 690, color: '#8EA5B3', fontSize: 11, lineHeight: 17 },
+  preludeProgress: { color: '#B8DAD7', fontSize: 12, fontWeight: '900' },
+  preludeList: { borderTopWidth: 1, borderTopColor: '#183447' },
+  preludeLesson: { minHeight: 66, flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: 16, paddingVertical: 11 },
+  preludeLessonBorder: { borderTopWidth: 1, borderTopColor: '#173143' },
+  preludeLessonPressed: { backgroundColor: '#102632' },
+  preludeNumber: { width: 36, height: 36, alignItems: 'center', justifyContent: 'center', borderRadius: 12, backgroundColor: '#102435', borderWidth: 1, borderColor: '#2B4A5E' },
+  preludeNumberComplete: { backgroundColor: '#103A38', borderColor: '#317D74' },
+  preludeNumberText: { color: '#65E7D6', fontSize: 9, fontWeight: '900' },
+  preludeLessonCopy: { flex: 1, gap: 3 },
+  preludeLessonTitle: { color: '#EEF5F7', fontSize: 13, lineHeight: 18, fontWeight: '900' },
+  preludeLessonMeta: { color: '#7F97A8', fontSize: 10, fontWeight: '700' },
+  preludeOpen: { color: '#4ED7C7', fontSize: 23, lineHeight: 23 },
 
   sectionHeading: { flexDirection: wide ? 'row' : 'column', alignItems: wide ? 'flex-end' : 'flex-start', justifyContent: 'space-between', gap: 6, marginTop: 3 },
   sectionKicker: { color: '#4ECFC0', fontSize: 9, fontWeight: '900', letterSpacing: 0.95, marginBottom: 4 },
