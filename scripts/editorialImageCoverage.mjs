@@ -11,7 +11,7 @@ const academyBatchPlanPath = path.join(root, 'docs/ACADEMY_EDITORIAL_IMAGE_BATCH
 const academyLessonDir = path.join(root, 'src/domain/learning/examples/academy');
 const academyAssetDir = path.join(root, 'assets/learning/academy');
 
-const TOTAL_BEGINNER_LESSONS = 24;
+const TOTAL_BEGINNER_LESSONS = 26;
 const TOTAL_ACADEMY_LESSONS = 120;
 const TOTAL_ACTIVE_LESSONS = TOTAL_BEGINNER_LESSONS + TOTAL_ACADEMY_LESSONS;
 const VALID_ROLES = new Set(['hook', 'concept', 'practice', 'misconception', 'risk', 'summary']);
