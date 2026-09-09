@@ -30,7 +30,8 @@ try {
   await english.waitFor();
   await english.click();
   await page.getByText('Start Learning', { exact: true }).waitFor();
-  await page.getByText('Four steps to basic financial literacy', { exact: true }).waitFor();
+  await page.getByText('Start with the basics, then progress through four sections', { exact: true }).waitFor();
+  await page.getByText('26 short lessons · learn at your pace', { exact: true }).waitFor();
   await assertNoHorizontalOverflow(page, 'language-en-selected');
 
   await page.reload({ waitUntil: 'networkidle' });
