@@ -34,7 +34,7 @@ const indexEtf = createFoundationLesson({
   hook: 'Bir endeksi doğrudan satın alabilir misin?',
   hookEn: 'Can you buy a market index directly?',
   explanation: 'Endeks, seçilmiş bir varlık grubunun performansını belirli kurallarla özetleyen ölçüdür. ETF ise borsada işlem gören bir fon payıdır; bir endeksi izleyebilir ama endeksin kendisi değildir. ETF’nin riski tuttuğu varlıklar ve yapısından gelir.',
-  explanationEn: 'An index is a rules-based measure summarizing a selected group of assets. An ETF is a fund share that trades on an exchange; it may track an index but is not the index itself. Its risk depends on what it holds and how it is structured.',
+  explanationEn: 'An index measures a selected group of assets using defined rules. An ETF is a fund share traded on an exchange; it may track an index but is not the index itself. Its risk depends on its holdings and structure.',
   proExplanation: 'Endeks metodolojisi bileşen seçimi ve ağırlıklandırmayı belirler. ETF’de buna ek olarak fon yapısı, ücretler, spread, likidite ve piyasa fiyatının net varlık değerinden sapması gibi unsurlar önem kazanabilir.',
   proExplanationEn: 'Index methodology determines constituent selection and weighting. For an ETF, fund structure, fees, spreads, liquidity, and possible gaps between market price and net asset value can also matter.',
   misconception: 'Yaygın hata: Endeks adı taşıyan her ETF’yi endeksin kendisi veya risksiz ürün sanmak.',
