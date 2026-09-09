@@ -3,7 +3,7 @@ import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, useWi
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { LearnHubNav } from '../../components/learning/LearnHubNav';
 import { ACADEMY_TRACK_IDS, ACADEMY_TRACKS } from '../../domain/learning/academyTracks';
-import { BEGINNER_SECTION_IDS, BEGINNER_SECTIONS } from '../../domain/learning/beginnerJourney';
+import { BEGINNER_LESSON_IDS as BEGINNER_JOURNEY_LESSON_IDS, BEGINNER_SECTION_IDS, BEGINNER_SECTIONS } from '../../domain/learning/beginnerJourney';
 import { MICRO_LESSON_CATALOG } from '../../domain/learning/catalog';
 import { selectLocalizedText, type LearningLanguage } from '../../domain/learning/presentation';
 import { useLanguageStore } from '../../store/useLanguageStore';
@@ -11,9 +11,7 @@ import type { RootStackParamList } from '../../types/navigation';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'LearnSearch'>;
 
-const BEGINNER_LESSON_IDS = new Set(
-  BEGINNER_SECTION_IDS.flatMap((sectionId) => [...BEGINNER_SECTIONS[sectionId].lessonIds])
-);
+const BEGINNER_LESSON_IDS = new Set<string>(BEGINNER_JOURNEY_LESSON_IDS);
 
 const QUICK_TOPICS = {
   tr: ['Faiz', 'Likidite', 'Trend', 'Risk', 'ETF', 'Bilanço'],
