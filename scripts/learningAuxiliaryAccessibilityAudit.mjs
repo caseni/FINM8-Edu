@@ -40,7 +40,7 @@ for (const [expected, label] of [
   ['`${sectionTitle}. ${status}. ${completedCount}/${section.lessonIds.length} ders, yüzde ${progressPercent}.`', 'Beginner landing progress label'],
   ['accessibilityLabel={sectionAccessibilityLabel}', 'Beginner landing card label'],
   ['accessibilityState={active ? undefined : { disabled: true }}', 'Beginner landing disabled state'],
-  ['Temel okuryazarlık yolu tamamlandı. 24/24 ders tamamlandı.', 'Beginner landing completion summary'],
+  ['`Temel okuryazarlık yolu tamamlandı. ${beginnerLessonIds.length}/${beginnerLessonIds.length} ders tamamlandı.`', 'Beginner landing completion summary'],
   ['İleri öğrenme yoluna geç', 'Beginner landing completion action'],
 ]) {
   requireSource(landing, expected, label);
@@ -62,7 +62,7 @@ for (const [expected, label] of [
   ['const sectionProgressAccessibilityLabel = language === \'tr\'', 'Beginner section progress summary'],
   ['accessibilityLabel={sectionProgressAccessibilityLabel}', 'Beginner section hero summary'],
   ['accessibilityLabel={`${lessonTitle}. ${lessonState}.`}', 'Beginner lesson contextual state'],
-  ['`${sectionTitle} bölümü tamamlandı. 6/6 ders.`', 'Beginner section completion summary'],
+  ['`${sectionTitle} bölümü tamamlandı. ${lessons.length}/${lessons.length} ders.`', 'Beginner section completion summary'],
   ['`Sıradaki bölüme geç: ${nextSection.title.tr}`', 'Beginner next-section action context'],
 ]) {
   requireSource(beginnerSection, expected, label);
@@ -168,7 +168,7 @@ if (challengeButtonRoles < 3) {
 
 console.log('Learning auxiliary accessibility audit PASS');
 console.log('  Beginner landing: persistent TR/EN switch + named progress cards + completion summary + disabled state');
-console.log('  Beginner section: named lesson states + progress/completion summaries + contextual next action');
+console.log('  Beginner section: named lesson states + dynamic progress/completion summaries + contextual next action');
 console.log('  Lesson player: live contextual step announcements + progressbar value');
 console.log('  Review Center: contextual lesson actions + expanded/selected states + named back control');
 console.log('  Challenge: named actions + disabled state + live result summary + 44/52px touch targets');

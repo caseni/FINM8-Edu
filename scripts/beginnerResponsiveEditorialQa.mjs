@@ -49,7 +49,7 @@ async function openMarketLesson(page, lessonTitle) {
   await page.goto(baseUrl, { waitUntil: 'networkidle' });
   await page.getByText('Öğrenmeye Başla', { exact: true }).waitFor({ timeout: 10000 });
   await page.getByRole('button', { name: /Piyasalar Nasıl Çalışır/i }).first().click();
-  await page.getByText('BAŞLANGIÇ · 6 KISA DERS', { exact: true }).waitFor();
+  await page.getByText('BAŞLANGIÇ · 7 KISA DERS', { exact: true }).waitFor();
   await page.getByRole('button', { name: new RegExp(lessonTitle, 'i') }).click();
   await page.getByText(/Adım 1\//).waitFor();
 }

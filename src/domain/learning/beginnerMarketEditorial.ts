@@ -26,7 +26,7 @@ const COPY: Readonly<Record<string, BeginnerLessonCopy>> = {
     hook: { tr: 'Tek bir kişi seçmez; iki tarafın teklifleri buluşur.', en: 'No single person chooses it; the two sides’ offers meet.' },
     explanation: { tr: 'Alıcı bir fiyat teklif eder, satıcı da kabul edeceği fiyatı söyler. İkisi aynı noktada buluşursa işlem gerçekleşir. Ekrandaki son fiyat, bu son işlemin fiyatıdır.', en: 'A buyer offers a price and a seller states what they will accept. When they meet at the same point, a trade happens. The last price on screen is the price of that latest trade.' },
     misconception: { tr: 'Fiyatı tek başına şirket veya borsa belirlemez. İşlem, alıcı ve satıcı buluşunca oluşur.', en: 'A company or exchange does not set the price alone. A trade forms when buyer and seller meet.' },
-    takeaway: { tr: 'Fiyat, alıcı ile satıcının buluştuğu noktadır.', en: 'Price is where buyer and seller meet.' },
+    takeaway: { tr: 'Uyumlu teklifler, gerçekleşen son işlem fiyatını oluşturur.', en: 'Compatible orders create the latest trade price.' },
     visualAlt: { tr: 'Bir alıcı ile bir satıcının aynı fiyatta buluşup işlem oluşturduğunu gösteren sade piyasa sahnesi', en: 'Simple market scene showing a buyer and seller meeting at the same price to create a trade' },
     taskPrompt: { tr: 'Bir piyasa fiyatını en basit şekilde ne oluşturur?', en: 'What most simply creates a market price?' },
     taskChoices: [

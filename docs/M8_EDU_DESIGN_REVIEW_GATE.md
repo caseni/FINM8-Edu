@@ -37,7 +37,8 @@ sentence.
 - The takeaway compresses the lesson into one short memory line.
 - Two consecutive surfaces must not repeat the same sentence with slightly
   different wording.
-- All four beginner sections are hard-gated: objective <= 16 words, hook <= 14,
+- All 26 Beginner lessons — two Prelude lessons plus the four main sections — are
+  hard-gated in both Turkish and English: objective <= 16 words, hook <= 14,
   explanation <= 40, misconception <= 24, takeaway <= 12.
 - Academy keeps more depth but is also hard-gated across all 10 schools / 120
   lessons: objective <= 16 words, hook <= 20, explanation <= 45,
@@ -75,12 +76,13 @@ images.
   but a human design review still checks hierarchy, meaning, polish, and
   whether the visual looks template-like.
 
-The hard-gate rollout now covers all 24 beginner lessons across Money/Economy,
-Markets, Charts, and Risk, plus all 120 Academy lessons across the ten schools.
-New learner-facing copy must stay inside its stage-appropriate clarity budget.
-Beginner fallback infographics must pass the teaching-mechanism rules, while
-Academy visuals must also pass the executable browser text-density and summary
-repetition checks.
+The hard-gate rollout now covers all 26 Beginner lessons: two Prelude lessons
+before the main path, then 24 lessons across Money/Economy, Markets, Charts, and
+Risk & Decisions. It also covers all 120 Academy lessons across the ten schools.
+New learner-facing copy must stay inside its stage-appropriate clarity budget in
+both Turkish and English. Beginner fallback infographics must pass the
+teaching-mechanism rules, while Academy visuals must also pass the executable
+browser text-density and summary repetition checks.
 
 ## 3. Navigation and state
 

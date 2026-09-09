@@ -27,6 +27,33 @@ export interface BeginnerCodeInfographicSpec {
   readonly reviewQuestions: readonly string[];
 }
 
+export const BEGINNER_PRELUDE_CODE_INFOGRAPHIC_SPECS: readonly BeginnerCodeInfographicSpec[] = [
+  {
+    lessonId: 'lesson.foundation.investing-vs-trading.001',
+    teachingGoal: {
+      tr: 'Aynı varlıkta yatırım ve kısa vadeli al-satın farklı karar yolları olduğunu göster.',
+      en: 'Show investing and short-term trading as different decision paths for the same asset.',
+    },
+    mechanism: 'comparison',
+    roles: ['hook', 'concept', 'practice', 'misconception', 'summary'],
+    mobileStrategy: 'stacked',
+    textBudget: { headingWords: 7, cardWords: 6, ruleWords: 0 },
+    reviewQuestions: ['İki yaklaşım amaç ve zaman ufkuyla ayrılıyor mu?', 'Uzun süre tutmak otomatik olarak güvenli gösteriliyor mu?'],
+  },
+  {
+    lessonId: 'lesson.foundation.goal-horizon-risk.001',
+    teachingGoal: {
+      tr: 'Hedef, zaman ufku ve risk toleransının birlikte karar çerçevesi oluşturduğunu göster.',
+      en: 'Show goal, time horizon, and risk tolerance forming one decision frame.',
+    },
+    mechanism: 'sequence',
+    roles: ['hook', 'concept', 'practice', 'misconception', 'summary'],
+    mobileStrategy: 'sequence',
+    textBudget: { headingWords: 7, cardWords: 5, ruleWords: 0 },
+    reviewQuestions: ['Üç unsur tek karar zincirinde birleşiyor mu?', 'Getiri isteği risk taşıma kapasitesinden ayrı gösteriliyor mu?'],
+  },
+] as const;
+
 export const BEGINNER_MARKET_CODE_INFOGRAPHIC_SPECS: readonly BeginnerCodeInfographicSpec[] = [
   {
     lessonId: 'lesson.market.price-formation.001',
@@ -51,6 +78,18 @@ export const BEGINNER_MARKET_CODE_INFOGRAPHIC_SPECS: readonly BeginnerCodeInfogr
     mobileStrategy: 'two_by_two',
     textBudget: { headingWords: 6, cardWords: 5, ruleWords: 0 },
     reviewQuestions: ['Her kart neyi temsil ettiğini söylüyor mu?', 'Özet görsel slide cümlesini tekrar ediyor mu?'],
+  },
+  {
+    lessonId: 'lesson.market.index-etf.001',
+    teachingGoal: {
+      tr: 'Endeksin ölçü, ETF’nin ise yatırım aracı olduğunu tek bakışta ayır.',
+      en: 'Show that an index measures while an ETF is an investment vehicle.',
+    },
+    mechanism: 'comparison',
+    roles: ['hook', 'concept', 'practice', 'misconception', 'summary'],
+    mobileStrategy: 'stacked',
+    textBudget: { headingWords: 7, cardWords: 5, ruleWords: 0 },
+    reviewQuestions: ['Ölçü ile yatırım aracı görsel olarak ayrılıyor mu?', 'ETF etiketi düşük risk garantisi gibi görünüyor mu?'],
   },
   {
     lessonId: 'lesson.market.liquidity.001',
@@ -101,7 +140,6 @@ export const BEGINNER_MARKET_CODE_INFOGRAPHIC_SPECS: readonly BeginnerCodeInfogr
     reviewQuestions: ['100 → 100,3 akışı tek bakışta okunuyor mu?', 'Görsel hareket nedenini anlatıyor mu?'],
   },
 ] as const;
-
 
 export const BEGINNER_ECONOMY_CODE_INFOGRAPHIC_SPECS: readonly BeginnerCodeInfographicSpec[] = [
   {
@@ -160,7 +198,6 @@ export const BEGINNER_ECONOMY_CODE_INFOGRAPHIC_SPECS: readonly BeginnerCodeInfog
   },
 ] as const;
 
-
 export const BEGINNER_CHART_CODE_INFOGRAPHIC_SPECS: readonly BeginnerCodeInfographicSpec[] = [
   {
     lessonId: 'lesson.chart.candles.001',
@@ -218,7 +255,6 @@ export const BEGINNER_CHART_CODE_INFOGRAPHIC_SPECS: readonly BeginnerCodeInfogra
   },
 ] as const;
 
-
 export const BEGINNER_RISK_CODE_INFOGRAPHIC_SPECS: readonly BeginnerCodeInfographicSpec[] = [
   {
     lessonId: 'lesson.risk.uncertainty.001',
@@ -274,6 +310,15 @@ export const BEGINNER_RISK_CODE_INFOGRAPHIC_SPECS: readonly BeginnerCodeInfograp
     textBudget: { headingWords: 7, cardWords: 5, ruleWords: 0 },
     reviewQuestions: ['Çok isim ile farklı risk ayrımı görünür mü?', 'Aynı kaynağa bağlı varlıklar farklıymış gibi sunuluyor mu?'],
   },
+  {
+    lessonId: 'lesson.behavior.fomo.001',
+    teachingGoal: { tr: 'FOMO baskısında dürtüsel karar ile kontrollü duraklamayı karşılaştır.', en: 'Compare an impulsive FOMO decision with a paused, controlled process.' },
+    mechanism: 'comparison',
+    roles: ['hook', 'concept', 'practice', 'misconception', 'summary'],
+    mobileStrategy: 'stacked',
+    textBudget: { headingWords: 7, cardWords: 5, ruleWords: 0 },
+    reviewQuestions: ['Baskı ile karar kalitesi birbirinden ayrılıyor mu?', 'Yükselen fiyat otomatik fırsat gibi sunuluyor mu?'],
+  },
 ] as const;
 
 export const BEGINNER_MARKET_CODE_INFOGRAPHIC_SPEC_BY_LESSON_ID = new Map(
@@ -282,6 +327,7 @@ export const BEGINNER_MARKET_CODE_INFOGRAPHIC_SPEC_BY_LESSON_ID = new Map(
 
 export const BEGINNER_CODE_INFOGRAPHIC_SPEC_BY_LESSON_ID = new Map(
   [
+    ...BEGINNER_PRELUDE_CODE_INFOGRAPHIC_SPECS,
     ...BEGINNER_MARKET_CODE_INFOGRAPHIC_SPECS,
     ...BEGINNER_ECONOMY_CODE_INFOGRAPHIC_SPECS,
     ...BEGINNER_CHART_CODE_INFOGRAPHIC_SPECS,

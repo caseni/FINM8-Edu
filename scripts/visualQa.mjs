@@ -14,6 +14,16 @@ const allTracks = [
   'Varlık Türlerini Anla',
 ];
 const representativeTracks = ['Grafikleri Derinleştir', 'Sistematik ve Sayısal Yaklaşımlar', 'İleri Grafik Yaklaşımları'];
+const beginnerSectionCounts = {
+  'Para ve Ekonomi': 6,
+  'Piyasalar Nasıl Çalışır': 7,
+  'Grafikleri Korkmadan Oku': 4,
+  'Risk ve Karar': 7,
+};
+const beginnerPreludeLessons = [
+  { id: 'lesson.foundation.investing-vs-trading.001', title: 'Yatırım ile kısa vadeli al-sat aynı şey mi' },
+  { id: 'lesson.foundation.goal-horizon-risk.001', title: 'Hedefin, zamanın ve taşıyabileceğin risk neden önce gelir' },
+];
 const beginnerEconomyLessons = [
   { id: 'lesson.economy.inflation.001', title: 'Aynı para neden zamanla daha az şey alır' },
   { id: 'lesson.economy.interest-rates.001', title: 'Faiz neyi etkiler' },
@@ -25,6 +35,7 @@ const beginnerEconomyLessons = [
 const beginnerMarketLessons = [
   { id: 'lesson.market.price-formation.001', title: 'Bir fiyat nasıl ortaya çıkar' },
   { id: 'lesson.market.instruments.001', title: 'Piyasada aldığın şey aslında nedir' },
+  { id: 'lesson.market.index-etf.001', title: 'Endeks ile borsada işlem gören fon aynı şey mi' },
   { id: 'lesson.market.liquidity.001', title: 'Neden bazen alıp satmak kolay, bazen zor' },
   { id: 'lesson.market.bid-ask.001', title: 'Alış ve satış fiyatı neden farklı olabilir' },
   { id: 'lesson.market.order-types.001', title: 'Emir verirken aslında ne seçiyorsun' },
@@ -35,8 +46,6 @@ const beginnerChartLessons = [
   { id: 'lesson.chart.timeframes.001', title: 'Aynı grafik neden yakınlaştırınca değişir' },
   { id: 'lesson.chart.trend.001', title: 'Fiyat genel olarak hangi yöne gidiyor' },
   { id: 'lesson.chart.support-resistance.001', title: 'Fiyat neden bazı bölgelerde tekrar durur' },
-  { id: 'lesson.technical.momentum.001', title: 'Hareket neden bazen hızlanır, bazen yavaşlar' },
-  { id: 'lesson.technical.moving-average.001', title: 'Grafikteki yardımcı çizgi geleceği bilir mi' },
 ];
 const beginnerRiskLessons = [
   { id: 'lesson.risk.uncertainty.001', title: 'Kaybetmeden önce risk var mıdır' },
@@ -45,6 +54,7 @@ const beginnerRiskLessons = [
   { id: 'lesson.risk.reward.001', title: 'Büyük hedef iyi karar demek midir' },
   { id: 'lesson.risk.stop-orders.001', title: 'Çıkış fiyatı neden garanti değildir' },
   { id: 'lesson.portfolio.diversification.001', title: 'Parayı farklı şeylere bölmek riski nasıl değiştirir' },
+  { id: 'lesson.behavior.fomo.001', title: 'FOMO kararını nasıl bozar' },
 ];
 const beginnerEndToEndCases = [
   {
@@ -76,7 +86,7 @@ const beginnerEndToEndCases = [
   },
   {
     key: 'risk',
-    section: 'Riskten Korun',
+    section: 'Risk ve Karar',
     lesson: 'Kaybetmeden önce risk var mıdır',
     lessonId: 'lesson.risk.uncertainty.001',
     taskWrong: 'Hesaba geçmiş 1.000 TL zarar',
@@ -137,7 +147,9 @@ async function openHome(page) {
 async function openBeginnerSection(page, sectionName) {
   await openHome(page);
   await page.getByRole('button', { name: new RegExp(sectionName, 'i') }).first().click();
-  await page.getByText('BAŞLANGIÇ · 6 KISA DERS', { exact: true }).waitFor();
+  const lessonCount = beginnerSectionCounts[sectionName];
+  if (!lessonCount) throw new Error(`Unknown Beginner section count for ${sectionName}`);
+  await page.getByText(`BAŞLANGIÇ · ${lessonCount} KISA DERS`, { exact: true }).waitFor();
 }
 
 async function walkBeginnerLesson(page, lesson, filePrefix) {
@@ -161,10 +173,31 @@ async function walkBeginnerLesson(page, lesson, filePrefix) {
   }
 }
 
+async function walkPreludeLesson(page, lesson, filePrefix) {
+  await openHome(page);
+  await page.getByRole('button', { name: new RegExp(lesson.title, 'i') }).first().click();
+  await page.getByText(/Adım 1\//).waitFor();
+  const stepMatch = (await page.getByText(/Adım 1\//).innerText()).match(/\/(\d+)/);
+  const totalSteps = Number(stepMatch?.[1] ?? 1);
+  if (!Number.isFinite(totalSteps) || totalSteps < 1) throw new Error(`Invalid Prelude lesson step count for ${lesson.title}.`);
+  for (let step = 1; step <= totalSteps; step += 1) {
+    await assertNoHorizontalOverflow(page, `${filePrefix}-step-${step}`);
+    await page.screenshot({ path: `visual-qa/${filePrefix}-step-${String(step).padStart(2, '0')}.png`, fullPage: true });
+    if (step < totalSteps) {
+      await page.getByRole('button', { name: /Sonraki adıma geç/i }).click();
+      await page.getByText(new RegExp(`Adım ${step + 1}\\/${totalSteps}`)).waitFor();
+    }
+  }
+}
+
 async function captureBeginnerFlow(page) {
   await openHome(page);
   await assertNoHorizontalOverflow(page, 'beginner-mobile-home');
   await page.screenshot({ path: 'visual-qa/beginner-mobile-home.png', fullPage: true });
+
+  for (const lesson of beginnerPreludeLessons) {
+    await walkPreludeLesson(page, lesson, `beginner-prelude-${slug(lesson.title)}-mobile`);
+  }
 
   await openBeginnerSection(page, 'Para ve Ekonomi');
   await assertNoHorizontalOverflow(page, 'beginner-mobile-money-economy');
@@ -190,11 +223,11 @@ async function captureBeginnerFlow(page) {
     await walkBeginnerLesson(page, lesson, `beginner-charts-${slug(lesson.title)}-mobile`);
   }
 
-  await openBeginnerSection(page, 'Riskten Korun');
+  await openBeginnerSection(page, 'Risk ve Karar');
   await assertNoHorizontalOverflow(page, 'beginner-mobile-risk');
   await page.screenshot({ path: 'visual-qa/beginner-mobile-risk.png', fullPage: true });
   for (const lesson of beginnerRiskLessons) {
-    await openBeginnerSection(page, 'Riskten Korun');
+    await openBeginnerSection(page, 'Risk ve Karar');
     await walkBeginnerLesson(page, lesson, `beginner-risk-${slug(lesson.title)}-mobile`);
   }
 }
@@ -324,7 +357,7 @@ try {
   await assertNoHorizontalOverflow(desktop, 'beginner-desktop-home');
   await desktop.screenshot({ path: 'visual-qa/beginner-desktop-home.png', fullPage: true });
 
-  for (const sectionName of ['Para ve Ekonomi', 'Piyasalar Nasıl Çalışır', 'Grafikleri Korkmadan Oku', 'Riskten Korun']) {
+  for (const sectionName of ['Para ve Ekonomi', 'Piyasalar Nasıl Çalışır', 'Grafikleri Korkmadan Oku', 'Risk ve Karar']) {
     await openBeginnerSection(desktop, sectionName);
     const sectionSlug = slug(sectionName);
     await assertNoHorizontalOverflow(desktop, `beginner-desktop-${sectionSlug}`);

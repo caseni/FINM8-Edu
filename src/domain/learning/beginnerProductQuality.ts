@@ -4,6 +4,8 @@ type CopyPair = { readonly tr: string; readonly en: string };
 
 type LessonPolish = {
   readonly hook?: CopyPair;
+  readonly explanation?: CopyPair;
+  readonly takeaway?: CopyPair;
   readonly visualAlt?: CopyPair;
   readonly taskPrompt?: CopyPair;
   readonly taskChoiceLabels?: readonly CopyPair[];
@@ -18,7 +20,7 @@ const POLISH: Readonly<Record<string, LessonPolish>> = {
   'lesson.economy.growth.001': {
     hook: {
       tr: 'Tek bir şirketin değil, ekonomide üretilen mal ve hizmetlerin toplamına bakılır.',
-      en: 'Look at the total goods and services produced across the economy, not just one company.',
+      en: 'Look at total goods and services produced across the economy, not one company.',
     },
   },
   'lesson.market.price-formation.001': {
@@ -50,8 +52,14 @@ const POLISH: Readonly<Record<string, LessonPolish>> = {
   },
   'lesson.market.bid-ask.001': {
     hook: {
-      tr: 'Alıcıların ödemek istediği fiyat ile satıcıların kabul ettiği fiyat aynı olmak zorunda değildir.',
-      en: 'The price buyers are willing to pay does not have to match the price sellers are willing to accept.',
+      tr: 'Alıcı ve satıcı neden aynı varlık için farklı fiyatlar söyleyebilir?',
+      en: 'Why can buyers and sellers quote different prices for the same asset?',
+    },
+  },
+  'lesson.chart.candles.001': {
+    takeaway: {
+      tr: 'Mumlar geçmiş kayıttır; sonraki hareketi tahmin etmez.',
+      en: 'Candles are historical records, not forecasts of the next move.',
     },
   },
   'lesson.chart.support-resistance.001': {
@@ -65,11 +73,43 @@ const POLISH: Readonly<Record<string, LessonPolish>> = {
       tr: 'Zarar henüz oluşmamış olsa bile sonuç belirsizse risk devam eder.',
       en: 'Risk remains while the outcome is uncertain, even before a loss has happened.',
     },
+    takeaway: {
+      tr: 'Sonuç belli olmadan önce olası kötü etkiyi planla.',
+      en: 'Plan for downside before the outcome is known.',
+    },
+  },
+  'lesson.risk.volatility.001': {
+    takeaway: {
+      tr: 'Geniş dalgalanma, hesabındaki parasal değişimi büyütebilir.',
+      en: 'Wider swings can create larger cash changes in your account.',
+    },
   },
   'lesson.risk.reward.001': {
     hook: {
-      tr: '1:5 oranı hedef büyüklüğünü gösterir; hedefe ulaşma ihtimalini veya maliyeti göstermez.',
-      en: 'A 1:5 ratio shows target size; it does not show the chance of reaching it or the trading cost.',
+      tr: '1:5 oranı hedef büyüklüğünü gösterir; olasılığı veya maliyeti göstermez.',
+      en: 'A 1:5 ratio shows target size, not probability or trading cost.',
+    },
+  },
+  'lesson.risk.stop-orders.001': {
+    hook: {
+      tr: '95 stop koyarsan tam 95’ten çıkman garanti midir?',
+      en: 'If you set a stop at 95, are you guaranteed to exit at 95?',
+    },
+  },
+  'lesson.portfolio.diversification.001': {
+    takeaway: {
+      tr: 'Farklı isimler ancak riskleri gerçekten farklıysa çeşitlendirmeye yardım eder.',
+      en: 'Different names help only when their risks are genuinely different.',
+    },
+  },
+  'lesson.behavior.fomo.001': {
+    hook: {
+      tr: '“Şimdi hareket etmeliyim” düşüncesi piyasa kanıtı mıdır?',
+      en: 'Does “I must act now” prove the market is offering an opportunity?',
+    },
+    explanation: {
+      tr: 'FOMO, başkaları kazanıyor gibi göründüğünde veya fiyat hızla hareket ettiğinde kararı aceleye getirebilir. Plan, risk sınırı ve karşı kanıt geri plana düşebilir. Sorun duygunun kendisi değil, aciliyetin karar sürecinin yerini almasıdır.',
+      en: 'FOMO can rush a decision when others appear to profit or price moves quickly. The plan, risk limit, and counter-evidence can fade into the background. The problem is not feeling emotion; it is letting urgency replace the decision process.',
     },
   },
 };
@@ -157,6 +197,15 @@ export function normalizeBeginnerProductQuality(lesson: MicroLesson): MicroLesso
             },
           };
         }
+        if (polish.explanation && block.kind === 'explanation') {
+          return {
+            ...block,
+            copy: {
+              ...block.copy,
+              normal: localized(polish.explanation),
+            },
+          };
+        }
         if (polish.visualAlt && block.kind === 'visual') {
           return { ...block, alt: localized(polish.visualAlt) };
         }
@@ -203,6 +252,7 @@ export function normalizeBeginnerProductQuality(lesson: MicroLesson): MicroLesso
   return {
     ...lesson,
     contentBlocks,
+    takeaway: polish?.takeaway ? localized(polish.takeaway) : lesson.takeaway,
     practicalTask,
     quiz,
   };

@@ -22,10 +22,10 @@ import type { LocalizedText, MicroLesson } from './types';
  * It rewrites labels only. Option ids, `correctOptionId`, task `expectedEvidence`, option
  * order and option count are never touched, so scoring identity is unchanged.
  *
- * Beginner-journey lessons are deliberately out of scope: the six economy foundation
- * lessons and the momentum / moving-average technical lessons are shared with the beginner
- * journey, are protected from the expansion by `preserveConciseBinary`, and were reviewed
- * in the beginner quality slice.
+ * Beginner-journey lessons that remain shared with Academy are deliberately out of scope
+ * when their concise assessment copy is already protected elsewhere. Momentum and moving
+ * average are now Academy-only in the Beginner refresh, so their final Academy options are
+ * repaired here like the other Academy foundation lessons.
  */
 
 type OptionCopyMap = Readonly<Record<string, LocalizedText>>;
@@ -154,6 +154,42 @@ const ACADEMY_FOUNDATION_ASSESSMENT_OVERRIDES: Readonly<
         b: copy(
           'Evet; sınır aşıldığı anda yeni trend başlamış sayılır',
           'Yes; a new trend counts as started the moment the boundary is crossed',
+        ),
+      },
+    },
+  },
+  'lesson.technical.momentum.001': {
+    questionOptions: {
+      'question.momentum-ne-anlatir.3': {
+        a: copy(
+          'Hayır; momentum tek başına sonraki yönü kesinleştirmez',
+          'No; momentum alone does not make the next direction certain',
+        ),
+        b: copy(
+          'Evet; momentum ölçüldüğünde sonraki yön kesinleşir',
+          'Yes; once momentum is measured, the next direction becomes certain',
+        ),
+        c: copy(
+          'Yalnız momentum güçlü olduğunda yön garanti edilir',
+          'Direction is guaranteed only when momentum is strong',
+        ),
+      },
+    },
+  },
+  'lesson.technical.moving-average.001': {
+    questionOptions: {
+      'question.hareketli-ortalama-ne-yapar.3': {
+        a: copy(
+          'Hayır; tek bir ortalama geçişi bağlam olmadan kesin talimat değildir',
+          'No; one moving-average cross is not a certain instruction without context',
+        ),
+        b: copy(
+          'Evet; fiyat ortalamayı geçtiğinde işlem yönü kesinleşir',
+          'Yes; crossing the average makes the trade direction certain',
+        ),
+        c: copy(
+          'Yalnız EMA kullanılırsa geçiş kesin sinyal sayılır',
+          'A cross is a certain signal only when an EMA is used',
         ),
       },
     },

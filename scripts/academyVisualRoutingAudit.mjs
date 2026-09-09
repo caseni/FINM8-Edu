@@ -4,7 +4,8 @@ import path from 'node:path';
 const root = process.cwd();
 const academyDir = path.join(root, 'src/domain/learning/examples/academy');
 const visualDir = path.join(root, 'src/components/learning');
-const expectedAcademyLessonCount = 120; // 24 beginner lessons live outside Academy; total product catalog = 144.
+const expectedAcademyLessonCount = 120;
+const expectedBeginnerLessonCount = 26;
 const modernVisualFiles = new Set([
   'AcademyFoundationCleanVisual.tsx',
   'AcademyAdvancedCleanVisual.tsx',
@@ -108,7 +109,7 @@ console.log(`modern clean visual coverage: ${modern.matched.length}/${lessons.le
 console.log(`legacy-only visual candidates: ${modern.unmatched.length}`);
 console.log(`duplicate academy slugs: ${duplicateSlugs.length}`);
 console.log(`legacy renderer Academy collisions: ${legacyRendererCollisions.length}`);
-console.log(`product catalog composition: 24 beginner + ${lessons.length} Academy = ${24 + lessons.length}`);
+console.log(`product catalog composition: ${expectedBeginnerLessonCount} beginner + ${lessons.length} Academy = ${expectedBeginnerLessonCount + lessons.length}`);
 
 if (routed.unmatched.length > 0) {
   console.log('Unmatched Academy lesson slugs:');

@@ -50,8 +50,10 @@ const academyFoundationIntegrated = academyMappings.filter((entry) => foundation
 const academyExpansionIntegrated = academyMappings.filter((entry) => expansionKeys.has(`${entry.slug}::${entry.role}`));
 const academyLessonsWithImage = new Set(academyMappings.map((entry) => entry.slug));
 
-if (beginnerLessons.length !== 24) issues.push(`Beginner rollout must contain 24 lessons; found ${beginnerLessons.length}`);
-if (beginnerPlannedRoles !== 115) issues.push(`Beginner rollout must contain 115 planned real-image roles; found ${beginnerPlannedRoles}`);
+const EXPECTED_BEGINNER_LESSONS = 26;
+const EXPECTED_BEGINNER_PLANNED_ROLES = 121;
+if (beginnerLessons.length !== EXPECTED_BEGINNER_LESSONS) issues.push(`Beginner rollout must contain ${EXPECTED_BEGINNER_LESSONS} lessons; found ${beginnerLessons.length}`);
+if (beginnerPlannedRoles !== EXPECTED_BEGINNER_PLANNED_ROLES) issues.push(`Beginner rollout must contain ${EXPECTED_BEGINNER_PLANNED_ROLES} planned real-image roles; found ${beginnerPlannedRoles}`);
 if (foundationItems.length !== 60) issues.push(`Academy foundation rollout must contain 60 hook items; found ${foundationItems.length}`);
 if (expansionItems.length !== 60) issues.push(`Academy expansion rollout must contain 60 hook items; found ${expansionItems.length}`);
 
@@ -63,13 +65,13 @@ for (const entry of academyMappings) {
 
 const totalPhysicalMappings = mappings.filter((entry) => entry.exists).length;
 const totalLessonsWithImage = new Set(mappings.filter((entry) => entry.exists).map((entry) => entry.slug)).size;
-const TOTAL_LESSONS = 144;
+const TOTAL_LESSONS = 146;
 
 console.log('FINM8 EDU real-image rollout status');
-console.log(`Beginner lessons planned: ${beginnerLessons.length}/24`);
+console.log(`Beginner lessons planned: ${beginnerLessons.length}/${EXPECTED_BEGINNER_LESSONS}`);
 console.log(`Beginner planned real-image roles: ${beginnerPlannedRoles}`);
 console.log(`Beginner physical roles integrated: ${beginnerIntegratedRoleKeys.size}/${beginnerPlannedRoles}`);
-console.log(`Beginner lessons with at least one real asset: ${beginnerLessonsWithImage.size}/24`);
+console.log(`Beginner lessons with at least one real asset: ${beginnerLessonsWithImage.size}/${EXPECTED_BEGINNER_LESSONS}`);
 console.log(`Academy foundation hooks planned: ${foundationItems.length}/60`);
 console.log(`Academy foundation physical hooks integrated: ${academyFoundationIntegrated.length}/${foundationItems.length}`);
 console.log(`Academy expansion hooks planned: ${expansionItems.length}/60`);

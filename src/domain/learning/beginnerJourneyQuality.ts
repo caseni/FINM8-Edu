@@ -1,6 +1,7 @@
-import { BEGINNER_SECTION_IDS, BEGINNER_SECTIONS } from './beginnerJourney';
+import { BEGINNER_LESSON_IDS, BEGINNER_PRELUDE_LESSON_IDS, BEGINNER_SECTION_IDS, BEGINNER_SECTIONS, type BeginnerSectionId } from './beginnerJourney';
 import { BEGINNER_CODE_INFOGRAPHIC_SPEC_BY_LESSON_ID } from './beginnerCodeInfographicSpecs';
 import { MICRO_LESSON_CATALOG } from './catalog';
+import type { LearningLanguage } from './presentation';
 import type { MicroLesson } from './types';
 
 export interface BeginnerJourneyQualityIssue {
@@ -28,7 +29,14 @@ export interface BeginnerJourneyQualityReport {
 }
 
 const EXPECTED_SECTION_COUNT = 4;
-const EXPECTED_LESSONS_PER_SECTION = 6;
+const EXPECTED_PRELUDE_LESSON_COUNT = 2;
+const EXPECTED_LESSON_COUNT = 26;
+const EXPECTED_SECTION_LESSON_COUNTS: Readonly<Record<BeginnerSectionId, number>> = {
+  money_economy: 6,
+  markets: 7,
+  charts: 4,
+  risk: 7,
+};
 const EXPECTED_QUIZ_QUESTIONS = 3;
 const MIN_OPTIONS = 3;
 
@@ -59,42 +67,47 @@ const BEGINNER_COPY_LIMITS = {
   takeaway: 12,
 } as const;
 
-const HARD_GATED_CLARITY_SECTION_IDS = new Set(['markets', 'money_economy', 'charts', 'risk']);
+const QUALITY_LANGUAGES: readonly LearningLanguage[] = ['tr', 'en'];
 
 function wordCount(value: string): number {
   const clean = value.trim().replace(/\s+/g, ' ');
   return clean ? clean.split(' ').length : 0;
 }
 
-function normalizedTokens(value: string): string[] {
+function normalizedTokens(value: string, language: LearningLanguage): string[] {
   return value
-    .toLocaleLowerCase('tr-TR')
+    .toLocaleLowerCase(language === 'tr' ? 'tr-TR' : 'en-US')
     .replace(/[^a-z0-9çğıöşü\s]/gi, ' ')
     .split(/\s+/)
     .map((token) => token.trim())
     .filter((token) => token.length >= 3);
 }
 
-function sharedTokenRatio(left: string, right: string): number {
-  const leftTokens = normalizedTokens(left);
-  const rightTokens = normalizedTokens(right);
+function sharedTokenRatio(left: string, right: string, language: LearningLanguage): number {
+  const leftTokens = normalizedTokens(left, language);
+  const rightTokens = normalizedTokens(right, language);
   if (leftTokens.length < 5 || rightTokens.length < 5) return 0;
   const rightSet = new Set(rightTokens);
   const shared = new Set(leftTokens.filter((token) => rightSet.has(token))).size;
   return shared / Math.min(new Set(leftTokens).size, new Set(rightTokens).size);
 }
 
-function normalBlockCopy(lesson: MicroLesson, kind: 'prompt' | 'explanation' | 'misconception'): string {
+function normalBlockCopy(
+  lesson: MicroLesson,
+  kind: 'prompt' | 'explanation' | 'misconception',
+  language: LearningLanguage
+): string {
   const block = lesson.contentBlocks.find((candidate) => candidate.kind === kind);
-  return block && 'copy' in block ? block.copy.normal.tr : '';
+  if (!block || !('copy' in block)) return '';
+  return language === 'tr' ? block.copy.normal.tr : block.copy.normal.en ?? '';
+}
+
+function localizedLessonText(lesson: MicroLesson, field: 'learningObjective' | 'takeaway', language: LearningLanguage): string {
+  const value = field === 'learningObjective' ? lesson.learningObjective : lesson.takeaway;
+  return language === 'tr' ? value.tr : value.en ?? '';
 }
 
 function validateBeginnerClarity(lesson: MicroLesson, issues: BeginnerJourneyQualityIssue[]): void {
-  const section = BEGINNER_SECTION_IDS
-    .map((sectionId) => BEGINNER_SECTIONS[sectionId])
-    .find((candidate) => candidate.lessonIds.includes(lesson.id));
-  if (!section || !HARD_GATED_CLARITY_SECTION_IDS.has(section.id)) return;
-
   const spec = BEGINNER_CODE_INFOGRAPHIC_SPEC_BY_LESSON_ID.get(lesson.id);
   if (!spec) {
     issues.push({
@@ -103,8 +116,11 @@ function validateBeginnerClarity(lesson: MicroLesson, issues: BeginnerJourneyQua
       detail: 'hard-gated beginner lesson must have a code-infographic teaching brief before fallback visuals are accepted',
     });
   } else {
+    const trTeachingWords = wordCount(spec.teachingGoal.tr);
+    const enTeachingWords = wordCount(spec.teachingGoal.en ?? '');
     if (
-      wordCount(spec.teachingGoal.tr) > 16 ||
+      trTeachingWords > 16 ||
+      enTeachingWords > 16 ||
       spec.textBudget.headingWords > 8 ||
       spec.textBudget.cardWords > 6 ||
       spec.textBudget.ruleWords > 12
@@ -112,46 +128,49 @@ function validateBeginnerClarity(lesson: MicroLesson, issues: BeginnerJourneyQua
       issues.push({
         lessonId: lesson.id,
         reason: 'infographic_spec_quality',
-        detail: 'infographic brief exceeds the visual text budget or teaching-goal budget',
+        detail: 'infographic brief exceeds the bilingual teaching-goal budget or visual text budget',
       });
     }
   }
 
-  const prompt = normalBlockCopy(lesson, 'prompt');
-  const explanation = normalBlockCopy(lesson, 'explanation');
-  const misconception = normalBlockCopy(lesson, 'misconception');
-  const surfaces = [
-    ['learningObjective', lesson.learningObjective.tr, BEGINNER_COPY_LIMITS.learningObjective],
-    ['prompt', prompt, BEGINNER_COPY_LIMITS.prompt],
-    ['explanation', explanation, BEGINNER_COPY_LIMITS.explanation],
-    ['misconception', misconception, BEGINNER_COPY_LIMITS.misconception],
-    ['takeaway', lesson.takeaway.tr, BEGINNER_COPY_LIMITS.takeaway],
-  ] as const;
+  for (const language of QUALITY_LANGUAGES) {
+    const prompt = normalBlockCopy(lesson, 'prompt', language);
+    const explanation = normalBlockCopy(lesson, 'explanation', language);
+    const misconception = normalBlockCopy(lesson, 'misconception', language);
+    const takeaway = localizedLessonText(lesson, 'takeaway', language);
+    const surfaces = [
+      ['learningObjective', localizedLessonText(lesson, 'learningObjective', language), BEGINNER_COPY_LIMITS.learningObjective],
+      ['prompt', prompt, BEGINNER_COPY_LIMITS.prompt],
+      ['explanation', explanation, BEGINNER_COPY_LIMITS.explanation],
+      ['misconception', misconception, BEGINNER_COPY_LIMITS.misconception],
+      ['takeaway', takeaway, BEGINNER_COPY_LIMITS.takeaway],
+    ] as const;
 
-  for (const [field, value, limit] of surfaces) {
-    const count = wordCount(value);
-    if (count > limit) {
-      issues.push({
-        lessonId: lesson.id,
-        reason: 'clarity_copy_budget',
-        detail: `${field} has ${count} words; beginner budget is ${limit}`,
-      });
+    for (const [field, value, limit] of surfaces) {
+      const count = wordCount(value);
+      if (count > limit) {
+        issues.push({
+          lessonId: lesson.id,
+          reason: 'clarity_copy_budget',
+          detail: `${language}.${field} has ${count} words; beginner budget is ${limit}`,
+        });
+      }
     }
-  }
 
-  const repetitionPairs = [
-    ['explanation', explanation, 'takeaway', lesson.takeaway.tr],
-    ['misconception', misconception, 'takeaway', lesson.takeaway.tr],
-  ] as const;
+    const repetitionPairs = [
+      ['explanation', explanation, 'takeaway', takeaway],
+      ['misconception', misconception, 'takeaway', takeaway],
+    ] as const;
 
-  for (const [leftName, left, rightName, right] of repetitionPairs) {
-    const ratio = sharedTokenRatio(left, right);
-    if (ratio >= 0.78) {
-      issues.push({
-        lessonId: lesson.id,
-        reason: 'clarity_repetition',
-        detail: `${leftName} and ${rightName} repeat too much of the same wording (overlap ${ratio.toFixed(2)})`,
-      });
+    for (const [leftName, left, rightName, right] of repetitionPairs) {
+      const ratio = sharedTokenRatio(left, right, language);
+      if (ratio >= 0.78) {
+        issues.push({
+          lessonId: lesson.id,
+          reason: 'clarity_repetition',
+          detail: `${language}.${leftName} and ${rightName} repeat too much of the same wording (overlap ${ratio.toFixed(2)})`,
+        });
+      }
     }
   }
 }
@@ -183,17 +202,28 @@ function beginnerVisibleText(lesson: MicroLesson): string {
 export function getBeginnerJourneyQualityReport(): BeginnerJourneyQualityReport {
   const catalogById = new Map(MICRO_LESSON_CATALOG.map((lesson) => [lesson.id, lesson] as const));
   const issues: BeginnerJourneyQualityIssue[] = [];
-  const beginnerLessonIds = BEGINNER_SECTION_IDS.flatMap((sectionId) => {
+
+  if (BEGINNER_PRELUDE_LESSON_IDS.length !== EXPECTED_PRELUDE_LESSON_COUNT) {
+    issues.push({
+      lessonId: 'section:prelude',
+      reason: 'section_lesson_count',
+      detail: `expected ${EXPECTED_PRELUDE_LESSON_COUNT} prelude lessons, found ${BEGINNER_PRELUDE_LESSON_IDS.length}`,
+    });
+  }
+
+  for (const sectionId of BEGINNER_SECTION_IDS) {
     const section = BEGINNER_SECTIONS[sectionId];
-    if (section.lessonIds.length !== EXPECTED_LESSONS_PER_SECTION) {
+    const expectedCount = EXPECTED_SECTION_LESSON_COUNTS[sectionId];
+    if (section.lessonIds.length !== expectedCount) {
       issues.push({
         lessonId: `section:${sectionId}`,
         reason: 'section_lesson_count',
-        detail: `expected ${EXPECTED_LESSONS_PER_SECTION} lessons, found ${section.lessonIds.length}`,
+        detail: `expected ${expectedCount} lessons, found ${section.lessonIds.length}`,
       });
     }
-    return [...section.lessonIds];
-  });
+  }
+
+  const beginnerLessonIds: readonly string[] = BEGINNER_LESSON_IDS;
 
   for (const lessonId of beginnerLessonIds) {
     const lesson = catalogById.get(lessonId);
@@ -260,7 +290,7 @@ export function getBeginnerJourneyQualityReport(): BeginnerJourneyQualityReport 
   return {
     sectionCount: BEGINNER_SECTION_IDS.length,
     lessonCount: beginnerLessonIds.length,
-    expectedLessonCount: EXPECTED_SECTION_COUNT * EXPECTED_LESSONS_PER_SECTION,
+    expectedLessonCount: EXPECTED_LESSON_COUNT,
     issues,
   };
 }
