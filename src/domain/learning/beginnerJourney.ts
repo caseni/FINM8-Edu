@@ -1,5 +1,10 @@
 import type { LocalizedText } from './types';
 
+export const BEGINNER_PRELUDE_LESSON_IDS = [
+  'lesson.foundation.investing-vs-trading.001',
+  'lesson.foundation.goal-horizon-risk.001',
+] as const;
+
 export const BEGINNER_SECTION_IDS = [
   'money_economy',
   'markets',
@@ -42,13 +47,14 @@ export const BEGINNER_SECTIONS: Readonly<Record<BeginnerSectionId, BeginnerSecti
     order: 2,
     title: { tr: 'Piyasalar Nasıl Çalışır?', en: 'How Do Markets Work?' },
     description: {
-      tr: 'Fiyatın nasıl oluştuğunu, ne aldığını ve neden bazen işlem fiyatının değişebildiğini sade örneklerle öğren.',
-      en: 'Learn with simple examples how prices form, what you are buying, and why the price you trade at can sometimes differ.',
+      tr: 'Fiyatın nasıl oluştuğunu, ne aldığını, endeks ile ETF farkını ve işlemlerin nasıl gerçekleştiğini sade örneklerle öğren.',
+      en: 'Learn with simple examples how prices form, what you are buying, how an index differs from an ETF, and how trades are executed.',
     },
     status: 'active',
     lessonIds: [
       'lesson.market.price-formation.001',
       'lesson.market.instruments.001',
+      'lesson.market.index-etf.001',
       'lesson.market.liquidity.001',
       'lesson.market.bid-ask.001',
       'lesson.market.order-types.001',
@@ -60,8 +66,8 @@ export const BEGINNER_SECTIONS: Readonly<Record<BeginnerSectionId, BeginnerSecti
     order: 3,
     title: { tr: 'Grafikleri Korkmadan Oku', en: 'Read Charts Without Fear' },
     description: {
-      tr: 'Grafiğin neyi kaydettiğini, farklı zaman ölçeklerini, genel yönü, tepki bölgelerini ve yardımcı çizgilerin sınırını sade örneklerle öğren.',
-      en: 'Learn with simple examples what a chart records, time scales, broader direction, reaction areas, and the limits of helper lines.',
+      tr: 'Grafiğin neyi kaydettiğini, farklı zaman ölçeklerini, genel yönü ve tepki bölgelerini sade örneklerle öğren.',
+      en: 'Learn with simple examples what a chart records, different time scales, broader direction, and reaction areas.',
     },
     status: 'active',
     lessonIds: [
@@ -69,17 +75,15 @@ export const BEGINNER_SECTIONS: Readonly<Record<BeginnerSectionId, BeginnerSecti
       'lesson.chart.timeframes.001',
       'lesson.chart.trend.001',
       'lesson.chart.support-resistance.001',
-      'lesson.technical.momentum.001',
-      'lesson.technical.moving-average.001',
     ],
   },
   risk: {
     id: 'risk',
     order: 4,
-    title: { tr: 'Riskten Korun', en: 'Protect Yourself From Risk' },
+    title: { tr: 'Risk ve Karar', en: 'Risk and Decisions' },
     description: {
-      tr: 'Kaybetmeden önce riski fark etmeyi, miktarın etkisini, çıkış planının sınırlarını ve farklı risklere yayılmayı sade örneklerle öğren.',
-      en: 'Learn with simple examples how to recognize risk before loss, understand the impact of size, the limits of exit plans, and spreading across different risks.',
+      tr: 'Riski kayıptan önce fark etmeyi, miktarın etkisini, çıkış planının sınırlarını, çeşitlendirmeyi ve duygusal karar baskısını sade örneklerle öğren.',
+      en: 'Learn with simple examples how to recognize risk before loss, understand the impact of size, the limits of exit plans, diversification, and emotional pressure on decisions.',
     },
     status: 'active',
     lessonIds: [
@@ -89,6 +93,12 @@ export const BEGINNER_SECTIONS: Readonly<Record<BeginnerSectionId, BeginnerSecti
       'lesson.risk.reward.001',
       'lesson.risk.stop-orders.001',
       'lesson.portfolio.diversification.001',
+      'lesson.behavior.fomo.001',
     ],
   },
 };
+
+export const BEGINNER_LESSON_IDS = [
+  ...BEGINNER_PRELUDE_LESSON_IDS,
+  ...BEGINNER_SECTION_IDS.flatMap((sectionId) => BEGINNER_SECTIONS[sectionId].lessonIds),
+] as const;
